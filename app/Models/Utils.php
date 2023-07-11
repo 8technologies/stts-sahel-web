@@ -9,6 +9,25 @@ class Utils extends Model
 {
     use HasFactory;
 
+    public static function apiSuccess($data = null, $message = 'Success')
+    {
+        return response()->json([
+            'code' => 1,
+            'message' => $message,
+            'data' => $data
+        ]);
+    }
+    public static function apiError($message = 'Error', $data = null)
+    {
+        return response()->json([
+            'code' => 0,
+            'message' => $message,
+            'data' => $data
+        ]);
+    }
+
+
+
     public static function tell_status($status)
     {
 
