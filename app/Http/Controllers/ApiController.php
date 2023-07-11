@@ -60,7 +60,7 @@ class ApiController extends Controller
     public function seed_producer_forms()
     {
         $u = auth('api')->user();
-        return Utils::apiSuccess(SeedProducer::where('user_id', $u->id)->get());
+        return Utils::apiSuccess(SeedProducer::where([])->get());
     }
     public function crops()
     {
