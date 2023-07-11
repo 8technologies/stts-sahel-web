@@ -25,7 +25,7 @@ class ApiController extends Controller
     public function __construct()
     {
         header('Content-Type: application/json');
- 
+
         $requestUrl = request()->path();
         $segments = explode('/', $requestUrl);
         $lastSegment = end($segments);
@@ -60,7 +60,7 @@ class ApiController extends Controller
     public function seed_producer_forms()
     {
         $u = auth('api')->user();
-        return Utils::apiSuccess(SeedProducer::where(['user_id' => $u->id])->get());
+        return Utils::apiSuccess(SeedProducer::where('user_id', $u->id)->get());
     }
     public function crops()
     {
