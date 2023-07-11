@@ -2,10 +2,11 @@
 
 namespace App\Admin\Controllers;
 
-use OpenAdmin\Admin\Controllers\AdminController;
-use OpenAdmin\Admin\Form;
-use OpenAdmin\Admin\Grid;
-use OpenAdmin\Admin\Show;
+use App\Models\Crop;
+use Encore\Admin\Controllers\AdminController;
+use Encore\Admin\Form;
+use Encore\Admin\Grid;
+use Encore\Admin\Show;
 use \App\Models\InspectionType;
 
 class InspectionTypeController extends AdminController
@@ -15,7 +16,7 @@ class InspectionTypeController extends AdminController
      *
      * @var string
      */
-    protected $title = 'InspectionType';
+    protected $title = 'Inspection Type';
 
     /**
      * Make a grid builder.
@@ -32,6 +33,7 @@ class InspectionTypeController extends AdminController
         $grid->column('period_after_planting', __('Period after planting'));
         $grid->column('created_at', __('Created at'));
         $grid->column('updated_at', __('Updated at'));
+        $grid->column('crop_id', __('Crop'));
 
         return $grid;
     }
@@ -52,6 +54,7 @@ class InspectionTypeController extends AdminController
         $show->field('period_after_planting', __('Period after planting'));
         $show->field('created_at', __('Created at'));
         $show->field('updated_at', __('Updated at'));
+        $show->field('crop_id', __('Crop id'));
 
         return $show;
     }
@@ -65,9 +68,12 @@ class InspectionTypeController extends AdminController
     {
         $form = new Form(new InspectionType());
 
-        $form->text('inspection_type_name', __('Inspection type name'));
-        $form->text('order', __('Order'));
-        $form->number('period_after_planting', __('Period after planting'));
+        $form->select('crop_id', __('Crop'))
+            ->options(Crop::all()->pluck('crop_name', 'id'))
+            ->required();
+        $form->text('inspection_type_name', __('Inspection type name'))->rules('required');
+        $form->decimal('order', __('Order'))->rules('required');
+        $form->decimal('period_after_planting', __('Days after planting'))->rules('required');
 
         return $form;
     }

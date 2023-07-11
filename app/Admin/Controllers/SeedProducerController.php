@@ -2,19 +2,11 @@
 
 namespace App\Admin\Controllers;
 
-use OpenAdmin\Admin\Controllers\AdminController;
-use OpenAdmin\Admin\Form;
-use OpenAdmin\Admin\Grid;
-use OpenAdmin\Admin\Show;
+use Encore\Admin\Controllers\AdminController;
+use Encore\Admin\Form;
+use Encore\Admin\Grid;
+use Encore\Admin\Show;
 use \App\Models\SeedProducer;
-use \App\Models\Crop;
-use \App\Models\User;
-use \App\Models\Utils;
-use \App\Models\Notification;
-use OpenAdmin\Admin\Auth\Database\Administrator;
-use Illuminate\Support\Facades\Auth;
-use OpenAdmin\Admin\Facades\Admin;
-use OpenAdmin\Admin\Widgets\Table;
 
 class SeedProducerController extends AdminController
 {
@@ -23,7 +15,7 @@ class SeedProducerController extends AdminController
      *
      * @var string
      */
-    protected $title = 'SeedProducer';
+    protected $title = 'Seed Producer';
 
     /**
      * Make a grid builder.
@@ -34,47 +26,47 @@ class SeedProducerController extends AdminController
     {
         $grid = new Grid(new SeedProducer());
 
-        //show the inspector forms where the inspector_id is the same as his id
-        $user =Admin::user();
-        if ($user->isRole('inspector')) 
-        {
-            $grid->model()->where('inspector_id', $user->id);
-        }
-        //disable the create button for users who arent basic users
-        if($user->inRoles(['administrator', 'developer']))
-        {
+        $sp = SeedProducer::where('user_id', auth('admin')->user()->id)->first();
+        if($sp!=null){
             $grid->disableCreateButton();
         }
-        $grid->column('producer_registration_number', __('admin.form.Registration Number'))->display(function ($value) {
-            return $value ?? '-';
-        });
-        
-        $grid->column('producer_category', __('admin.form.Seed producer category'))->display(function ($value) {
-            return $value ?? '-';
-        });
-        
-        $grid->column('name_of_applicant', __('admin.form.Name of applicant'))->display(function ($value) {
-            return $value ?? '-';
-        });
-        
-        $grid->column('status', __('admin.form.Status'))->display(function ($value) {
-            return Utils::tell_status($value) ?? '-';
-        });
-         
-        $grid->column('valid_from', __('admin.form.Seed producer approval date'))->display(function ($value) {
-            return $value ?? '-';
-        });
-        
-        $grid->column('valid_until', __('admin.form.Valid until'))->display(function ($value) {
-            return $value ?? '-';
-        });
 
-        $grid->column('id', __('admin.form.Certificate'))->display(function () {
-            $link = url('certificate?id=' . $this->id);
-            return '<b><a target="_blank" href="' . $link . '">Print Certificate</a></b>';
+        if(!auth('admin')->user()->isRole('commissioner')){
+            $grid->model()->where('user_id', auth('admin')->user()->id);
+        }
+        $grid->model()->orderBy('id', 'desc');
+        $grid->column('created_at', __('Date'))->display(function($created_at){
+            return date('d-m-Y', strtotime($created_at));
         });
-
-      
+        $grid->column('user_id', __('User'))->display(function($user_id){
+            return \App\Models\User::find($user_id)->name;
+        });
+        $grid->quicksearch('name_of_applicant')->placeholder('Search by name of applicant');
+        $grid->column('producer_registration_number', __('Producer registration number'));
+        $grid->column('producer_category', __('Producer category'))->sortable();
+        $grid->column('name_of_applicant', __('Name of applicant'))->sortable();
+        $grid->column('applicant_phone_number', __('Applicant phone number'));
+        $grid->column('applicant_email', __('Applicant email'))->hide();
+        $grid->column('premises_location', __('Premises location'))->hide();
+        $grid->column('proposed_farm_location', __('Proposed farm location'))->hide();
+        $grid->column('years_of_experience', __('Years of experience'))->hide();
+        $grid->column('gardening_history_description', __('Gardening history description'))->hide();
+        $grid->column('storage_facilities_description', __('Storage facilities description'))->hide();
+        $grid->column('have_adequate_isolation', __('Have adequate isolation'))->hide();
+        $grid->column('labor_details', __('Labor details'))->hide();
+        $grid->column('receipt', __('Receipt'))->hide();
+        $grid->column('grower_number', __('Grower number'));
+        $grid->column('status', __('Status'))->label([
+            'accepted' => 'success',
+            'pending' => 'warning',
+            'approved' => 'success',
+            'rejected' => 'danger',
+            'halted' => 'danger'
+        ])->sortable();
+        $grid->column('valid_from', __('Valid from'));
+        $grid->column('valid_until', __('Valid until'));
+        $grid->column('status_comment', __('Status comment'));
+     
         return $grid;
     }
 
@@ -87,62 +79,30 @@ class SeedProducerController extends AdminController
     protected function detail($id)
     {
         $show = new Show(SeedProducer::findOrFail($id));
-        $user = Auth::user();
-        $seed_producer = SeedProducer::findOrFail($id);
-        $show->panel()->tools(function ($tools) 
-        {
-            $tools->disableDelete();
-        });
-       
-        //delete a notification, once it has been read
-        if (Admin::user()->isRole('basic-user')) 
-        {
-            $statusArray = [2, 3, 4, 5];
-        
-            if (in_array($seed_producer->status, $statusArray))
-            {
-                Notification::where([
-                    'receiver_id' => Admin::user()->id,
-                    'model_id' => $id,
-                    'model' => 'SeedProducer'
-                ])->delete();
-            }
-        }
-        
 
-
-        $show->field('producer_registration_number', __('admin.form.Seed producer registration number'));
-        $show->field('producer_category', __('admin.form.seed producer category'));
-        $show->field('name_of_applicant', __('admin.form.Name of applicant'));
-        $show->field('applicant_phone_number', __('admin.form.Applicant phone number'));
-        $show->field('applicant_email', __('admin.form.Applicant email'));
-        $show->field('premises_location', __('admin.form.Applicant physcial address'));
-        $show->field('proposed_farm_location', __('admin.form.Proposed farm location'));
-        $show->field('years_of_experience', __('admin.form.If seed company, years of experience as a seed producer'));
-        $show->field('gardening_history_description', __('admin.form.Garden history of the proposed seed production field for the last three season or years'));
-        $show->field('storage_facilities_description', __('admin.form.Describe your storage facilities to handle the resultant seed'));
-        $show->field('have_adequate_isolation', __('admin.form.Do you have adequate isolation?'));
-        $show->field('labor_details', __('admin.form.Detail the labor you have at the farm in terms of numbers and competencies'));
-        $show->field('receipt', __('admin.form.Proof of payment of application fees'));
-        $show->field('status', __('admin.form.Status'));
-        $show->field('status_comment', __('admin.form.Status comment'));
-        $show->field('inspector', __('admin.form.Inspector'));
-        $show->field('grower number', __('admin.form.Seed producer approval number'));
-        $show->field('valid_from', __('admin.form.Seed producer approval date'));
-        $show->field('valid_until', __('admin.form.Valid until'));
-        $show->field('crops', __('admin.form.Knowledge of crops and varieties'))->as(function ($crops) {
-            return $crops->pluck('crop_name');
-        })->label();
-
-        //create a choice form if the user is an admin
-       
-        if ($user->isRole('administrator')) 
-        {
-            $show->field('status', __('admin.form.Status'))->as(function ($status) {
-                return $status;
-            })->editable('select', [1 => 'Pending', 2 => 'Approved', 3 => 'Rejected']);
-        }
-        
+        $show->field('id', __('Id'));
+        $show->field('user_id', __('User id'));
+        $show->field('producer_registration_number', __('Producer registration number'));
+        $show->field('producer_category', __('Producer category'));
+        $show->field('name_of_applicant', __('Name of applicant'));
+        $show->field('applicant_phone_number', __('Applicant phone number'));
+        $show->field('applicant_email', __('Applicant email'));
+        $show->field('premises_location', __('Premises location'));
+        $show->field('proposed_farm_location', __('Proposed farm location'));
+        $show->field('years_of_experience', __('Years of experience'));
+        $show->field('gardening_history_description', __('Gardening history description'));
+        $show->field('storage_facilities_description', __('Storage facilities description'));
+        $show->field('have_adequate_isolation', __('Have adequate isolation'));
+        $show->field('labor_details', __('Labor details'));
+        $show->field('receipt', __('Receipt'));
+        $show->field('status', __('Status'));
+        $show->field('status_comment', __('Status comment'));
+        $show->field('inspector_id', __('Inspector id'));
+        $show->field('grower_number', __('Grower number'));
+        $show->field('valid_from', __('Valid from'));
+        $show->field('valid_until', __('Valid until'));
+        $show->field('created_at', __('Created at'));
+        $show->field('updated_at', __('Updated at'));
 
         return $show;
     }
@@ -154,212 +114,84 @@ class SeedProducerController extends AdminController
      */
     protected function form()
     {
-        $form = new Form(new SeedProducer());
-        $form->tools(function (Form\Tools $tools) 
-        {
-            $tools->disableDelete();
-        });
-        $user = Admin::user();
+        $form = new Form(new SeedProducer()); 
 
-         //check the id of the user before editing the form
-         if ($form->isEditing()) 
-         {
-              //get request id
-             $id = request()->route()->parameters()['seed-producer'];
-             //get the form
-              $seed_producer = SeedProducer::find($id);
- 
-              //checking the user before accessing the form to ensure the right user accesses the right form
-             if ($user->isRole('basic-user'))
-             {
-             
-                 if ($user->id != $seed_producer->user_id) 
-                 {
-                     $form->html('<div class="alert alert-danger">You cannot edit this form </div>');
-                     $form->footer(function ($footer) 
-                     {
- 
-                         // disable reset btn
-                         $footer->disableReset();
- 
-                         // disable submit btn
-                         $footer->disableSubmit();
- 
-                         // disable `View` checkbox
-                         $footer->disableViewCheck();
- 
-                         // disable `Continue editing` checkbox
-                         $footer->disableEditingCheck();
- 
-                         // disable `Continue Creating` checkbox
-                         $footer->disableCreatingCheck();
- 
-                     });
-                 }
-                 
-             }
-             
-             //checking if the form has been inspected by the inspector if it is prevent him from editing it again
-             if($user->isRole('inspector'))
-             {
-                  if($seed_producer->status != 2)
-                 {
-                     $form->html('<div class="alert alert-danger">You cannot edit this form, please commit the commissioner to make any changes. </div>');
-                     $form->footer(function ($footer) 
-                     {
- 
-                         // disable reset btn
-                         $footer->disableReset();
- 
-                         // disable submit btn
-                         $footer->disableSubmit();
- 
-                         // disable `View` checkbox
-                         $footer->disableViewCheck();
- 
-                         // disable `Continue editing` checkbox
-                         $footer->disableEditingCheck();
- 
-                         // disable `Continue Creating` checkbox
-                         $footer->disableCreatingCheck();
- 
-                     });
-                 }
-               
-             }
- 
-             
-         }
-
-        if ($form->isCreating()) 
-        {
-            $form->hidden('user_id', __('Administrator id'))->value($user->id);
-        } 
-        else 
-        {
-            $form->hidden('user_id', __('Administrator id'));
+        $u = auth()->user();
+        if($form->isCreating()) {
+            $form->hidden('user_id')->default($u->id);
         }
 
-        $form->saving(function (Form $form) 
-        {
-            $producer_category = $form->producer_category;
-            $seed_producer = SeedProducer::where('producer_category', $producer_category)->where('user_id', $user->id)->first();
-            if ($seed_producer) 
-            {
-                
-                    if($form->isEditing())
-                    {
-                        $form_id = request()->route()->parameters()['seed-producer'];
-                        $existing_seed_producer = SeedProducer::find($form_id);
-                      //count the number of forms with the same type
-                        $count = SeedProducer::where('producer_category', $producer_category)->where('user_id', $user->id)->count();
-                        if($count > 1)
-                        {
-                           
-                        }
-                        elseif($count == 1)
-                        { 
-                            return  response(' <p class="alert alert-warning"> You cannot create a new SR4 form  while having PENDING one of the same category. <a href="/admin/form-sr4s"> Go Back </a></p> ');
-                            //check if what is being passed to the form is the same as the one in the database
-                            if($form_sr4->id == $formSr4->id)
-                            {
-                                return true;
-                            }
-                            else
-                            {
-
-                                if(!Utils::can_create_form($form_sr4))
-                                {
-                                    return  response(' <p class="alert alert-warning"> You cannot create a new SR4 form  while having PENDING one of the same category. <a href="/admin/form-sr4s"> Go Back </a></p> ');
-                                }
-                                
-                                //check if its still valid
-                                if (Utils::can_renew_app_form($form_sr4)) 
-                                {
-                                    return  response(' <p class="alert alert-warning"> You cannot create a new SR4 form  while having VALID one of the same category. <a href="/admin/form-sr4s"> Go Back </a></p> ');   
-                                }
-                            }
-                        }
-                        else{
-                             return true;
-                        }
-
-                    }
-                    //check if the status of the form is pending, rejected,halted or accepted
-                    if(!Utils::can_create_form($form_sr4))
-                    {
-                        return  response(' <p class="alert alert-warning"> You cannot create a new SR4 form  while having PENDING one of the same category. <a href="/admin/form-sr4s/create"> Go Back </a></p> ');
-                    }
-                    
-                    //check if its still valid
-                    if (Utils::can_renew_app_form($form_sr4)) 
-                    {
-                        return  response(' <p class="alert alert-warning"> You cannot create a new SR4 form  while having VALID one of the same category. <a href="/admin/form-sr4s/create"> Go Back </a></p> ');   
-                    }
-                $form->accept_declaration = 1;
-            }
-                     
-        });
-
-        //check if the user is a basic user
-        if ($user->isRole('basic-user')) 
-        {
-           
-            $form->text('producer_category', __('admin.form.Seed producer category'));
-            $form->text('name_of_applicant', __('admin.form.Name of applicant'));
-            $form->text('applicant_phone_number', __('admin.form.Applicant phone number'));
-            $form->text('applicant_email', __('admin.form.Applicant email'));
-            $form->text('premises_location', __('admin.form.Applicant physcial address'));
-            $form->text('proposed_farm_location', __('admin.form.Proposed farm location'));
-            $form->text('years_of_experience', __('admin.form.If seed company, years of experience as a seed producer'));
-            $form->textarea('gardening_history_description', __('admin.form.Garden history of the proposed seed production field for the last three season or years'));
-            $form->textarea('storage_facilities_description', __('admin.form.Describe your storage facilities to handle the resultant seed'));
-            $form->switch('have_adequate_isolation', __('admin.form.Do you have adequate isolation?'));
-            $form->textarea('labor_details', __('admin.form.Detail the labor you have at the farm in terms of numbers and competencies'));
-            $form->multipleSelect('crops', __('admin.form.Knowledge of crops and varieties'))->options(Crop::all()->pluck('crop_name', 'id'));
-            $form->text('receipt', __('admin.form.Proof of payment of application fees'));
-        }
-
-        //check if the user is an administrator
-        if ($user->inRoles(['administrator', 'developer']))
-        {
-            $form->text('name_of_applicant', __('admin.form.Name of applicant'))->default($user->name)->readonly();
-            $form->text('premises_location', __('admin.form.Applicant physcial address'))->readonly();
-            $form->text('proposed_farm_location', __('admin.form.Proposed farm location'))->readonly();
-            //get the users in the admin_user table whose role is inspector
-            $inspectors = Administrator::whereHas('roles', function ($query) {
-                $query->where('slug', 'inspector');
-            })->get();
-            $form->select('inspector_id', __('admin.form. Assign inspector'))->options($inspectors->pluck('name', 'id'));
-            $form->hidden('status', __('admin.form.Status'))->value(2);
-        }
-
-        //check if the user is an inspector
-        if ($user->isRole('inspector')) 
-        {
-           
-            $form->radio('status', __('admin.form.Status'))
-            ->options
-            ([
-                3 => 'Accepted',
-                4 => 'Please Resubmit',
-                5 => 'Rejected'
-            ])->required()
-            ->when(3, function(Form $form)
-            {
-                $form->text('producer_registration_number', __('admin.form.Seed producer registration number'))->default("SeedProducer". "/". mt_rand(10000000, 99999999));
-                $form->text('grower number', __('admin.form.Seed producer approval number'))->default("Grower". "/". mt_rand(10000000, 99999999));
-                $form->datetime('valid_from', __('admin.form.Seed producer approval date'))->default(date('Y-m-d H:i:s'));
-                $form->datetime('valid_until', __('admin.form.Valid until'))->default(date('Y-m-d H:i:s'));
-            })
-
-            ->when('in', [4, 5], function (Form $form) 
-            {
-                $form->textarea('status_comment', __('admin.form.Status comment'))
-                ->help( __('admin.form.Please specify your reason'));
-            });       
+        if($u->isRole('commissioner')){
+            $form->display('producer_registration_number', __('Producer registration number'));
+            $form->display('producer_category', __('Producer category'))->options([
+                'Individual-grower' => 'Individual-grower',
+                'Seed-breeder' => 'Seed-breeder',
+                'Seed-Company' => 'Seed-Company',
+            ]);
+            $form->display('name_of_applicant', __('Name of applicant'));
+            $form->display('applicant_phone_number', __('Applicant phone number'));
+            $form->display('applicant_email', __('Applicant email'));
+            $form->display('premises_location', __('Premises location'));
+            $form->display('proposed_farm_location', __('Proposed farm location'));
+            $form->display('years_of_experience', __('Years of experience'));
+            $form->display('gardening_history_description', __('Gardening history description'));
+            $form->display('storage_facilities_description', __('Storage facilities description'));
+            $form->radio('have_adequate_isolation', __('Have adequate isolation'))
+            ->options([
+                '1' => 'Yes',
+                '0' => 'No',
+            ])->readonly();
+            $form->textarea('labor_details', __('Labor details'));
             
+        $form->file('receipt', __('Receipt'))->readonly();
+        }else{
+            $form->text('producer_registration_number', __('Producer registration number'));
+            $form->select('producer_category', __('Producer category'))->options([
+                'Individual-grower' => 'Individual-grower',
+                'Seed-breeder' => 'Seed-breeder',
+                'Seed-Company' => 'Seed-Company',
+            ]);
+            $form->text('name_of_applicant', __('Name of applicant'));
+            $form->text('applicant_phone_number', __('Applicant phone number'));
+            $form->text('applicant_email', __('Applicant email'));
+            $form->text('premises_location', __('Premises location'));
+            $form->text('proposed_farm_location', __('Proposed farm location'));
+            $form->text('years_of_experience', __('Years of experience'));
+            $form->textarea('gardening_history_description', __('Gardening history description'));
+            $form->textarea('storage_facilities_description', __('Storage facilities description'));
+            $form->radio('have_adequate_isolation', __('Have adequate isolation'))
+            ->options([
+                '1' => 'Yes',
+                '0' => 'No',
+            ]);
+            $form->textarea('labor_details', __('Labor details'));
+
+            if($form->isEditing()){
+                $form->saving(function($form){
+                    $form->status = 'pending';
+                    return $form;
+                });
+            }
+            
+        $form->file('receipt', __('Receipt')); 
         }
+
+        if($u->isRole('commissioner')){
+            $form->divider();
+            $form->select('status', __('Status'))
+            ->options([
+                'accepted' => 'Accepted',
+                'pending' => 'Pending',
+                'rejected' => 'Rejected',
+                'halted' => 'Halted',
+            ])
+            ->default('pending');
+            $form->textarea('status_comment', __('Status comment')); 
+            $form->text('grower_number', __('Grower number'))->default(rand(1000,100000));
+            $form->datetime('valid_from', __('Valid from'))->default(date('Y-m-d H:i:s'));
+            $form->datetime('valid_until', __('Valid until'))->default(date('Y-m-d H:i:s'));
+        }
+
 
         return $form;
     }

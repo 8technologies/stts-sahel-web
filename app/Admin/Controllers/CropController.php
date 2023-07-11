@@ -2,12 +2,11 @@
 
 namespace App\Admin\Controllers;
 
-use OpenAdmin\Admin\Controllers\AdminController;
-use OpenAdmin\Admin\Form;
-use OpenAdmin\Admin\Grid;
-use OpenAdmin\Admin\Show;
+use Encore\Admin\Controllers\AdminController;
+use Encore\Admin\Form;
+use Encore\Admin\Grid;
+use Encore\Admin\Show;
 use \App\Models\Crop;
-use \App\Models\InspectionType;
 
 class CropController extends AdminController
 {
@@ -27,11 +26,15 @@ class CropController extends AdminController
     {
         $grid = new Grid(new Crop());
 
-        $grid->column('id', __('Id'));
-        $grid->column('created_at', __('Created at'));
-        $grid->column('updated_at', __('Updated at'));
-        $grid->column('crop_name', __('Crop Name'));
+        $grid->disableBatchActions();
+        $grid->column('id', __('Id'))->sortable();
+        $grid->column('crop_name', __('Crop name'));
+        $grid->column('number_of_inspections', __('No. of inspections'))->display(function () {
+            return $this->inspection_types()->count();
+        })->sortable();
         $grid->column('number_of_days_before_submission', __('Number of days before submission'));
+        $grid->column('seed_viability_period', __('Seed viability period'));
+        $grid->column('number_of_inspections', __('Number of inspections'))->sortable();
 
         return $grid;
     }
@@ -49,15 +52,10 @@ class CropController extends AdminController
         $show->field('id', __('Id'));
         $show->field('created_at', __('Created at'));
         $show->field('updated_at', __('Updated at'));
-        $show->field('crop_name', __('Crop Name'));
+        $show->field('crop_name', __('Crop name'));
+        $show->field('crop_code', __('Crop code'));
         $show->field('number_of_days_before_submission', __('Number of days before submission'));
-     
-        $show->id(__('Crop varieties'))->unescape()->as(function ($id) {
-            $crop = Crop::with('crop_varieties')->findOrFail($id);
-            $crop_varieties = $crop->crop_varieties->pluck('crop_variety_name')->implode(', ');
-            return "<p>{$crop_varieties}</p>";
-        });
-        
+        $show->field('seed_viability_period', __('Seed viability period'));
 
         return $show;
     }
@@ -71,20 +69,18 @@ class CropController extends AdminController
     {
         $form = new Form(new Crop());
 
-        $form->textarea('crop_name', __('Crop Name'));
-        $form->number('number_of_days_before_submission', __('Number of days before submission'));
-        $form->multipleSelect('inspection_types', __('admin.form.Select Inspections'))->options(InspectionType::all()->pluck('inspection_type_name', 'id'));
+        $form->text('crop_name', __('Crop name'))->rules('required');
+        $form->text('crop_code', __('Crop code'));
+        $form->decimal('number_of_days_before_submission', __('Number of days before submission'));
+        $form->decimal('seed_viability_period', __('Seed viability period')); 
 
-        $form->hasMany('crop_varieties', function (Form\NestedForm $form)  {
-            $form->text('crop_variety_name', __('Crop Variety Name'));
-            $form->text('crop_variety_code', __('Crop Variety Code'));
-            $form->text('crop_variety_generation', __('Crop Variety Generation'));
+        $form->morphMany('inspection_types', function (Form\NestedForm $form) {
+            $form->text('inspection_type_name', __('Inspection type name'))->rules('required');
+            $form->decimal('order', __('Order'))->rules('required');
+            $form->decimal('period_after_planting', __('Days after planting'))->rules('required');
         });
-        
-        
 
 
-     
         return $form;
     }
 }

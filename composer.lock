@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "fe9b33c5486d79aacb95fd4b876cae73",
+    "content-hash": "fb0def7651f65ed8409d4b5ff57acdd5",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -412,16 +412,16 @@
         },
         {
             "name": "doctrine/dbal",
-            "version": "3.6.3",
+            "version": "3.6.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/dbal.git",
-                "reference": "9a747d29e7e6b39509b8f1847e37a23a0163ea6a"
+                "reference": "19f0dec95edd6a3c3c5ff1d188ea94c6b7fc903f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/dbal/zipball/9a747d29e7e6b39509b8f1847e37a23a0163ea6a",
-                "reference": "9a747d29e7e6b39509b8f1847e37a23a0163ea6a",
+                "url": "https://api.github.com/repos/doctrine/dbal/zipball/19f0dec95edd6a3c3c5ff1d188ea94c6b7fc903f",
+                "reference": "19f0dec95edd6a3c3c5ff1d188ea94c6b7fc903f",
                 "shasum": ""
             },
             "require": {
@@ -504,7 +504,7 @@
             ],
             "support": {
                 "issues": "https://github.com/doctrine/dbal/issues",
-                "source": "https://github.com/doctrine/dbal/tree/3.6.3"
+                "source": "https://github.com/doctrine/dbal/tree/3.6.4"
             },
             "funding": [
                 {
@@ -520,7 +520,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-06-01T05:46:46+00:00"
+            "time": "2023-06-15T07:40:12+00:00"
         },
         {
             "name": "doctrine/deprecations",
@@ -1017,6 +1017,80 @@
                 }
             ],
             "time": "2023-01-14T14:17:03+00:00"
+        },
+        {
+            "name": "encore/laravel-admin",
+            "version": "v1.8.19",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/z-song/laravel-admin.git",
+                "reference": "6c292ebb5efa886fa4776d86e975180608505946"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/z-song/laravel-admin/zipball/6c292ebb5efa886fa4776d86e975180608505946",
+                "reference": "6c292ebb5efa886fa4776d86e975180608505946",
+                "shasum": ""
+            },
+            "require": {
+                "doctrine/dbal": "2.*|3.*",
+                "laravel/framework": ">=5.5",
+                "php": ">=7.0.0",
+                "symfony/dom-crawler": "~3.1|~4.0|~5.0"
+            },
+            "require-dev": {
+                "fzaninotto/faker": "~1.4",
+                "intervention/image": "~2.3",
+                "laravel/browser-kit-testing": "^6.0",
+                "laravel/laravel": ">=5.5",
+                "spatie/phpunit-watcher": "^1.22.0"
+            },
+            "suggest": {
+                "intervention/image": "Required to handling and manipulation upload images (~2.3).",
+                "spatie/eloquent-sortable": "Required to built orderable gird."
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Encore\\Admin\\AdminServiceProvider"
+                    ],
+                    "aliases": {
+                        "Admin": "Encore\\Admin\\Facades\\Admin"
+                    }
+                }
+            },
+            "autoload": {
+                "files": [
+                    "src/helpers.php"
+                ],
+                "psr-4": {
+                    "Encore\\Admin\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "zsong",
+                    "email": "zosong@126.com"
+                }
+            ],
+            "description": "laravel admin",
+            "homepage": "https://github.com/z-song/laravel-admin",
+            "keywords": [
+                "admin",
+                "form",
+                "grid",
+                "laravel"
+            ],
+            "support": {
+                "issues": "https://github.com/z-song/laravel-admin/issues",
+                "source": "https://github.com/z-song/laravel-admin/tree/v1.8.19"
+            },
+            "time": "2022-05-24T03:49:38+00:00"
         },
         {
             "name": "fruitcake/php-cors",
@@ -2970,83 +3044,6 @@
             "time": "2023-02-08T01:06:31+00:00"
         },
         {
-            "name": "open-admin-org/open-admin",
-            "version": "v1.0.27",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/open-admin-org/open-admin.git",
-                "reference": "a6e34ae1fd90c6fd81b335a50faaec69bbb3a544"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/open-admin-org/open-admin/zipball/a6e34ae1fd90c6fd81b335a50faaec69bbb3a544",
-                "reference": "a6e34ae1fd90c6fd81b335a50faaec69bbb3a544",
-                "shasum": ""
-            },
-            "require": {
-                "doctrine/dbal": "2.*|3.*",
-                "laravel/framework": ">=7.0",
-                "php": "~7.3|~8.0",
-                "symfony/dom-crawler": "~3.1|~4.0|~5.0"
-            },
-            "require-dev": {
-                "fzaninotto/faker": "~1.4",
-                "intervention/image": "~2.3",
-                "laravel/browser-kit-testing": "^6.0",
-                "laravel/laravel": ">=8.0",
-                "spatie/phpunit-watcher": "^1.22.0"
-            },
-            "suggest": {
-                "intervention/image": "Required to handling and manipulation upload images (~2.3).",
-                "spatie/eloquent-sortable": "Required to built orderable gird."
-            },
-            "type": "library",
-            "extra": {
-                "laravel": {
-                    "providers": [
-                        "OpenAdmin\\Admin\\AdminServiceProvider"
-                    ],
-                    "aliases": {
-                        "Admin": "OpenAdmin\\Admin\\Facades\\Admin"
-                    }
-                }
-            },
-            "autoload": {
-                "files": [
-                    "src/helpers.php"
-                ],
-                "psr-4": {
-                    "OpenAdmin\\Admin\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Sjors Broersen | Open-Admin.org",
-                    "email": "info@open-admin.org"
-                }
-            ],
-            "description": "open-admin. Open-source Laravel Admin panel. No pro or paid package, free & open. Based on laravel-admin, with special thanks to z-song",
-            "homepage": "https://github.com/open-admin-org/open-admin",
-            "keywords": [
-                "admin",
-                "form",
-                "free",
-                "grid",
-                "laravel",
-                "open",
-                "open-admin"
-            ],
-            "support": {
-                "issues": "https://github.com/open-admin-org/open-admin/issues",
-                "source": "https://github.com/open-admin-org/open-admin/tree/v1.0.27"
-            },
-            "time": "2023-04-02T22:05:19+00:00"
-        },
-        {
             "name": "phenx/php-font-lib",
             "version": "0.5.4",
             "source": {
@@ -4270,16 +4267,16 @@
         },
         {
             "name": "symfony/dom-crawler",
-            "version": "v5.4.23",
+            "version": "v5.4.25",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/dom-crawler.git",
-                "reference": "4a286c916b74ecfb6e2caf1aa31d3fe2a34b7e08"
+                "reference": "d2aefa5a7acc5511422792931d14d1be96fe9fea"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/dom-crawler/zipball/4a286c916b74ecfb6e2caf1aa31d3fe2a34b7e08",
-                "reference": "4a286c916b74ecfb6e2caf1aa31d3fe2a34b7e08",
+                "url": "https://api.github.com/repos/symfony/dom-crawler/zipball/d2aefa5a7acc5511422792931d14d1be96fe9fea",
+                "reference": "d2aefa5a7acc5511422792931d14d1be96fe9fea",
                 "shasum": ""
             },
             "require": {
@@ -4325,7 +4322,7 @@
             "description": "Eases DOM navigation for HTML and XML documents",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/dom-crawler/tree/v5.4.23"
+                "source": "https://github.com/symfony/dom-crawler/tree/v5.4.25"
             },
             "funding": [
                 {
@@ -4341,7 +4338,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-04-08T21:20:19+00:00"
+            "time": "2023-06-05T08:05:41+00:00"
         },
         {
             "name": "symfony/error-handler",

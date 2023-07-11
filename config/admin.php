@@ -4,29 +4,29 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Open-admin name
+    | Laravel-admin name
     |--------------------------------------------------------------------------
     |
-    | This value is the name of Open-admin, This setting is displayed on the
+    | This value is the name of laravel-admin, This setting is displayed on the
     | login page.
     |
     */
-    'name' => 'Sahel',
+    'name' => 'STTS',
 
     /*
     |--------------------------------------------------------------------------
-    | Open-admin logo
+    | Laravel-admin logo
     |--------------------------------------------------------------------------
     |
     | The logo of all admin pages. You can also set it as an image by using a
     | `img` tag, eg '<img src="http://logo-url" alt="Admin logo">'.
     |
     */
-    'logo' => 'Sahel',
+    'logo' => '<b>STTS</b> admin',
 
     /*
     |--------------------------------------------------------------------------
-    | Open-admin mini logo
+    | Laravel-admin mini logo
     |--------------------------------------------------------------------------
     |
     | The logo of all admin pages when the sidebar menu is collapsed. You can
@@ -34,21 +34,21 @@ return [
     | '<img src="http://logo-url" alt="Admin logo">'.
     |
     */
-    'logo-mini' => '<b>OA</b>',
+    'logo-mini' => '<b>STTS</b>',
 
     /*
     |--------------------------------------------------------------------------
-    | Open-admin bootstrap setting
+    | Laravel-admin bootstrap setting
     |--------------------------------------------------------------------------
     |
-    | This value is the path of open-admin bootstrap file.
+    | This value is the path of laravel-admin bootstrap file.
     |
     */
     'bootstrap' => app_path('Admin/bootstrap.php'),
 
     /*
     |--------------------------------------------------------------------------
-    | Open-admin route settings
+    | Laravel-admin route settings
     |--------------------------------------------------------------------------
     |
     | The routing configuration of the admin page, including the path prefix,
@@ -67,7 +67,7 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Open-admin install directory
+    | Laravel-admin install directory
     |--------------------------------------------------------------------------
     |
     | The installation directory of the controller and routing configuration
@@ -79,7 +79,7 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Open-admin html title
+    | Laravel-admin html title
     |--------------------------------------------------------------------------
     |
     | Html title for all pages.
@@ -99,7 +99,7 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Open-admin auth setting
+    | Laravel-admin auth setting
     |--------------------------------------------------------------------------
     |
     | Authentication settings for all admin pages. Include an authentication
@@ -124,7 +124,7 @@ return [
         'providers' => [
             'admin' => [
                 'driver' => 'eloquent',
-                'model'  => OpenAdmin\Admin\Auth\Database\Administrator::class,
+                'model'  => Encore\Admin\Auth\Database\Administrator::class,
             ],
         ],
 
@@ -133,11 +133,6 @@ return [
 
         // Redirect to the specified URI when user is not authorized.
         'redirect_to' => 'auth/login',
-
-        // Protect agaist brute force attacks
-        'throttle_logins'   => true,
-        'throttle_attempts' => 5,
-        'throttle_timeout'  => 900, // in seconds
 
         // The URIs that should be excluded from authorization.
         'excepts' => [
@@ -148,7 +143,7 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Open-admin upload setting
+    | Laravel-admin upload setting
     |--------------------------------------------------------------------------
     |
     | File system configuration for form upload files and images, including
@@ -169,10 +164,10 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Open-admin database settings
+    | Laravel-admin database settings
     |--------------------------------------------------------------------------
     |
-    | Here are database settings for open-admin builtin model & tables.
+    | Here are database settings for laravel-admin builtin model & tables.
     |
     */
     'database' => [
@@ -182,19 +177,19 @@ return [
 
         // User tables and model.
         'users_table' => 'admin_users',
-        'users_model' => OpenAdmin\Admin\Auth\Database\Administrator::class,
+        'users_model' => Encore\Admin\Auth\Database\Administrator::class,
 
         // Role table and model.
         'roles_table' => 'admin_roles',
-        'roles_model' => OpenAdmin\Admin\Auth\Database\Role::class,
+        'roles_model' => Encore\Admin\Auth\Database\Role::class,
 
         // Permission table and model.
         'permissions_table' => 'admin_permissions',
-        'permissions_model' => OpenAdmin\Admin\Auth\Database\Permission::class,
+        'permissions_model' => Encore\Admin\Auth\Database\Permission::class,
 
         // Menu table and model.
         'menu_table' => 'admin_menu',
-        'menu_model' => OpenAdmin\Admin\Auth\Database\Menu::class,
+        'menu_model' => Encore\Admin\Auth\Database\Menu::class,
 
         // Pivot table for table above.
         'operation_log_table'    => 'admin_operation_log',
@@ -209,7 +204,7 @@ return [
     | User operation log setting
     |--------------------------------------------------------------------------
     |
-    | By setting this option to open or close operation log in open-admin.
+    | By setting this option to open or close operation log in laravel-admin.
     |
     */
     'operation_log' => [
@@ -230,15 +225,6 @@ return [
         'except' => [
             env('ADMIN_ROUTE_PREFIX', 'admin').'/auth/logs*',
         ],
-
-        /*
-         * Replace input fields that should not be logged
-         */
-        'filter_input' => [
-            'token'             => '*****-filtered-out-*****',
-            'password'          => '*****-filtered-out-*****',
-            'password_remember' => '*****-filtered-out-*****',
-        ],
     ],
 
     /*
@@ -253,7 +239,7 @@ return [
     | Indicates whether to check menu roles.
     |--------------------------------------------------------------------------
     */
-    'check_menu_roles' => true,
+    'check_menu_roles'       => true,
 
     /*
     |--------------------------------------------------------------------------
@@ -263,28 +249,33 @@ return [
     | Set a default avatar for newly created users.
     |
     */
-    'default_avatar' => '/vendor/open-admin/open-admin/gfx/user.svg',
+    'default_avatar' => '/vendor/laravel-admin/AdminLTE/dist/img/user2-160x160.jpg',
 
     /*
     |--------------------------------------------------------------------------
     | Admin map field provider
     |--------------------------------------------------------------------------
     |
-    | Supported: "openstreetmaps", "tencent", "google", "yandex".
+    | Supported: "tencent", "google", "yandex".
     |
     */
-    'map_provider' => 'openstreetmaps',
+    'map_provider' => 'google',
 
     /*
     |--------------------------------------------------------------------------
     | Application Skin
     |--------------------------------------------------------------------------
     |
-    | A custom class to overwrite your admin panel looks.
-    | The orginal adminlte theme is not used anymore.
+    | This value is the skin of admin pages.
+    | @see https://adminlte.io/docs/2.4/layout
+    |
+    | Supported:
+    |    "skin-blue", "skin-blue-light", "skin-yellow", "skin-yellow-light",
+    |    "skin-green", "skin-green-light", "skin-purple", "skin-purple-light",
+    |    "skin-red", "skin-red-light", "skin-black", "skin-black-light".
     |
     */
-    'skin' => 'your-custom-skin-class',
+    'skin' => env('ADMIN_SKIN', 'skin-green'),
 
     /*
     |--------------------------------------------------------------------------
@@ -292,12 +283,13 @@ return [
     |--------------------------------------------------------------------------
     |
     | This value is the layout of admin pages.
+    | @see https://adminlte.io/docs/2.4/layout
     |
     | Supported: "fixed", "layout-boxed", "layout-top-nav", "sidebar-collapse",
     | "sidebar-mini".
     |
     */
-    'layout' => ['sidebar-mini', 'sidebar-collapse'],
+    'layout' => ['fixed'],
 
     /*
     |--------------------------------------------------------------------------
@@ -314,7 +306,7 @@ return [
     | Show version at footer
     |--------------------------------------------------------------------------
     |
-    | Whether to display the version number of open-admin at the footer of
+    | Whether to display the version number of laravel-admin at the footer of
     | each page
     |
     */
@@ -367,14 +359,17 @@ return [
     | Enable/Disable sidebar menu search
     |--------------------------------------------------------------------------
     */
-    'enable_menu_search' => true,
+    'enable_menu_search' => false,
 
     /*
     |--------------------------------------------------------------------------
-    | Enable/Disable user_panel in sidebar
+    | Exclude route from generate menu command
     |--------------------------------------------------------------------------
     */
-    'enable_user_panel' => false,
+    'menu_exclude' => [
+        '_handle_selectable_',
+        '_handle_renderable_',
+    ],
 
     /*
     |--------------------------------------------------------------------------
@@ -385,10 +380,10 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | The global Grid action display class. (Actions::class, DropdownActions:class or ContextMenuActions::class)
+    | The global Grid action display class.
     |--------------------------------------------------------------------------
     */
-    'grid_action_class' => \OpenAdmin\Admin\Grid\Displayers\Actions\Actions::class,
+    'grid_action_class' => \Encore\Admin\Grid\Displayers\DropdownActions::class,
 
     /*
     |--------------------------------------------------------------------------
@@ -406,7 +401,7 @@ return [
     |--------------------------------------------------------------------------
     |
     | You can find all available extensions here
-    | https://github.com/open-admin-extensions.
+    | https://github.com/laravel-admin-extensions.
     |
     */
     'extensions' => [

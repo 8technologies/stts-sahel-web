@@ -10,7 +10,7 @@ use \App\Models\CropVariety;
 
 
 class Crop extends Model
-{  
+{
     protected $fillable = [
         'crop_name',
         'crop_code',
@@ -27,11 +27,7 @@ class Crop extends Model
 
     public function inspection_types()
     {
-        $pivotTable = 'crop_inspection_type';
-
-        $relatedModel = InspectionType::class;
-
-        return $this->belongsToMany($relatedModel, $pivotTable, 'crop_id', 'inspection_type_id');
+        return $this->hasMany(InspectionType::class, 'crop_id');
     }
 
     public function seed_producers(): BelongsToMany
@@ -42,7 +38,4 @@ class Crop extends Model
 
         return $this->belongsToMany($relatedModel, $pivotTable, 'crop_id', 'seed_producer_id');
     }
-
-
-   
 }

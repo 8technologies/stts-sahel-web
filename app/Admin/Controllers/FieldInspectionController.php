@@ -2,14 +2,11 @@
 
 namespace App\Admin\Controllers;
 
-use OpenAdmin\Admin\Controllers\AdminController;
-use OpenAdmin\Admin\Form;
-use OpenAdmin\Admin\Grid;
-use OpenAdmin\Admin\Show;
+use Encore\Admin\Controllers\AdminController;
+use Encore\Admin\Form;
+use Encore\Admin\Grid;
+use Encore\Admin\Show;
 use \App\Models\FieldInspection;
-use \App\Models\CustomValidation;
-use OpenAdmin\Admin\Facades\Admin;
-use OpenAdmin\Admin\Auth\Database\Administrator;
 
 class FieldInspectionController extends AdminController
 {
@@ -18,7 +15,7 @@ class FieldInspectionController extends AdminController
      *
      * @var string
      */
-    protected $title = 'FieldInspection';
+    protected $title = 'Field Inspections';
 
     /**
      * Make a grid builder.
@@ -27,53 +24,69 @@ class FieldInspectionController extends AdminController
      */
     protected function grid()
     {
+        // $m = FieldInspection::find(3);
+        // $m->is_done = 0;
+        // $m->field_decision = 'rejected';
+        // $m->save();
+        // die("romina");
         $grid = new Grid(new FieldInspection());
-        $user = Admin::user();
-        if($user->inRoles(['basic-user','administrator']))
-        {
-            $grid->disableCreateButton();
-            $grid->actions(function ($actions) 
-            {
-                $actions->disableEdit();
-            
-            });
-        }
 
-        $grid->column('id', __('Id'));
-        $grid->column('applicant_id', __('Applicant id'))->display (function ($applicant_id) 
-        {
-            return Administrator::find($applicant_id)->name;
-        });
-
-        
-        $grid->column('field_inspection_form_number', __('Field inspection form number'));
-        $grid->column('crop_variety', __('Crop variety'))->display (function ($crop_variety) 
-        {
-            return $crop_variety['crop_variety_name'];
-        });
-        $grid->column('inspection_type', __('Inspection type'))->display (function ($inspection_type_id) 
-        {
-            return $inspection_type_id['inspection_type_name'];
-        });
-    
-        $grid->column('inspector_id', __('Inspector '))->display (function ($inspection_type_id) 
-        {
-            return Administrator::find($inspection_type_id)->name;
-        });
-        $grid->column('is_active', __('Status'))->display (function ($is_active) 
-        {
-            if($is_active == 1 )
-            {
-                return "<span class='badge bg-warning'>Active</span>";
-            }
-            else
-            {
-                return "<span class='badge bg-danger'>Inactive</span>";
-            }
-        });
-        $grid->column('field_decision', __('Field decision'));
-        $grid->column('inspection_date', __('Inspection date'));
       
+
+
+        if (!auth('admin')->user()->isRole('commissioner')) {
+
+            if (!auth('admin')->user()->isRole('inspector')) {
+                $grid->model()->where('applicant_id', auth('admin')->user()->id);
+            } else {
+                $grid->model()->where('inspector_id', auth('admin')->user()->id);
+            }
+        }
+        $grid->model()->orderBy('order_number', 'asc');
+        $grid->column('created_at', __('Date'))->display(function ($created_at) {
+            return date('d-m-Y', strtotime($created_at));
+        });
+
+        $grid->actions(function ($actions) {
+            $actions->disableDelete();
+            if ($actions->row->is_done == 1) {
+                $actions->disableEdit();
+            }
+            if ($actions->row->is_active != 1) {
+                $actions->disableEdit();
+            }
+        });
+
+        // $grid->column('field_inspection_form_number', __('Field inspection form number'));
+        // $grid->column('crop_declaration_id', __('Crop declaration id'));
+        // $grid->column('crop_variety_id', __('Crop variety id'));
+        // $grid->column('inspection_type_id', __('Inspection type id'));
+        // $grid->column('applicant_id', __('Applicant id'));
+        // $grid->column('physical_address', __('Physical address'));
+        // $grid->column('type_of_inspection', __('Type of inspection'));
+        // $grid->column('field_size', __('Field size'));
+        // $grid->column('seed_generation', __('Seed generation'));
+        // $grid->column('crop_condition', __('Crop condition'));
+        // $grid->column('field_spacing', __('Field spacing'));
+        // $grid->column('estimated_yield', __('Estimated yield'));
+        // $grid->column('remarks', __('Remarks'));
+        // $grid->column('inspector_id', __('Inspector id'));
+        // $grid->column('signature', __('Signature'));
+        $grid->column('field_decision', __('Field decision'));
+        $grid->column('is_active', __('Is active'))->using([
+            0 => 'Not active',
+            1 => 'Active'
+        ])->filter([
+            0 => 'Not active',
+            1 => 'Active'
+        ])->dot([
+            0 => 'warning',
+            1 => 'success'
+        ]);
+        $grid->column('is_done', __('Is done'));
+        $grid->column('inspection_date', __('Inspection date'));
+
+        $grid->column('order_number', __('Order number'));
 
         return $grid;
     }
@@ -87,11 +100,6 @@ class FieldInspectionController extends AdminController
     protected function detail($id)
     {
         $show = new Show(FieldInspection::findOrFail($id));
-        $show->panel()->tools(function ($tools) 
-        {
-            $tools->disableDelete();
-        });
-       
 
         $show->field('id', __('Id'));
         $show->field('field_inspection_form_number', __('Field inspection form number'));
@@ -110,9 +118,12 @@ class FieldInspectionController extends AdminController
         $show->field('inspector_id', __('Inspector id'));
         $show->field('signature', __('Signature'));
         $show->field('field_decision', __('Field decision'));
+        $show->field('is_active', __('Is active'));
+        $show->field('is_done', __('Is done'));
         $show->field('inspection_date', __('Inspection date'));
         $show->field('created_at', __('Created at'));
         $show->field('updated_at', __('Updated at'));
+        $show->field('order_number', __('Order number'));
 
         return $show;
     }
@@ -125,61 +136,32 @@ class FieldInspectionController extends AdminController
     protected function form()
     {
         $form = new Form(new FieldInspection());
-        $user = Admin::user();
-        $form->tools(function (Form\Tools $tools) 
-        {
-            $tools->disableDelete();
-        });
 
-        if($form->isEditing())
-        {
-            //get id of the model being edited
-              $model_id = request()->route()->parameters()['field_inspection'];
-            //get the field inspection status
-           $field_inspection= CustomValidation::validateFieldInspectionStatus('FieldInspection', $model_id);
-           if($field_inspection == false){
-             admin_error('This inspection has either already been submitted and cannot be edited,or it has not been approved');
-             $form->footer(function ($footer) {
+        $form->display('crop_variety_id', __('Crop variety id'));
+        $form->display('inspection_type_id', __('Inspection type id'));
+        $form->display('applicant_id', __('Applicant id'));
+        $form->display('physical_address', __('Physical address'));
+        $form->display('inspector_id', __('Inspector'));
 
-                // disable reset btn
-                $footer->disableReset();
-            
-                // disable submit btn
-                $footer->disableSubmit();
-            
-                // disable `View` checkbox
-                $footer->disableViewCheck();
-            
-                // disable `Continue editing` checkbox
-                $footer->disableEditingCheck();
-            
-                // disable `Continue Creating` checkbox
-                $footer->disableCreatingCheck();
-            
-            });
-           }
-        }
+        $form->text('field_inspection_form_number', __('Field inspection form number'));
+        $form->decimal('field_size', __('Field size'));
+        $form->text('type_of_inspection', __('Type of inspection'));
+        $form->text('seed_generation', __('Seed generation'));
+        $form->text('crop_condition', __('Crop condition'));
+        $form->text('field_spacing', __('Field spacing'));
+        $form->decimal('estimated_yield', __('Estimated yield'));
+        $form->text('signature', __('Signature'));
 
-         //check if the user is an inspector
-         if ($user->inRole(['inspector','developer'])) 
-         {
-            $form->text('field_inspection_form_number', __('Field inspection form number'));
-            $form->text('crop_declaration_id', __('Crop declaration id'));
-            $form->number('crop_variety_id', __('Crop variety id'));
-            $form->number('inspection_type_id', __('Inspection type id'));
-            $form->text('applicant_id', __('Applicant id'));
-            $form->text('physical_address', __('Physical address'));
-            $form->text('type_of_inspection', __('Type of inspection'));
-            $form->decimal('field_size', __('Field size'));
-            $form->text('seed_generation', __('Seed generation'));
-            $form->text('crop_condition', __('Crop condition'));
-            $form->text('field_spacing', __('Field spacing'));
-            $form->decimal('estimated_yield', __('Estimated yield'));
-            $form->textarea('remarks', __('Remarks'));
-            $form->text('signature', __('Signature'));
-            $form->radio('field_decision', __('Field decision'))->options(['1' => 'Approved', '0'=> 'Rejected'])->default('1');
-            $form->date('inspection_date', __('Inspection date'))->default(date('Y-m-d'));    
-         }
+        $form->divider();
+
+        $form->select('field_decision', __('Field Decision'))
+            ->options([
+                'accepted' => 'Approved',
+                'rejected' => 'Rejected'
+            ])
+            ->rules('required');
+
+        $form->textarea('remarks', __('Remarks'));
 
         return $form;
     }

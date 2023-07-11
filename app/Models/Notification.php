@@ -5,8 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Mail;
-use OpenAdmin\Admin\Facades\Admin;
-use OpenAdmin\Admin\Auth\Database\Administrator;
+use Encore\Admin\Facades\Admin;
+use Encore\Admin\Auth\Database\Administrator;
 use App\Mail\MyNotification;
 
 class Notification extends Model

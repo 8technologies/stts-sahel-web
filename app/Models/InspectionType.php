@@ -13,16 +13,19 @@ class InspectionType extends Model
         'inspection_type_name',
         'order',
         'period_after_planting',
-        
+
     ];
 
     public function crops()
     {
         $pivotTable = 'crop_inspection_types';
-
         $relatedModel = InspectionType::class;
-
         return $this->belongsToMany($relatedModel, $pivotTable, 'inspection_type_id', 'crop_id');
+    }
+    
+    public function crop()
+    {
+        return $this->belongsTo(Crop::class);
     }
 
     public function crop_varieties()
@@ -31,6 +34,6 @@ class InspectionType extends Model
 
         $relatedModel = InspectionType::class;
 
-        return $this->belongsToMany($relatedModel, $pivotTable,'inspection_type_id', 'crop_variety_id' );
+        return $this->belongsToMany($relatedModel, $pivotTable, 'inspection_type_id', 'crop_variety_id');
     }
 }

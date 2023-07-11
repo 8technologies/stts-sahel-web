@@ -3,11 +3,10 @@
 namespace App\Admin\Controllers;
 
 use App\Http\Controllers\Controller;
-use OpenAdmin\Admin\Admin;
-use OpenAdmin\Admin\Controllers\Dashboard;
-use OpenAdmin\Admin\Layout\Column;
-use OpenAdmin\Admin\Layout\Content;
-use OpenAdmin\Admin\Layout\Row;
+use Encore\Admin\Controllers\Dashboard;
+use Encore\Admin\Layout\Column;
+use Encore\Admin\Layout\Content;
+use Encore\Admin\Layout\Row;
 
 class HomeController extends Controller
 {
@@ -15,14 +14,21 @@ class HomeController extends Controller
     {
         return $content
             ->title('Dashboard')
-            ->description('Under Design...');
-            // ->row(function (Row $row) {
-            //     $row->column(12, function (Column $column) {
-            //         $column->append(Dashboard::cards());
-            //     });
-                 
-            // });
-            // return('Under design');
-          
+            ->description('Description...')
+            ->row(Dashboard::title())
+            ->row(function (Row $row) {
+
+                $row->column(4, function (Column $column) {
+                    $column->append(Dashboard::environment());
+                });
+
+                $row->column(4, function (Column $column) {
+                    $column->append(Dashboard::extensions());
+                });
+
+                $row->column(4, function (Column $column) {
+                    $column->append(Dashboard::dependencies());
+                });
+            });
     }
 }

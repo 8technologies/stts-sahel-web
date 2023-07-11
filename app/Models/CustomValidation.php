@@ -3,8 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
-use OpenAdmin\Admin\Facades\Admin;
+use Illuminate\Database\Eloquent\Model; 
 use App\Models\FieldInspection;
 
 
