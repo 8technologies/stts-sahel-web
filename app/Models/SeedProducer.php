@@ -48,13 +48,13 @@ class SeedProducer extends Model
         //call back to send a notification to the user
         self::created(function ($model) 
         {
-            Notification::send_notification($model, 'SeedProducer', request()->segment(count(request()->segments())));
+            //Notification::send_notification($model, 'SeedProducer', request()->segment(count(request()->segments())));
         });
 
         self::updated(function ($model) 
         {
         //call back to send a notification to the user after form is updated
-            Notification::update_notification($model, 'SeedProducer', request()->segment(count(request()->segments())-1));
+           /*  Notification::update_notification($model, 'SeedProducer', request()->segment(count(request()->segments())-1));
             if($model->status == 'accepted'){
                 AdminRoleUser::where([
                     'user_id' => $model->user_id
@@ -71,7 +71,7 @@ class SeedProducer extends Model
                 $r->user_id = $model->user_id;
                 $r->role_id = 3;
                 $r->save();
-            }
+            } */
         });
 
     }
