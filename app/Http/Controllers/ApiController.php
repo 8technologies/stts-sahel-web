@@ -24,6 +24,8 @@ class ApiController extends Controller
      */
     public function __construct()
     {
+        header('Content-Type: application/json');
+ 
         $requestUrl = request()->path();
         $segments = explode('/', $requestUrl);
         $lastSegment = end($segments);

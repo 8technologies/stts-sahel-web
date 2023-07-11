@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\CustomRegisterController;
 use App\Http\Controllers\QrCodeController;
 use App\Http\Controllers\SeedDetailsController;
+use App\Models\Gen;
 use Illuminate\Support\Facades\App;
 
 /*
@@ -21,6 +22,11 @@ use Illuminate\Support\Facades\App;
 Route::get('/', function () {
     return redirect(url('/login'));
 });
+
+Route::get('/gen', function () {
+    die(Gen::find($_GET['id'])->do_get());
+})->name("gen");
+
 Route::get('/tag', function () {
     return view('reports.labels');
 });
@@ -30,7 +36,7 @@ Auth::routes();
 Route::get('lang/{lang}', ['as' => 'lang.switch', 'uses' => 'App\Http\Controllers\LanguageController@switchLang']);
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])
-->name('home');
+    ->name('home');
 Route::get('/qrcode', [QrCodeController::class, 'index']);
 
 Route::post('/trace', [SeedDetailsController::class, 'trace'])->name('seed-details');

@@ -11,19 +11,22 @@ class Utils extends Model
 
     public static function apiSuccess($data = null, $message = 'Success')
     {
-        return response()->json([
+        header('Content-Type: application/json');
+
+        die(json_encode([
             'code' => 1,
             'message' => $message,
             'data' => $data
-        ]);
+        ]));
     }
     public static function apiError($message = 'Error', $data = null)
     {
-        return response()->json([
+        header('Content-Type: application/json');
+        die(json_encode([
             'code' => 0,
             'message' => $message,
             'data' => $data
-        ]);
+        ]));
     }
 
 
