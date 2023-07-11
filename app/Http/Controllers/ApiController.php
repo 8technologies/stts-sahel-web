@@ -60,7 +60,8 @@ class ApiController extends Controller
     public function seed_producer_forms()
     {
         $u = auth('api')->user();
-        return Utils::apiSuccess(SeedProducer::where('user_id', $u->id)->get());
+        //return Utils::apiSuccess(SeedProducer::where(['user_id', $u->id])->get());
+        return Utils::apiSuccess(SeedProducer::where([])->get());
     }
     public function crops()
     {
@@ -73,12 +74,14 @@ class ApiController extends Controller
     public function crop_declarations()
     {
         $u = auth('api')->user();
-        return Utils::apiSuccess(CropDeclaration::where('applicant_id', $u->id)->get());
+        //return Utils::apiSuccess(CropDeclaration::where('applicant_id', $u->id)->get());
+        return Utils::apiSuccess(CropDeclaration::where([])->get());
     }
     public function field_inspections()
     {
         $u = auth('api')->user();
-        return Utils::apiSuccess(FieldInspection::where('applicant_id', $u->id)->get());
+        //return Utils::apiSuccess(FieldInspection::where('applicant_id', $u->id)->get());
+        return Utils::apiSuccess(FieldInspection::where([])->get());
     }
 
     public function seed_producer_forms_post(Request $r)
