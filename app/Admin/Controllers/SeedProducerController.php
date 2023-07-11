@@ -161,6 +161,76 @@ class SeedProducerController extends AdminController
         });
         $user = Admin::user();
 
+         //check the id of the user before editing the form
+         if ($form->isEditing()) 
+         {
+              //get request id
+             $id = request()->route()->parameters()['seed-producer'];
+             //get the form
+              $seed_producer = SeedProducer::find($id);
+ 
+              //checking the user before accessing the form to ensure the right user accesses the right form
+             if ($user->isRole('basic-user'))
+             {
+             
+                 if ($user->id != $seed_producer->user_id) 
+                 {
+                     $form->html('<div class="alert alert-danger">You cannot edit this form </div>');
+                     $form->footer(function ($footer) 
+                     {
+ 
+                         // disable reset btn
+                         $footer->disableReset();
+ 
+                         // disable submit btn
+                         $footer->disableSubmit();
+ 
+                         // disable `View` checkbox
+                         $footer->disableViewCheck();
+ 
+                         // disable `Continue editing` checkbox
+                         $footer->disableEditingCheck();
+ 
+                         // disable `Continue Creating` checkbox
+                         $footer->disableCreatingCheck();
+ 
+                     });
+                 }
+                 
+             }
+             
+             //checking if the form has been inspected by the inspector if it is prevent him from editing it again
+             if($user->isRole('inspector'))
+             {
+                  if($seed_producer->status != 2)
+                 {
+                     $form->html('<div class="alert alert-danger">You cannot edit this form, please commit the commissioner to make any changes. </div>');
+                     $form->footer(function ($footer) 
+                     {
+ 
+                         // disable reset btn
+                         $footer->disableReset();
+ 
+                         // disable submit btn
+                         $footer->disableSubmit();
+ 
+                         // disable `View` checkbox
+                         $footer->disableViewCheck();
+ 
+                         // disable `Continue editing` checkbox
+                         $footer->disableEditingCheck();
+ 
+                         // disable `Continue Creating` checkbox
+                         $footer->disableCreatingCheck();
+ 
+                     });
+                 }
+               
+             }
+ 
+             
+         }
+
         if ($form->isCreating()) 
         {
             $form->hidden('user_id', __('Administrator id'))->value($user->id);
@@ -169,6 +239,67 @@ class SeedProducerController extends AdminController
         {
             $form->hidden('user_id', __('Administrator id'));
         }
+
+        $form->saving(function (Form $form) 
+        {
+            $producer_category = $form->producer_category;
+            $seed_producer = SeedProducer::where('producer_category', $producer_category)->where('user_id', $user->id)->first();
+            if ($seed_producer) 
+            {
+                
+                    if($form->isEditing())
+                    {
+                        $form_id = request()->route()->parameters()['seed-producer'];
+                        $existing_seed_producer = SeedProducer::find($form_id);
+                      //count the number of forms with the same type
+                        $count = SeedProducer::where('producer_category', $producer_category)->where('user_id', $user->id)->count();
+                        if($count > 1)
+                        {
+                           
+                        }
+                        elseif($count == 1)
+                        { 
+                            return  response(' <p class="alert alert-warning"> You cannot create a new SR4 form  while having PENDING one of the same category. <a href="/admin/form-sr4s"> Go Back </a></p> ');
+                            //check if what is being passed to the form is the same as the one in the database
+                            if($form_sr4->id == $formSr4->id)
+                            {
+                                return true;
+                            }
+                            else
+                            {
+
+                                if(!Utils::can_create_form($form_sr4))
+                                {
+                                    return  response(' <p class="alert alert-warning"> You cannot create a new SR4 form  while having PENDING one of the same category. <a href="/admin/form-sr4s"> Go Back </a></p> ');
+                                }
+                                
+                                //check if its still valid
+                                if (Utils::can_renew_app_form($form_sr4)) 
+                                {
+                                    return  response(' <p class="alert alert-warning"> You cannot create a new SR4 form  while having VALID one of the same category. <a href="/admin/form-sr4s"> Go Back </a></p> ');   
+                                }
+                            }
+                        }
+                        else{
+                             return true;
+                        }
+
+                    }
+                    //check if the status of the form is pending, rejected,halted or accepted
+                    if(!Utils::can_create_form($form_sr4))
+                    {
+                        return  response(' <p class="alert alert-warning"> You cannot create a new SR4 form  while having PENDING one of the same category. <a href="/admin/form-sr4s/create"> Go Back </a></p> ');
+                    }
+                    
+                    //check if its still valid
+                    if (Utils::can_renew_app_form($form_sr4)) 
+                    {
+                        return  response(' <p class="alert alert-warning"> You cannot create a new SR4 form  while having VALID one of the same category. <a href="/admin/form-sr4s/create"> Go Back </a></p> ');   
+                    }
+                $form->accept_declaration = 1;
+            }
+                     
+        });
 
         //check if the user is a basic user
         if ($user->isRole('basic-user')) 
