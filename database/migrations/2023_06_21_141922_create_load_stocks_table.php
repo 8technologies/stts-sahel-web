@@ -13,17 +13,19 @@ return new class extends Migration
     {
         Schema::create('load_stocks', function (Blueprint $table) {
             $table->id();
-            $table->string('load_stock_number');
-            $table->string('planting_return_number');
-            $table->string('name_of_applicant');
-            $table->string('registration_number');
-            $table->string('seed_class');
-            $table->unsignedFloat('field_size')->comment('In Acres');
-            $table->unsignedFloat('yield_quantity');
-            $table->date('last_field_inspection_date');
-            $table->date('load_stock_date');
-            $table->text('last_field_inspection_remarks');
+            $table->string('load_stock_number')->nullable();
+            $table->unsignedBigInteger('crop_declarattion_id')->nullable();
+            $table->string('name_of_applicant')->nullable();
+            $table->string('registration_number')->nullable();
+            $table->string('seed_class')->nullable();
+            $table->unsignedFloat('field_size')->comment('In Acres')->nullable();
+            $table->unsignedFloat('yield_quantity')->nullable();
+            $table->date('last_field_inspection_date')->nullable();
+            $table->date('load_stock_date')->nullable();
+            $table->text('last_field_inspection_remarks')->nullable();
             $table->timestamps();
+
+            $table->foreign('crop_declarattion_id')->references('id')->on('crop_declarations')->onDelete('cascade');
         });
     }
 

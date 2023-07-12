@@ -35,6 +35,11 @@ class FieldInspection extends Model
         return $this->belongsTo(CropVariety::class);
     }
 
+    public function crop_declaration()
+    {
+        return $this->belongsTo(CropDeclaration::class);
+    }
+    
     public function inspection_type()
     {
         return $this->belongsTo(InspectionType::class);

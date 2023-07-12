@@ -124,7 +124,6 @@ class SeedProducerController extends AdminController
         if($u->isRole('commissioner')){
             $form->display('producer_registration_number', __('Producer registration number'));
             $form->display('producer_category', __('Producer category'))->options([
-                'Individual-grower' => 'Individual-grower',
                 'Seed-breeder' => 'Seed-breeder',
                 'Seed-Company' => 'Seed-Company',
             ]);
@@ -145,7 +144,7 @@ class SeedProducerController extends AdminController
             
         $form->file('receipt', __('Receipt'))->readonly();
         }else{
-            $form->text('producer_registration_number', __('Producer registration number'));
+           
             $form->select('producer_category', __('Producer category'))->options([
                 'Individual-grower' => 'Individual-grower',
                 'Seed-breeder' => 'Seed-breeder',
@@ -187,6 +186,7 @@ class SeedProducerController extends AdminController
             ])
             ->default('pending');
             $form->textarea('status_comment', __('Status comment')); 
+            $form->text('producer_registration_number', __('Producer registration number'))->default(rand(1000,100000));
             $form->text('grower_number', __('Grower number'))->default(rand(1000,100000));
             $form->datetime('valid_from', __('Valid from'))->default(date('Y-m-d H:i:s'));
             $form->datetime('valid_until', __('Valid until'))->default(date('Y-m-d H:i:s'));

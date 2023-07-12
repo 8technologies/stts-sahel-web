@@ -21,4 +21,9 @@ class LoadStock extends Model
         'load_stock_date',
         'last_field_inspection_remarks',
     ];
+
+    public function crop_declaration()
+    {
+        return $this->belongsTo(CropDeclaration::class);
+    }
 }

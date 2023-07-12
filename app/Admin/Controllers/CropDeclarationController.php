@@ -30,11 +30,13 @@ class CropDeclarationController extends AdminController
     protected function grid()
     {
         $grid = new Grid(new CropDeclaration());
+       
         $u = auth()->user();
         if ($u->isRole('grower')) {
             $cd = SeedProducer::where(['user_id' => $u->id, 'status' => 'accepted'])->first();
             if ($cd == null) {
                 $grid->disableCreateButton();
+                return admin_warning('No Valid Seed Producer Form Found.', 'You need to have at least one valid Seed Producer.');
             }
         } else {
             $grid->disableCreateButton();
