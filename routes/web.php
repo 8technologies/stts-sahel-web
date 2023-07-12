@@ -6,7 +6,7 @@ use App\Http\Controllers\QrCodeController;
 use App\Http\Controllers\SeedDetailsController;
 use App\Models\Gen;
 use Illuminate\Support\Facades\App;
-
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -50,6 +50,6 @@ Route::get('certificate', function () {
 
 Route::get('label', function () {
     $pdf = App::make('dompdf.wrapper');
-    $pdf->loadHTML(view('reports/label'));
+    $pdf->loadHTML(view('reports/labels'));
     return $pdf->stream();
 });

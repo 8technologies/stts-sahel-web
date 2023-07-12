@@ -37,13 +37,12 @@ class SeedLabelController extends AdminController
     {
         $grid = new Grid(new SeedLabel());
         $user = Admin::user();
-
-        //check the status of the form before displaying it to labosem
-        if(Admin::user()->isRole('labosem')){
-            $grid->model()->where('status', '=', 'approved');
-        }
-
-        
+      
+       //check the status of the form before displaying it to labosem
+       if(Admin::user()->isRole('labosem')){
+        $grid->model()->where('status', '=', 'approved');
+       
+    }
 
        //disable create button and delete button for admin users
        if(!$user->inRoles(['basic-user','grower'])){
@@ -62,6 +61,8 @@ class SeedLabelController extends AdminController
         $grid->column('quantity_of_seed', __('Quantity of seed'));
         $grid->column('proof_of_payment', __('Proof of payment'));
         $grid->column('request_date', __('Request date'));
+        
+        
        
 
         return $grid;
@@ -76,7 +77,7 @@ class SeedLabelController extends AdminController
     protected function detail($id)
     {
         $show = new Show(SeedLabel::findOrFail($id));
-
+       
         $show->field('id', __('Id'));
         $show->field('seed_label_request_number', __('Seed label request number'));
         $show->field('applicant_id', __('Applicant name'));
@@ -87,8 +88,72 @@ class SeedLabelController extends AdminController
         $show->field('proof_of_payment', __('Proof of payment'));
         $show->field('request_date', __('Request date'));
         $show->field('applicant_remarks', __('Applicant remarks'));
-        $show->field('created_at', __('Created at'));
-        $show->field('updated_at', __('Updated at'));
+
+        //show the details in the pivot table
+        $show->packages('Label packages', function ($packages) {
+            $packages->resource('/admin/label-packages');
+            $packages->id();
+            $packages->package_id('Label package')->display(function ($package_id) {
+                return LabelPackage::find($package_id)->quantity.'kgs'.' @ '.LabelPackage::find($package_id)->price;
+            });
+            $packages->quantity('Quantity');
+            $packages->disableCreateButton();
+            $packages->disableActions();
+            $packages->disableRowSelector();
+            $packages->disableExport();
+            $packages->disableFilter();
+            $packages->disablePagination();
+            $packages->disableColumnSelector();
+            $packages->disableTools();
+            $packages->disableBatchActions();
+            $packages->disablePerPageSelector();
+            $packages->disableCreateButton();
+            $packages->disableActions();
+            $packages->disableRowSelector();
+            $packages->disableExport();
+            $packages->disableFilter();
+            $packages->disablePagination();
+            $packages->disableColumnSelector();
+            $packages->disableTools();
+            $packages->disableBatchActions();
+            $packages->disablePerPageSelector();
+            $packages->disableCreateButton();
+            $packages->disableActions();
+            $packages->disableRowSelector();
+            $packages->disableExport();
+            $packages->disableFilter();
+            $packages->disablePagination();
+            $packages->disableColumnSelector();
+            $packages->disableTools();
+            $packages->disableBatchActions();
+            $packages->disablePerPageSelector();
+            $packages->disableCreateButton();
+            $packages->disableActions();
+            $packages->disableRowSelector();
+            $packages->disableExport();
+            $packages->disableFilter();
+            $packages->disablePagination();
+            $packages->disableColumnSelector();
+            $packages->disableTools();
+            $packages->disableBatchActions();
+            $packages->disablePerPageSelector();
+            $packages->disableCreateButton();
+            $packages->disableActions();
+            $packages->disableRowSelector();
+            $packages->disableExport();
+            $packages->disableFilter();
+            $packages->disablePagination();
+            $packages->disableColumnSelector();
+            $packages->disableTools();
+            $packages->disableBatchActions();
+            $packages->disablePerPageSelector();
+            $packages->disableCreateButton();
+            $packages->disableActions();
+            $packages->disableRowSelector();
+            $packages->disableExport();
+            $packages->disableFilter();
+        });
+       
 
         return $show;
     }
@@ -122,7 +187,6 @@ class SeedLabelController extends AdminController
         $form->text('label_packages', __('Label packages'));
         $form->hasMany('packages', __('Packages'), function (Form\NestedForm $form) {
            //drop down of the price and quantity from the label package table
-           //concatenate the price and quantity from the label package table
               $label_package = LabelPackage::all();
                 $label_package_array = [];
                 foreach($label_package as $label){
@@ -166,6 +230,24 @@ class SeedLabelController extends AdminController
             $form->display('proof_of_payment', __('Proof of payment'));
             $form->display('request_date', __('Request date'))->default(date('Y-m-d'));
             $form->display('applicant_remarks', __('Applicant remarks'));
+            $form->hasMany('packages', __('Packages'), function (Form\NestedForm $form) {
+                //drop down of the price and quantity from the label package table
+                   $label_package = LabelPackage::all();
+                     $label_package_array = [];
+                     foreach($label_package as $label){
+                         $label_package_array[$label->id] = $label->quantity.'kgs'.' @ '.$label->price;
+                     }
+                     $form_id= request()->route()->parameters()['seed_label'];
+                     $seed_label = SeedLabel::find($form_id); 
+                 $form->select('package_id', __('Label package'))->readonly();
+                 $form->display('quantity', __('Quantity'))->readonly();
+                 $link = url('label?id=' . $seed_label->id);
+           
+             //add a print button
+                $form->html('<a href="' . $link . '" class="btn btn-sm btn-success" target="_blank">Print</a>', __('Print'));
+               
+     
+             })->readonly();
             
         }
 
