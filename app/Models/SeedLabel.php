@@ -21,4 +21,10 @@ class SeedLabel extends Model
         'applicant_remarks',
     ];
 
+    public function packages()
+    {
+
+        return $this->hasMany(SeedLabelPackage::class, 'seed_label_id');
+    }
+
 }

@@ -53,25 +53,8 @@ class SeedProducer extends Model
 
         self::updated(function ($model) 
         {
-        //call back to send a notification to the user after form is updated
-           /*  Notification::update_notification($model, 'SeedProducer', request()->segment(count(request()->segments())-1));
-            if($model->status == 'accepted'){
-                AdminRoleUser::where([
-                    'user_id' => $model->user_id
-                ])->delete();
-                $r = new AdminRoleUser();
-                $r->user_id = $model->user_id;
-                $r->role_id = 5;
-                $r->save();
-            }else{
-                AdminRoleUser::where([
-                    'user_id' => $model->user_id
-                ])->delete();
-                $r = new AdminRoleUser();
-                $r->user_id = $model->user_id;
-                $r->role_id = 3;
-                $r->save();
-            } */
+            //Notification::send_notification($model, 'SeedProducer', request()->segment(count(request()->segments())));
+        
         });
 
     }

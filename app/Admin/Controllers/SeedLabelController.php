@@ -16,6 +16,7 @@ use \App\Models\Crop;
 use \App\Models\SeedProducer;
 use \App\Models\CropDeclaration;
 use \App\Models\LoadStock;
+use \App\Models\LabelPackage;
 
 
 class SeedLabelController extends AdminController
@@ -35,13 +36,25 @@ class SeedLabelController extends AdminController
     protected function grid()
     {
         $grid = new Grid(new SeedLabel());
+        $user = Admin::user();
 
         //check the status of the form before displaying it to labosem
         if(Admin::user()->isRole('labosem')){
             $grid->model()->where('status', '=', 'approved');
         }
-      ;
-                
+
+        
+
+       //disable create button and delete button for admin users
+       if(!$user->inRoles(['basic-user','grower'])){
+        
+        $grid->disableCreateButton();
+        $grid->actions(function ($actions) {
+            $actions->disableDelete();
+           
+            
+        });
+    }
         $grid->column('seed_label_request_number', __('Seed label request number'));
         $grid->column('applicant_id', __('Applicant name'));
         $grid->column('registration_number', __('Registration number'));
@@ -101,11 +114,27 @@ class SeedLabelController extends AdminController
         $form->select('seed_lab_id', __('Seed lab id'))->options($seed_lab_id->pluck('seed_lab_test_report_number', 'id'))->required();
         $form->text('seed_label_request_number', __('Seed label request number'));
         $form->text('registration_number', __('Registration number'));
-        $form->text('label_packages', __('Label packages'));
         $form->decimal('quantity_of_seed', __('Quantity of seed'));
-        $form->text('proof_of_payment', __('Proof of payment'));
+        $form->file('proof_of_payment', __('Proof of payment'));
         $form->date('request_date', __('Request date'))->default(date('Y-m-d'));
         $form->textarea('applicant_remarks', __('Applicant remarks'));
+
+        $form->text('label_packages', __('Label packages'));
+        $form->hasMany('packages', __('Packages'), function (Form\NestedForm $form) {
+           //drop down of the price and quantity from the label package table
+           //concatenate the price and quantity from the label package table
+              $label_package = LabelPackage::all();
+                $label_package_array = [];
+                foreach($label_package as $label){
+                    $label_package_array[$label->id] = $label->quantity.'kgs'.' @ '.$label->price;
+                }
+               
+            $form->select('package_id', __('Label package'))->options($label_package_array)->required();
+            $form->number('quantity', __('Quantity'))->required();
+
+          
+
+        });
         }
 
         if($form->isEditing()){
