@@ -17,4 +17,5 @@ Route::group([
     $router->resource('crops', CropController::class);
     $router->resource('inspection-types', InspectionTypeController::class);
     $router->resource('field-inspections', FieldInspectionController::class);
+    $router->resource('gens', GenController::class);  
 });
