@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('seed_labels', function (Blueprint $table) {
             $table->id();
             $table->string('seed_label_request_number');
-            $table->string('applicant_name');
+            $table->string('applicant_id');
             $table->string('registration_number');
             $table->string('seed_lab_id');
             $table->string('label_packages');

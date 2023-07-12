@@ -21,4 +21,6 @@ Route::group([
     $router->resource('load-stocks', LoadStockController::class);
     $router->resource('seed-lab-tests', SeedLabController::class);
     $router->resource('seed-sample-requests', SeedSampleController::class);
+    $router->resource('seed-labels', SeedLabelController::class);
+
 });
