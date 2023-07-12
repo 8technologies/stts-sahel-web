@@ -83,7 +83,7 @@ class ApiController extends Controller
             $u->save();
             $role = new AdminRoleUser();
             $role->user_id = $u->id;
-            $role->role_id = 5;
+            $role->role_id = 3;
             $role->save();
         } catch (\Throwable $th) {
             return Utils::apiError('Error saving user. ' . $th->getMessage());
