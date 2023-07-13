@@ -21,7 +21,7 @@ use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 //route function to go to the login page
 Route::get('/', function () {
-    return redirect(url('/login'));
+    return redirect(admin_url('/auth/login'));
 });
 
 
