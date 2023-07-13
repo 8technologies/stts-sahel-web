@@ -58,7 +58,7 @@
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
 </head>
 <body>
-    <div id="app" style="background: url({{ asset('storage/assets/seeds1.jpg') }}) no-repeat;background-size: cover;">
+    <div id="app" style="background: url({{ asset('storage/assets/seeds.jpg') }}) no-repeat;background-size: cover;">
         <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
             <div class="container">
                 <a class="navbar-brand" href="{{ url('/') }}">

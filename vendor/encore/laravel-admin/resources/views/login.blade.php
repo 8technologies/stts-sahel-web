@@ -53,7 +53,7 @@
     <!-- Scripts -->
   
 </head>
-<body class="hold-transition login-page" style="background: url({{ asset('storage/assets/seeds1.jpg') }}) no-repeat;background-size: cover;">
+<body class="hold-transition login-page" style="background: url({{ asset('storage/assets/seeds.jpg') }}) no-repeat;background-size: cover;">
 <nav class="navbar navbar-default" role="navigation">
     <div class="container">
         <div class="navbar-header">
