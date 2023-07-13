@@ -78,14 +78,34 @@ class SeedLabelController extends AdminController
     {
         $show = new Show(SeedLabel::findOrFail($id));
        
-        $show->field('id', __('Id'));
+            $seed_label = SeedLabel::find($id);
+            //get the users successfully registered seed labs
+            $seed_lab = SeedLab::where('id', $seed_label->seed_lab_id)->first();
+            $crop_declaration = LoadStock::where('id', $seed_lab->load_stock_id)->where('applicant_id', $seed_lab->applicant_id )->value('crop_declaration_id');
+            //get crop variety from crop_declaration id
+            $crop_variety_id = CropDeclaration::where('id', $crop_declaration)->value('crop_variety_id');
+            //get crop variety name from crop_variety id
+            $crop_variety= CropVariety::where('id', $crop_variety_id)->first();
+            //get crop name from crop variety
+            $crop_name = Crop::where('id', $crop_variety->crop_id)->value('crop_name');
         $show->field('seed_label_request_number', __('Seed label request number'));
-        $show->field('applicant_id', __('Applicant name'));
+        $show->field('applicant_id', __('Applicant name'))->as(function ($applicant_id) {
+            return Administrator::where('id', $applicant_id)->value('name');
+        });
+
+        $show->field('id', __('Crop'))->as (function ($crop) use ($crop_name) {
+            return $crop_name;
+        });
+        $show->field('a', __('Variety'))->as (function ($variety) use ($crop_variety) {
+            return $crop_variety->crop_variety_name;
+        });
+        $show->field('', __('Generation'))-> as (function ($generation) use ($crop_variety) {
+            return $crop_variety->crop_variety_generation;
+        });
         $show->field('registration_number', __('Registration number'));
-        $show->field('seed_lab_id', __('Seed lab id'));
         $show->field('label_packages', __('Label packages'));
         $show->field('quantity_of_seed', __('Quantity of seed'));
-        $show->field('proof_of_payment', __('Proof of payment'));
+        $show->file('proof_of_payment', __('Proof of payment'));
         $show->field('request_date', __('Request date'));
         $show->field('applicant_remarks', __('Applicant remarks'));
 
@@ -158,6 +178,12 @@ class SeedLabelController extends AdminController
             $packages->disableRowSelector();
             $packages->disableExport();
             $packages->disableFilter();
+        });
+
+        //disable the edit button and delete button
+        $show->panel()->tools(function ($tools) {
+            $tools->disableEdit();
+            $tools->disableDelete();
         });
        
 
