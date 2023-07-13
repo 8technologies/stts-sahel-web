@@ -1,6 +1,16 @@
 <?php
 $link = public_path('css/bootstrap-print.css');
-$form = App\Models\SeedProducer::find($_GET['id']);
+$package = App\Models\SeedLabelPackage::find($_GET['id']);
+$label =App\Models\LabelPackage::find( $package->package_id);
+$seed_label = App\Models\SeedLabel::find($package->seed_label_id);
+$seed_lab = App\Models\SeedLab::find($seed_label->seed_lab_id);
+$crop_declaration = App\Models\LoadStock::where('id', $seed_lab->load_stock_id)->where('applicant_id', $seed_lab->applicant_id )->value('crop_declaration_id');
+//get crop variety from crop_declaration id
+$crop_variety_id = App\Models\CropDeclaration::where('id', $crop_declaration)->value('crop_variety_id');
+//get crop variety name from crop_variety id
+$crop_variety= App\Models\CropVariety::where('id', $crop_variety_id)->first();
+//get crop name from crop variety
+$crop_name = App\Models\Crop::where('id', $crop_variety->crop_id)->value('crop_name');
 //get current date
 $today = date("F j, Y");
 
@@ -57,35 +67,29 @@ $today = date("F j, Y");
       <div class="form-field-column">
     <div class="card-body">
         <!-- Place the QR code here -->
-        <img src="data:image/png;base64,{{ base64_encode(QrCode::size(200)->generate('66666')) }}" alt="QR Code" />
+        <img src="data:image/png;base64,{{ base64_encode(QrCode::size(200)->generate($seed_lab->lot_number)) }}" alt="QR Code" />
     </div>
 </div>
 
         <div class="form-field-column">
           <div class="form-field">
-            <label for="analysis-number" class="form-field-label">Analysis No.:</label>
-            <p></p>
+            <label for="analysis-number" class="form-field-label">Lot Number:{{$seed_lab->lot_number}}</label>
+            
           </div>
           <div class="form-field">
-            <label for="seed-company" class="form-field-label">Seed Company:</label>
-            <p></p>
+            <label for="seed-company" class="form-field-label">Crop:{{$crop_name}}</label>
+           
           </div>
           <div class="form-field">
-            <label for="registration-number" class="form-field-label">Seed Company Registration Number:</label>
-            <p></p>
+            <label for="registration-number" class="form-field-label">Variety:{{$crop_variety->crop_variety_name}}</label>
+            
           </div>
           <div class="form-field">
-            <label for="seed-category" class="form-field-label">Seed Category (Color):</label>
-            <p></p>
+            <label for="seed-category" class="form-field-label">Quantity:{{ $label->quantity . ' kgs' }}</label>
+            
+
           </div>
-          <div class="form-field">
-            <label for="culture" class="form-field-label">Culture:</label>
-            <p></p>
-          </div>
-          <div class="form-field">
-            <label for="variety" class="form-field-label">Variety:</label>
-            <p></p>
-          </div>
+         
         </div>
       </div>
     </div>

@@ -92,11 +92,17 @@ class SeedLabelController extends AdminController
         //show the details in the pivot table
         $show->packages('Label packages', function ($packages) {
             $packages->resource('/admin/label-packages');
-            $packages->id();
             $packages->package_id('Label package')->display(function ($package_id) {
                 return LabelPackage::find($package_id)->quantity.'kgs'.' @ '.LabelPackage::find($package_id)->price;
             });
+
             $packages->quantity('Quantity');
+              //add a print button with the package id as the id
+              $packages->column('id', __('print'))->display(function ($id) {
+                $link = url('label?id=' . $id);
+           
+                return '<a href="' . $link . '" class="btn btn-sm btn-success" target="_blank">Print</a>';
+            });
             $packages->disableCreateButton();
             $packages->disableActions();
             $packages->disableRowSelector();
@@ -239,13 +245,8 @@ class SeedLabelController extends AdminController
                      }
                      $form_id= request()->route()->parameters()['seed_label'];
                      $seed_label = SeedLabel::find($form_id); 
-                 $form->select('package_id', __('Label package'))->readonly();
+                     $form->select('package_id', __('Label package'))->options($label_package_array)->required();
                  $form->display('quantity', __('Quantity'))->readonly();
-                 $link = url('label?id=' . $seed_label->id);
-           
-             //add a print button
-                $form->html('<a href="' . $link . '" class="btn btn-sm btn-success" target="_blank">Print</a>', __('Print'));
-               
      
              })->readonly();
             
