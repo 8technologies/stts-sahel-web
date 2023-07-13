@@ -34,26 +34,21 @@ class Utils extends Model
     public static function tell_status($status)
     {
 
-        // ->label([
-        //     '' => 'success',
-        //     'pending' => 'warning',
-        //     'approved' => 'success',
-        //     'rejected' => 'danger',
-        //     'halted' => 'danger'
-        // ])
-
         if (!$status)
-            return '<span class="badge bg-warning">Pending</span>';
-        if ($status == 1 || $status == 'pending')
-            return '<span class="badge bg-warning">Pending</span>';
-        if ($status == 3 || $status == 'Inspection assigned')
-            return '<span class="badge bg-warning">Inspection assigned</span>';
-        if ($status == 3 || $status == 'Halted')
-            return '<span class="badge bg-warning">Halted</span>';
-        if ($status == 4 || $status == 'Rejected')
-            return '<span class="badge bg-danger">Rejected</span>';
-        if ($status == 5 || $status == 'accepted')
-            return '<span class="badge badge-success">Accepted</span>';
+            return '<span class="label label-warning">Pending</span>';
+        if ($status == 'pending')
+            return '<span class="label label-warning">Pending</span>';
+        if ($status == 'inspection assigned')
+            return '<span class="label label-warning">Inspection assigned</span>';
+        if ($status == 'halted')
+            return '<span class="label label-warning">Halted</span>';
+        if ($status == 'rejected')
+            return '<span class="label label-danger">Rejected</span>';
+        if ($status == 'accepted')
+            return '<span class="label label-success">Accepted</span>';
+        if ($status == 'printed')
+            return '<span class="badge badge-success">Printed</span>';
+
 
         return $status;
     }

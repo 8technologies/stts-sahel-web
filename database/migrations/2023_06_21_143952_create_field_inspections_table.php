@@ -17,7 +17,7 @@ return new class extends Migration
             $table->unsignedBigInteger('crop_declaration_id')->nullable();
             $table->unsignedBigInteger('crop_variety_id')->nullable();;
             $table->unsignedBigInteger('inspection_type_id')->nullable();;
-            $table->string('applicant_id')->nullable();;
+            $table->unsignedBigInteger('applicant_id')->nullable();;
             $table->string('physical_address')->nullable();;
             $table->string('type_of_inspection')->nullable();;
             $table->unsignedFloat('field_size')->nullable();;
@@ -29,13 +29,15 @@ return new class extends Migration
             $table->string('inspector_id')->nullable();
             $table->string('signature')->nullable();
             $table->string('field_decision')->nullable();
-            $table->boolean('is_active');
+            $table->integer('is_active');
+            $table->integer('is_done');
             $table->date('inspection_date')->nullable();
             $table->timestamps();
 
             $table->foreign('crop_variety_id')->references('id')->on('crop_varieties')->onDelete('cascade');
             $table->foreign('inspection_type_id')->references('id')->on('inspection_types')->onDelete('cascade');
             $table->foreign('crop_declaration_id')->references('id')->on('crop_declarations')->onDelete('cascade');
+            
         });
     }
 

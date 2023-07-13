@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use \App\Models\Crop;
+use Encore\Admin\Facades\Admin;
 use \App\Models\Notification;
 
 
@@ -51,10 +52,30 @@ class SeedProducer extends Model
             //Notification::send_notification($model, 'SeedProducer', request()->segment(count(request()->segments())));
         });
 
+        self::updating(function ($model){
+            if( Admin::user()->isRole('basic-user') )
+            {
+                $model->status = 'pending';
+                $model->inspector_id = null;
+                return $model;
+            } 
+        });
+
         self::updated(function ($model) 
         {
-            //Notification::send_notification($model, 'SeedProducer', request()->segment(count(request()->segments())));
-        
+        //call back to send a notification to the user after form is updated
+           // Notification::update_notification($model, 'SeedProducer', request()->segment(count(request()->segments())-1));
+            
+           //change the role of the basic user to that of the seed producer
+           if($model->status == 'accepted'){
+                AdminRoleUser::where([
+                    'user_id' => $model->user_id
+                ])->delete();
+                $new_role = new AdminRoleUser();
+                $new_role->user_id = $model->user_id;
+                $new_role->role_id = 5;
+                $new_role->save();
+            }
         });
 
     }
