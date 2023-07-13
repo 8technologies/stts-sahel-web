@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Encore\Admin\Facades\Admin;
+
 
 class SeedLab extends Model
 {
@@ -46,10 +48,15 @@ class SeedLab extends Model
             //Notification::send_notification($model, 'SeedProducer', request()->segment(count(request()->segments())));
         });
 
-        self::updating(function ($model) 
-        {
-            //Notification::send_notification($model, 'SeedProducer', request()->segment(count(request()->segments())));
+        self::updating(function ($model){
+            if( Admin::user()->isRole('basic-user') )
+            {
+                $model->status = 'pending';
+                $model->inspector_id = null;
+                return $model;
+            } 
         });
+
 
     }
 }

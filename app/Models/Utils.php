@@ -46,8 +46,15 @@ class Utils extends Model
             return '<span class="label label-danger">Rejected</span>';
         if ($status == 'accepted')
             return '<span class="label label-success">Accepted</span>';
+        if ($status == 'lab test assigned')
+            return '<span class="label label-success">Lab Test Assigned</span>';
         if ($status == 'printed')
-            return '<span class="badge badge-success">Printed</span>';
+            return '<span class="label label-success">Printed</span>';
+        if ($status == 'marketable')
+            return '<span class="label label-success">Marketable</span>';
+        if ($status == 'not marketable')
+            return '<span class="label label-danger">Not Marketable</span>';
+
 
 
         return $status;

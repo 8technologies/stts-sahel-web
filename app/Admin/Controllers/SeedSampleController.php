@@ -49,13 +49,20 @@ class SeedSampleController extends AdminController
 
         $grid->column('id', __('Id'));
         $grid->column('sample_request_number', __('Sample request number'));
-        $grid->column('applicant_id', __('Applicant id'));
+        $grid->column('applicant_id', __('Applicant '))->display(function($user_id){
+            return \App\Models\User::find($user_id)->name;
+        });
         $grid->column('load_stock_id', __('Load stock number'));
         $grid->column('sample_request_date', __('Sample request date'));
-        $grid->column('status', __('Status'));
+        $grid->column('status', __('Status'))->display(function ($status) {
+            return \App\Models\Utils::tell_status($status) ?? '-';
+        });
         $grid->column('applicant_remarks', __('Applicant remarks'));
       
-
+        //disable delete button
+        $grid->actions(function ($actions) {
+            $actions->disableDelete();
+        });
         return $grid;
     }
 
@@ -69,15 +76,21 @@ class SeedSampleController extends AdminController
     {
         $show = new Show(SeedLab::findOrFail($id));
 
-        $show->field('id', __('Id'));
+       
         $show->field('sample_request_number', __('Sample request number'));
-        $show->field('applicant_id', __('Applicant id'));
+        $show->field('applicant_id', __('Applicant id'))->as(function ($applicant_id) {
+            return \App\Models\User::find($applicant_id)->name;
+        });
         $show->field('load_stock_id', __('Load stock number'));
         $show->field('sample_request_date', __('Sample request date'));
-        $show->field('proof_of_payment', __('Proof of payment'));
+        $show->field('proof_of_payment', __('Proof of payment'))->file();
         $show->field('applicant_remarks', __('Applicant remarks'));
        
-
+       //disable edit button and delete button
+        $show->panel()->tools(function ($tools) {
+            $tools->disableEdit();
+            $tools->disableDelete();
+        });
         return $show;
     }
 
@@ -142,7 +155,7 @@ class SeedSampleController extends AdminController
             if(auth('admin')->user()->isRole('commissioner')){
                 $form->select('priority', __('Priority'))->options(['low' => 'Low', 'medium' => 'Medium', 'high' => 'High']);
                     $form->textarea('additional_instructions', __('Additional instructions'));
-                    $form->select('status', __('Decision'))->options(['pending' => 'Pending', 'inspector assigned'=> 'Assign Inspector']);
+                    $form->select('status', __('Decision'))->options(['pending' => 'Pending', 'inspection assigned'=> 'Assign Inspector']);
         
                 //get the users in the admin_user table whose role is inspector
                     $inspectors = Administrator::whereHas('roles', function ($query) {
@@ -159,6 +172,12 @@ class SeedSampleController extends AdminController
             $form->text('sample_request_number', __('Sample request number'))->readonly();
             }
     }
+
+    //disable delete button
+    $form->tools(function (Form\Tools $tools) {
+        $tools->disableView();
+        $tools->disableDelete();
+    });
         return $form;
     }
 }

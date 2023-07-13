@@ -31,22 +31,27 @@ class CropDeclarationController extends AdminController
     {
         $grid = new Grid(new CropDeclaration());
        
-        $u = auth()->user();
-        if ($u->isRole('grower')) {
-            $cd = SeedProducer::where(['user_id' => $u->id, 'status' => 'accepted'])->first();
-            if ($cd == null) {
+        $user = auth()->user();
+        if ($user->isRole('grower')) {
+            $seed_producer = SeedProducer::where(['user_id' => $user->id, 'status' => 'accepted'])->first();
+            if ($seed_producer == null) {
                 $grid->disableCreateButton();
                 return admin_warning('No Valid Seed Producer Form Found.', 'You need to have at least one valid Seed Producer.');
             }
         } else {
             $grid->disableCreateButton();
+           
         }
-
+        //disable delete action
+        $grid->actions(function ($actions) {
+            $actions->disableDelete();
+        });
         $grid->column('id', __('Id'));
-        $grid->column('applicant_id', __('Applicant id'));
+        $grid->column('applicant_id', __('Applicant'))->display(function ($applicant_id) {
+            return \App\Models\User::find($applicant_id)->name;
+        });
         $grid->column('phone_number', __('Phone number'));
         $grid->column('applicant_registration_number', __('Applicant registration number'));
-        $grid->column('seed_producer_id', __('Seed producer id'));
         $grid->column('garden_size', __('Garden size'));
         $grid->column('field_name', __('Field name'));
         $grid->column('planting_date', __('Planting date'))->display(function ($planting_date) {
@@ -56,8 +61,7 @@ class CropDeclarationController extends AdminController
         ->display(function ($status) {
             return Utils::tell_status($status);
         })->sortable();
-        $grid->column('inspector_id', __('Inspector id'));
-        $grid->column('remarks', __('Remarks'));
+      
 
         return $grid;
     }
@@ -71,12 +75,14 @@ class CropDeclarationController extends AdminController
     protected function detail($id)
     {
         $show = new Show(CropDeclaration::findOrFail($id));
-
-        $show->field('id', __('Id'));
-        $show->field('applicant_id', __('Applicant id'));
+        $user = auth()->user();
+       
+        $show->field('applicant_id', __('Applicant Name'))->as(function ($applicant_id) {
+            return \App\Models\User::find($applicant_id)->name;
+        });
         $show->field('phone_number', __('Phone number'));
         $show->field('applicant_registration_number', __('Applicant registration number'));
-        $show->field('seed_producer_id', __('Seed producer id'));
+       
         $show->field('garden_size', __('Garden size'));
         $show->field('gps_coordinates_1', __('Gps coordinates 1'));
         $show->field('gps_coordinates_2', __('Gps coordinates 2'));
@@ -97,10 +103,22 @@ class CropDeclarationController extends AdminController
         $show->field('garden_location_latitude', __('Garden location latitude'));
         $show->field('garden_location_longitude', __('Garden location longitude'));
         $show->field('status', __('Status'));
-        $show->field('inspector_id', __('Inspector id'));
-        $show->field('remarks', __('Remarks'));
-        $show->field('created_at', __('Created at'));
-        $show->field('updated_at', __('Updated at'));
+        $show->field('remarks', __('Remarks'))->as(function ($remarks) {
+            return $remarks == null ? 'No remarks yet' : $remarks;
+        });
+        
+        //if the user is a commissioner, show the inspector
+        if ($user->isRole('commissioner')) {
+            $show->field('inspector_id', __('Inspector'))->as(function ($inspector_id) {
+                return \App\Models\User::find($inspector_id)->name;
+            });
+        }
+
+        //disable delete and edit button
+        $show->panel()->tools(function ($tools) {
+            $tools->disableEdit();
+            $tools->disableDelete();
+        });
 
         return $show;
     }
@@ -129,46 +147,81 @@ class CropDeclarationController extends AdminController
                 $form->hidden('applicant_id')->default($u->id);
             }
 
+            //when is saving, check that the expected yield is not more than the quantity of seed planted
+            $form->saving(function (Form $form) {
+                $quantity_of_seed_planted = $form->quantity_of_seed_planted;
+                $expected_yield = $form->expected_yield;
+                if ($expected_yield > $quantity_of_seed_planted) {
+                    admin_error('Expected yield cannot be more than the quantity of seed planted', 'Please check the values and try again.');
+                    return back();
+                }
+            });
+
             $form->hidden('seed_producer_id')->default($cd->id);
         }
 
+        if ($u->inRoles(['basic-user', 'grower'])) 
+        {
+            $form->select('crop_variety_id', __('Crop variety'))
+                ->options(CropVariety::all()->pluck('name_text', 'id'))
+                ->required();
 
-        $form->select('crop_variety_id', __('Crop variety'))
-            ->options(CropVariety::all()->pluck('name_text', 'id'))
-            ->required();
-
-        $form->text('phone_number', __('Phone number'));
-        $form->text('applicant_registration_number', __('Applicant registration number'));
-        $form->decimal('garden_size', __('Garden size'));
-        $form->decimal('gps_coordinates_1', __('Gps coordinates 1'));
-        $form->decimal('gps_coordinates_2', __('Gps coordinates 2'));
-        $form->decimal('gps_coordinates_3', __('Gps coordinates 3'));
-        $form->decimal('gps_coordinates_4', __('Gps coordinates 4'));
-        $form->text('field_name', __('Field name'));
-        $form->text('district_region', __('District region'));
-        $form->text('circle', __('Circle'));
-        $form->text('township', __('Township'));
-        $form->text('village', __('Village'));
-        $form->date('planting_date', __('Planting date'))->default(date('Y-m-d'));
-        $form->number('quantity_of_seed_planted', __('Quantity of seed planted'));
-        $form->number('expected_yield', __('Expected yield'));
-        $form->text('seed_supplier_name', __('Seed supplier name'));
-        $form->text('seed_supplier_registration_number', __('Seed supplier registration number'));
-        $form->text('source_lot_number', __('Source lot number'));
-        $form->text('origin_of_variety', __('Origin of variety'));
-        $form->decimal('garden_location_latitude', __('Garden location latitude'));
-        $form->decimal('garden_location_longitude', __('Garden location longitude'));
-
+            $form->text('phone_number', __('Phone number'));
+            $form->text('applicant_registration_number', __('Applicant registration number'));
+            $form->decimal('garden_size', __('Garden size'));
+            $form->decimal('gps_coordinates_1', __('Gps coordinates 1'));
+            $form->decimal('gps_coordinates_2', __('Gps coordinates 2'));
+            $form->decimal('gps_coordinates_3', __('Gps coordinates 3'));
+            $form->decimal('gps_coordinates_4', __('Gps coordinates 4'));
+            $form->text('field_name', __('Field name'));
+            $form->text('district_region', __('District region'));
+            $form->text('circle', __('Circle'));
+            $form->text('township', __('Township'));
+            $form->text('village', __('Village'));
+            $form->date('planting_date', __('Planting date'))->default(date('Y-m-d'));
+            $form->number('quantity_of_seed_planted', __('Quantity of seed planted'));
+            $form->number('expected_yield', __('Expected yield'));
+            $form->text('seed_supplier_name', __('Seed supplier name'));
+            $form->text('seed_supplier_registration_number', __('Seed supplier registration number'));
+            $form->text('source_lot_number', __('Source lot number'));
+            $form->text('origin_of_variety', __('Origin of variety'));
+            $form->decimal('garden_location_latitude', __('Garden location latitude'));
+            $form->decimal('garden_location_longitude', __('Garden location longitude'));
+        }
 
 
 
 
         if ($u->isRole('commissioner')) {
+            $form->display('crop_variety_id', __('Crop variety'))
+            ->options(CropVariety::all()->pluck('name_text', 'id'))
+            ->required();
+
+            $form->display('phone_number', __('Phone number'));
+            $form->display('applicant_registration_number', __('Applicant registration number'));
+            $form->display('garden_size', __('Garden size'));
+            $form->display('gps_coordinates_1', __('Gps coordinates 1'));
+            $form->display('gps_coordinates_2', __('Gps coordinates 2'));
+            $form->display('gps_coordinates_3', __('Gps coordinates 3'));
+            $form->display('gps_coordinates_4', __('Gps coordinates 4'));
+            $form->display('field_name', __('Field name'));
+            $form->display('district_region', __('District region'));
+            $form->display('circle', __('Circle'));
+            $form->display('township', __('Township'));
+            $form->display('village', __('Village'));
+            $form->display('planting_date', __('Planting date'))->default(date('Y-m-d'));
+            $form->display('quantity_of_seed_planted', __('Quantity of seed planted'));
+            $form->display('expected_yield', __('Expected yield'));
+            $form->display('seed_supplier_name', __('Seed supplier name'));
+            $form->display('seed_supplier_registration_number', __('Seed supplier registration number'));
+            $form->display('source_lot_number', __('Source lot number'));
+            $form->display('origin_of_variety', __('Origin of variety'));
+            $form->display('garden_location_latitude', __('Garden location latitude'));
+            $form->display('garden_location_longitude', __('Garden location longitude'));
             $form->divider();
             $form->select('status', __('Status'))
                 ->options([
                     'Inspection assigned' => 'Inspection assigned',
-                    'pending' => 'Pending',
                     'rejected' => 'Rejected',
                     'halted' => 'Halted',
                 ])
@@ -186,9 +239,15 @@ class CropDeclarationController extends AdminController
             }
 
             $form->select('inspector_id', __('Inspector'))
-                ->options($users)
-                ->required(); 
+                ->options($users);
+                
         }
+
+        //disable delete and view button
+        $form->tools(function (Form\Tools $tools) {
+            $tools->disableDelete();
+            $tools->disableView();
+        });
         return $form;
     }
 }

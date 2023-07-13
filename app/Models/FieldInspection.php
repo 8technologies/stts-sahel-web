@@ -57,24 +57,7 @@ class FieldInspection extends Model
 
         self::updating(function ($model) {
 
-            /*
-                    $form->number('is_active', __('Is active'));
-        $form->number('is_done', __('Is done'));
             
-            */
-
-            // if($model->field_decision == '1')
-            // {
-
-            //     $nextInspection = FieldInspection::where('crop_variety_id', $model->crop_variety_id)->where('inspection_type_id', $model->inspection_type->order + 1)->first();
-            //     if($nextInspection)
-            //     {
-            //         $nextInspection->is_active = 1;
-            //         $nextInspection->save();
-            //     }
-
-            // }
-
 
         });
 
@@ -110,20 +93,7 @@ class FieldInspection extends Model
                 }
             }
 
-            //call back to send a notification to the user after form is updated
             //Notification::update_notification($model, 'FieldInspection', request()->segment(count(request()->segments())-1));
-
-            //update the inspection status of the previous inspection
-            /*
-            $Inspection = FieldInspection::where('crop_variety_id', $model->crop_variety_id)
-                ->whereNotNull('field_decision')
-                ->get();
-
-            if ($Inspection)
-                for ($i = 0; $i < count($Inspection); $i++) {
-                    $Inspection[$i]->is_active = 0;
-                    $Inspection[$i]->save();
-                }*/
         });
     }
 

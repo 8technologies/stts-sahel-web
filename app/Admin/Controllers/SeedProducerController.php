@@ -147,6 +147,7 @@ class SeedProducerController extends AdminController
         //disable delete button
         $show->panel()->tools(function ($tools) {
             $tools->disableDelete();
+            $tools->disableEdit();
         });
         
 
@@ -162,12 +163,17 @@ class SeedProducerController extends AdminController
     {
         $form = new Form(new SeedProducer()); 
 
-        $u = auth()->user();
+        $user = auth()->user();
         if($form->isCreating()) {
-            $form->hidden('user_id')->default($u->id);
+            $form->hidden('user_id')->default($user->id);
         }
 
-        if($u->isRole('commissioner'))
+        //redirect to the list after saving
+        $form->saved(function (Form $form) {
+            return redirect(admin_url('seed-producers'));
+        });
+
+        if($user->isRole('commissioner'))
         {
            
             $form->display('producer_category', __('Producer category'))->options([
@@ -223,12 +229,11 @@ class SeedProducerController extends AdminController
         $form->file('receipt', __('Receipt')); 
         }
 
-        if($u->isRole('commissioner')){
+        if($user->isRole('commissioner')){
             $form->divider();
             $form->select('status', __('Status'))
             ->options([
                 'accepted' => 'Accepted',
-                'pending' => 'Pending',
                 'rejected' => 'Rejected',
                 'halted' => 'Halted',
             ])
@@ -241,7 +246,13 @@ class SeedProducerController extends AdminController
             $form->datetime('valid_until', __('Valid until'))->default(date('Y-m-d H:i:s'));
         }
 
+        //disable delete and view button
+        $form->tools(function (Form\Tools $tools) {
+            $tools->disableDelete();
+            $tools->disableView();
 
+            
+        });
         return $form;
     }
 }

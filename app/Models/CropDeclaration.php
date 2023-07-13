@@ -77,40 +77,20 @@ class CropDeclaration extends Model
             //Notification::send_notification($model, 'CropDeclaration', request()->segment(count(request()->segments())));
         });
 
+        self::updating(function ($model){
+            if( Admin::user()->inRoles(['basic-user','grower']) )
+            {
+                $model->status = 'pending';
+                $model->inspector_id = null;
+                return $model;
+            } 
+        });
+
+
         self::updated(function ($model) {
             //call back to send a notification to the user after form is updated
-            /*
-            Notification::update_notification($model, 'CropDeclaration', request()->segment(count(request()->segments())-1));
-
-            if (Admin::user()->isRole('inspector')) {
-                $selectedCropVarietyIds = $model->crop_varieties()->pluck('crop_varieties.id')->toArray();
             
-                foreach ($selectedCropVarietyIds as $selectedCropVarietyId) {
-                    $cropVariety = CropVariety::findOrFail($selectedCropVarietyId);
-                   
-                    // Fetch the inspection types for the crop variety
-                    $crops = $cropVariety->crop_id;
-                    $inspectionTypes = Crop::findOrFail($crops)->inspection_types()->orderBy('order')->get();
-                    
-                    // Allocate inspections to the crop variety for each inspection type
-                    foreach ($inspectionTypes as $inspectionType) {
-                        $inspection = new FieldInspection();
-                        $inspection->crop_variety_id = $cropVariety->id;
-                        $inspection->inspection_type_id = $inspectionType->id;
-                        $inspection->crop_declaration_id = $model->id;
-                        $inspection->applicant_id = $model->applicant_id;
-                        $inspection->inspector_id = $model->inspector_id;
-
-                        //check inspection type order and set the is_done attribute
-                        if ($inspectionType->order == 1) {
-                            $inspection->is_active = 1;
-                        } else {
-                            $inspection->is_active = 0;
-                        }
-                        $inspection->save();
-                    }
-                }
-            }*/
+           // Notification::update_notification($model, 'CropDeclaration', request()->segment(count(request()->segments())-1));
 
             if ($model->status == 'Inspection assigned') {
                 $crop_variety = CropVariety::find($model->crop_variety_id);

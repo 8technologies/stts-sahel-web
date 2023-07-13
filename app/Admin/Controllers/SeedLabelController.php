@@ -37,32 +37,37 @@ class SeedLabelController extends AdminController
     {
         $grid = new Grid(new SeedLabel());
         $user = Admin::user();
-      
-       //check the status of the form before displaying it to labosem
-       if(Admin::user()->isRole('labosem')){
-        $grid->model()->where('status', '=', 'approved');
-       
-    }
+        if(Admin::user()->isRole('labosem'))
+        {
+            $grid->model()->where('status', '=', 'accepted');
+          
+        }
 
        //disable create button and delete button for admin users
-       if(!$user->inRoles(['basic-user','grower'])){
+       if(!$user->inRoles(['basic-user','grower']))
+       {
         
         $grid->disableCreateButton();
-        $grid->actions(function ($actions) {
-            $actions->disableDelete();
-           
-            
-        });
-    }
+       
+        }
+
         $grid->column('seed_label_request_number', __('Seed label request number'));
         $grid->column('applicant_id', __('Applicant name'));
         $grid->column('registration_number', __('Registration number'));
         $grid->column('label_packages', __('Label packages'));
-        $grid->column('quantity_of_seed', __('Quantity of seed'));
-        $grid->column('proof_of_payment', __('Proof of payment'));
         $grid->column('request_date', __('Request date'));
-        
-        
+        if(!Admin::user()->isRole('labosem')){
+        $grid->column('status', __('Status'))->display(function ($status) {
+          return \App\Models\Utils::tell_status($status);
+        });
+        }
+        //check the status of the form before displaying it to labosem
+     
+        $grid->actions(function ($actions) {
+            $actions->disableDelete();  
+            $actions->disableEdit();  
+            
+        });
        
 
         return $grid;
@@ -208,10 +213,10 @@ class SeedLabelController extends AdminController
       
         if($user->inRoles(['basic-user','grower'])){
     
-        $form->select('seed_lab_id', __('Seed lab id'))->options($seed_lab_id->pluck('seed_lab_test_report_number', 'id'))->required();
+        $form->select('seed_lab_id', __('Lot Number'))->options($seed_lab_id->pluck('lot_number', 'id'))->required();
         $form->text('seed_label_request_number', __('Seed label request number'));
         $form->text('registration_number', __('Registration number'));
-        $form->decimal('quantity_of_seed', __('Quantity of seed'));
+        //$form->decimal('quantity_of_seed', __('Quantity of seed'));
         $form->file('proof_of_payment', __('Proof of payment'));
         $form->date('request_date', __('Request date'))->default(date('Y-m-d'));
         $form->textarea('applicant_remarks', __('Applicant remarks'));
@@ -258,7 +263,7 @@ class SeedLabelController extends AdminController
             $form->display('', __('Variety'))->default($crop_variety->crop_variety_name);
             $form->display('', __('Generation'))->default($crop_variety->crop_variety_generation);
             $form->display('label_packages', __('Label packages'));
-            $form->display('quantity_of_seed', __('Quantity of seed'));
+           // $form->display('quantity_of_seed', __('Quantity of seed'));
             $form->display('proof_of_payment', __('Proof of payment'));
             $form->display('request_date', __('Request date'))->default(date('Y-m-d'));
             $form->display('applicant_remarks', __('Applicant remarks'));
@@ -280,14 +285,20 @@ class SeedLabelController extends AdminController
 
         if($user->isRole('labosem')){
 
-            $form->select('status', __('Status'))->options(['printed' => 'Printed', 'rejected' => 'Rejected', 'pending' => 'Pending'])->default('pending');
+            $form->select('status', __('Status'))->options(['printed' => 'Printed', 'rejected' => 'Rejected'])->default('pending');
         }
 
         if($user->isRole('commissioner')){
 
-            $form->select('status', __('Status'))->options(['pending' => 'Pending', 'approved' => 'Approved', 'rejected' => 'Rejected'])->default('pending');
+            $form->select('status', __('Status'))->options([ 'accepted' => 'Approved', 'rejected' => 'Rejected'])->default('pending');
         }
     }
+
+    //disable delete button
+    $form->tools(function (Form\Tools $tools) {
+        $tools->disableView();
+        $tools->disableDelete();
+    });
 
         return $form;
     }

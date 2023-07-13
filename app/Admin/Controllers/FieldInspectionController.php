@@ -30,6 +30,14 @@ class FieldInspectionController extends AdminController
         // $m->save();
         // die("romina");
         $grid = new Grid(new FieldInspection());
+
+        //disable create button and delete action
+        $grid->disableCreateButton();
+         //disable delete action
+         $grid->actions(function ($actions) {
+            $actions->disableDelete();
+        });
+
         $inspection = FieldInspection::where('applicant_id', auth('admin')->user()->id)->value('is_done');
       
         if (!auth('admin')->user()->isRole('commissioner')) {
@@ -57,7 +65,9 @@ class FieldInspectionController extends AdminController
         $grid->column('applicant_id', __('Applicant'))->display(function ($applicant_id) {
             return \App\Models\User::find($applicant_id)->name;
         });
-        $grid->column('field_decision', __('Field decision'));
+        $grid->column('field_decision', __('Field decision'))->display(function ($field_decision) {
+            return $field_decision ?? '-';
+       });
         $grid->column('is_active', __('Is active'))->using([
             0 => 'Not active',
             1 => 'Active'
@@ -68,7 +78,7 @@ class FieldInspectionController extends AdminController
             0 => 'warning',
             1 => 'success'
         ]);
-        $grid->column('is_done', __('Is done'));
+      
         $grid->column('inspection_date', __('Inspection date'));
 
         $grid->column('order_number', __('Order number'));
@@ -93,29 +103,36 @@ class FieldInspectionController extends AdminController
     {
         $show = new Show(FieldInspection::findOrFail($id));
 
-        $show->field('id', __('Id'));
-        $show->field('field_inspection_form_number', __('Field inspection form number'));
-        $show->field('crop_declaration_id', __('Crop declaration id'));
-        $show->field('crop_variety_id', __('Crop variety id'));
-        $show->field('inspection_type_id', __('Inspection type id'));
-        $show->field('applicant_id', __('Applicant id'));
+        $show->field('applicant_id', __('Applicant '))->as(function ($applicant_id) {
+            return \App\Models\User::find($applicant_id)->name;
+        });
+       
+       
+        $show->field('crop_variety_id', __('Crop variety '))->as(function ($crop_variety_id) {
+            return \App\Models\CropVariety::find($crop_variety_id)->crop_variety_name;
+        });
+        $show->field('inspection_type_id', __('Inspection type'))->as(function ($inspection_type_id) {
+            return \App\Models\InspectionType::find($inspection_type_id)->inspection_type_name;
+        });
+       
         $show->field('physical_address', __('Physical address'));
-        $show->field('type_of_inspection', __('Type of inspection'));
         $show->field('field_size', __('Field size'));
-        $show->field('seed_generation', __('Seed generation'));
+        $show->field('inspection_date', __('Inspection date'));
         $show->field('crop_condition', __('Crop condition'));
         $show->field('field_spacing', __('Field spacing'));
         $show->field('estimated_yield', __('Estimated yield'));
         $show->field('remarks', __('Remarks'));
-        $show->field('inspector_id', __('Inspector id'));
         $show->field('signature', __('Signature'));
         $show->field('field_decision', __('Field decision'));
-        $show->field('is_active', __('Is active'));
-        $show->field('is_done', __('Is done'));
-        $show->field('inspection_date', __('Inspection date'));
-        $show->field('created_at', __('Created at'));
-        $show->field('updated_at', __('Updated at'));
-        $show->field('order_number', __('Order number'));
+    
+       
+        $show->field('field_inspection_form_number', __('Field inspection form number'));
+
+        //disable edit button
+        $show->panel()->tools(function ($tools) {
+            $tools->disableEdit();
+            $tools->disableDelete();
+        });
 
         return $show;
     }
@@ -128,12 +145,21 @@ class FieldInspectionController extends AdminController
     protected function form()
     {
         $form = new Form(new FieldInspection());
-
-        $form->display('crop_variety_id', __('Crop variety id'));
-        $form->display('inspection_type_id', __('Inspection type id'));
-        $form->display('applicant_id', __('Applicant id'));
+        
+        $form->display('applicant_id', __('Applicant id'))->with(function ($applicant_id) {
+            return \App\Models\User::find($applicant_id)->name;
+        });
+        $form->display('crop_variety_id', __('Crop variety id'))->with(function ($crop_variety_id) {
+            return \App\Models\CropVariety::find($crop_variety_id)->crop_variety_name;
+        });
+        $form->display('inspection_type_id', __('Inspection type id'))->with(function ($inspection_type_id) {
+            return \App\Models\InspectionType::find($inspection_type_id)->inspection_type_name;
+        });
+       
         $form->display('physical_address', __('Physical address'));
-        $form->display('inspector_id', __('Inspector'));
+        $form->display('inspector_id', __('Inspector'))->with(function ($inspector_id) {
+            return \App\Models\User::find($inspector_id)->name;
+        });
 
         $form->text('field_inspection_form_number', __('Field inspection form number'));
         $form->decimal('field_size', __('Field size'));
@@ -154,6 +180,12 @@ class FieldInspectionController extends AdminController
             ->rules('required');
 
         $form->textarea('remarks', __('Remarks'));
+
+        //disable delete and view button
+        $form->tools(function (Form\Tools $tools) {
+            $tools->disableDelete();
+            $tools->disableView();
+        });
 
         return $form;
     }

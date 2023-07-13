@@ -49,15 +49,30 @@ class SeedLabController extends AdminController
             });
         }
 
-        $grid->column('id', __('Id'));
-        $grid->column('sample_request_number', __('Sample request number'));
-        $grid->column('applicant_id', __('Applicant id'));
-        $grid->column('applicant_remarks', __('Applicant remarks'));
-        $grid->column('seed_lab_test_report_number', __('Seed lab test report number'));
-        $grid->column('seed_sample_request_number', __('Seed sample request number'));
-        $grid->column('germination_test_results', __('Germination test results'));
-        $grid->column('purity_test_results', __('Purity test results'));;
-        $grid->column('test_decision', __('Test decision'));
+        $grid->actions(function ($actions) {
+            $actions->disableDelete();
+        });
+
+        $grid->column('lot_number', __('Lot Number'))->display(function ($lot_number) {
+            return $lot_number??'Not yet assigned';
+        });
+        $grid->column('applicant_id', __('Applicant'))->display(function ($applicant_id) {
+            return \App\Models\User::find($applicant_id)->name;
+        });
+       
+        $grid->column('seed_lab_test_report_number', __('Seed lab test report number'))->display(function ($seed_lab_test_report_number) {
+            return $seed_lab_test_report_number??'Not yet assigned';
+        });
+        $grid->column('germination_test_results', __('Germination test results'))->display(function ($germination_test_results) {
+            return $germination_test_results??'Not yet assigned';
+        });
+        $grid->column('purity_test_results', __('Purity test results'))->display(function ($purity_test_results) {
+            return $purity_test_results??'Not yet assigned';
+        });
+        $grid->column('test_decision', __('Test decision'))->display(function ($test_decision) {
+           
+            return \App\Models\Utils::tell_status($test_decision)??'Not yet assigned';
+        });
         if($lab_results != null ){
             $grid->column('id', __('admin.form.Print Results'))->display(function ($id) {
                 $link = url('lab_results?id=' . $id);
@@ -78,9 +93,11 @@ class SeedLabController extends AdminController
     {
         $show = new Show(SeedLab::findOrFail($id));
 
-        $show->field('id', __('Id'));
+      
     
-        $show->field('applicant_id', __('Applicant id'));
+        $show->field('applicant_id', __('Applicant'))->as(function ($applicant_id) {
+            return \App\Models\User::find($applicant_id)->name;
+        });
         $show->field('load_stock_number', __('Load stock number'));
         $show->field('seed_lab_test_report_number', __('Seed lab test report number'));
         $show->field('seed_sample_request_number', __('Seed sample request number'));
@@ -94,6 +111,12 @@ class SeedLabController extends AdminController
         $show->field('reporting_and_signature', __('Reporting and signature'));
         $show->field('created_at', __('Created at'));
         $show->field('updated_at', __('Updated at'));
+
+        //disable edit button 
+        $show->panel()->tools(function ($tools) {
+            $tools->disableEdit();
+            $tools->disableDelete();
+        });
 
         return $show;
     }
@@ -153,6 +176,13 @@ class SeedLabController extends AdminController
         });
         $form->textarea('reporting_and_signature', __('Reporting and signature'));
     }
+
+    //disable edit and delete buttons
+    $form->tools(function (Form\Tools $tools) {
+        $tools->disableDelete();
+        $tools->disableView();
+    });
+    
         return $form;
     }
 }

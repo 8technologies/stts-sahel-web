@@ -57,6 +57,22 @@ class CropController extends AdminController
         $show->field('number_of_days_before_submission', __('Number of days before submission'));
         $show->field('seed_viability_period', __('Seed viability period'));
 
+        $show->crop_varieties('Crop varieties', function ($crop_varieties) {
+            $crop_varieties->resource('/admin/crop_varieties');
+            $crop_varieties->crop_variety_name();
+            $crop_varieties->crop_variety_code();
+            $crop_varieties->crop_variety_generation();
+           
+        });
+
+        $show->inspection_types('Inspection types', function ($inspection_types) {
+            $inspection_types->resource('/admin/inspection_types');
+            $inspection_types->inspection_type_name();
+            $inspection_types->order();
+            $inspection_types->period_after_planting();
+           
+        });
+
         return $show;
     }
 
@@ -73,7 +89,14 @@ class CropController extends AdminController
         $form->text('crop_code', __('Crop code'));
         $form->decimal('number_of_days_before_submission', __('Number of days before submission'));
         $form->decimal('seed_viability_period', __('Seed viability period')); 
+        $form->divider();
+        $form->hasMany('crop_varieties', function (Form\NestedForm $form)  {
+            $form->text('crop_variety_name', __('Crop Variety Name'));
+            $form->text('crop_variety_code', __('Crop Variety Code'));
+            $form->text('crop_variety_generation', __('Crop Variety Generation'));
+        });
 
+      
         $form->morphMany('inspection_types', function (Form\NestedForm $form) {
             $form->text('inspection_type_name', __('Inspection type name'))->rules('required');
             $form->decimal('order', __('Order'))->rules('required');
