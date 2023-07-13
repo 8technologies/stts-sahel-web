@@ -9,6 +9,7 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Encore\Admin\Auth\Database\Administrator;
 use Tymon\JWTAuth\Contracts\JWTSubject;
+use App\Models\CooperativeMember;
 
 
 class User extends Authenticatable implements JWTSubject
@@ -73,6 +74,12 @@ class User extends Authenticatable implements JWTSubject
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    //relationship with cooperatives
+    public function cooperatives()
+    {
+        return $this->hasMany(CooperativeMember::class, 'user_id');
+    }
 
     //assign a user a role of 3 once they are registered
     public static function boot()

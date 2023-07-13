@@ -57,7 +57,6 @@ class CropDeclarationController extends AdminController
             return Utils::tell_status($status);
         })->sortable();
         $grid->column('inspector_id', __('Inspector id'));
-        $grid->column('lot_number', __('Lot number'));
         $grid->column('remarks', __('Remarks'));
 
         return $grid;
@@ -99,7 +98,6 @@ class CropDeclarationController extends AdminController
         $show->field('garden_location_longitude', __('Garden location longitude'));
         $show->field('status', __('Status'));
         $show->field('inspector_id', __('Inspector id'));
-        $show->field('lot_number', __('Lot number'));
         $show->field('remarks', __('Remarks'));
         $show->field('created_at', __('Created at'));
         $show->field('updated_at', __('Updated at'));

@@ -30,10 +30,8 @@ class FieldInspectionController extends AdminController
         // $m->save();
         // die("romina");
         $grid = new Grid(new FieldInspection());
-
+        $inspection = FieldInspection::where('applicant_id', auth('admin')->user()->id)->value('is_done');
       
-
-
         if (!auth('admin')->user()->isRole('commissioner')) {
 
             if (!auth('admin')->user()->isRole('inspector')) {
@@ -56,22 +54,9 @@ class FieldInspectionController extends AdminController
                 $actions->disableEdit();
             }
         });
-
-        // $grid->column('field_inspection_form_number', __('Field inspection form number'));
-        // $grid->column('crop_declaration_id', __('Crop declaration id'));
-        // $grid->column('crop_variety_id', __('Crop variety id'));
-        // $grid->column('inspection_type_id', __('Inspection type id'));
-        // $grid->column('applicant_id', __('Applicant id'));
-        // $grid->column('physical_address', __('Physical address'));
-        // $grid->column('type_of_inspection', __('Type of inspection'));
-        // $grid->column('field_size', __('Field size'));
-        // $grid->column('seed_generation', __('Seed generation'));
-        // $grid->column('crop_condition', __('Crop condition'));
-        // $grid->column('field_spacing', __('Field spacing'));
-        // $grid->column('estimated_yield', __('Estimated yield'));
-        // $grid->column('remarks', __('Remarks'));
-        // $grid->column('inspector_id', __('Inspector id'));
-        // $grid->column('signature', __('Signature'));
+        $grid->column('applicant_id', __('Applicant'))->display(function ($applicant_id) {
+            return \App\Models\User::find($applicant_id)->name;
+        });
         $grid->column('field_decision', __('Field decision'));
         $grid->column('is_active', __('Is active'))->using([
             0 => 'Not active',
@@ -88,6 +73,13 @@ class FieldInspectionController extends AdminController
 
         $grid->column('order_number', __('Order number'));
 
+        if($inspection == 1 ){
+            $grid->column('id', __('admin.form.Inspection Report'))->display(function ($id) {
+                $link = url('inspection?id=' . $id);
+                return '<b><a target="_blank" href="' . $link . '">Print Report</a></b>';
+            });
+        }
+      
         return $grid;
     }
 

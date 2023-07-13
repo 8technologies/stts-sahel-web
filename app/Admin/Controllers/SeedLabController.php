@@ -33,6 +33,7 @@ class SeedLabController extends AdminController
     {
         $grid = new Grid(new SeedLab());
         $user = Admin::user();
+        $lab_results = SeedLab::where('applicant_id', auth('admin')->user()->id)->value('test_decision');
         //check the status of the form before displaying it
         $grid->model()->where('status', '=', 'lab test assigned');
 
@@ -57,6 +58,12 @@ class SeedLabController extends AdminController
         $grid->column('germination_test_results', __('Germination test results'));
         $grid->column('purity_test_results', __('Purity test results'));;
         $grid->column('test_decision', __('Test decision'));
+        if($lab_results != null ){
+            $grid->column('id', __('admin.form.Print Results'))->display(function ($id) {
+                $link = url('lab_results?id=' . $id);
+                return '<b><a target="_blank" href="' . $link . '">Print Results</a></b>';
+            });
+        }
   
         return $grid;
     }

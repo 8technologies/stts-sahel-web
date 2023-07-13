@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\CustomRegisterController;
 use App\Http\Controllers\QrCodeController;
 use App\Http\Controllers\SeedDetailsController;
+use App\Admin\Controllers\FeedBackController;
 use App\Models\Gen;
 use Illuminate\Support\Facades\App;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
@@ -22,6 +23,7 @@ use SimpleSoftwareIO\QrCode\Facades\QrCode;
 Route::get('/', function () {
     return redirect(url('/login'));
 });
+
 
 Route::get('/gen', function () {
     die(Gen::find($_GET['id'])->do_get());
@@ -53,3 +55,23 @@ Route::get('label', function () {
     $pdf->loadHTML(view('reports/labels'));
     return $pdf->stream();
 });
+
+Route::get('inspection', function () {
+    $pdf = App::make('dompdf.wrapper');
+    $pdf->loadHTML(view('reports/inspection_report'));
+    return $pdf->stream();
+});
+
+Route::get('lab_results', function () {
+    $pdf = App::make('dompdf.wrapper');
+    $pdf->loadHTML(view('reports/laboratory_results'));
+    return $pdf->stream();
+});
+
+Route::get('agro_certificate', function () {
+    $pdf = App::make('dompdf.wrapper');
+    $pdf->loadHTML(view('reports/agro_dealer_certificate'));
+    return $pdf->stream();
+});
+
+Route::get('/feedback/{lotId}', [FeedBackController::class, 'feedbackDetails']);
