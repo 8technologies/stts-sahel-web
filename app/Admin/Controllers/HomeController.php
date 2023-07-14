@@ -13,22 +13,20 @@ class HomeController extends Controller
     public function index(Content $content)
     {
         return $content
-            // ->view('layouts.dash');
-            ->description('Description...')
-            ->row(Dashboard::title())
+            ->title('Dashboard')
             ->row(function (Row $row) {
-
-                $row->column(4, function (Column $column) {
-                    $column->append(Dashboard::environment());
+                $row->column(12, function (Column $column) {
+                    $column->append(Dashboard::cards());
                 });
-
-                $row->column(4, function (Column $column) {
-                    $column->append(Dashboard::extensions());
+               
+            })
+            ->row(function (Row $row) {
+                $row->column(12, function (Column $column) {
+                    $column->append(Dashboard::graph1());
                 });
-
-                $row->column(4, function (Column $column) {
-                    $column->append(Dashboard::dependencies());
-                });
+              
+               
             });
-     }
+          
+    }
 }
