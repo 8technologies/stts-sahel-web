@@ -37,6 +37,8 @@ return new class extends Migration
             $table->text('additional_tests_results')->nullable();
             $table->string('test_decision')->nullable();
             $table->text('reporting_and_signature')->nullable();
+            $table->text('mother_lot')->nullable();
+            $table->text('lot_number')->nullable();
             $table->timestamps();
 
             $table->foreign('load_stock_id')->references('id')->on('load_stocks')->onDelete('cascade');

@@ -27,8 +27,13 @@ class CreateAdminTables extends Migration
             $table->string('password', 60);
             $table->string('name');
             $table->string('avatar')->nullable();
+            $table->unsignedBigInteger('cooperative_id')->nullable();
+            $table->string('value_chains')->nullable();
             $table->string('remember_token', 100)->nullable();
             $table->timestamps();
+
+            $table->foreign('cooperative_id ')->references('id')->on('cooperatives')->onDelete('cascade');
+
         });
 
         Schema::create(config('admin.database.roles_table'), function (Blueprint $table) {

@@ -53,6 +53,7 @@ class User extends Authenticatable implements JWTSubject
         'name',
         'email',
         'password',
+        'value_chains',
     ];
 
     /**
@@ -78,7 +79,7 @@ class User extends Authenticatable implements JWTSubject
     //relationship with cooperatives
     public function cooperatives()
     {
-        return $this->hasMany(CooperativeMember::class, 'user_id');
+        return $this->belongsTo(Cooperative::class);
     }
 
     //assign a user a role of 3 once they are registered

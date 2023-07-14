@@ -30,6 +30,7 @@ class SeedLab extends Model
         'additional_tests_results',
         'test_decision',
         'lot_number',
+        'mother_lot',
         'reporting_and_signature',
     ];
 

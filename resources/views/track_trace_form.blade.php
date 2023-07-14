@@ -6,9 +6,9 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/html5-qrcode@0.4.0/dist/html5-qrcode.min.js"></script>
     <style>
         .details {
@@ -24,34 +24,34 @@
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-8">
-                <div class="card">
-                    <div class="card-header">{{ __('Track and Trace') }}</div>
+                <div class="panel panel-default">
+                    <div class="panel-heading">{{ __('QR Code Scanner') }}</div>
 
-                    <div class="card-body">
+                    <div class="panel-body">
                         <form id="myform" method="POST">
-                            @csrf
+                            {{ csrf_field() }}
                             <div class="input-group">
                                 <input type="text" name="lot_number" id="lot_number" class="form-control"
                                     placeholder="Enter lot number">
-                                <button class="btn btn-primary" id="btnscan" type="button" onclick="startScan()">Scan QR Code</button>
-                                
-
+                                <div class="input-group-btn">
+                                    <button class="btn btn-primary" id="btnscan" type="button"
+                                        onclick="startScan()">Scan QR Code</button>
+                                </div>
                             </div>
                             <div id="qr-reader" style="width: 100%; margin-top: 20px;"></div>
-                            <p id="scan-error" style="color: red; display: none;">QR code scanning failed. Please ensure the QR code is visible and try again.</p>
-                            <div class="button-container">
-                                <button type="button" class="btn btn-primary mt-3" data-bs-toggle="modal"
-                                    data-bs-target="#trackModal" onclick="openModal('trackModal')">Track</button>
-                                <button type="button" class="btn btn-primary mt-3" data-bs-toggle="modal"
-                                    data-bs-target="#traceModal" onclick="openModal('traceModal')">Trace</button>
+                            <p id="scan-error" style="color: red; display: none;">QR code scanning failed. Please
+                                ensure the QR code is visible and try again.</p>
+                                <div class="button-container">
+                                <button type="button" class="btn btn-primary mt-3" data-toggle="modal"
+                                    data-target="#trackModal" onclick="openModal('trackModal')">Track</button>
+                                <button type="button" class="btn btn-primary mt-3" data-toggle="modal"
+                                    data-target="#traceModal" onclick="openModal('traceModal')">Trace</button>
                             </div>
-                            
                         </form>
                     </div>
                 </div>
             </div>
         </div>
-   
 
         <script src="https://cdn.jsdelivr.net/npm/html5-qrcode/dist/html5-qrcode.min.js"></script>
         <script>
@@ -82,7 +82,6 @@
                 }, config, qrCodeSuccessCallback, qrCodeErrorCallback);
             }
 
-
             function openModal(modal) {
         
                 // Determine which modal to open based on the selected button
@@ -101,16 +100,19 @@
                         console.log(response);
 
                         // Access and use the returned data  
-                        document.getElementById("result-container").textContent = response.id;
-                        document.getElementById("crop_variety").textContent = response.crop_variety_text;
+                        // document.getElementById("result-container").textContent = response.id;
+                        document.getElementById("crop").textContent = response.crop;
+                        document.getElementById("crop_variety").textContent = response.crop_variety;
+                        document.getElementById("generation").textContent = response.generation;
                         document.getElementById("lab_test_number").textContent = response.lab_test_number;
-                        document.getElementById("lot_number").textContent = response.lot_number;
+                        document.getElementById("germination").textContent = response.germination;
+                        document.getElementById("purity").textContent = response.purity;
+                        document.getElementById("testing_methods").textContent = response.testing_methods;
+                        document.getElementById("decision").textContent = response.test_decision;
                         document.getElementById("mother_lot").textContent = response.mother_lot;
-                        document.getElementById("p_x_g").textContent = response.p_x_g;
-                        document.getElementById("packaging").textContent = response.packaging;
-                        document.getElementById("quantity").textContent = response.quantity;
-                        document.getElementById("weight").textContent = response.sample_weight;
-
+                        document.getElementById("seed_lot_number").textContent = response.lot_number;
+                      
+                       
                         if (response.report_recommendation == 11) {
                             document.getElementById("status").textContent = "Marketable";
                         } else {
@@ -172,92 +174,103 @@
 
     </div>
 
-  <!-- Trace Modal -->
-<div class="modal fade" id="traceModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Batch details</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <ul class="nav nav-tabs">
-                    <li class="nav-item"><a class="nav-link active" id="home-tab" data-bs-toggle="tab" href="#home">Seed Details</a></li>
-                    <li class="nav-item"><a class="nav-link" id="profile-tab" data-bs-toggle="tab" href="#profile">Seed Lab Details</a></li>
-                    <li class="nav-item"><a class="nav-link" id="contact-tab" data-bs-toggle="tab" href="#contact">Mother Lot</a></li>
-                </ul>
-                <div class="tab-content">
-                    <div class="tab-pane fade show active" id="home">
-                        <div class="card">
-                            <div class="card-body">
-                                <div class="details">
-                                    <strong>Id:</strong>
-                                    <p class="text-muted" id="result-container"></p>
-                                </div>
-                                <div class="details">
-                                    <strong>Crop Variety:</strong>
-                                    <p class="text-muted" id="crop_variety"></p>
-                                </div>
-                                <div class="details">
-                                    <strong>Lot Number:</strong>
-                                    <p class="text-muted" id="lot_number"></p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="tab-pane fade" id="profile">
-                        <div class="card">
-                            <div class="card-body">
-                                <div class="details">
-                                    <strong>Lab Test Number:</strong>
-                                    <p class="text-muted" id="lab_test_number"></p>
-                                </div>
-                                <div class="details">
-                                    <strong>P_x_G:</strong>
-                                    <p class="text-muted" id="p_x_g"></p>
-                                </div>
-                                <div class="details">
-                                    <strong>Packaging:</strong>
-                                    <p class="text-muted" id="packaging"></p>
-                                </div>
-                                <div class="details">
-                                    <strong>Tests Made:</strong>
-                                    <p class="text-muted" id="test"></p>
-                                </div>
-                                <div class="details">
-                                    <strong>Status:</strong>
-                                    <p class="text-muted" id="status"></p>
+    <!-- Trace Modal -->
+    <div class="modal fade" id="traceModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <!-- Trace Modal content goes here -->
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Batch details</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <ul class="nav nav-tabs">
+                        <li class="active"><a data-toggle="tab" href="#home">Seed Details</a></li>
+                        <li><a data-toggle="tab" href="#profile">Seed Lab Details</a></li>
+                        <li><a data-toggle="tab" href="#contact">Mother Lot</a></li>
+                    </ul>
+                    <div class="tab-content">
+                        <div class="tab-pane active" id="home">
+                            <div class="card">
+                                <div class="card-body">
+                                
+                                    <div class="details">
+                                        <strong>Lot Number:</strong>
+                                        <p class="text-muted" id="seed_lot_number"></p>
+                                    </div>
+                                    <div class="details">
+                                        <strong>Crop:</strong>
+                                        <p class="text-muted" id="crop"></p>
+                                    </div>
+                                    <div class="details">
+                                        <strong>Crop Variety:</strong>
+                                        <p class="text-muted" id="crop_variety"></p>
+                                    </div>
+                                    <div class="details">
+                                        <strong>Generation:</strong>
+                                        <p class="text-muted" id="generation"></p>
+                                    </div>
+                                
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="tab-pane fade" id="contact">
-                        <div class="card">
-                            <div class="card-body">
-                                <div class="details">
-                                    <strong>Mother Lot:</strong>
-                                    <p class="text-muted" id="mother_lot"></p>
+                        <div class="tab-pane" id="profile">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="details">
+                                        <strong>Lab Test Number:</strong>
+                                        <p class="text-muted" id="lab_test_number"></p>
+                                    </div>
+                                    <div class="details">
+                                        <strong>Germination Test:</strong>
+                                        <p class="text-muted" id="germination"></p>
+                                    </div>
+                                    <div class="details">
+                                        <strong>Purity Test:</strong>
+                                        <p class="text-muted" id="purity"></p>
+                                    </div>
+                                    <div class="details">
+                                        <strong>Testing Method:</strong>
+                                        <p class="text-muted" id="testing_methods"></p>
+                                    </div>
+                                    <div class="details">
+                                        <strong>Test Decision:</strong>
+                                        <p class="text-muted" id="decision"></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane" id="contact">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="details">
+                                        <strong>Mother Lot:</strong>
+                                        <p class="text-muted" id="mother_lot"></p>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
             </div>
         </div>
     </div>
-</div>
-
 
 <!-- Track Modal -->
-<div class="modal fade" id="trackModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="trackModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLabel">Batch details</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">&times;</span></button>
             </div>
             <div class="modal-body">
                 <table class="table">
@@ -273,7 +286,7 @@
                 </table>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
             </div>
         </div>
     </div>

@@ -26,6 +26,6 @@ class Cooperative extends Model
     //relatinship with cocperative members
     public function members()
     {
-        return $this->hasMany(CooperativeMember::class, 'cooperative_id');
+        return $this->hasMany(User::class);
     }
 }

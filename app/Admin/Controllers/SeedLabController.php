@@ -147,6 +147,8 @@ class SeedLabController extends AdminController
             $crop_declaration = LoadStock::where('id', $seed_lab->load_stock_id)->where('applicant_id', $seed_lab->applicant_id )->value('crop_declaration_id');
             //get crop variety from crop_declaration id
             $crop_variety_id = CropDeclaration::where('id', $crop_declaration)->value('crop_variety_id');
+            //get mother_lot from crop_declaration
+            $mother_lot = CropDeclaration::where('id', $crop_declaration)->value('source_lot_number');
             //get crop variety name from crop_variety id
             $crop_variety= CropVariety::where('id', $crop_variety_id)->first();
             //get crop name from crop variety
@@ -160,7 +162,8 @@ class SeedLabController extends AdminController
                 $form->display('', __('Crop'))->default($crop_name);
                 $form->display('', __('Variety'))->default($crop_variety->crop_variety_name);
                 $form->display('', __('Generation'))->default($crop_variety->crop_variety_generation);
-        
+                
+        $form->hidden('mother_lot')->default($mother_lot);
         $form->text('seed_lab_test_report_number', __('Seed lab test report number'))->default('labtest'. "/". mt_rand(10000000, 99999999));
         $form->text('seed_sample_request_number', __('Seed sample request number'));
         $form->decimal('seed_sample_size', __('Seed sample size'));
