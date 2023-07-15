@@ -13,9 +13,7 @@ return new class extends Migration
     {
         Schema::create('pre_orders', function (Blueprint $table) {
             $table->id();
-            $table->string('order_number');
-            $table->string('crop');
-            $table->string('variety');
+            $table->unsignedBigInteger('crop_variety_id');
             $table->string('seed_class');
             $table->float('quantity');
             $table->date('preferred_delivery_date')->nullable();
@@ -29,6 +27,8 @@ return new class extends Migration
             $table->string('seed_delivery_preferences')->nullable();
             $table->text('other_information')->nullable();
             $table->timestamps();
+
+            $table->foreign('crop_variety_id')->references('id')->on('crop_varieties')->onDelete('cascade');
         });
     }
 

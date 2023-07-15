@@ -59,4 +59,11 @@ class Utils extends Model
 
         return $status;
     }
+
+    public static function start_session()
+    {
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+    }
 }

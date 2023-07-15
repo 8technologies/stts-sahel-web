@@ -27,5 +27,8 @@ Route::group([
     $router->resource('agro-dealers', AgroDealersController::class);
     $router->resource('feedback', FeedBackController::class);
     $router->resource('track-and-trace', TrackAndTraceController::class);
+    $router->resource('pre-orders', PreOrderController::class);
+    $router->resource('quotations', QuotationController::class);
+    $router->resource('orders', OrderController::class);
 
 });

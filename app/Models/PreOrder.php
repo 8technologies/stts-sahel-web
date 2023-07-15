@@ -10,9 +10,7 @@ class PreOrder extends Model
     use HasFactory;
 
     protected $fillable = [
-        'order_number',
-        'crop',
-        'variety',
+        'crop_variety_id',
         'seed_class',
         'quantity',
         'preferred_delivery_date',
