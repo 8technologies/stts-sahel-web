@@ -175,7 +175,7 @@
         <div class="col-md-6">
         <div class="panel panel-success">
                     <div class="panel-heading">
-                        <h4 class="panel-title">Revenue</h4>
+                        <h4 class="panel-title">Users</h4>
                     </div>
                     <div class="panel-body">
                         <div class="text-center pt-3">

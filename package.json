@@ -6,14 +6,18 @@
         "build": "vite build"
     },
     "devDependencies": {
+        "@faker-js/faker": "^8.0.2",
         "@popperjs/core": "^2.11.6",
         "axios": "^1.1.2",
         "bootstrap": "^5.2.3",
         "laravel-vite-plugin": "^0.7.5",
+        "parcel": "^2.6.2",
         "sass": "^1.56.1",
         "vite": "^4.0.0"
     },
     "dependencies": {
+        "@cubejs-client/core": "^0.31.0",
+        "chart.js": "^4.3.0",
         "flag-icon-css": "^4.1.7"
     }
 }

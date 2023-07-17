@@ -163,7 +163,7 @@ class CropDeclarationController extends AdminController
         if ($u->inRoles(['basic-user', 'grower'])) 
         {
             $form->select('crop_variety_id', __('Crop variety'))
-                ->options(CropVariety::all()->pluck('name_text', 'id'))
+                ->options(CropVariety::all()->pluck('crop_variety_name', 'id'))
                 ->required();
 
             $form->text('phone_number', __('Phone number'));
@@ -194,7 +194,10 @@ class CropDeclarationController extends AdminController
 
         if ($u->isRole('commissioner')) {
             $form->display('crop_variety_id', __('Crop variety'))
-            ->options(CropVariety::all()->pluck('name_text', 'id'))
+            ->with(function ($crop_variety_id)
+            {
+                return CropVariety::find($crop_variety_id)->crop_variety_name;
+            })
             ->required();
 
             $form->display('phone_number', __('Phone number'));

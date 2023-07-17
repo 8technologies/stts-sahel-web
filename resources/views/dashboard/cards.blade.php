@@ -21,6 +21,12 @@
     <!-- App CSS -->
     <link href="assets/css/app.min.css" id="app-style" rel="stylesheet">
 
+    <style>
+        .card {
+            border: 1px solid green;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+    </style>
 </head>
 
 <body>
@@ -30,11 +36,11 @@
 <!-- ============================================================== -->
 <div class="row">
     <div class="col-lg-3 col-md-6 col-sm-6">
-        <div class="panel panel-success">
-            <div class="panel-heading">
-                <h3 class="panel-title">Registered Farmers</h3>
+        <div class="card panel-success">
+            <div class="card-header">
+                <h3 class="card-title"> Farmers</h3>
             </div>
-            <div class="panel-body">
+            <div class="card-body">
                 <h4 class="mb-2">1452</h4>
                 <p class="text-muted mb-0"><span class="text-success fw-bold font-size-12 me-2"><i class="glyphicon glyphicon-arrow-up me-1 align-middle"></i>9.23%</span>from previous period</p>
             </div>
@@ -43,11 +49,11 @@
     
 
     <div class="col-lg-3 col-md-6 col-sm-6">
-        <div class="panel panel-success">
-            <div class="panel-heading">
-                <h3 class="panel-title">Registered Co-operatives</h3>
+        <div class="card panel-success">
+            <div class="card-header">
+                <h3 class="card-title"> Co-operatives</h3>
             </div>
-            <div class="panel-body">
+            <div class="card-body">
                 <h4 class="mb-2">938</h4>
                 <p class="text-muted mb-0"><span class="text-danger fw-bold font-size-12 me-2"><i class="glyphicon glyphicon-arrow-down me-1 align-middle"></i>1.09%</span>from previous period</p>
             </div>
@@ -55,11 +61,11 @@
     </div>
 
     <div class="col-lg-3 col-md-6 col-sm-6">
-        <div class="panel panel-success">
-            <div class="panel-heading">
-                <h3 class="panel-title">Registered Agro-Dealers</h3>
+        <div class="card panel-success">
+            <div class="card-header">
+                <h3 class="card-title">Agro-Dealers</h3>
             </div>
-            <div class="panel-body">
+            <div class="card-body">
                 <h4 class="mb-2">8246</h4>
                 <p class="text-muted mb-0"><span class="text-success fw-bold font-size-12 me-2"><i class="glyphicon glyphicon-arrow-up me-1 align-middle"></i>16.2%</span>from previous period</p>
             </div>
@@ -67,11 +73,11 @@
     </div>
 
     <div class="col-lg-3 col-md-6 col-sm-6">
-        <div class="panel panel-success">
-            <div class="panel-heading">
-                <h3 class="panel-title">Total Pre-Orders</h3>
+        <div class="card panel-success">
+            <div class="card-header">
+                <h3 class="card-title">Pre-Orders</h3>
             </div>
-            <div class="panel-body">
+            <div class="card-body">
                 <h4 class="mb-2">29670</h4>
                 <p class="text-muted mb-0"><span class="text-success fw-bold font-size-12 me-2"><i class="glyphicon glyphicon-arrow-up me-1 align-middle"></i>11.7%</span>from previous period</p>
             </div>

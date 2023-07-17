@@ -98,7 +98,7 @@
             <div class="col-md-6">
                 <div class="panel panel-success">
                     <div class="panel-heading">
-                        <h4 class="panel-title">Revenue</h4>
+                        <h4 class="panel-title">Users</h4>
                     </div>
                     <div class="panel-body">
                         <div class="text-center pt-3">
@@ -110,7 +110,7 @@
                                             <i class="mdi mdi-menu-up font-size-14"> </i>2.2%
                                         </div>
                                     </div>
-                                    <p class="text-muted text-truncate mb-0">Marketplace</p>
+                                    <p class="text-muted text-truncate mb-0">Agro Dealers</p>
                                 </div><!-- end col -->
                                 <div class="col-sm-4 mb-3 mb-sm-0">
                                     <div class="d-inline-flex">

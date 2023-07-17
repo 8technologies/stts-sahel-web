@@ -21,12 +21,26 @@ class HomeController extends Controller
                
             })
             ->row(function (Row $row) {
-                $row->column(12, function (Column $column) {
-                    $column->append(Dashboard::graph1());
+                $row->column(4, function (Column $column) {
+                    $column->append(view('dashboard.pieChart'));
                 });
+                $row->column(8, function (Column $column) {
+                    $column->append((Dashboard::crops()));
+                });
+             
               
                
-            });
+            })
           
+            ->row(function (Row $row) {
+                $row->column(6, function (Column $column) {
+                    $column->append((Dashboard::crops()));
+                });
+               
+                $row->column(6, function (Column $column) {
+                    $column->append(view('dashboard.comparison'));
+                });
+              
+            });
     }
 }

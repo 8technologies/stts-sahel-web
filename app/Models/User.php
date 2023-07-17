@@ -12,6 +12,8 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
 use App\Models\CooperativeMember;
 
 
+
+
 class User extends Authenticatable implements JWTSubject
 {
 
