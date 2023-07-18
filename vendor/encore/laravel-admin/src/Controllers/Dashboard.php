@@ -66,7 +66,8 @@ class Dashboard
     //function to get marketable seed crop type
     public function getCropVarietiesWithCounts()
 {
-    $cropVarieties = MarketableSeed::all()->value('crop_variety_id');
+    $cropVarieties = MarketableSeed::pluck('crop_variety_id');
+
     $data = [];
 
     foreach ($cropVarieties as $cropVariety) {
@@ -83,7 +84,7 @@ class Dashboard
         }
     }
 
-    return $data;
+    return view('dashboard.pieChart', $data);
 }
 
 }
