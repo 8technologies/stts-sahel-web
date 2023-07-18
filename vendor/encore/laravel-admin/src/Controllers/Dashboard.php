@@ -8,6 +8,7 @@ use App\Models\CropDeclaration;
 use App\Models\SeedLab;
 use Carbon\Carbon;
 use App\Models\Utils;
+use App\Models\MarketableSeed;
 
 class Dashboard
 {
@@ -19,14 +20,6 @@ class Dashboard
         return view('dashboard.cards');
     }
 
-    public static function graph1(){
-        return view('dashboard.graph1');
-    }
-
-    public static function graph2(){
-        return view('dashboard.graph2');
-    }
-
     public static function crops()
     {
         $crops = CropDeclaration::orderBy('updated_at', 'Desc')->limit(4)->get();
@@ -34,7 +27,8 @@ class Dashboard
         return view('dashboard.table', [ 'crops' => $crops]);
     }
 
-    //function to get the total number of marketable seeds for each month
+   
+    //function to get the total number of marketable and unmarketable seeds for each month
     public static function seeds()
     {
         $data = [
@@ -68,5 +62,28 @@ class Dashboard
 
         return view('dashboard.comparison', $data);
     }
+
+    //function to get marketable seed crop type
+    public function getCropVarietiesWithCounts()
+{
+    $cropVarieties = MarketableSeed::all()->value('crop_variety_id');
+    $data = [];
+
+    foreach ($cropVarieties as $cropVariety) {
+        $crops = $cropVariety->crops;
+
+        foreach ($crops as $crop) {
+            $cropName = $crop->name;
+
+            if (!isset($data[$cropName])) {
+                $data[$cropName] = 0;
+            }
+
+            $data[$cropName]++;
+        }
+    }
+
+    return $data;
+}
 
 }

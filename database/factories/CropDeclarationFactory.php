@@ -2,6 +2,8 @@
 
 namespace Database\Factories;
 
+use App\Models\Crop;
+use App\Models\CropVariety;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use App\Models\SeedProducer;
 
@@ -22,12 +24,13 @@ class CropDeclarationFactory extends Factory
             'phone_number' => $this->faker->numberBetween(1, 3),
             'applicant_registration_number' => $this->faker->numberBetween(1, 100),
             'seed_producer_id' => SeedProducer::factory(),
+            'crop_variety_id'=> CropVariety::factory(),
             'garden_size' => $this->faker->numberBetween(1, 100),
             'gps_coordinates_1' => $this->faker->randomFloat(6, -90, 90),
             'gps_coordinates_2' => $this->faker->randomFloat(6, -90, 90),
             'gps_coordinates_3' => $this->faker->randomFloat(6, -90, 90),
             'gps_coordinates_4' => $this->faker->randomFloat(6, -90, 90),
-            'field_name' => $this->faker->string,
+            'field_name' => $this->faker->word(),
             'district_region' => $this->faker->text,
             'circle' => $this->faker->text,
             'township' => $this->faker->text,
