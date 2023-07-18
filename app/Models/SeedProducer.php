@@ -29,6 +29,7 @@ class SeedProducer extends Model
         'have_adequate_isolation',
         'labor_details',
         'receipt',
+        'status',
     ];
 
 

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Carbon\Carbon;
 
 class Utils extends Model
 {
@@ -65,5 +66,14 @@ class Utils extends Model
         if (session_status() === PHP_SESSION_NONE) {
             session_start();
         }
+    }
+
+    public static function month($max_date)
+    {
+        $label = Carbon::parse($max_date);
+        if ($max_date == null) {
+            return $max_date;
+        }
+        return $label->format('M - Y');
     }
 }

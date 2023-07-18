@@ -38,7 +38,7 @@ class HomeController extends Controller
                 });
                
                 $row->column(6, function (Column $column) {
-                    $column->append(view('dashboard.comparison'));
+                    $column->append((Dashboard::seeds()));
                 });
               
             });
