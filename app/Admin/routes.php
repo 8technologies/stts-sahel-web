@@ -31,5 +31,6 @@ Route::group([
     $router->resource('quotations', QuotationController::class);
     $router->resource('orders', OrderController::class);
     $router->resource('marketable-seeds', MarketableSeedController::class);
+    $router->resource('seed-classes', SeedClassController::class);
 
 });

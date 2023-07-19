@@ -1,15 +1,5 @@
-<!DOCTYPE html>
-<html lang="en">
 
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet">
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/html5-qrcode@0.4.0/dist/html5-qrcode.min.js"></script>
+  
     <style>
         .details {
             display: flex;
@@ -18,9 +8,7 @@
             padding: 10px;
         }
     </style>
-</head>
 
-<body>
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-8">
@@ -54,6 +42,7 @@
         </div>
 
         <script src="https://cdn.jsdelivr.net/npm/html5-qrcode/dist/html5-qrcode.min.js"></script>
+     
         <script>
             let html5QrCode;
             let qrCodeSuccessCallback;
@@ -293,9 +282,7 @@
 </div>
 
 
-</body>
 
-</html>
 
 
           

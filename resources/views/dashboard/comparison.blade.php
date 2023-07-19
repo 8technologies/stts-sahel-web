@@ -1,14 +1,10 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Seed Production Growth</title>
+
     <style>
         .card {
             border-radius: 5px;
         }
     </style>
-</head>
-<body>
+
     <div class="card mb-4 mb-md-5 border-0">
         <!--begin::Header-->
         <div class="d-flex justify-content-between px-3 px-md-4">
@@ -26,7 +22,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
-        document.addEventListener("DOMContentLoaded", function () {
+        $(function () {
             var ctx = document.getElementById('mixed-chart').getContext('2d');
 
             // Dummy data
@@ -101,5 +97,4 @@
             mixedChart.update();
         });
     </script>
-</body>
-</html>
+

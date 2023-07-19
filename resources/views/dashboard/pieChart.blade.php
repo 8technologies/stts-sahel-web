@@ -1,7 +1,5 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Seed Stock</title>
+
+
     <style>
         .chart-container {
             position: relative;
@@ -28,11 +26,10 @@
             margin-left: 5px;
         }
     </style>
-</head>
-<body>
+
 <div class="card" >
     <div class="card-header">
-        <h3 class="card-title">Seed Stock</h3>
+        <h3 class="card-title">Marketable Seed Stock</h3>
     </div>
 
     <div class="card-body">
@@ -44,28 +41,44 @@
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            var ctx = document.getElementById('pie-chart').getContext('2d');
+    // Function to generate a random color
+    function getRandomColor() {
+        const letters = '0123456789ABCDEF';
+        let color = '#';
+        for (let i = 0; i < 6; i++) {
+            color += letters[Math.floor(Math.random() * 16)];
+        }
+        return color;
+    }
 
-            // Dummy data
-            var seedProductionData = [400, 350, 250]; // Seed A, Seed B, Seed C
+    $(function () {
+        var ctx = document.getElementById('pie-chart').getContext('2d');
 
-            var pieChart = new Chart(ctx, {
-                type: 'pie',
-                data: {
-                    labels: ['Seed A', 'Seed B', 'Seed C'],
-                    datasets: [{
-                        data: seedProductionData,
-                        backgroundColor: ['#4CAF50', '#FF4081', '#3F51B5'],
-                        borderWidth: 0
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false
-                }
-            });
+        // Dummy data
+        var seedProductionData = <?php echo json_encode($counts); ?>;
+        var labels = <?php echo json_encode($names); ?>;
+
+        // Generate an array of random colors based on the number of datasets
+        var backgroundColors = [];
+        for (let i = 0; i < seedProductionData.length; i++) {
+            backgroundColors.push(getRandomColor());
+        }
+
+        var pieChart = new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: labels,
+                datasets: [{
+                    data: seedProductionData,
+                    backgroundColor: backgroundColors,
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false
+            }
         });
-    </script>
-</body>
-</html>
+    });
+</script>
+

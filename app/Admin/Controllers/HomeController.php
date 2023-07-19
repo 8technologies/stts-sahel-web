@@ -22,10 +22,10 @@ class HomeController extends Controller
             })
             ->row(function (Row $row) {
                 $row->column(4, function (Column $column) {
-                    $column->append(view('dashboard.pieChart'));
+                    $column->append(Dashboard::marketableSeeds());
                 });
                 $row->column(8, function (Column $column) {
-                    $column->append((Dashboard::crops()));
+                    $column->append(Dashboard::crops());
                 });
              
               
@@ -34,7 +34,7 @@ class HomeController extends Controller
           
             ->row(function (Row $row) {
                 $row->column(6, function (Column $column) {
-                    $column->append((Dashboard::crops()));
+                    $column->append(Dashboard::preOrders());
                 });
                
                 $row->column(6, function (Column $column) {

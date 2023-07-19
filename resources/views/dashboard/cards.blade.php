@@ -1,25 +1,4 @@
-<!doctype html>
-<html lang="en">
 
-<!-- Mirrored from themesdesign.in/upcube/layouts/ by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 08 Feb 2023 16:21:10 GMT -->
-<head>
-
-    <meta charset="utf-8" />
-    <title>Dashboard | Upcube - Admin & Dashboard Template</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta content="Premium Multipurpose Admin & Dashboard Template" name="description" />
-    <meta content="Themesdesign" name="author" />
-    <!-- App favicon -->
-    <link rel="shortcut icon" href="assets/images/favicon.ico">
-
-    <!-- Bootstrap CSS -->
-    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet">
-
-    <!-- Icons CSS -->
-    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css" rel="stylesheet">
-
-    <!-- App CSS -->
-    <link href="assets/css/app.min.css" id="app-style" rel="stylesheet">
 
     <style>
         .card {
@@ -27,9 +6,6 @@
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
     </style>
-</head>
-
-<body>
 
 <!-- ============================================================== -->
 <!-- Start right Content here -->
@@ -87,6 +63,3 @@
 
 <!-- Bootstrap 3.3.5 JS -->
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
-
-</body>
-</html>

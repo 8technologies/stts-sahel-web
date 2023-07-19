@@ -85,9 +85,9 @@ use App\Models\Utils;
 
     <div class="card" >
         <div class="card-header">
-            <h3 class="card-title">Recent Crop Declarations</h3>
+            <h3 class="card-title">Recent Pre Orders</h3>
             <div>
-                <a href="{{ admin_url('/crop-declarations') }}" class="btn-view-all">View All</a>
+                <a href="{{ admin_url('/pre-orders') }}" class="btn-view-all">View All</a>
             </div>
         </div>
 
@@ -95,52 +95,43 @@ use App\Models\Utils;
             <table class="table">
                 <thead>
                     <tr>
-                        <th style="min-width: 200px;">Applicant</th>
+                        <th style="min-width: 200px;">Order by</th>
                         <th style="min-width: 150px;">Crop Variety</th>
-                        <th style="min-width: 150px;">Status</th>
-                        <th class="text-right">Actions</th>
+                        <th style="min-width: 150px;">Quantity</th>
+                       
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($crops as $crop)
+                    @foreach ($preOrders as $preOrder)
                     @php
-                    $name = App\Models\User::find($crop->applicant_id)->name;
-                    $crop_variety = App\Models\CropVariety::find($crop->crop_variety_id)->crop_variety_name;
+                    $name = App\Models\User::find($preOrder->user_id)->name;
+                    $crop_variety = App\Models\CropVariety::find($preOrder->crop_variety_id)->crop_variety_name;
                     @endphp
                     <tr>
                         <td>
                             <div>
                                 <a href="#" style="color: black; font-weight: 600;">{{ $name }}</a>
-                                <br>
-                                <span class="text-muted">{{ $crop->field_name }}</span>
-                                <br>
-                                <span class="text-muted">
-                                    <b class="small text-dark">Garden Size:</b>
-                                    {{ Str::of($crop->garden_size)->limit(10) }}
-                                </span>
+                               
                             </div>
                         </td>
                         <td>
                             <div>
                                 <b style="color: black;">{{ Str::of($crop_variety)->limit(35) }}</b>
                                 <br>
-                                <span class="text-primary">{{ $crop->updated_at }}</span>
+                                <span class="text-primary">{{ $preOrder->created_at }}</span>
                             </div>
                         </td>
                         <td class="text-end">
-                            <span>{!! Utils::tell_status($crop->status) ?? '-' !!}</span>
+                            <span>{!! $preOrder->quantity ?? '-' !!}</span>
                         </td>
                         <td class="text-right">
                             <div>
-                                <a href="{{ admin_url('/crop-declarations/'.$crop->id) }}" title="View" class="btn-action">
+                                <a href="{{ admin_url('/pre-orders/'.$preOrder->id) }}" title="View" class="btn-action">
                                     <i class="fa fa-eye"></i>
                                     <span>View</span>
                                 </a>
                                 <br>
-                                <a href="{{ admin_url('/crop-declarations/'.$crop->id.'/edit') }}" title="Edit" class="btn-action">
-                                    <i class="fa fa-edit"></i>
-                                    <span>Edit</span>
-                                </a>
+    
                             </div>
                         </td>
                     </tr>

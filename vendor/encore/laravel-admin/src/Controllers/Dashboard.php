@@ -9,6 +9,8 @@ use App\Models\SeedLab;
 use Carbon\Carbon;
 use App\Models\Utils;
 use App\Models\MarketableSeed;
+use App\Models\CropVariety;
+use App\Models\PreOrder;
 
 class Dashboard
 {
@@ -20,6 +22,8 @@ class Dashboard
         return view('dashboard.cards');
     }
 
+
+    //CROP DECLARATION TABLE
     public static function crops()
     {
         $crops = CropDeclaration::orderBy('updated_at', 'Desc')->limit(4)->get();
@@ -27,8 +31,8 @@ class Dashboard
         return view('dashboard.table', [ 'crops' => $crops]);
     }
 
-   
-    //function to get the total number of marketable and unmarketable seeds for each month
+   //COMAPRISON CHARTS
+    //function to get the total number of marketable and unmarketable seeds for each month 
     public static function seeds()
     {
         $data = [
@@ -63,28 +67,47 @@ class Dashboard
         return view('dashboard.comparison', $data);
     }
 
+    //PIE CHARTS
     //function to get marketable seed crop type
-    public function getCropVarietiesWithCounts()
-{
-    $cropVarieties = MarketableSeed::pluck('crop_variety_id');
-
-    $data = [];
-
-    foreach ($cropVarieties as $cropVariety) {
-        $crops = $cropVariety->crops;
-
-        foreach ($crops as $crop) {
-            $cropName = $crop->name;
-
-            if (!isset($data[$cropName])) {
-                $data[$cropName] = 0;
+    public static function marketableSeeds()
+    {
+        $cropVarieties = MarketableSeed::pluck('crop_variety_id');
+    
+        $data = [];
+    
+        foreach ($cropVarieties as $cropVarietyId) {
+            // Get the respective crop that the crop variety belongs to
+            $cropVariety = CropVariety::find($cropVarietyId);
+    
+            if ($cropVariety) {
+                // Get the crop name
+                $cropName = $cropVariety->crop->crop_name;
+    
+                // Increment the count for the crop name in the data array
+                if (!isset($data[$cropName])) {
+                    $data[$cropName] = 0;
+                }
+    
+                $data[$cropName]++;
             }
-
-            $data[$cropName]++;
         }
+    
+        // Separate the names and their respective counts into different variables
+        $names = array_keys($data);
+        $counts = array_values($data);
+    
+        // Return the data as an associative array
+        return view('dashboard.pieChart', ['names' => $names, 'counts' => $counts]);
     }
 
-    return view('dashboard.pieChart', $data);
-}
+    //PRE-ORDER TABLE
+    //function to get the pre-orders
+    public static function preOrders()
+    {
+        $preOrders = PreOrder::orderBy('updated_at', 'Desc')->limit(4)->get();
 
+        return view('dashboard.preorder_table', [ 'preOrders' => $preOrders]);
+    }
+
+    
 }
