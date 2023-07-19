@@ -94,10 +94,10 @@ use App\Models\Utils;
         <div class="card-body">
             <table class="table">
                 <thead>
-                    <tr>
-                        <th style="min-width: 200px;">Order by</th>
+                    <tr> 
                         <th style="min-width: 150px;">Crop Variety</th>
-                        <th style="min-width: 150px;">Quantity</th>
+                        <th style="min-width: 200px;">Quantity Ordered</th>
+                        <th class="text-right">Actions</th>
                        
                     </tr>
                 </thead>
@@ -108,12 +108,7 @@ use App\Models\Utils;
                     $crop_variety = App\Models\CropVariety::find($preOrder->crop_variety_id)->crop_variety_name;
                     @endphp
                     <tr>
-                        <td>
-                            <div>
-                                <a href="#" style="color: black; font-weight: 600;">{{ $name }}</a>
-                               
-                            </div>
-                        </td>
+                       
                         <td>
                             <div>
                                 <b style="color: black;">{{ Str::of($crop_variety)->limit(35) }}</b>
@@ -121,9 +116,11 @@ use App\Models\Utils;
                                 <span class="text-primary">{{ $preOrder->created_at }}</span>
                             </div>
                         </td>
-                        <td class="text-end">
-                            <span>{!! $preOrder->quantity ?? '-' !!}</span>
+                        <td>
+                                <a href="#" style="color: black; font-weight: 600;">{{$preOrder->quantity }}</a>
+                                 
                         </td>
+                       
                         <td class="text-right">
                             <div>
                                 <a href="{{ admin_url('/pre-orders/'.$preOrder->id) }}" title="View" class="btn-action">

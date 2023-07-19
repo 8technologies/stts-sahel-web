@@ -11,6 +11,10 @@ use App\Models\Utils;
 use App\Models\MarketableSeed;
 use App\Models\CropVariety;
 use App\Models\PreOrder;
+use App\Models\SeedProducer;
+use App\Models\AgroDealers;
+use App\Models\Cooperative;
+
 
 class Dashboard
 {
@@ -18,8 +22,19 @@ class Dashboard
     /**
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
+    //function to get the totals
     public static function cards(){
-        return view('dashboard.cards');
+        $data = [
+            'total_producers' => SeedProducer::count(),
+            'pending_producers' => SeedProducer::where('status', 'pending')->count(),
+            'total_cooperatives' => Cooperative::count(),
+            'pending_cooperatives' => Cooperative::where('status', 'pending')->count(),
+            'total_agro_dealers' => AgroDealers::count(),
+            'pending_agro_dealers' => AgroDealers::where('status', 'pending')->count(),
+            'total_marketable_seeds' => MarketableSeed::count(),
+        ];
+
+        return view('dashboard.cards', ['data' => $data]);
     }
 
 
