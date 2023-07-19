@@ -32,7 +32,7 @@ class SeedProducerFactory extends Factory
             'have_adequate_isolation' => $this->faker->boolean(),
             'labor_details' =>$this->faker->sentence(),
             'receipt' =>$this->faker->imageUrl(),
-            'status' => $this->faker->randomElement(['Pending','Approved','Rejected']),
+            'status' => $this->faker->randomElement(['pending','accepted','rejected']),
 
             //
         ];

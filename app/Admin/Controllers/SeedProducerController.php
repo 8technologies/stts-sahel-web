@@ -27,6 +27,10 @@ class SeedProducerController extends AdminController
     {
         $grid = new Grid(new SeedProducer());
         $user = Admin::user();
+
+        //order by pending first
+        $grid->model()->orderByRaw('CASE WHEN status = "pending" THEN 1 ELSE 2 END');
+        
         $seed_producer = SeedProducer::where('user_id', auth('admin')->user()->id)->value('status');
          if(!$user->isRole('basic-user')){
             //disable create button and delete

@@ -20,7 +20,9 @@ class DatabaseSeeder extends Seeder
        // \App\Models\SeedLab::factory(10)->create();
         //\App\Models\MarketableSeed::factory(10)->create();
 
-         //
+        // \App\Models\AgroDealers::factory(10)->create();
+        // \App\Models\Cooperative::factory(10)->create();
+        \App\Models\PreOrder::factory(10)->create();
 
        // \App\Models\User::factory(10)->create();
 
