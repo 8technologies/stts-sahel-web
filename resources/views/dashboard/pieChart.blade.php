@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Seed Production Distribution</title>
+    <title>Seed Stock</title>
     <style>
         .chart-container {
             position: relative;
@@ -32,7 +32,7 @@
 <body>
 <div class="card" >
     <div class="card-header">
-        <h3 class="card-title">Crops</h3>
+        <h3 class="card-title">Seed Stock</h3>
     </div>
 
     <div class="card-body">
