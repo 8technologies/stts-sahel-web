@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -33,6 +34,11 @@ class SeedProducerFactory extends Factory
             'labor_details' =>$this->faker->sentence(),
             'receipt' =>$this->faker->imageUrl(),
             'status' => $this->faker->randomElement(['pending','accepted','rejected']),
+            'status_comment'=> $this->faker->sentence(),
+            'valid_from' => Carbon::now(),
+            'valid_until' => Carbon::now()->addYear(),
+            'grower_number' => $this->faker->randomNumber(),
+            'inspector_id'=> User::factory(),
 
             //
         ];

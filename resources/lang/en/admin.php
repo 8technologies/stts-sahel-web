@@ -112,6 +112,7 @@ return [
     'next'                   => 'Next',
     'quick_create'           => 'Quick create',
     'form'=>[
+        //Seed Producer form
         'Knowledge of crops and varieties' =>  'Knowledge of crops and varieties', 
         'Valid until' => 'Valid until',
         'Inspector' => 'Inspector',
@@ -124,7 +125,7 @@ return [
         'Garden history of the proposed seed production field for the last three season or years' => 'Garden history of the proposed seed production field for the last three season or years',
         'If seed company, years of experience as a seed producer' => 'If seed company, years of experience as a seed producer',
         'Proposed farm location' => 'Proposed farm location',
-        'Applicant physcial address' => 'Applicant physcial address',
+        'Applicant physical address' => 'Applicant physcial address',
         'Proposed farm location' => 'Proposed farm location',
         'Applicant email' => 'Applicant email',
         'Applicant phone number' => 'Applicant phone number',
@@ -136,7 +137,9 @@ return [
         'Please specify your reason' => 'Please specify your reason',
         'Registration Number' => 'Registration Number',
         'Certificate' => 'Certificate',
-
+        'Applicant' => 'Applicant',
+        'Date' => 'Date',
+        'Search by name of applicant' => 'Search by name applicant'
 
     ]
 ];

@@ -100,6 +100,7 @@ return [
     ],
     'menu_titles'           => [],
     'form'=>[
+          //Seed Producer form
         'Knowledge of crops and varieties' => 'Connaissance des cultures et des variétés', 
         'Valid until' => 'Valide jusqu\'au',
         'Inspector' => 'Inspecteur', 
@@ -124,6 +125,9 @@ return [
         'Please specify your reason' => 'Veuillez préciser votre raison',
         'Registration Number' => 'Numéro d\'enregistrement',
         'Certificate' => 'Certificat',
+        'Applicant' => 'Demandeur',
+        'Date' => 'Date',
+        'Search by name of applicant' => 'Recherche par nom du demandeur'
 
     ]
 
