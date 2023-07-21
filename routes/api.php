@@ -1,10 +1,10 @@
 <?php
 
-use App\Http\Controllers\Apis\AuthController;
-use App\Http\Controllers\Apis\CropDeclarationController;
-use App\Http\Controllers\Apis\CropController;
-use App\Http\Controllers\Apis\FieldInspectionController;
-use App\Http\Controllers\Apis\SeedProducerController;
+use App\Http\Controllers\ApiController;
+use App\Http\Controllers\CropDeclarationController;
+use App\Http\Controllers\CropController;
+use App\Http\Controllers\FieldInspectionController;
+use App\Http\Controllers\SeedProducerController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
