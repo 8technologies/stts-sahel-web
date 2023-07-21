@@ -19,10 +19,10 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('test', [AuthController::class, 'index']);
-Route::post('register', [AuthController::class, 'register']);
-Route::post('login', [AuthController::class, 'login']);
-Route::get('me', [AuthController::class, 'me']);
+Route::get('test', [ApiController::class, 'index']);
+Route::post('register', [ApiController::class, 'register']);
+Route::post('login', [ApiController::class, 'login']);
+Route::get('me', [ApiController::class, 'me']);
 Route::get('seed-producer-forms', [SeedProducerController::class, 'seed_producer_forms']);
 Route::post('seed-producer-forms', [SeedProducerController::class, 'seed_producer_forms_post']);
 Route::get('crop-declarations', [CropDeclarationController::class, 'crop_declarations']);
