@@ -55,6 +55,9 @@ class Utils extends Model
             return '<span class="label label-success">Marketable</span>';
         if ($status == 'not marketable')
             return '<span class="label label-danger">Not Marketable</span>';
+        if ($status == 'Inspection assigned')
+            return '<span class="label" style="background-color: yellow; color: black;">Inspection Assigned</span>';
+        
 
 
 

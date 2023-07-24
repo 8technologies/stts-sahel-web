@@ -76,9 +76,9 @@ public static function get_notifications($user)
         {
             $notification = new Notification();
             $notification->role_id = 2;
-            $notification->message = Admin::user()->name. ' has applied for a {$entity} ';
+            $notification->message =  "New {$entity} has been submitted by ".Admin::user()->name.' ';
             $notification->link = admin_url("auth/login"); 
-            $notification->form_link = admin_url("{$entity}/{$model->id}");
+            $notification->form_link = admin_url("{$entity}/{$model->id}/edit");
             $notification->status = 'Unread'; 
             $notification->model = $model_name;
             $notification->model_id = $model->id; 

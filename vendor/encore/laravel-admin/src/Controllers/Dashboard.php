@@ -26,11 +26,11 @@ class Dashboard
     public static function cards(){
         $data = [
             'total_producers' => SeedProducer::count(),
-            'pending_producers' => SeedProducer::where('status', 'pending')->count(),
+            'pending_producers' => SeedProducer::where('status', 'pending')->orWhere('status', null)->count(),
             'total_cooperatives' => Cooperative::count(),
-            'pending_cooperatives' => Cooperative::where('status', 'pending')->count(),
+            'pending_cooperatives' => Cooperative::where('status', 'pending')->orWhere('status', null)->count(),
             'total_agro_dealers' => AgroDealers::count(),
-            'pending_agro_dealers' => AgroDealers::where('status', 'pending')->count(),
+            'pending_agro_dealers' => AgroDealers::where('status', 'pending')->orWhere('status', null)->count(),
             'total_marketable_seeds' => MarketableSeed::count(),
         ];
 

@@ -140,6 +140,8 @@ return [
         'Applicant' => 'Applicant',
         'Date' => 'Date',
         'Search by name of applicant' => 'Search by name applicant'
+        //crop declaration form
+        
 
     ]
 ];

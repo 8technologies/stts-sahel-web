@@ -55,7 +55,7 @@
             </div>
             <div class="card-body">
                 <h4 class="mb-2"> {{ $data['total_marketable_seeds'] }}</h4>
-                <p class="text-muted mb-0"><span class="text-success fw-bold font-size-12 me-2"><i class="glyphicon glyphicon-leaf me-1 align-middle"></i></span><a href="admin_url('/marketable-seeds')">marketable seeds</a></p>
+                <p class="text-muted mb-0"><span class="text-success fw-bold font-size-12 me-2"><i class="glyphicon glyphicon-leaf me-1 align-middle"></i></span><a href="{{ admin_url('/marketable-seeds') }}">marketable seeds</a></p>
             </div>
         </div>
     </div>
