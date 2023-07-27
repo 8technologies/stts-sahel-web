@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
+use Encore\Admin\Auth\Database\Administrator;
 
 class Utils extends Model
 {
@@ -55,21 +56,24 @@ class Utils extends Model
             return '<span class="label label-success">Marketable</span>';
         if ($status == 'not marketable')
             return '<span class="label label-danger">Not Marketable</span>';
-        if ($status == 'Inspection assigned')
+        if ($status == 'inspector assigned')
             return '<span class="label" style="background-color: yellow; color: black;">Inspection Assigned</span>';
-        
+
 
 
 
         return $status;
     }
 
+    //get session or getting an id
     public static function start_session()
     {
         if (session_status() === PHP_SESSION_NONE) {
             session_start();
         }
     }
+
+    //get chat labels
 
     public static function month($max_date)
     {
@@ -78,5 +82,13 @@ class Utils extends Model
             return $max_date;
         }
         return $label->format('M - Y');
+    }
+    //get all inspectors
+    public static function get_inspectors()
+    {
+        $users = Administrator::whereHas('roles', function ($query) {
+            $query->where('name', 'inspector');
+        })->pluck('name', 'id');
+        return $users;
     }
 }

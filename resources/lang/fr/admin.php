@@ -99,35 +99,37 @@ return [
         'filter_placeholder' => 'Filtre',
     ],
     'menu_titles'           => [],
-    'form'=>[
-          //Seed Producer form
-        'Knowledge of crops and varieties' => 'Connaissance des cultures et des variétés', 
+    'form' => [
+        //Seed Producer form
+        'Knowledge of crops and varieties' => 'Connaissance des cultures et des variétés',
         'Valid until' => 'Valide jusqu\'au',
-        'Inspector' => 'Inspecteur', 
-        'Status comment' => 'Commentaire sur le statut', 
-        'Status' => 'Statut', 
-        'Proof of payment of application fees' => 'Preuve du paiement des frais de demande', 
+        'Inspector' => 'Inspecteur',
+        'Status comment' => 'Commentaire sur le statut',
+        'Status' => 'Statut',
+        'Proof of payment of application fees' => 'Preuve du paiement des frais de demande',
         'Detail the labor you have at the farm in terms of numbers and competencies' => 'Détaillez la main-d\'œuvre que vous avez à la ferme en termes de nombres et de compétences',
-        'Do you have adequate isolation?' => 'Avez-vous une isolation adéquate?', 
-        'Describe your storage facilities to handle the resultant seed' => 'Décrivez vos installations de stockage pour gérer la semence résultante', 
-        'Garden history of the proposed seed production field for the last three season or years' => 'Historique du jardin du champ de production de semences proposé pour les trois dernières saisons ou années', 
-        'If seed company, years of experience as a seed producer' => 'Si société de semences, années d\'expérience en tant que producteur de semences', 
+        'Do you have adequate isolation?' => 'Avez-vous une isolation adéquate?',
+        'Describe your storage facilities to handle the resultant seed' => 'Décrivez vos installations de stockage pour gérer la semence résultante',
+        'Garden history of the proposed seed production field for the last three season or years' => 'Historique du jardin du champ de production de semences proposé pour les trois dernières saisons ou années',
+        'If seed company, years of experience as a seed producer' => 'Si société de semences, années d\'expérience en tant que producteur de semences',
         'Proposed farm location' => 'Emplacement de la ferme proposée',
-        'Applicant physcial address' => 'Adresse physique du demandeur', 
-        'Proposed farm location' => 'Emplacement de la ferme proposée', 
+        'Applicant physcial address' => 'Adresse physique du demandeur',
+        'Proposed farm location' => 'Emplacement de la ferme proposée',
         'Applicant email' => 'Email du demandeur',
-        'Applicant phone number' => 'Numéro de téléphone du demandeur', 
-        'Name of Applicant' => 'Nom du demandeur', 
-        'Seed producer categorry' => 'Catégorie de producteur de semences', 
-        'Seed producer approval number' => 'Numéro d\'approbation du producteur de semences', 
-        'Seed producer approval date' => 'Date d\'approbation du producteur de semences', 
-        'Seed producer registration number' =>  'Numéro d\'enregistrement du producteur de semences', 
+        'Applicant phone number' => 'Numéro de téléphone du demandeur',
+        'Name of Applicant' => 'Nom du demandeur',
+        'Seed producer categorry' => 'Catégorie de producteur de semences',
+        'Seed producer approval number' => 'Numéro d\'approbation du producteur de semences',
+        'Seed producer approval date' => 'Date d\'approbation du producteur de semences',
+        'Seed producer registration number' =>  'Numéro d\'enregistrement du producteur de semences',
         'Please specify your reason' => 'Veuillez préciser votre raison',
         'Registration Number' => 'Numéro d\'enregistrement',
         'Certificate' => 'Certificat',
         'Applicant' => 'Demandeur',
         'Date' => 'Date',
         'Search by name of applicant' => 'Recherche par nom du demandeur'
+        //crop declaration form
+
 
     ]
 
