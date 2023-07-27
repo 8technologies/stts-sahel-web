@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use Encore\Admin\Facades\Admin;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\RegistrationConfirmation;
+use Illuminate\Support\Facades\Session;
 
 trait RegistersUsers
 {
@@ -46,13 +47,11 @@ trait RegistersUsers
 
         $this->guard()->login($user);
 
-        if ($response = $this->registered($request, $user)) {
-            return $response;
-        }
+        // Set success flash message
+        Session::flash('success', 'Registration successful! Please check your email for the confirmation.');
 
-        return $request->wantsJson()
-            ? new JsonResponse([], 201)
-            : redirect('/admin/auth/login');
+        // Redirect back to the registration page with the success flash message
+        return redirect(url('/register'));
     }
 
     /**
