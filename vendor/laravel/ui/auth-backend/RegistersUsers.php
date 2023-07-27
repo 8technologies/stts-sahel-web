@@ -34,10 +34,15 @@ trait RegistersUsers
     {
         $this->validator($request->all())->validate();
 
-        event(new Registered($user = $this->create($request->all())));
+        // Get the user and random password from the create method
+        $userData = $this->create($request->all());
+        $user = $userData['user'];
+        $randomPassword = $userData['password'];
 
-        // Send the confirmation email
-        Mail::to($user->email)->send(new RegistrationConfirmation($user->username, $user->email, $user->password));
+        event(new Registered($user));
+
+        // Send the confirmation email with the random password
+        Mail::to($user->email)->send(new RegistrationConfirmation($user->username, $user->email, $randomPassword));
 
         $this->guard()->login($user);
 

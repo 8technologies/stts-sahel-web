@@ -86,7 +86,8 @@ class RegisterController extends Controller
         // Add a special character
         $randomPassword .= $specialCharacters[mt_rand(0, strlen($specialCharacters) - 1)];
 
-        return User::create([
+        // Create the user and get the model instance
+        $user = User::create([
             'first_name' => $data['first_name'],
             'last_name' => $data['last_name'],
             'username' => $data['username'],
@@ -94,5 +95,10 @@ class RegisterController extends Controller
             'email' => $data['email'],
             'password' => Hash::make($randomPassword),
         ]);
+
+        return [
+            'user' => $user,
+            'password' => $randomPassword,
+        ];
     }
 }
