@@ -55,7 +55,7 @@ class User extends Authenticatable implements JWTSubject
         'name',
         'email',
         'password',
-        'value_chains',
+
     ];
 
     /**
@@ -77,12 +77,6 @@ class User extends Authenticatable implements JWTSubject
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
-
-    //relationship with cooperatives
-    public function cooperatives()
-    {
-        return $this->belongsTo(Cooperative::class);
-    }
 
     //assign a user a role of 3 once they are registered
     public static function boot()
