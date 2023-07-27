@@ -7,6 +7,8 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Encore\Admin\Facades\Admin;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\RegistrationConfirmation;
 
 trait RegistersUsers
 {
@@ -34,6 +36,9 @@ trait RegistersUsers
 
         event(new Registered($user = $this->create($request->all())));
 
+        // Send the confirmation email
+        Mail::to($user->email)->send(new RegistrationConfirmation($user->username, $user->email, $user->password));
+
         $this->guard()->login($user);
 
         if ($response = $this->registered($request, $user)) {
@@ -41,8 +46,8 @@ trait RegistersUsers
         }
 
         return $request->wantsJson()
-                    ? new JsonResponse([], 201)
-                    : redirect('/admin');
+            ? new JsonResponse([], 201)
+            : redirect('/admin/auth/login');
     }
 
     /**

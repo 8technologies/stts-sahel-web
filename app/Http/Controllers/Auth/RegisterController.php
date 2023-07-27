@@ -8,6 +8,8 @@ use App\Models\User;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
+
 
 class RegisterController extends Controller
 {
@@ -52,7 +54,7 @@ class RegisterController extends Controller
         return Validator::make($data, [
             'username' => ['required', 'string', 'max:255', 'unique:admin_users'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:admin_users'],
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
+
         ]);
     }
 
@@ -64,15 +66,33 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
+        $uppercaseLetters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $lowercaseLetters = 'abcdefghijklmnopqrstuvwxyz';
+        $numbers = '0123456789';
+        $specialCharacters = '!@#$%^&*()_-+=[]{}|';
+
+        // Generate a random password of length 8 characters
+        $randomPassword = Str::random(8);
+
+        // Add an uppercase letter
+        $randomPassword .= $uppercaseLetters[mt_rand(0, strlen($uppercaseLetters) - 1)];
+
+        // Add a lowercase letter
+        $randomPassword .= $lowercaseLetters[mt_rand(0, strlen($lowercaseLetters) - 1)];
+
+        // Add a number
+        $randomPassword .= $numbers[mt_rand(0, strlen($numbers) - 1)];
+
+        // Add a special character
+        $randomPassword .= $specialCharacters[mt_rand(0, strlen($specialCharacters) - 1)];
+
         return User::create([
             'first_name' => $data['first_name'],
             'last_name' => $data['last_name'],
             'username' => $data['username'],
-            'name'=> $data['first_name'].' '.$data['last_name'],
+            'name' => $data['first_name'] . ' ' . $data['last_name'],
             'email' => $data['email'],
-            'password' => Hash::make($data['password']),
+            'password' => Hash::make($randomPassword),
         ]);
-
-    
     }
 }
