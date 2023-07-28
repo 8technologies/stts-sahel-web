@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('price');
             $table->string('supply_date');
             $table->integer('quotation_by');
+            $table->integer('quotation_to');
             $table->string('details');
             $table->string('status');
             $table->string('payment_method')->nullable();

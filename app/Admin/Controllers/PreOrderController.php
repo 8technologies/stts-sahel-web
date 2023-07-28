@@ -25,16 +25,33 @@ class PreOrderController extends AdminController
     protected function grid()
     {
         $grid = new Grid(new PreOrder());
+        //order by the latest
+        $grid->model()->orderBy('id', 'desc');
+        //if the preorder is not made by the user,disable the delete and edit button
+        $grid->actions(function ($actions) {
+            $user = auth()->user()->id;
+            $owner = ((int)(($actions->row['user_id'])));
+            if ($owner != $user) {
+                $actions->disableDelete();
+                $actions->disableEdit();
+            }
+        });
 
         $grid->column('id', __('Id'));
-        $grid->column('crop_variety_id', __('Crop variety'))->display(function($crop_variety_id){
+        $grid->column('crop_variety_id', __('Crop variety'))->display(function ($crop_variety_id) {
             return \App\Models\CropVariety::find($crop_variety_id)->crop_variety_name;
         });
         $grid->column('seed_class', __('Seed class'));
         $grid->column('quantity', __('Quantity'));
         $grid->column('preferred_delivery_date', __('Preferred delivery date'));
         $grid->column('client_name', __('Client name'));
-       
+
+        $grid->column('id', __('admin.form.Contract'))->display(function ($id) {
+            $link = url('contract?id=' . $id);
+            return '<b><a target="_blank" href="' . $link . '">Review Contract</a></b>';
+        });
+
+
 
         return $grid;
     }
@@ -49,8 +66,8 @@ class PreOrderController extends AdminController
     {
         $show = new Show(PreOrder::findOrFail($id));
 
-    
-        $show->field('crop_variety_id', __('Crop variety'))->as(function($crop_variety_id){
+
+        $show->field('crop_variety_id', __('Crop variety'))->as(function ($crop_variety_id) {
             return \App\Models\CropVariety::find($crop_variety_id)->crop_variety_name;
         });
         $show->field('seed_class', __('Seed class'));
@@ -77,8 +94,8 @@ class PreOrderController extends AdminController
             $user = auth()->user();
             $id = request()->route()->parameters['pre_order'];
             $preOrder = PreOrder::findOrFail($id);
-            if($user->id != $preOrder->user_id) {
-                $tools->append("<a href='" . admin_url('quotations/create?preorder_id='.$id) . "' class='btn btn-primary'>SUBMIT QUOTATION</a>");
+            if ($user->id != $preOrder->user_id) {
+                $tools->append("<a href='" . admin_url('quotations/create?preorder_id=' . $id) . "' class='btn btn-primary'>SUBMIT QUOTATION</a>");
             }
         });
 
@@ -96,7 +113,7 @@ class PreOrderController extends AdminController
 
         //assign user_id to the currently logged in user
         $user = auth()->user();
-        if($form->isCreating()) {
+        if ($form->isCreating()) {
             $form->hidden('user_id')->default($user->id);
         }
         $form->select('crop_variety_id', __('Crop variety'))->options(\App\Models\CropVariety::all()->pluck('crop_variety_name', 'id'));
@@ -112,7 +129,7 @@ class PreOrderController extends AdminController
         $form->text('seed_delivery_preferences', __('Seed delivery preferences'));
         $form->textarea('other_information', __('Other information'));
 
-        
+
 
         return $form;
     }

@@ -5,6 +5,7 @@ use App\Http\Controllers\Auth\CustomRegisterController;
 use App\Http\Controllers\QrCodeController;
 use App\Http\Controllers\SeedDetailsController;
 use App\Admin\Controllers\FeedBackController;
+use App\Http\Controllers\ContractController;
 use App\Models\Gen;
 use Illuminate\Support\Facades\App;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
@@ -75,3 +76,4 @@ Route::get('agro_certificate', function () {
 });
 
 Route::get('/feedback/{lotId}', [FeedBackController::class, 'feedbackDetails']);
+//Route::get('/contract/{id}', [ContractController::show])->name('contract.show');

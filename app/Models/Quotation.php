@@ -17,6 +17,7 @@ class Quotation extends Model
         'price',
         'supply_date',
         'quotation_by',
+        'quotation_to',
         'payment_method',
         'details',
         'status',
@@ -35,9 +36,8 @@ class Quotation extends Model
         //after updating the status of the quotation, enter the order details to the order table
         static::updated(function ($model) {
 
-        //check if the person editing the quotation is not the person who made it
-            if ($model->quotation_by != Admin::user()->id) 
-            {
+            //check if the person editing the quotation is not the person who made it
+            if ($model->quotation_by != Admin::user()->id) {
                 if ($model->status == 'accepted') {
                     $order = new Order();
                     $order->preorder_id = $model->preorder_id;
@@ -58,7 +58,4 @@ class Quotation extends Model
             }
         });
     }
-    
 }
-
-   
