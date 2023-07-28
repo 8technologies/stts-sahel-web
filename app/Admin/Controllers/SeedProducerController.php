@@ -9,6 +9,8 @@ use Encore\Admin\Show;
 use \App\Models\SeedProducer;
 use Encore\Admin\Facades\Admin;
 use Encore\Admin\Auth\Database\Administrator;
+use Illuminate\Support\Carbon;
+use \App\Models\Cooperative;
 
 class SeedProducerController extends AdminController
 {
@@ -30,11 +32,13 @@ class SeedProducerController extends AdminController
         $user = Admin::user();
 
         $seed_producer = SeedProducer::where('user_id', auth('admin')->user()->id)->value('status');
-        if (!$user->isRole('basic-user')) {
+
+        if ($user->inRoles(['commissioner', 'inspector'])) {
             //disable create button and delete
             $grid->disableCreateButton();
             $grid->actions(function ($actions) {
-                $actions->disableEdit();
+                $actions->disableView();
+                $actions->disableDelete();
             });
         }
 
@@ -47,10 +51,17 @@ class SeedProducerController extends AdminController
             }
         }
 
-        $grid->actions(function ($actions) {
-            $actions->disableDelete();
-            $actions->disableView();
-        });
+        if ($user->isRole('grower')) {
+
+            //disable create button 
+            $grid->disableCreateButton();
+            $grid->actions(function ($actions) {
+
+                $actions->disableEdit();
+            });
+        }
+
+
 
         //diasable filter
         $grid->disableFilter();
@@ -61,9 +72,10 @@ class SeedProducerController extends AdminController
         }
 
         //show the user only his records
-        if (auth('admin')->user()->isRole('basic-user')) {
+        if (!auth('admin')->user()->inRoles(['commissioner', 'inspector'])) {
             $grid->model()->where('user_id', auth('admin')->user()->id);
         }
+
 
         $grid->model()->orderBy('id', 'desc');
         $grid->column('created_at', __('admin.form.Date'))->display(function ($created_at) {
@@ -181,11 +193,27 @@ class SeedProducerController extends AdminController
             return redirect(admin_url('seed-producers'));
         });
 
+        //When form is creating check type 
+        if ($form->isCreating()) {
+            //check if there is a valid sr4 for the selected application type
+            $form->saving(function (Form $form) {
+
+
+                $cooperative = Cooperative::where('user_id',  Admin::user()->id)->where('status', 'accepted')->first();
+
+                if ($form->producer_category == 'Cooperative' &&  !$cooperative) {
+                    return  response(' <p class="alert alert-warning">You do not have a valid SR4 of the selected type. <a href="/admin/seed-producers"> Go Back </a></p> ');
+                } else {
+                    return $form;
+                }
+            });
+        }
         if ($user->inRoles(['commissioner', 'inspector'])) {
 
-            $form->display('producer_category', __('admin.form.Seed producer category'))->options([
+            $form->radioCard('producer_category', __('admin.form.Seed producer category'))->options([
                 'Seed-breeder' => 'Seed-breeder',
                 'Seed-Company' => 'Seed-Company',
+                'Cooperative' => 'Cooperative',
             ]);
             $form->display('applicant_phone_number', __('admin.form.Applicant phone number'));
             $form->display('applicant_email', __('admin.form.Applicant email'));
@@ -215,7 +243,7 @@ class SeedProducerController extends AdminController
 
                     ])
                     ->when('in', ['rejected', 'halted'], function (Form $form) {
-                        $form->textarea('status_comment', __('admin.form.Status comment'))->required();
+                        $form->textarea('status_comment', __('admin.form.Status comment'));
                     })
                     ->when('accepted', function (Form $form) {
                         $form->text('producer_registration_number', __('admin.form.Seed producer registration number'))->default(rand(1000, 100000))->required();
@@ -242,7 +270,7 @@ class SeedProducerController extends AdminController
                         'halted' => 'Halted',
                     ])
                     ->when('in', ['rejected', 'halted'], function (Form $form) {
-                        $form->textarea('status_comment', __('admin.form.Status comment'))->required();
+                        $form->textarea('status_comment', __('admin.form.Status comment'));
                     })
 
                     ->when('accepted', function (Form $form) {
@@ -254,10 +282,11 @@ class SeedProducerController extends AdminController
             }
         } else {
 
-            $form->select('producer_category', __('admin.form.Seed producer category'))->options([
+            $form->radioCard('producer_category', __('admin.form.Seed producer category'))->options([
                 'Individual-grower' => 'Individual-grower',
                 'Seed-breeder' => 'Seed-breeder',
                 'Seed-Company' => 'Seed-Company',
+                'Cooperative' => 'Cooperative',
             ])->required();
 
             $form->text('applicant_phone_number', __('admin.form.Applicant phone number'))->required();

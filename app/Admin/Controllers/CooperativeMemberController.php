@@ -7,6 +7,8 @@ use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Show;
 use \App\Models\CooperativeMember;
+use \Encore\Admin\Facades\Admin;
+
 
 class CooperativeMemberController extends AdminController
 {
@@ -26,19 +28,12 @@ class CooperativeMemberController extends AdminController
     {
         $grid = new Grid(new CooperativeMember());
 
-        $grid->column('cooperative_id', __('Cooperative id'));
         $grid->column('member_number', __('Member number'));
         $grid->column('farmer_first_name', __('Farmer first name'));
         $grid->column('farmer_last_name', __('Farmer last name'));
-        $grid->column('gender', __('Gender'));
-        $grid->column('date_of_birth', __('Date of birth'));
-        $grid->column('nationality', __('Nationality'));
         $grid->column('phone_number', __('Phone number'));
         $grid->column('email_address', __('Email address'));
-        $grid->column('residential_physical_address', __('Residential physical address'));
-        $grid->column('agriculture_value_chains', __('Agriculture value chains'));
-        $grid->column('created_at', __('Created at'));
-        $grid->column('updated_at', __('Updated at'));
+
 
         return $grid;
     }
@@ -53,7 +48,6 @@ class CooperativeMemberController extends AdminController
     {
         $show = new Show(CooperativeMember::findOrFail($id));
 
-        $show->field('cooperative_id', __('Cooperative id'));
         $show->field('member_number', __('Member number'));
         $show->field('farmer_first_name', __('Farmer first name'));
         $show->field('farmer_last_name', __('Farmer last name'));
@@ -79,11 +73,14 @@ class CooperativeMemberController extends AdminController
     {
         $form = new Form(new CooperativeMember());
 
-        $form->number('cooperative_id', __('Cooperative id'));
-        $form->text('member_number', __('Member number'));
+        //get the cooperative id of the user
+        $user = Admin::user()->id;
+        $cooperative_id = \App\Models\Cooperative::where('user_id', $user)->first()->id;
+        $form->hidden('cooperative_id', __('Cooperative id'))->default($cooperative_id)->readonly();
+        $form->text('member_number', __('Member number'))->default(rand(1000, 100000))->required();
         $form->text('farmer_first_name', __('Farmer first name'));
         $form->text('farmer_last_name', __('Farmer last name'));
-        $form->text('gender', __('Gender'));
+        $form->select('gender', __('Gender'))->options(['Male' => 'Male', 'Female' => 'Female', 'Other' => 'Other']);
         $form->date('date_of_birth', __('Date of birth'))->default(date('Y-m-d'));
         $form->text('nationality', __('Nationality'));
         $form->text('phone_number', __('Phone number'));

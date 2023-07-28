@@ -45,6 +45,11 @@ class CooperativeController extends AdminController
             $grid->model()->where('user_id', auth('admin')->user()->id);
         }
 
+        //show the cooperative only his records
+        if (auth('admin')->user()->isRole('cooperative')) {
+            $grid->model()->where('user_id', auth('admin')->user()->id);
+        }
+
 
         $grid->column('id', __('Id'));
         $grid->column('cooperative_number', __('Cooperative number'));
