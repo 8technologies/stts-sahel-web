@@ -18,7 +18,6 @@ class HomeController extends Controller
                 $row->column(12, function (Column $column) {
                     $column->append(Dashboard::cards());
                 });
-               
             })
             ->row(function (Row $row) {
                 $row->column(4, function (Column $column) {
@@ -27,20 +26,21 @@ class HomeController extends Controller
                 $row->column(8, function (Column $column) {
                     $column->append(Dashboard::crops());
                 });
-             
-              
-               
             })
-          
+
             ->row(function (Row $row) {
                 $row->column(6, function (Column $column) {
                     $column->append(Dashboard::preOrders());
                 });
-               
+
                 $row->column(6, function (Column $column) {
                     $column->append((Dashboard::seeds()));
                 });
-              
+            })
+            ->row(function (Row $row) {
+                $row->column(6, function (Column $column) {
+                    $column->append(view('dashboard.inspections_stack'));
+                });
             });
     }
 }

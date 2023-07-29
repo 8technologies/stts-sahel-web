@@ -33,13 +33,13 @@ class FieldInspectionController extends AdminController
 
         //disable create button and delete action
         $grid->disableCreateButton();
-         //disable delete action
-         $grid->actions(function ($actions) {
+        //disable delete action
+        $grid->actions(function ($actions) {
             $actions->disableDelete();
         });
 
         $inspection = FieldInspection::where('applicant_id', auth('admin')->user()->id)->value('is_done');
-      
+
         if (!auth('admin')->user()->isRole('commissioner')) {
 
             if (!auth('admin')->user()->isRole('inspector')) {
@@ -67,7 +67,7 @@ class FieldInspectionController extends AdminController
         });
         $grid->column('field_decision', __('Field decision'))->display(function ($field_decision) {
             return $field_decision ?? '-';
-       });
+        });
         $grid->column('is_active', __('Is active'))->using([
             0 => 'Not active',
             1 => 'Active'
@@ -78,18 +78,18 @@ class FieldInspectionController extends AdminController
             0 => 'warning',
             1 => 'success'
         ]);
-      
+
         $grid->column('inspection_date', __('Inspection date'));
 
         $grid->column('order_number', __('Order number'));
 
-        if($inspection == 1 ){
+        if ($inspection == 1) {
             $grid->column('id', __('admin.form.Inspection Report'))->display(function ($id) {
                 $link = url('inspection?id=' . $id);
                 return '<b><a target="_blank" href="' . $link . '">Print Report</a></b>';
             });
         }
-      
+
         return $grid;
     }
 
@@ -106,15 +106,15 @@ class FieldInspectionController extends AdminController
         $show->field('applicant_id', __('Applicant '))->as(function ($applicant_id) {
             return \App\Models\User::find($applicant_id)->name;
         });
-       
-       
+
+
         $show->field('crop_variety_id', __('Crop variety '))->as(function ($crop_variety_id) {
             return \App\Models\CropVariety::find($crop_variety_id)->crop_variety_name;
         });
         $show->field('inspection_type_id', __('Inspection type'))->as(function ($inspection_type_id) {
             return \App\Models\InspectionType::find($inspection_type_id)->inspection_type_name;
         });
-       
+
         $show->field('physical_address', __('Physical address'));
         $show->field('field_size', __('Field size'));
         $show->field('inspection_date', __('Inspection date'));
@@ -124,8 +124,8 @@ class FieldInspectionController extends AdminController
         $show->field('remarks', __('Remarks'));
         $show->field('signature', __('Signature'));
         $show->field('field_decision', __('Field decision'));
-    
-       
+
+
         $show->field('field_inspection_form_number', __('Field inspection form number'));
 
         //disable edit button
@@ -145,7 +145,7 @@ class FieldInspectionController extends AdminController
     protected function form()
     {
         $form = new Form(new FieldInspection());
-        
+
         $form->display('applicant_id', __('Applicant id'))->with(function ($applicant_id) {
             return \App\Models\User::find($applicant_id)->name;
         });
@@ -155,7 +155,7 @@ class FieldInspectionController extends AdminController
         $form->display('inspection_type_id', __('Inspection type id'))->with(function ($inspection_type_id) {
             return \App\Models\InspectionType::find($inspection_type_id)->inspection_type_name;
         });
-       
+
         $form->display('physical_address', __('Physical address'));
         $form->display('inspector_id', __('Inspector'))->with(function ($inspector_id) {
             return \App\Models\User::find($inspector_id)->name;

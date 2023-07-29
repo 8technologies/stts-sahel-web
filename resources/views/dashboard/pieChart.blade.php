@@ -1,33 +1,31 @@
+<style>
+    .chart-container {
+        position: relative;
+        margin-top: 20px;
+        width: 400px;
+        height: 400px;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+    }
 
+    .chart-legend {
+        display: flex;
+        justify-content: center;
+        margin-top: 10px;
+    }
 
-    <style>
-        .chart-container {
-            position: relative;
-            margin-top: 20px;
-            width: 400px;
-            height: 400px;
-            border-radius: 5px;
-            border: 1px solid #ccc;
-        }
+    .legend-item {
+        display: flex;
+        align-items: center;
+        margin-right: 20px;
+    }
 
-        .chart-legend {
-            display: flex;
-            justify-content: center;
-            margin-top: 10px;
-        }
+    .legend-item span {
+        margin-left: 5px;
+    }
+</style>
 
-        .legend-item {
-            display: flex;
-            align-items: center;
-            margin-right: 20px;
-        }
-
-        .legend-item span {
-            margin-left: 5px;
-        }
-    </style>
-
-<div class="card" >
+<div class="card">
     <div class="card-header">
         <h3 class="card-title">Marketable Seed Stock</h3>
     </div>
@@ -39,8 +37,8 @@
 
 
 
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
     // Function to generate a random color
     function getRandomColor() {
         const letters = '0123456789ABCDEF';
@@ -51,7 +49,7 @@
         return color;
     }
 
-    $(function () {
+    $(function() {
         var ctx = document.getElementById('pie-chart').getContext('2d');
 
         // Dummy data
@@ -81,4 +79,3 @@
         });
     });
 </script>
-

@@ -39,38 +39,33 @@ class SeedLab extends Model
         parent::boot();
 
         //call back to send a notification to the user
-        self::created(function ($model) 
-        {
+        self::created(function ($model) {
             //Notification::send_notification($model, 'SeedProducer', request()->segment(count(request()->segments())));
         });
 
-        self::updated(function ($model) 
-        {
+        self::updated(function ($model) {
             //Notification::send_notification($model, 'SeedProducer', request()->segment(count(request()->segments())));
 
-            //if the test_decision is marketable ,add it to the marketable seeds table
-            $marketable_seed = new MarketableSeed();
-            $marketable_seed->user_id = $model->applicant_id;
-            $marketable_seed->seed_lab_id = $model->id;
-            $marketable_seed->load_stock_id = $model->load_stock_id;
-            $marketable_seed->quantity = $model->quantity;
-            $marketable_seed->save();
+            // //if the test_decision is marketable ,add it to the marketable seeds table
+            // $marketable_seed = new MarketableSeed();
+            // $marketable_seed->user_id = $model->applicant_id;
+            // $marketable_seed->seed_lab_id = $model->id;
+            // $marketable_seed->load_stock_id = $model->load_stock_id;
+            // $marketable_seed->quantity = $model->quantity;
+            // $marketable_seed->save();
 
-            //update the quantity in the load stock table
-            $load_stock = LoadStock::find($model->load_stock_id)->value('quantity');
-            $load_stock->quantity = $load_stock->quantity - $model->quantity;
-            $load_stock->save();
+            // //update the quantity in the load stock table
+            // $load_stock = LoadStock::find($model->load_stock_id)->value('quantity');
+            // $load_stock->quantity = $load_stock->quantity - $model->quantity;
+            // $load_stock->save();
         });
 
-        self::updating(function ($model){
-            if( Admin::user()->isRole('basic-user') )
-            {
+        self::updating(function ($model) {
+            if (Admin::user()->isRole('basic-user')) {
                 $model->status = 'pending';
                 $model->inspector_id = null;
                 return $model;
-            } 
+            }
         });
-
-
     }
 }

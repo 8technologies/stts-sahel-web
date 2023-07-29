@@ -1,11 +1,9 @@
-
-
-    <style>
-        .card {
-            border: 1px solid green;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-    </style>
+<style>
+    .card {
+        border: 1px solid green;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+</style>
 
 <!-- ============================================================== -->
 <!-- Start right Content here -->
@@ -22,7 +20,7 @@
             </div>
         </div>
     </div>
-    
+
 
     <div class="col-lg-3 col-md-6 col-sm-6">
         <div class="card panel-success">
@@ -60,6 +58,3 @@
         </div>
     </div>
 </div>
-
-<!-- Bootstrap 3.3.5 JS -->
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
