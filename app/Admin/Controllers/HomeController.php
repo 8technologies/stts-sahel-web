@@ -34,12 +34,15 @@ class HomeController extends Controller
                 });
 
                 $row->column(6, function (Column $column) {
-                    $column->append(Dashboard::seeds());
+                    $column->append(Dashboard::getProcessedAndUnprocessedSeedsPerCrop());
                 });
             })
             ->row(function (Row $row) {
                 $row->column(6, function (Column $column) {
                     $column->append(Dashboard::inspectionsChart());
+                });
+                $row->column(6, function (Column $column) {
+                    $column->append(Dashboard::seeds());
                 });
             });
     }

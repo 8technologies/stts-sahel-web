@@ -10,7 +10,7 @@
         <div class="card-header">
             <h3 class="card-title">Inspections</h3>
             <div>
-                <a href="{{ admin_url('/seed-lab-tests') }}" class="btn-view-all">View</a>
+                <a href="{{ admin_url('/field-inspections') }}" class="btn-view-all">View</a>
             </div>
         </div>
     </div>
