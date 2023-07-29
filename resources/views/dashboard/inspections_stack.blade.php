@@ -15,36 +15,46 @@
         </div>
     </div>
     <div style="width: 80%; margin: 0 auto;">
-        <canvas id="stackedBarChart"></canvas>
+        <canvas id="inspectionsChart"></canvas>
     </div>
 
     <script>
-        // Dummy data for the stacked bar chart
-        var chartData = {
-            labels: ['January', 'February', 'March'],
-            datasets: [{
-                    label: 'Apples',
-                    data: [30, 40, 25],
-                    backgroundColor: 'rgba(255, 99, 132, 0.5)',
-                },
-                {
-                    label: 'Oranges',
-                    data: [20, 10, 15],
-                    backgroundColor: 'rgba(54, 162, 235, 0.5)',
-                },
-                {
-                    label: 'Bananas',
-                    data: [15, 20, 10],
-                    backgroundColor: 'rgba(75, 192, 192, 0.5)',
-                },
-            ],
-        };
+        // Retrieve the chart data passed from the controller
+        var chartData = <?php echo json_encode($chartData); ?>;
 
         // Create the stacked bar chart
-        var ctx = document.getElementById('stackedBarChart').getContext('2d');
+        var ctx = document.getElementById('inspectionsChart').getContext('2d');
         new Chart(ctx, {
             type: 'bar',
-            data: chartData,
+            data: {
+                labels: chartData.labels,
+                datasets: [
+                    // Accepted and Rejected stacked together
+                    {
+                        label: chartData.datasets[0].label,
+                        data: chartData.datasets[0].data,
+                        backgroundColor: chartData.datasets[0].backgroundColor,
+                    },
+                    // Accepted and Rejected stacked together
+                    {
+                        label: chartData.datasets[1].label,
+                        data: chartData.datasets[1].data,
+                        backgroundColor: chartData.datasets[1].backgroundColor,
+                    },
+                    // Pending and Processed stacked together
+                    {
+                        label: chartData.datasets[2].label,
+                        data: chartData.datasets[2].data,
+                        backgroundColor: chartData.datasets[2].backgroundColor,
+                    },
+                    // Pending and Processed stacked together
+                    {
+                        label: chartData.datasets[3].label,
+                        data: chartData.datasets[3].data,
+                        backgroundColor: chartData.datasets[3].backgroundColor,
+                    },
+                ],
+            },
             options: {
                 responsive: true,
                 scales: {
@@ -53,6 +63,23 @@
                     },
                     y: {
                         stacked: true,
+                        beginAtZero: true,
+                    },
+                },
+                plugins: {
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                var label = context.dataset.label || '';
+                                if (label) {
+                                    label += ': ';
+                                }
+                                if (context.parsed.y !== null) {
+                                    label += context.parsed.y;
+                                }
+                                return label;
+                            },
+                        },
                     },
                 },
             },
