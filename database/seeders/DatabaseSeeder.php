@@ -25,7 +25,6 @@ class DatabaseSeeder extends Seeder
     //   \App\Models\PreOrder::factory(10)->create();
 
     //   \App\Models\User::factory(10)->create();
-
-
+    \App\Models\SeedLabel::factory(10)->create();
   }
 }

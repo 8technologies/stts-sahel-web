@@ -34,15 +34,22 @@ class HomeController extends Controller
                 });
 
                 $row->column(6, function (Column $column) {
-                    $column->append(Dashboard::getProcessedAndUnprocessedSeedsPerCrop());
+                    $column->append(Dashboard::seeds());
+                });
+            })
+
+            ->row(function (Row $row) {
+                $row->column(6, function (Column $column) {
+                    $column->append(Dashboard::compareCropsByPackage());
+                });
+
+                $row->column(12, function (Column $column) {
+                    $column->append(Dashboard::inspectionsChart());
                 });
             })
             ->row(function (Row $row) {
-                $row->column(6, function (Column $column) {
-                    $column->append(Dashboard::inspectionsChart());
-                });
-                $row->column(6, function (Column $column) {
-                    $column->append(Dashboard::seeds());
+                $row->column(12, function (Column $column) {
+                    $column->append(Dashboard:: getProcessedAndUnprocessedSeedsPerCrop());
                 });
             });
     }

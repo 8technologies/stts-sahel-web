@@ -8,13 +8,13 @@
     <!--begin::Header-->
     <div class="d-flex justify-content-between px-3 px-md-4">
         <div class="card-header">
-            <h3 class="card-title">Inspections</h3>
+            <h3 class="card-title">Marketable vs Raw Seed</h3>
             <div>
                 <select id="cropSelect" onchange="updateChart()">
                     <option value="">Select Crop</option>
                     <option value="Show All">Show All</option>
-                    <?php foreach ($cropNames as $cropName) : ?>
-                        <option value="<?php echo $cropName; ?>"><?php echo $cropName; ?></option>
+                    <?php foreach ($crop_names as $crop_name) : ?>
+                        <option value="<?php echo $crop_name; ?>"><?php echo $crop_name; ?></option>
                     <?php endforeach; ?>
                 </select>
             </div>
@@ -27,10 +27,10 @@
     <script>
         // Retrieve the data passed from the Laravel controller
         var cropData = <?php echo json_encode($data); ?>;
-        var cropNames = <?php echo json_encode($cropNames); ?>;
+        var crop_names = <?php echo json_encode($crop_names); ?>;
 
         // Extract the labels (crop names) and datasets (processed and unprocessed counts) from the data
-        var labels = Object.values(cropNames);
+        var labels = Object.values(crop_names);
         var processedData = Object.values(cropData).map(data => data.marketable_seeds);
         var unprocessedData = Object.values(cropData).map(data => data.load_stocks);
 

@@ -16,6 +16,7 @@ use App\Models\AgroDealers;
 use App\Models\Cooperative;
 use App\Models\FieldInspection;
 use App\Models\LoadStock;
+use App\Models\SeedLabelPackage;
 use Illuminate\Support\Facades\DB;
 
 
@@ -208,7 +209,7 @@ class Dashboard
         }
 
         // Fetch the crop names corresponding to crop_variety_id
-        $cropNames = CropVariety::whereIn('id', array_keys($combinedData))
+        $crop_names = CropVariety::whereIn('id', array_keys($combinedData))
             ->with('crop') // Load the crop relationship
             ->get()
             ->pluck('crop.crop_name', 'id')
@@ -216,6 +217,20 @@ class Dashboard
 
 
         // Return the data as an associative array
-        return view('dashboard.seed_processing', ['data' => $combinedData, 'cropNames' => $cropNames]);
+        return view('dashboard.seed_processing', ['data' => $combinedData, 'crop_names' => $crop_names]);
+    }
+    //seed paackages
+    public static function compareCropsByPackage()
+    {
+        $crops_data = SeedLabelPackage::select('seed_label_packages.quantity', 'label_packages.quantity as label_quantity', 'crops.crop_name')
+            ->join('label_packages', 'label_packages.id', '=', 'seed_label_packages.package_id')
+            ->join('seed_labels', 'seed_label_packages.seed_label_id', '=', 'seed_labels.id')
+            ->join('seed_labs', 'seed_labels.seed_lab_id', '=', 'seed_labs.id')
+            ->join('load_stocks', 'seed_labs.load_stock_id', '=', 'load_stocks.id')
+            ->join('crop_varieties', 'load_stocks.crop_variety_id', '=', 'crop_varieties.id')
+            ->join('crops', 'crop_varieties.crop_id', '=', 'crops.id')
+            ->groupBy('seed_label_packages.quantity', 'label_packages.quantity', 'crops.crop_name')
+            ->get();
+        return view('dashboard.packages', compact('crops_data'));
     }
 }

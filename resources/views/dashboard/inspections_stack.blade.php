@@ -4,7 +4,7 @@
     }
 </style>
 
-<div class="card mb-4 mb-md-5 border-0">
+<div class="card">
     <!--begin::Header-->
     <div class="d-flex justify-content-between px-3 px-md-4">
         <div class="card-header">
@@ -14,7 +14,7 @@
             </div>
         </div>
     </div>
-    <div style="width: 80%; margin: 0 auto;">
+    <div style="width: 100%; margin: 0 auto;">
         <canvas id="inspectionsChart"></canvas>
     </div>
 
