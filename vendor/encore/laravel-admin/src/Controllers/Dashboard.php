@@ -2,7 +2,8 @@
 
 namespace Encore\Admin\Controllers;
 
-use Encore\Admin\Admin;
+use \Encore\Admin\Facades\Admin;
+
 use Illuminate\Support\Arr;
 use App\Models\CropDeclaration;
 use App\Models\SeedLab;
@@ -17,6 +18,7 @@ use App\Models\Cooperative;
 use App\Models\FieldInspection;
 use App\Models\LoadStock;
 use App\Models\SeedLabelPackage;
+use App\Models\SeedLabel;
 use Illuminate\Support\Facades\DB;
 use App\Models\Order;
 
@@ -235,32 +237,64 @@ class Dashboard
         return view('dashboard.packages', compact('crops_data'));
     }
 
- 
+   //orders
+    public static function getOrders()
+    {
+        $order_data = Order::selectRaw('crops.crop_name, orders.order_date, SUM(orders.quantity) as total_quantity')
+        ->join('pre_orders', 'orders.preorder_id', '=', 'pre_orders.id')
+        ->join('crop_varieties', 'pre_orders.crop_variety_id', '=', 'crop_varieties.id')
+        ->join('crops', 'crop_varieties.crop_id', '=', 'crops.id')
+        ->groupBy('crops.crop_name', 'orders.order_date')
+        ->get();
 
+        return view('dashboard.orders', compact('order_data'));
+            
+    }
 
-public static function getOrders()
-{
-    $order_data = Order::selectRaw('crops.crop_name, orders.order_date, SUM(orders.quantity) as total_quantity')
-    ->join('pre_orders', 'orders.preorder_id', '=', 'pre_orders.id')
-    ->join('crop_varieties', 'pre_orders.crop_variety_id', '=', 'crop_varieties.id')
-    ->join('crops', 'crop_varieties.crop_id', '=', 'crops.id')
-    ->groupBy('crops.crop_name', 'orders.order_date')
-    ->get();
+    //preorders
+    public static function getPreOrders()
+    {
+        $pre_order_data = PreOrder::selectRaw('crops.crop_name, pre_orders.order_date, SUM(pre_orders.quantity) as total_quantity')
+        ->join('crop_varieties', 'pre_orders.crop_variety_id', '=', 'crop_varieties.id')
+        ->join('crops', 'crop_varieties.crop_id', '=', 'crops.id')
+        ->groupBy('crops.crop_name', 'pre_orders.order_date')
+        ->get();
 
-    return view('dashboard.orders', compact('order_data'));
-        
-}
+        return view('dashboard.preorders', compact('pre_order_data'));
+            
+    }
 
-public static function getPreOrders()
-{
-    $pre_order_data = PreOrder::selectRaw('crops.crop_name, pre_orders.order_date, SUM(pre_orders.quantity) as total_quantity')
-    ->join('crop_varieties', 'pre_orders.crop_variety_id', '=', 'crop_varieties.id')
-    ->join('crops', 'crop_varieties.crop_id', '=', 'crops.id')
-    ->groupBy('crops.crop_name', 'pre_orders.order_date')
-    ->get();
+    //mystock
+    public static function getUserStats()
+    {
+            //find the authenticated user
+            $userId = Admin::user()->id;
+            $stockCount = Loadstock::where('applicant_id', $userId)->sum('yield_quantity');
+            $seedLabsCount = Seedlab::where('applicant_id', $userId)->sum('quantity');
+            $seedLabelsCount = Seedlabel::where('applicant_id', $userId)->sum('quantity_of_seed');
+      
+        // Pass the user stats data to the view
+        return view('dashboard.mystock', [ 'stock_count' => $stockCount,
+        'seed_labs_count' => $seedLabsCount,
+        'seed_labels_count' => $seedLabelsCount,]);
+    }
 
-    return view('dashboard.preorders', compact('pre_order_data'));
-        
-}
+    //myinspections
+    public static function getMyInspections()
+    {
+        $userId = Admin::user()->id;
+    
+        $inspections = FieldInspection::where('applicant_id', $userId)
+            ->select('field_decision', DB::raw('count(*) as count'))
+            ->groupBy('field_decision')
+            ->pluck('count', 'field_decision');
+    
+        return view('dashboard.myinspections', compact('inspections'));
+    }
+
+    //my sales
+    public static function getMySales(){
+        $sales = Order::where('applicant_id', $userId)->where('status',);
+    }
 
 }

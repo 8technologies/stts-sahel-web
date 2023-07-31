@@ -28,19 +28,19 @@ class HomeController extends Controller
             //     });
             // })
 
-            ->row(function (Row $row) {
-                $row->column(6, function (Column $column) {
-                    $column->append(Dashboard::getOrders());
-                });
+            // ->row(function (Row $row) {
+            //     $row->column(6, function (Column $column) {
+            //         $column->append(Dashboard::getOrders());
+            //     });
 
               
-            })
+            // })
 
-             ->row(function (Row $row) {
-                $row->column(6, function (Column $column) {
-                    $column->append(Dashboard::getPreOrders());
-                });
-            });
+            //  ->row(function (Row $row) {
+            //     $row->column(6, function (Column $column) {
+            //         $column->append(Dashboard::getPreOrders());
+            //     });
+            // });
 
             //     $row->column(12, function (Column $column) {
             //         $column->append(Dashboard::inspectionsChart());
@@ -51,5 +51,10 @@ class HomeController extends Controller
             //         $column->append(Dashboard:: getProcessedAndUnprocessedSeedsPerCrop());
             //     });
             // });
+            ->row(function (Row $row){
+                $row->column(12, function (Column $column) {
+                    $column->append(Dashboard:: getMyInspections());
+                });
+            });
     }
 }
