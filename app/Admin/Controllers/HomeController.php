@@ -53,7 +53,7 @@ class HomeController extends Controller
             // });
             ->row(function (Row $row){
                 $row->column(12, function (Column $column) {
-                    $column->append(Dashboard:: getMyInspections());
+                    $column->append(Dashboard:: getMySales());
                 });
             });
     }

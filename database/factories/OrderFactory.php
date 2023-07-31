@@ -27,11 +27,12 @@ class OrderFactory extends Factory
             'supply_date' => $this->faker->date(),
             'order_by' => User::factory(),
             'details' => $this->faker->text,
-            'status' => $this->faker->randomElement(['pending', 'processing', 'shipped']),
+            'status' => $this->faker->randomElement(['pending', 'processing', 'shipped','delivered']),
             'status_comment' => $this->faker->sentence,
             'payment_method' => $this->faker->randomElement(['credit_card', 'paypal', 'cash_on_delivery']),
             'order_number' => $this->faker->uuid,
             'order_date' => $this->faker->dateTimeBetween('-1 year', '+1 year')->format('Y-m-d'),
+            'created_at' => $this->faker->dateTimeBetween('-1 year', '+1 year')->format('Y-m-d'),
         ];
     }
 }

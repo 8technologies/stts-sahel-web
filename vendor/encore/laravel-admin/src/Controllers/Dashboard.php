@@ -293,8 +293,21 @@ class Dashboard
     }
 
     //my sales
-    public static function getMySales(){
-        $sales = Order::where('applicant_id', $userId)->where('status',);
+    public static function getMySales()
+    {
+        // Retrieve the count of sales with status 'delivered' grouped by created_at
+        $sales = Order::where('status', 'delivered')
+            ->select(DB::raw('DATE(created_at) as date'), DB::raw('COUNT(*) as count'))
+            ->groupBy('date')
+            ->get();
+         
+    
+        // Retrieve the count of other orders (statuses other than 'delivered') grouped by created_at
+        $otherOrders = Order::where('status', '<>', 'delivered')
+            ->select(DB::raw('DATE(created_at) as date'), DB::raw('COUNT(*) as count'))
+            ->groupBy('date')
+            ->get();
+   
+        return view('dashboard.mysales', compact('sales', 'otherOrders'));
     }
-
 }
