@@ -1,12 +1,7 @@
-<style>
-    .card {
-        border-radius: 5px;
-    }
-</style>
 
 <div class="card mb-4 mb-md-5 border-0">
     <!--begin::Header-->
-    <div class="d-flex justify-content-between px-3 px-md-4">
+    <div >
         <div class="card-header">
             <h3 class="card-title">Quality Declared Seed</h3>
             <div>

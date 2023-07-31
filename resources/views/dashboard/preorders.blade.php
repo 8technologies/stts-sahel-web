@@ -6,7 +6,7 @@
 </style>
 
 <div class="card">
-    <div class="d-flex justify-content-between px-3 px-md-4">
+    <div>
         <div class="card-header2">
             <h3 class="card-title">PreOrders</h3>
         </div>

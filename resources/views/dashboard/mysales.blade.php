@@ -1,11 +1,4 @@
-<!-- Updated CSS Styles -->
-<style>
-  
 
-    .crop-dropdown {
-        margin-top: 10px;
-    }
-</style>
 
 <!-- Updated HTML Structure -->
 <div class="card">

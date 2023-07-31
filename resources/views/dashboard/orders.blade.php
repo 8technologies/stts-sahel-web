@@ -1,12 +1,7 @@
-<style>
 
-    .crop-dropdown {
-        margin-top: 10px;
-    }
-</style>
 
 <div class="card">
-    <div class="d-flex justify-content-between px-3 px-md-4">
+    <div >
         <div class="card-header4">
             <h3 class="card-title">Orders</h3>
         </div>

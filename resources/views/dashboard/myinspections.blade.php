@@ -1,20 +1,12 @@
 <style>
-        .card {
-        border-radius: 5px;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    /* border color */
-        border: 1px solid #007bff;
-        margin-bottom: 30px;
-        /* padding around */
-        padding: 20px;
-    } 
+  
     .crop-dropdown {
         margin-top: 10px;
     }
 </style>
 
 <div class="card">
-    <div class="d-flex justify-content-between px-3 px-md-4">
+    <div >
         <div class="card-header">
             <h3 class="card-title">My Inspections</h3>
         </div>

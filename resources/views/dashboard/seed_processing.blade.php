@@ -1,12 +1,8 @@
-<style>
-    .card {
-        border-radius: 5px;
-    }
-</style>
+
 
 <div class="card">
     <!--begin::Header-->
-    <div class="d-flex justify-content-between px-3 px-md-4">
+    <div class="d-flex justify-content-between ">
         <div class="card-header">
             <h3 class="card-title">Marketable vs Raw Seed</h3>
             <div>
