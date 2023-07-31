@@ -265,7 +265,7 @@ class Dashboard
     }
 
     //mystock
-    public static function getUserStats()
+    public static function getMyStock()
     {
             //find the authenticated user
             $userId = Admin::user()->id;

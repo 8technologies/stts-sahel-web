@@ -14,46 +14,56 @@ class HomeController extends Controller
     {
         return $content
             ->title('Dashboard')
-            // ->row(function (Row $row) {
-            //     $row->column(12, function (Column $column) {
-            //         $column->append(Dashboard::cards());
-            //     });
-            // })
-            // ->row(function (Row $row) {
-            //     $row->column(4, function (Column $column) {
-            //         $column->append(Dashboard::marketableSeeds());
-            //     });
-            //     $row->column(8, function (Column $column) {
-            //         $column->append(Dashboard::crops());
-            //     });
-            // })
-
-            // ->row(function (Row $row) {
-            //     $row->column(6, function (Column $column) {
-            //         $column->append(Dashboard::getOrders());
-            //     });
+            ->row(function (Row $row) {
+                $row->column(12, function (Column $column) {
+                    $column->append(Dashboard::cards());
+                });
+            })
+            ->row(function (Row $row) {
+                $row->column(8, function (Column $column) {
+                    $column->append(Dashboard::crops());
+                });
+                $row->column(4, function (Column $column) {
+                    $column->append(Dashboard::inspectionsChart());
+                });
+               
+            })
+            ->row(function (Row $row) {
+                $row->column(6, function (Column $column) {
+                    $column->append(Dashboard::getOrders());
+                });
+                $row->column(6, function (Column $column) {
+                    $column->append(Dashboard::getPreOrders());
+                });
 
               
-            // })
+               })
 
-            //  ->row(function (Row $row) {
-            //     $row->column(6, function (Column $column) {
-            //         $column->append(Dashboard::getPreOrders());
-            //     });
-            // });
+             ->row(function (Row $row) {
+                $row->column(6, function (Column $column) {
+                    $column->append(Dashboard::getProcessedAndUnprocessedSeedsPerCrop());
+                });
+                $row->column(6, function (Column $column) {
+                    $column->append(Dashboard::compareCropsByPackage());
+                });
+              
+            })
 
-            //     $row->column(12, function (Column $column) {
-            //         $column->append(Dashboard::inspectionsChart());
-            //     });
-            // })
-            // ->row(function (Row $row) {
-            //     $row->column(12, function (Column $column) {
-            //         $column->append(Dashboard:: getProcessedAndUnprocessedSeedsPerCrop());
-            //     });
-            // });
+            ->row(function (Row $row) {
+                $row->column(6, function (Column $column) {
+                    $column->append(Dashboard::getMySales());
+                });
+                $row->column(6, function (Column $column) {
+                    $column->append(Dashboard::getMyStock());
+                });
+                
+            })
             ->row(function (Row $row){
-                $row->column(12, function (Column $column) {
-                    $column->append(Dashboard:: getMySales());
+                $row->column(8, function (Column $column) {
+                    $column->append(Dashboard::getMyInspections());
+                });
+                $row->column(4, function (Column $column) {
+                    $column->append(Dashboard::marketableSeeds());
                 });
             });
     }

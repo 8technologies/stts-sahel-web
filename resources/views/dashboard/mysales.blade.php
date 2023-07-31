@@ -1,14 +1,6 @@
 <!-- Updated CSS Styles -->
 <style>
-    .card {
-        border-radius: 5px;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        /* border color */
-        border: 1px solid #007bff;
-        margin-bottom: 30px;
-        /* padding around */
-        padding: 20px;
-    }
+  
 
     .crop-dropdown {
         margin-top: 10px;
@@ -17,11 +9,9 @@
 
 <!-- Updated HTML Structure -->
 <div class="card">
-    <div class="d-flex justify-content-between px-3 px-md-4">
-        <div class="card-header">
+        <div class="card-header3">
             <h3 class="card-title">Sales</h3>
         </div>
-    </div>
     <div style="width: 100%; margin: auto;">
         <canvas id="salesChart"></canvas>
     </div>
@@ -46,12 +36,12 @@
 
             // Create an array with all months of the selected year and initialize it with zeros
             const allMonths = [];
-            const currentDate = new Date();
-            const currentYear = currentDate.getFullYear();
-            const currentMonth = currentDate.getMonth() + 1;
+            const currentDate3 = new Date();
+            const currentYear3 = currentDate3.getFullYear();
+            const currentMonth3 = currentDate3.getMonth() + 1;
 
             for (let month = 1; month <= 12; month++) {
-                if (selectedYear === currentYear && month > currentMonth) {
+                if (selectedYear === currentYear3 && month > currentMonth3) {
                     break;
                 }
                 const date = new Date(selectedYear, month - 1, 1);
@@ -125,16 +115,16 @@
             yearSelect.appendChild(yearOption);
         });
 
-        const cardHeader = document.querySelector('.card-header');
-        cardHeader.appendChild(yearSelect);
+        const cardHeader3 = document.querySelector('.card-header3');
+        cardHeader3.appendChild(yearSelect);
 
         // Get the current date and year
-        const currentDate = new Date();
-        const currentYear = currentDate.getFullYear();
-        const currentMonth = currentDate.getMonth() + 1;
+        const currentDate3 = new Date();
+        const currentYear3 = currentDate3.getFullYear();
+        const currentMonth3 = currentDate3.getMonth() + 1;
 
         // Call updateChart function with currentYear
-        updateChart(currentYear);
+        updateChart(currentYear3);
 
         function getRandomColor() {
             return '#' + Math.floor(Math.random() * 16777215).toString(16);

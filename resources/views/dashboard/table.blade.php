@@ -13,23 +13,7 @@ use App\Models\Utils;
             margin-right: 10px;
         }
 
-        .card {
-            border-radius: 5px;
-            padding: 20px;
-            margin: 20px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-
-        .card-header {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 20px;
-        }
-
-        .card-title {
-            font-size: 24px;
-            font-weight: bold;
-        }
+     
 
         .btn-view-all {
             font-size: 14px;

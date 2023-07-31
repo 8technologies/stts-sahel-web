@@ -1,7 +1,11 @@
 <style>
     .card {
         border: 1px solid green;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        margin-bottom: 30px;
+        /* padding around */
+        padding: 20px;
     }
 </style>
 
@@ -10,7 +14,7 @@
 <!-- ============================================================== -->
 <div class="row">
     <div class="col-lg-3 col-md-6 col-sm-6">
-        <div class="card panel-success">
+        <div class="card ">
             <div class="card-header">
                 <h3 class="card-title">Seed Producers</h3>
             </div>

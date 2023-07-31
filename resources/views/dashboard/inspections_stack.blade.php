@@ -17,6 +17,7 @@
     <div style="width: 100%; margin: 0 auto;">
         <canvas id="inspectionsChart"></canvas>
     </div>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <script>
         // Retrieve the chart data passed from the controller

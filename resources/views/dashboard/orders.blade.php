@@ -1,13 +1,5 @@
 <style>
-        .card {
-        border-radius: 5px;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    /* border color */
-        border: 1px solid #007bff;
-        margin-bottom: 30px;
-        /* padding around */
-        padding: 20px;
-    } 
+
     .crop-dropdown {
         margin-top: 10px;
     }
@@ -15,7 +7,7 @@
 
 <div class="card">
     <div class="d-flex justify-content-between px-3 px-md-4">
-        <div class="card-header">
+        <div class="card-header4">
             <h3 class="card-title">Orders</h3>
         </div>
     </div>
@@ -117,7 +109,7 @@
         cropSelect.classList.add('crop-dropdown');
         cropSelect.addEventListener('change', function () {
             const selectedCrop = cropSelect.value;
-            const selectedYear = yearSelect.value;
+            const selectedYear = yearSelect1.value;
             if (selectedCrop === 'all') {
                 updateChart(allCrops, selectedYear);
             } else {
@@ -125,10 +117,10 @@
             }
         });
 
-        const yearSelect = document.createElement('select');
-        yearSelect.classList.add('year-dropdown');
-        yearSelect.addEventListener('change', function () {
-            const selectedYear = yearSelect.value;
+        const yearSelect1 = document.createElement('select');
+        yearSelect1.classList.add('year-dropdown');
+        yearSelect1.addEventListener('change', function () {
+            const selectedYear = yearSelect1.value;
             const selectedCrop = cropSelect.value;
             if (selectedCrop === 'all') {
                 updateChart(allCrops, selectedYear);
@@ -153,11 +145,11 @@
             const yearOption = document.createElement('option');
             yearOption.value = year;
             yearOption.textContent = year;
-            yearSelect.appendChild(yearOption);
+            yearSelect1.appendChild(yearOption);
         });
 
-        const cardHeader = document.querySelector('.card-header');
+        const cardHeader = document.querySelector('.card-header4');
         cardHeader.appendChild(cropSelect);
-        cardHeader.appendChild(yearSelect);
+        cardHeader.appendChild(yearSelect1);
     </script>
 </div>

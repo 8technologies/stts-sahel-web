@@ -24,15 +24,15 @@
     </div>
 
     <script>
-        const data = <?php echo json_encode($crops_data); ?>;
+        const data4 = <?php echo json_encode($crops_data); ?>;
 
-        const packageNames = Array.from(new Set(data.map(item => item.label_quantity)));
-        const cropNames = Array.from(new Set(data.map(item => item.crop_name)));
-        const quantities = Array.from(new Set(data.map(item => item.quantity)));
+        const packageNames = Array.from(new Set(data4.map(item => item.label_quantity)));
+        const cropNames = Array.from(new Set(data4.map(item => item.crop_name)));
+        const quantities = Array.from(new Set(data4.map(item => item.quantity)));
 
         const datasets = cropNames.map(cropName => {
             const counts = packageNames.map(packageName => {
-                const item = data.find(item => item.label_quantity === packageName && item.crop_name === cropName);
+                const item = data4.find(item => item.label_quantity === packageName && item.crop_name === cropName);
                 return item ? item.quantity : 0;
             });
 
