@@ -93,7 +93,9 @@ class CropController extends AdminController
         $form->hasMany('crop_varieties', function (Form\NestedForm $form)  {
             $form->text('crop_variety_name', __('Crop Variety Name'));
             $form->text('crop_variety_code', __('Crop Variety Code'));
-            $form->text('crop_variety_generation', __('Crop Variety Generation'));
+            //get all seed class and display in dropdown
+            $form->select('crop_variety_generation', __('Crop Variety Generation'))->options(\App\Models\SeedClass::all()->pluck('class_name', 'id'));
+          
         });
 
       

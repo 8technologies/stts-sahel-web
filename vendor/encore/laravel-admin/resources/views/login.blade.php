@@ -54,7 +54,7 @@
   
 </head>
 <body class="hold-transition login-page" style="background: url({{ asset('storage/assets/seeds.jpg') }}) no-repeat;background-size: cover;">
-<nav class="navbar navbar-default" role="navigation">
+<nav class="navbar navbar-default" role="navigation" style="border: 3px solid green; border-radius: 10px">
     <div class="container">
         <div class="navbar-header">
             <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbarSupportedContent" aria-expanded="false">
@@ -129,7 +129,8 @@
 <div class="login-box">
 
   <!-- /.login-logo -->
-  <div class="login-box-body" style="border-radius: 25px">
+  
+<div class="login-box-body" style="border: 3px solid green; border-radius: 25px;">
   <div class="login-logo">
     <a href="{{ admin_url('/') }}"><b>{{ __('Login') }}</b></a>
   <hr>

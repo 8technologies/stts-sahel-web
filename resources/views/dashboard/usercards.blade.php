@@ -41,7 +41,7 @@
     <div class="col-lg-3 col-md-6 col-sm-6">
         <div class="card panel-success">
             <div class="card-header">
-                <h3 class="card-title">My TOtal Sales</h3>
+                <h3 class="card-title">My Total Sales</h3>
             </div>
             <div class="card-body">
                 <h4 class="mb-2"> {{ $data['total_sales'] }}</h4>

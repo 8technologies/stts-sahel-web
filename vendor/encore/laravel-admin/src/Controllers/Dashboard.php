@@ -159,6 +159,10 @@ class Dashboard
     public static function inspectionsChart()
     {
         $inspections = FieldInspection::all();
+        if($inspections->count() == 0){
+            $chartData = 0;
+            return view('dashboard.inspections_stack', compact('chartData'));
+        }
 
         // Group inspections by status
         $statusGroups = $inspections->groupBy('field_decision');
@@ -318,19 +322,21 @@ class Dashboard
     //my sales
     public static function getMySales()
     {
-        // Retrieve the count of sales with status 'delivered' grouped by created_at
-        $sales = Order::where('status', 'delivered')
+        $userId = Admin::user()->id;
+        // Retrieve the count of sales with status 'delivered' grouped by created_at for the specified user
+            $sales = Order::where('order_by', $userId)
+            ->where('status', 'delivered')
             ->select(DB::raw('DATE(created_at) as date'), DB::raw('COUNT(*) as count'))
             ->groupBy('date')
             ->get();
-         
-    
-        // Retrieve the count of other orders (statuses other than 'delivered') grouped by created_at
-        $otherOrders = Order::where('status', '<>', 'delivered')
+        
+        // Retrieve the count of other orders (statuses other than 'delivered') grouped by created_at for the specified user
+        $otherOrders = Order::where('order_by', $userId)
+            ->where('status', '<>', 'delivered')
             ->select(DB::raw('DATE(created_at) as date'), DB::raw('COUNT(*) as count'))
             ->groupBy('date')
             ->get();
-   
+
         return view('dashboard.mysales', compact('sales', 'otherOrders'));
     }
 }

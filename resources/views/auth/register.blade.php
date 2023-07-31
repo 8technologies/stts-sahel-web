@@ -2,9 +2,9 @@
 
 @section('content')
 <div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card">
+    <div class="row justify-content-center" >
+        <div class="col-md-6" >
+            <div class="card"  style="border: 3px solid green; border-radius: 25px;">
                 <div class="card-header">{{ __('Register') }}</div>
                 @if (Session::has('success'))
                 <div class="alert alert-success">
