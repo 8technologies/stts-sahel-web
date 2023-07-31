@@ -1,71 +1,161 @@
-<!-- Your Laravel view file -->
-<div>
-    <label for="timePeriod">Select Time Period:</label>
-    <select id="timePeriod">
-        <option value="week">This Week</option>
-        <option value="month">This Month</option>
-        <option value="year">This Year</option>
-    </select>
-</div>
-<canvas id="cropQuantityChart" width="800" height="400"></canvas>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/adapters/moment.min.js"></script>
-
-<script>
-    var ctx = document.getElementById('cropQuantityChart').getContext('2d');
-    var chartData = @json($datasets);
-    
-    // Function to filter the data based on the selected time period
-    function filterDataByTimePeriod(data, timePeriod) {
-        var now = new Date();
-        var filteredData = data.map(function (dataset) {
-            var filteredValues = dataset.data.filter(function (entry) {
-                var entryDate = new Date(entry.x);
-                if (timePeriod === 'week') {
-                    return entryDate >= new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
-                } else if (timePeriod === 'month') {
-                    return entryDate >= new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
-                } else if (timePeriod === 'year') {
-                    return entryDate >= new Date(now.getTime() - 365 * 24 * 60 * 60 * 1000);
-                }
-            });
-            return { ...dataset, data: filteredValues };
-        });
-        return filteredData;
+<style>
+    .cards {
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        /* border color */
+        border: 1px solid #007bff;
+        margin-bottom: 30px;
+        /* padding around */
+        padding: 20px;
     }
-        // Define the momentAdapter variable
-        const momentAdapter = Chart._adapters._date.adapters.moment;
-    
-    var chart = new Chart(ctx, {
-        type: 'line',
-        data: {
-            datasets: chartData,
-        },
-        options: {
-            scales: {
-                x: {
-                    type: 'time',
-                    adapters: {
-                        date: momentAdapter, // Use the Moment.js adapter for time scale
+    .preordercrop-dropdown {
+        margin-top: 10px;
+    }
+</style>
+
+<div class="cards">
+    <div class="d-flex justify-content-between px-3 px-md-4">
+        <div class="card-header2">
+            <h3 class="card-title">PreOrders</h3>
+        </div>
+    </div>
+    <div style="width: 100%; margin: auto;">
+        <canvas id="preorderChart"></canvas>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+        const preorderData = <?php echo json_encode($pre_order_data); ?>;
+        const preorderSortedData = preorderData.slice().sort((a, b) => new Date(a.order_date) - new Date(b.order_date));
+        const preorderAllCrops = Array.from(new Set(preorderData.map(item => item.crop_name)));
+        const preorderInitialCropsToShow = preorderAllCrops.slice(0, 5);
+
+        function filterDataForCrops(crops, selectedYear) {
+            return preorderSortedData.filter(item => crops.includes(item.crop_name) && new Date(item.order_date).getFullYear() === selectedYear);
+        }
+
+        const preorderCurrentDate = new Date();
+        const preorderCurrentYear = preorderCurrentDate.getFullYear();
+        const preorderCurrentMonth = preorderCurrentDate.getMonth() + 1;
+        const preorderYears = [];
+        for (let year = preorderCurrentYear; year >= 2010; year--) {
+            preorderYears.push(year);
+        }
+        let preorderChart;
+        let preorderAllMonths = [];
+
+        // Function to initialize datasets for the chart
+        function preorderInitializeDatasets(crops) {
+            return crops.map(crop => {
+                const counts = preorderAllMonths.map(date => {
+                    const matchingItem = preorderSortedData.find(item => item.crop_name === crop && new Intl.DateTimeFormat('en', { year: 'numeric', month: 'long' }).format(new Date(item.order_date)) === date);
+                    return matchingItem ? matchingItem.total_quantity : 0;
+                });
+
+                return {
+                    label: crop,
+                    data: counts,
+                    fill: false,
+                    borderColor: preorderGetRandomColor(),
+                };
+            });
+        }
+
+        // Function to get a random color for the chart datasets
+        function preorderGetRandomColor() {
+            return '#' + Math.floor(Math.random() * 16777215).toString(16);
+        }
+
+        // Function to update the chart with the selected crops and year
+        function preorderUpdateChart(cropsToShow, selectedYear) {
+            // Get all unique months for the selected year
+            const preorderCurrentYearIndex = preorderYears.indexOf(preorderCurrentYear);
+            const preorderSelectedYearIndex = preorderYears.indexOf(parseInt(selectedYear));
+
+            preorderAllMonths.length = 0;
+
+            for (let month = 1; month <= 12; month++) {
+                if (preorderSelectedYearIndex === preorderCurrentYearIndex && month > preorderCurrentMonth) {
+                    break;
+                }
+                const date = new Date(selectedYear, month - 1, 1);
+                preorderAllMonths.push(new Intl.DateTimeFormat('en', { year: 'numeric', month: 'long' }).format(date));
+            }
+
+            const filteredData = filterDataForCrops(cropsToShow, selectedYear);
+            const datasets = preorderInitializeDatasets(cropsToShow);
+
+            if (preorderChart) {
+                preorderChart.data.labels = preorderAllMonths;
+                preorderChart.data.datasets = datasets;
+                preorderChart.update();
+            } else {
+                preorderChart = new Chart('preorderChart', {
+                    type: 'line',
+                    data: {
+                        labels: preorderAllMonths,
+                        datasets: datasets,
                     },
-                    time: {
-                        unit: 'day',
-                    },
-                },
-                y: {
-                    beginAtZero: true,
-                },
-            },
-        },
-    });
-    
-    // Event listener to update the chart data when the dropdown selection changes
-    document.getElementById('timePeriod').addEventListener('change', function () {
-        var selectedTimePeriod = this.value;
-        var filteredData = filterDataByTimePeriod(chartData, selectedTimePeriod);
-        chart.data.datasets = filteredData;
-        chart.update();
-    });
-</script>
+                    options: {
+                        responsive: true,
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                });
+            }
+        }
+
+        preorderUpdateChart(preorderInitialCropsToShow, preorderCurrentYear);
+
+        const preorderCropSelect = document.createElement('select');
+        preorderCropSelect.classList.add('preordercrop-dropdown');
+        preorderCropSelect.addEventListener('change', function () {
+            const selectedCrop = preorderCropSelect.value;
+            const selectedYear = preorderYearSelect.value;
+            if (selectedCrop === 'all') {
+                preorderUpdateChart(preorderAllCrops, selectedYear);
+            } else {
+                preorderUpdateChart([selectedCrop], selectedYear);
+            }
+        });
+
+        const preorderYearSelect = document.createElement('select');
+        preorderYearSelect.classList.add('year-dropdown');
+        preorderYearSelect.addEventListener('change', function () {
+            const selectedYear = preorderYearSelect.value;
+            const selectedCrop = preorderCropSelect.value;
+            if (selectedCrop === 'all') {
+                preorderUpdateChart(preorderAllCrops, selectedYear);
+            } else {
+                preorderUpdateChart([selectedCrop], selectedYear);
+            }
+        });
+
+        const preorderShowAllOption = document.createElement('option');
+        preorderShowAllOption.value = 'all';
+        preorderShowAllOption.textContent = 'Show All Crops';
+        preorderCropSelect.appendChild(preorderShowAllOption);
+
+        preorderAllCrops.forEach(cropName => {
+            const cropOption = document.createElement('option');
+            cropOption.value = cropName;
+            cropOption.textContent = cropName;
+            preorderCropSelect.appendChild(cropOption);
+        });
+
+        preorderYears.forEach(year => {
+            const yearOption = document.createElement('option');
+            yearOption.value = year;
+            yearOption.textContent = year;
+            preorderYearSelect.appendChild(yearOption);
+        });
+
+        const preorderCardHeader = document.querySelector('.card-header2');
+        preorderCardHeader.appendChild(preorderCropSelect);
+        preorderCardHeader.appendChild(preorderYearSelect);
+    </script>
+</div>

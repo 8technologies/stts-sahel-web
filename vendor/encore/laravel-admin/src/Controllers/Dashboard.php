@@ -251,4 +251,16 @@ public static function getOrders()
         
 }
 
+public static function getPreOrders()
+{
+    $pre_order_data = PreOrder::selectRaw('crops.crop_name, pre_orders.order_date, SUM(pre_orders.quantity) as total_quantity')
+    ->join('crop_varieties', 'pre_orders.crop_variety_id', '=', 'crop_varieties.id')
+    ->join('crops', 'crop_varieties.crop_id', '=', 'crops.id')
+    ->groupBy('crops.crop_name', 'pre_orders.order_date')
+    ->get();
+
+    return view('dashboard.preorders', compact('pre_order_data'));
+        
+}
+
 }

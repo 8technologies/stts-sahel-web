@@ -33,15 +33,14 @@ class HomeController extends Controller
                     $column->append(Dashboard::getOrders());
                 });
 
-                // $row->column(6, function (Column $column) {
-                //     $column->append(Dashboard::seeds());
-                // });
-            });
+              
+            })
 
-            // ->row(function (Row $row) {
-            //     $row->column(6, function (Column $column) {
-            //         $column->append(Dashboard::compareCropsByPackage());
-            //     });
+             ->row(function (Row $row) {
+                $row->column(6, function (Column $column) {
+                    $column->append(Dashboard::getPreOrders());
+                });
+            });
 
             //     $row->column(12, function (Column $column) {
             //         $column->append(Dashboard::inspectionsChart());

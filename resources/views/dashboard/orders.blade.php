@@ -26,7 +26,7 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 
-    <script>
+   <script>
         const data = <?php echo json_encode($order_data); ?>;
 
         const sortedData = data.slice().sort((a, b) => new Date(a.order_date) - new Date(b.order_date));
