@@ -22,9 +22,13 @@ class DatabaseSeeder extends Seeder
 
     //   \App\Models\AgroDealers::factory(10)->create();
     //    \App\Models\Cooperative::factory(10)->create();
-    //   \App\Models\PreOrder::factory(10)->create();
+       //\App\Models\PreOrder::factory(10)->create();
 
-    //   \App\Models\User::factory(10)->create();
-    \App\Models\SeedLabel::factory(10)->create();
+      // \App\Models\User::factory(10)->create();
+
+    //\App\Models\SeedLabel::factory(10)->create();
+    //  \App\Models\SeedLabelPackage::factory(10)->create();
+     // \App\Models\Quotation::factory(10)->create();
+       \App\Models\Order::factory(10)->create();
   }
 }

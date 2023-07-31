@@ -18,6 +18,7 @@ use App\Models\FieldInspection;
 use App\Models\LoadStock;
 use App\Models\SeedLabelPackage;
 use Illuminate\Support\Facades\DB;
+use App\Models\Order;
 
 
 class Dashboard
@@ -233,4 +234,21 @@ class Dashboard
             ->get();
         return view('dashboard.packages', compact('crops_data'));
     }
+
+ 
+
+
+public static function getOrders()
+{
+    $order_data = Order::selectRaw('crops.crop_name, orders.order_date, SUM(orders.quantity) as total_quantity')
+    ->join('pre_orders', 'orders.preorder_id', '=', 'pre_orders.id')
+    ->join('crop_varieties', 'pre_orders.crop_variety_id', '=', 'crop_varieties.id')
+    ->join('crops', 'crop_varieties.crop_id', '=', 'crops.id')
+    ->groupBy('crops.crop_name', 'orders.order_date')
+    ->get();
+
+    return view('dashboard.orders', compact('order_data'));
+        
+}
+
 }
