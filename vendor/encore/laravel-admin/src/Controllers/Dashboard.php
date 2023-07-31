@@ -45,6 +45,29 @@ class Dashboard
         return view('dashboard.cards', ['data' => $data]);
     }
 
+      //function to get the user totals
+      public static function userCards()
+      {
+          $userId = Admin::user()->id;
+
+          $data = [
+              'total_stock' => LoadStock::where('applicant_id', $userId)->count(),
+              'total_inspections' => FieldInspection::where('applicant_id', $userId)->count(),
+              'pending_inspections' => FieldInspection::where('field_decision', 'pending')->orWhere('field_decision', null)->count(),
+              'total_sales'=> Order::where('supplier', $userId)->orWhere('order_by',  $userId)->count(),
+              'pending_orders' => Order::where(function ($query) use ($userId) {
+                $query->where('supplier', $userId)
+                    ->orWhere('order_by', $userId);
+            })->where(function ($query) {
+                $query->where('status', 'pending')
+                    ->orWhereNull('status');
+            })->count(),
+          ];
+  
+          return view('dashboard.usercards', ['data' => $data]);
+      }
+  
+
 
     //CROP DECLARATION TABLE
     public static function crops()
