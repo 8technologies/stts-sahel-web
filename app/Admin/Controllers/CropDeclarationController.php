@@ -96,12 +96,12 @@ class CropDeclarationController extends AdminController
         $show->field('applicant_registration_number', __('admin.form.Applicant registration number'));
 
         $show->field('garden_size', __('admin.form.Garden size'));
-        $show->field('gps_coordinates_1', __('admin.form.Gps coordinates 1'));
-        $show->field('gps_coordinates_2', __('admin.form.Gps coordinates 2'));
-        $show->field('gps_coordinates_3', __('admin.form.Gps coordinates 3'));
-        $show->field('gps_coordinates_4', __('admin.form.Gps coordinates 4'));
+        $show->field('gps_coordinates_1', __('admin.form.GPS coordinates 1'));
+        $show->field('gps_coordinates_2', __('admin.form.GPS coordinates 2'));
+        $show->field('gps_coordinates_3', __('admin.form.GPS coordinates 3'));
+        $show->field('gps_coordinates_4', __('admin.form.GPS coordinates 4'));
         $show->field('field_name', __('admin.form.Field name'));
-        $show->field('district_region', __('admin.form.District region'));
+        $show->field('district_region', __('admin.form.District/Region'));
         $show->field('circle', __('admin.form.Circle'));
         $show->field('township', __('admin.form.Township'));
         $show->field('village', __('admin.form.Village'));
@@ -166,33 +166,40 @@ class CropDeclarationController extends AdminController
                 $form->hidden('applicant_id')->default($user->id);
             }
 
-            //when is saving, check that the expected yield is not more than the quantity of seed planted
-            $form->saving(function (Form $form) {
-                $quantity_of_seed_planted = $form->quantity_of_seed_planted;
-                $expected_yield = $form->expected_yield;
-                if ($expected_yield > $quantity_of_seed_planted) {
-                    admin_error('Expected yield cannot be more than the quantity of seed planted', 'Please check the values and try again.');
-                    return back();
-                }
-            });
-
             $form->hidden('seed_producer_id')->default($seed_producer->id);
         }
 
         if ($user->inRoles(['basic-user', 'grower'])) {
-            $form->select('crop_variety_id', __('admin.form.Crop variety'))
+            $form->select('crop_variety_id', __('admin.form.Crop Variety'))
                 ->options(CropVariety::all()->pluck('crop_variety_name', 'id'))
                 ->required();
 
             $form->text('phone_number', __('admin.form.Phone number'))->required();
             $form->text('applicant_registration_number', __('admin.form.Applicant registration number'));
             $form->decimal('garden_size', __('admin.form.Garden size'))->required();
-            $form->decimal('gps_coordinates_1', __('admin.form.Gps coordinates 1'))->required();
-            $form->decimal('gps_coordinates_2', __('admin.form.Gps coordinates 2'))->required();
-            $form->decimal('gps_coordinates_3', __('admin.form.Gps coordinates 3'))->required();
-            $form->decimal('gps_coordinates_4', __('admin.form.Gps coordinates 4'))->required();
+            $form->decimal('gps_coordinates_1', __('admin.form.GPS coordinates 1'))
+                ->rules('required|numeric|between:-9999.999999,9999.999999', [
+                    'numeric' => 'Coordinates must be a numeric value.',
+                    'between' => 'Coordinates must be between -9999.999999 and 9999.999999.',
+                ])
+                ->required();
+            $form->decimal('gps_coordinates_2', __('admin.form.GPS coordinates 2'))->rules('required|numeric|between:-9999.999999,9999.999999', [
+                'numeric' => 'Coordinates must be a numeric value.',
+                'between' => 'Coordinates must be between -9999.999999 and 9999.999999.',
+            ])
+            ->required();
+            $form->decimal('gps_coordinates_3', __('admin.form.GPS coordinates 3'))->rules('required|numeric|between:-9999.999999,9999.999999', [
+                'numeric' => 'Coordinates must be a numeric value.',
+                'between' => 'Coordinates must be between -9999.999999 and 9999.999999.',
+            ])
+            ->required();
+            $form->decimal('gps_coordinates_4', __('admin.form.GPS coordinates 4'))->rules('required|numeric|between:-9999.999999,9999.999999', [
+                'numeric' => 'Coordinates must be a numeric value.',
+                'between' => 'Coordinates must be between -9999.999999 and 9999.999999.',
+            ])
+            ->required();
             $form->text('field_name', __('admin.form.Field name'));
-            $form->text('district_region', __('admin.form.District region'))->required();
+            $form->text('district_region', __('admin.form.District/Region'))->required();
             $form->text('circle', __('admin.form.Circle'))->required();
             $form->text('township', __('admin.form.Township'))->required();
             $form->text('village', __('admin.form.Village'))->required();
@@ -237,16 +244,27 @@ class CropDeclarationController extends AdminController
             $form->display('seed_supplier_registration_number', __('admin.form.Seed supplier registration number'));
             $form->display('source_lot_number', __('admin.form.Source lot number'));
             $form->display('origin_of_variety', __('admin.form.Origin of variety'));
-            $form->display('garden_location_latitude', __('admin.form.Garden location latitude'));
-            $form->display('garden_location_longitude', __('admin.form.Garden location longitude'));
+            $form->display('garden_location_latitude', __('admin.form.Garden location latitude'))->rules('required|numeric|digits:10|between:-9999.999999,9999.999999', [
+                'numeric' => 'Coordinates must be a numeric value.',
+                'digits'  => 'Coordinates must have exactly 10 digits in total.',
+                'between' => 'Coordinates must be between -9999.999999 and 9999.999999.',
+            ])
+            ->required();
+            $form->display('garden_location_longitude', __('admin.form.Garden location longitude'))->rules('required|numeric|digits:10|between:-9999.999999,9999.999999', [
+                'numeric' => 'Coordinates must be a numeric value.',
+                'digits'  => 'Coordinates must have exactly 10 digits in total.',
+                'between' => 'Coordinates must be between -9999.999999 and 9999.999999.',
+            ])
+            ->required();
             $form->textarea('details', __('admin.form.Provide more details about the garden'));
 
             $form->divider(__('admin.form.Administrator decision'));
             $form->select('status', __('admin.form.Status'))
                 ->options([
-                    'Inspection assigned' => __('admin.form.Inspection assigned'),
+                    'inspector assigned' => __('admin.form.Inspection assigned'),
                     'rejected' => __('admin.form.Rejected'),
                     'halted' => __('admin.form.Halted'),
+                   
                 ])
                 ->default('pending');
             $form->textarea('remarks', __('admin.form.Status comment'));

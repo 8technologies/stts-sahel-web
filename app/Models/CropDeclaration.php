@@ -92,7 +92,7 @@ class CropDeclaration extends Model
             
            // Notification::update_notification($model, 'CropDeclaration', request()->segment(count(request()->segments())-1));
 
-            if ($model->status == 'Inspection assigned') {
+            if ($model->status == 'inspector assigned') {
                 $crop_variety = CropVariety::find($model->crop_variety_id);
                 if ($crop_variety == null) {
                     return;
@@ -103,6 +103,7 @@ class CropDeclaration extends Model
                 }
 
                 $inspectionTypes = $crop->inspection_types()->orderBy('order')->get();
+                
                 $isFirst = true;
                 foreach ($inspectionTypes as $key => $type) {
                     $inspection = FieldInspection::where([

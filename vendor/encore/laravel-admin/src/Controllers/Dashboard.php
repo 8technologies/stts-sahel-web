@@ -251,45 +251,45 @@ class Dashboard
     }
     //marketable vs loadstock
     public static function getProcessedAndUnprocessedSeedsPerCrop()
-    {
-        // Retrieve the data for unprocessed seeds
-        $unprocessedSeedsData = LoadStock::select('crop_variety_id', DB::raw('count(*) as count'))
-            ->groupBy('crop_variety_id')
-            ->get();
+{
+    // Retrieve the data for unprocessed seeds
+    $unprocessedSeedsData = LoadStock::select('crop_variety_id', DB::raw('SUM(yield_quantity) as total_quantity'))
+        ->groupBy('crop_variety_id')
+        ->get();
 
-        // Retrieve the data for processed seeds
-        $processedSeedsData = MarketableSeed::select('crop_variety_id', DB::raw('count(*) as count'))
-            ->groupBy('crop_variety_id')
-            ->get();
+    // Retrieve the data for processed seeds
+    $processedSeedsData = MarketableSeed::select('crop_variety_id', DB::raw('SUM(quantity) as total_quantity'))
+        ->groupBy('crop_variety_id')
+        ->get();
 
-        // Combine the data and organize it by crop_variety_id
-        $combinedData = [];
+    // Combine the data and organize it by crop_variety_id
+    $combinedData = [];
 
-        foreach ($unprocessedSeedsData as $data) {
-            $combinedData[$data->crop_variety_id]['load_stocks'] = $data->count;
-        }
-
-        foreach ($processedSeedsData as $data) {
-            $cropVarietyId = $data->crop_variety_id;
-            if (isset($combinedData[$cropVarietyId])) {
-                $combinedData[$cropVarietyId]['marketable_seeds'] = $data->count;
-            } else {
-                $combinedData[$cropVarietyId]['marketable_seeds'] = $data->count;
-                $combinedData[$cropVarietyId]['load_stocks'] = 0;
-            }
-        }
-
-        // Fetch the crop names corresponding to crop_variety_id
-        $crop_names = CropVariety::whereIn('id', array_keys($combinedData))
-            ->with('crop') // Load the crop relationship
-            ->get()
-            ->pluck('crop.crop_name', 'id')
-            ->toArray();
-
-
-        // Return the data as an associative array
-        return view('dashboard.seed_processing', ['data' => $combinedData, 'crop_names' => $crop_names]);
+    foreach ($unprocessedSeedsData as $data) {
+        $combinedData[$data->crop_variety_id]['load_stocks'] = $data->total_quantity;
     }
+
+    foreach ($processedSeedsData as $data) {
+        $cropVarietyId = $data->crop_variety_id;
+        if (isset($combinedData[$cropVarietyId])) {
+            $combinedData[$cropVarietyId]['marketable_seeds'] = $data->total_quantity;
+        } else {
+            $combinedData[$cropVarietyId]['marketable_seeds'] = $data->total_quantity;
+            $combinedData[$cropVarietyId]['load_stocks'] = 0;
+        }
+    }
+
+    // Fetch the crop names corresponding to crop_variety_id
+    $crop_names = CropVariety::whereIn('id', array_keys($combinedData))
+        ->with('crop') // Load the crop relationship
+        ->get()
+        ->pluck('crop.crop_name', 'id')
+        ->toArray();
+
+    // Return the data as an associative array
+    return view('dashboard.seed_processing', ['data' => $combinedData, 'crop_names' => $crop_names]);
+}
+
     //seed paackages
     public static function compareCropsByPackage()
     {
