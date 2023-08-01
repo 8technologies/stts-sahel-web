@@ -47,18 +47,21 @@ class SeedLab extends Model
         self::updated(function ($model) {
             //Notification::send_notification($model, 'SeedProducer', request()->segment(count(request()->segments())));
 
-            // //if the test_decision is marketable ,add it to the marketable seeds table
-            // $marketable_seed = new MarketableSeed();
-            // $marketable_seed->user_id = $model->applicant_id;
-            // $marketable_seed->seed_lab_id = $model->id;
-            // $marketable_seed->load_stock_id = $model->load_stock_id;
-            // $marketable_seed->quantity = $model->quantity;
-            // $marketable_seed->save();
+            //if the test_decision is marketable ,add it to the marketable seeds table
+            if($model->test_decision == 'marketable'){
+            $marketable_seed = new MarketableSeed();
+            $marketable_seed->user_id = $model->applicant_id;
+            $marketable_seed->seed_lab_id = $model->id;
+            $marketable_seed->load_stock_id = $model->load_stock_id;
+            $marketable_seed->crop_variety_id = $model->crop_variety_id;
+            $marketable_seed->quantity = $model->quantity;
+            $marketable_seed->save();
 
-            // //update the quantity in the load stock table
-            // $load_stock = LoadStock::find($model->load_stock_id)->value('quantity');
-            // $load_stock->quantity = $load_stock->quantity - $model->quantity;
-            // $load_stock->save();
+            //update the quantity in the load stock table
+            $load_stock = LoadStock::find($model->load_stock_id);
+            $load_stock->yield_quantity = $load_stock->yield_quantity - $model->quantity;
+            $load_stock->save();
+        }
         });
 
         self::updating(function ($model) {

@@ -13,6 +13,7 @@ use \App\Models\SeedLab;
 use \App\Models\CropDeclaration;
 use \App\Models\CropVariety;
 use \App\Models\Crop;
+use \App\Models\SeedClass;
 
 
 class SeedSampleController extends AdminController
@@ -32,6 +33,10 @@ class SeedSampleController extends AdminController
     protected function grid()
     {
         $grid = new Grid(new SeedLab());
+
+        //order of the table 
+
+        $grid->model()->orderBy('id', 'desc');
         $user = Admin::user();
         if (!$user->isRole('commissioner')) {
 
@@ -114,8 +119,9 @@ class SeedSampleController extends AdminController
 
         //forms for user and seed producer
         if (auth('admin')->user()->inRoles(['basic-user', 'grower'])) {
-            $form->text('sample_request_number', __('Sample request number'));
-            $form->select('load_stock_id', __('Load stock number'))->options($crop_stock->pluck('load_stock_number', 'id'));
+            $form->text('sample_request_number', __('Sample request number'))->default('SRN' . date('YmdHis'))->readonly();
+            $form->select('load_stock_id', __('Load stock number'))->options($crop_stock->pluck('load_stock_number', 'id'))->required();
+            $form->number('quantity', __('Quantity'))->required();
             $form->date('sample_request_date', __('Sample request date'))->default(date('Y-m-d'));
             $form->file('proof_of_payment', __('Proof of payment'));
             $form->textarea('applicant_remarks', __('Applicant remarks'));
@@ -135,20 +141,22 @@ class SeedSampleController extends AdminController
             $crop_name = Crop::where('id', $crop_variety->crop_id)->value('crop_name');
 
             $applicant_name = Administrator::where('id', $seed_lab->applicant_id)->value('name');
+            $seed_class = SeedClass::where('id', $crop_variety->crop_variety_generation)->value('class_name');
 
-
-            if (auth('admin')->user()->inRoles(['inspector', 'commissioner'])) {
+            if (auth('admin')->user()->inRoles(['inspector', 'commissioner'])) 
+            {
                 $form->display('', __('Applicant name'))->default($applicant_name);
                 $form->display('load_stock_id', __('Load stock number'))->readonly();
                 $form->display('', __('Crop'))->default($crop_name);
                 $form->display('', __('Variety'))->default($crop_variety->crop_variety_name);
-                $form->display('', __('Generation'))->default($crop_variety->crop_variety_generation);
+                $form->display('', __('Generation'))->default($seed_class);
                 $form->date('sample_request_date', __('Sample request date'))->default(date('Y-m-d'))->readonly();
                 $form->file('proof_of_payment', __('Proof of payment'))->readonly();
                 $form->display('applicant_remarks', __('Applicant remarks'))->readonly();
             }
 
             if (auth('admin')->user()->isRole('commissioner')) {
+                $form->divider('Administrator descision');
                 $form->select('priority', __('Priority'))->options(['low' => 'Low', 'medium' => 'Medium', 'high' => 'High']);
                 $form->textarea('additional_instructions', __('Additional instructions'));
                 $form->select('status', __('Decision'))->options(['pending' => 'Pending', 'inspection assigned' => 'Assign Inspector']);
@@ -163,7 +171,7 @@ class SeedSampleController extends AdminController
 
             if (auth('admin')->user()->isRole('inspector')) {
                 $form->display('priority', __('Priority'));
-                $form->textarea('additional_instructions', __('Additional instructions'));
+                $form->textarea('additional_instructions', __('Analyst Information'));
                 $form->select('status', __('Decision'))->options(['halted' => 'Halted', 'rejected' => 'Rejected', 'lab test assigned' => 'Assign Lab Test']);
                 $form->text('sample_request_number', __('Sample request number'))->readonly();
             }

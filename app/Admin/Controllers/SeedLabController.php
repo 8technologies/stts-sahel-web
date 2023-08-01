@@ -13,6 +13,7 @@ use \App\Models\SeedLab;
 use \App\Models\CropDeclaration;
 use \App\Models\CropVariety;
 use \App\Models\Crop;
+use \App\Models\SeedClass;
 
 
 class SeedLabController extends AdminController
@@ -143,6 +144,7 @@ class SeedLabController extends AdminController
             $form_id = request()->route()->parameters()['seed_lab_test'];
             $seed_lab = SeedLab::find($form_id);
 
+            
             $crop_declaration = LoadStock::where('id', $seed_lab->load_stock_id)->where('applicant_id', $seed_lab->applicant_id)->value('crop_declaration_id');
             //get crop variety from crop_declaration id
             $crop_variety_id = CropDeclaration::where('id', $crop_declaration)->value('crop_variety_id');
@@ -154,17 +156,17 @@ class SeedLabController extends AdminController
             $crop_name = Crop::where('id', $crop_variety->crop_id)->value('crop_name');
 
             $applicant_name = Administrator::where('id', $seed_lab->applicant_id)->value('name');
-
+            $seed_class = SeedClass::where('id', $crop_variety->crop_variety_generation)->value('class_name');
 
             $form->display('', __('Applicant name'))->default($applicant_name);
             $form->display('load_stock_id', __('Load stock number'))->readonly();
             $form->display('', __('Crop'))->default($crop_name);
             $form->display('', __('Variety'))->default($crop_variety->crop_variety_name);
-            $form->display('', __('Generation'))->default($crop_variety->crop_variety_generation);
-
-            $form->hidden('mother_lot')->default($mother_lot);
+            $form->display('', __('Generation'))->default($seed_class);
+            $form->number('quantity', __('Quantity'))->readonly();
+            $form->hidden('crop_variety_id', __('Crop Variety'))->default($crop_variety->id);
+            $form->text('mother_lot',__('Mother lot'))->default($mother_lot)->readonly();
             $form->text('seed_lab_test_report_number', __('Seed lab test report number'))->default('labtest' . "/" . mt_rand(10000000, 99999999))->readonly();
-            $form->text('seed_sample_request_number', __('Seed sample request number'));
             $form->decimal('seed_sample_size', __('Seed sample size'));
             $form->text('testing_methods', __('Testing methods'));
             $form->decimal('germination_test_results', __('Germination test results'));
@@ -174,7 +176,7 @@ class SeedLabController extends AdminController
             $form->radio('test_decision', __('Test decision'))
                 ->options(['marketable' => 'Marketable', 'not marketable' => 'Not Marketable'])
                 ->when('marketable', function (Form $form) use ($crop_variety) {
-                    $form->textarea('lot_number', __('Lot number'))->default($crop_variety->crop_variety_name . "/" . mt_rand(10000000, 99999999));
+                    $form->text('lot_number', __('Lot number'))->default($crop_variety->crop_variety_name . "/" . mt_rand(10000000, 99999999))->readonly();
                 });
             $form->textarea('reporting_and_signature', __('Reporting and signature'));
         }

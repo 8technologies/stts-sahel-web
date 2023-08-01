@@ -17,6 +17,7 @@ use \App\Models\SeedProducer;
 use \App\Models\CropDeclaration;
 use \App\Models\LoadStock;
 use \App\Models\LabelPackage;
+use \App\Models\SeedClass;
 
 
 class SeedLabelController extends AdminController
@@ -46,10 +47,18 @@ class SeedLabelController extends AdminController
 
             $grid->disableCreateButton();
         }
+        //order
+        $grid->model()->orderBy('id', 'desc');
+
+        //show a user only what belongs to him if he is not an admin or labosem
+        if (!$user->inRoles(['labosem','commissioner'])) {
+            $grid->model()->where('applicant_id', '=', $user->id);
+        }
 
         $grid->column('seed_label_request_number', __('Seed label request number'));
-        $grid->column('applicant_id', __('Applicant name'));
-        $grid->column('registration_number', __('Registration number'));
+        $grid->column('applicant_id', __('Applicant name'))->display(function ($applicant_id) {
+            return Administrator::where('id', $applicant_id)->value('name');
+        });
         $grid->column('label_packages', __('Label packages'));
         $grid->column('request_date', __('Request date'));
         if (!Admin::user()->isRole('labosem')) {
@@ -57,12 +66,24 @@ class SeedLabelController extends AdminController
                 return \App\Models\Utils::tell_status($status);
             });
         }
-        //check the status of the form before displaying it to labosem
-
-        $grid->actions(function ($actions) {
-            $actions->disableDelete();
-            $actions->disableEdit();
-        });
+       
+        //check if the user is not labosem or admin and disable edit if the status is not pending
+        if (!Admin::user()->isRole('labosem')) {
+            $grid->actions(function ($actions) {
+                if ($actions->row->status != 'pending' && $actions->row->status != null) {
+                    $actions->disableEdit();
+                    $actions->disableDelete();
+                }
+                if (Admin::user()->isRole('commissioner')) {
+                    $actions->disableDelete();
+                }
+            });
+        }else{
+            $grid->actions(function ($actions) {
+                $actions->disableDelete();
+                $actions->disableEdit();
+            });
+        }
 
 
         return $grid;
@@ -100,12 +121,10 @@ class SeedLabelController extends AdminController
             return $crop_variety->crop_variety_name;
         });
         $show->field('', __('Generation'))->as(function ($generation) use ($crop_variety) {
-            return $crop_variety->crop_variety_generation;
-        });
-        $show->field('registration_number', __('Registration number'));
+            return \App\Models\SeedClass::find($crop_variety->crop_variety_generation)->class_name;
+    });
         $show->field('label_packages', __('Label packages'));
-        $show->field('quantity_of_seed', __('Quantity of seed'));
-        $show->file('proof_of_payment', __('Proof of payment'));
+        $show->field('proof_of_payment', __('Proof of payment'))->file();
         $show->field('request_date', __('Request date'));
         $show->field('applicant_remarks', __('Applicant remarks'));
 
@@ -187,6 +206,7 @@ class SeedLabelController extends AdminController
         });
 
 
+
         return $show;
     }
 
@@ -206,17 +226,15 @@ class SeedLabelController extends AdminController
         //get the users successfully registered seed labs
         $seed_lab_id = SeedLab::where('applicant_id', Auth::user()->id)->where('test_decision', 'marketable')->get();
 
-        if ($user->inRoles(['basic-user', 'grower'])) {
+        if ($user->inRoles(['basic-user', 'grower','agro-dealer','cooperative'])) {
 
             $form->select('seed_lab_id', __('Lot Number'))->options($seed_lab_id->pluck('lot_number', 'id'))->required();
-            $form->text('seed_label_request_number', __('Seed label request number'));
-            $form->text('registration_number', __('Registration number'));
-            //$form->decimal('quantity_of_seed', __('Quantity of seed'));
+            $form->text('seed_label_request_number', __('Seed label request number'))->default('SLR' . date('YmdHis') . rand(1000, 9999))->readonly();
             $form->file('proof_of_payment', __('Proof of payment'));
             $form->date('request_date', __('Request date'))->default(date('Y-m-d'));
             $form->textarea('applicant_remarks', __('Applicant remarks'));
 
-            $form->text('label_packages', __('Label packages'));
+            $form->text('label_packages', __('Label package Type'));
             $form->hasMany('packages', __('Packages'), function (Form\NestedForm $form) {
                 //drop down of the price and quantity from the label package table
                 $label_package = LabelPackage::all();
@@ -245,20 +263,21 @@ class SeedLabelController extends AdminController
             $crop_name = Crop::where('id', $crop_variety->crop_id)->value('crop_name');
 
             $applicant_name = Administrator::where('id', $seed_lab->applicant_id)->value('name');
-
+            $seed_class = SeedClass::where('id',$crop_variety->crop_variety_generation)->value('class_name');
             if ($user->inRoles(['commissioner', 'labosem'])) {
 
                 $form->display('seed_label_request_number', __('Seed label request number'));
-                $form->display('registration_number', __('Registration number'));
+               
                 $form->display('', __('Applicant name'))->default($applicant_name);
                 $form->display('', __('Crop'))->default($crop_name);
                 $form->display('', __('Variety'))->default($crop_variety->crop_variety_name);
-                $form->display('', __('Generation'))->default($crop_variety->crop_variety_generation);
+                $form->display('', __('Generation'))->default($seed_class);
                 $form->display('label_packages', __('Label packages'));
                 // $form->display('quantity_of_seed', __('Quantity of seed'));
                 $form->display('proof_of_payment', __('Proof of payment'));
                 $form->display('request_date', __('Request date'))->default(date('Y-m-d'));
                 $form->display('applicant_remarks', __('Applicant remarks'));
+              
                 $form->hasMany('packages', __('Packages'), function (Form\NestedForm $form) {
                     //drop down of the price and quantity from the label package table
                     $label_package = LabelPackage::all();
@@ -268,20 +287,21 @@ class SeedLabelController extends AdminController
                     }
                     $form_id = request()->route()->parameters()['seed_label'];
                     $seed_label = SeedLabel::find($form_id);
-                    $form->select('package_id', __('Label package'))->options($label_package_array)->required();
+                    $form->display('package_id', __('Label package'));
                     $form->display('quantity', __('Quantity'))->readonly();
                 })->readonly();
             }
+            if ($user->isRole('commissioner')) {
+$form->divider('Administrator descision');
+                $form->select('status', __('Status'))->options(['accepted' => 'Approved', 'rejected' => 'Rejected'])->default('pending');
+            }
 
             if ($user->isRole('labosem')) {
-
+$form->divider('Administrator descision');
                 $form->select('status', __('Status'))->options(['printed' => 'Printed', 'rejected' => 'Rejected'])->default('pending');
             }
 
-            if ($user->isRole('commissioner')) {
-
-                $form->select('status', __('Status'))->options(['accepted' => 'Approved', 'rejected' => 'Rejected'])->default('pending');
-            }
+          
         }
 
         //disable delete button

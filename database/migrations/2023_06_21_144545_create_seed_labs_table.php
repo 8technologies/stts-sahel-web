@@ -25,6 +25,7 @@ return new class extends Migration
             $table->unsignedBigInteger('inspector_id')->nullable();
             $table->unsignedBigInteger('lab_officer_id')->nullable();
             $table->dateTime('reporting_date')->nullable();
+            $table->integer('quantity')->nullable();
 
 
             $table->string('seed_lab_test_report_number')->nullable();

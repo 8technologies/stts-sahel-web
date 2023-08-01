@@ -60,12 +60,20 @@ class LoadStockController extends AdminController
     {
         $show = new Show(LoadStock::findOrFail($id));
 
-        $show->field('id', __('Id'));
         $show->field('load_stock_number', __('Load stock number'));
-        $show->field('crop_declaration_id', __('Crop Declaration'));
-        $show->field('applicant_id', __('Applicant id'));
-        $show->field('registration_number', __('Registration number'));
-        $show->field('seed_class', __('Seed class'));
+        $show->field('crop_declaration_id', __('Crop Declaration'))->as(function ($value) {
+            $crop_variety_id = \App\Models\CropDeclaration::find($value)->crop_variety_id;
+            return \App\Models\CropVariety::find($crop_variety_id)->crop_variety_name ?? '-';
+        });;
+        $show->field('applicant_id', __('Applicant id'))->as(function ($value) {
+            return \App\Models\User::find($value)->name ?? '-';
+        });
+        $show->field('registration_number', __('Registration number'))->as(function ($value) {
+            return \App\Models\SeedProducer::find($value)->producer_registration_number ?? '-';
+        });
+        $show->field('seed_class', __('Seed class'))->as(function ($value) {
+            return \App\Models\SeedClass::find($value)->class_name ?? '-';
+        });
         $show->field('field_size', __('Field size'));
         $show->field('yield_quantity', __('Yield quantity'));
         $show->field('last_field_inspection_date', __('Last field inspection date'));
@@ -93,32 +101,49 @@ class LoadStockController extends AdminController
            
             if ($form->isCreating()) {
                 $form->hidden('applicant_id')->default($user->id);
+
+                //if form is saving get the crop variety id from the crop declaration
+                $form->saving(function (Form $form) {
+                    $crop_declaration = CropDeclaration::find($form->crop_declaration_id);
+                    $user = auth()->user();
+                    if(!$user->isRole('agro-dealer')){   
+                        $form->crop_variety_id = 5;
+                        $form->last_field_inspection_date = $crop_declaration->updated_at->format('Y-m-d');
+                        $form->registration_number = $crop_declaration->seed_producer_id;
+                    }
+                });
             }
 
-        $form->text('load_stock_number', __('Load stock number'))->default('LS'.date('YmdHis'));
 
+        $form->text('load_stock_number', __('Load stock number'))->default('LS'.rand(1000, 100000))->readonly();
+
+        //get all crop varieties
+        $crop_varieties = \App\Models\CropVariety::all();
+        //get all seed classes
+        $seed_classes = \App\Models\SeedClass::all();
         $crop_declarations = CropDeclaration::where('applicant_id', $user->id)
         ->where('status', 'accepted')->get();
+        if(!$user->isRole('agro-dealer')){
+            $form->select('crop_declaration_id', __('Crop Declaration'))->options($crop_declarations->pluck('field_name', 'id'))->required();
+            $form->hidden('crop_variety_id', __('Crop Variety'));
+            $form->hidden('last_field_inspection_date', __('Date'));
+            $form->hidden('registration_number',__('producer Registration number'));
+
+            
+        }else{
+            $form->select('crop_declaration_id', __('Crop Declaration'))->options($crop_declarations->pluck('field_name', 'id'));
+            $form->selecet('crop_variety_id', __('Crop Variety'))->options($crop_varieties->pluck('name', 'id'))->required();
+            $form->date('last_field_inspection_date', __('Last field inspection date'))->default(date('Y-m-d'));
+        }
         
-        $form->select('crop_declaration_id', __('Crop Declaration'))->options($crop_declarations->pluck('field_name', 'id'));
-        $form->text('registration_number', __('Registration number'));
-        $form->text('seed_class', __('Seed class'));
+        
+        $form->select('seed_class', __('Seed class'))->options($seed_classes->pluck('class_name', 'id'))->required();
         $form->decimal('field_size', __('Field size'));
         $form->decimal('yield_quantity', __('Yield quantity'));
-        $form->date('last_field_inspection_date', __('Last field inspection date'))->default(date('Y-m-d'));
+       
         $form->date('load_stock_date', __('Load stock date'))->default(date('Y-m-d'));
         $form->textarea('last_field_inspection_remarks', __('Last field inspection remarks'));
      
-       //when saving, check if the quantity of seed planted of the selected crop declaration is less than the yield quantity
-        $form->saving(function (Form $form) {
-            if($form->crop_declaration_id != null){
-            $crop_declaration = CropDeclaration::find($form->crop_declaration_id);
-            if($crop_declaration->quantity_of_seed_planted < $form->yield_quantity){
-                admin_error('Yield quantity cannot be greater than the seed planted quantity');
-                return back();
-            }
-        }
-        });
 
         //disable edit button and delete button
         $form->tools(function (Form\Tools $tools) {

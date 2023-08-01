@@ -18,7 +18,7 @@ class HomeController extends Controller
         return $content
             ->title('Dashboard')
             ->row(function (Row $row) use($user) {
-                if($user->inRoles(['commissioner', 'developer','basic-user'])){
+                if($user->inRoles(['commissioner', 'developer',])){
                 $row->column(12, function (Column $column) {
                     $column->append(Dashboard::cards());
                 });
@@ -32,8 +32,24 @@ class HomeController extends Controller
              
             }
             })
+            ->row(function (Row $row) use($user){
+                if($user->inRoles(['lab_technician'])){
+                $row->column(12, function (Column $column) {
+                    $column->append(Dashboard::labCards());
+                });
+             
+            }
+            })
+            ->row(function (Row $row) use($user){
+                if($user->inRoles(['labosem'])){
+                $row->column(12, function (Column $column) {
+                    $column->append(Dashboard::labosemCards());
+                });
+             
+            }
+            })
             ->row(function (Row $row) use($user) {
-                if($user->inRoles(['commissioner', 'developer','basic-user',])){
+                if($user->inRoles(['commissioner', 'developer'])){
                 $row->column(8, function (Column $column) {
                     $column->append(Dashboard::crops());
                 });
@@ -53,7 +69,7 @@ class HomeController extends Controller
             })
         
             ->row(function (Row $row) use($user) {
-                if($user->inRoles(['commissioner', 'developer','basic-user'])){
+                if($user->inRoles(['commissioner', 'developer','basic-user','agro-dealer','cooperative','lab_technician','labosem'])){
               
                 $row->column(6, function (Column $column) {
                     $column->append(Dashboard::getPreOrders());
@@ -66,7 +82,7 @@ class HomeController extends Controller
                })
 
              ->row(function (Row $row)  use($user){
-                if($user->inRoles(['commissioner', 'developer','basic-user','inspector'])){
+                if($user->inRoles(['commissioner', 'developer','basic-user','inspector','agro-dealer','cooperative','lab_technician','labosem'])){
                 $row->column(6, function (Column $column) {
                     $column->append(Dashboard::getProcessedAndUnprocessedSeedsPerCrop());
                 });

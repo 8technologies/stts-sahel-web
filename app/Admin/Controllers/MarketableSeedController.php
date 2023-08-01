@@ -7,6 +7,7 @@ use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Show;
 use \App\Models\MarketableSeed;
+use Encore\Admin\Facades\Admin;
 
 class MarketableSeedController extends AdminController
 {
@@ -25,12 +26,28 @@ class MarketableSeedController extends AdminController
     protected function grid()
     {
         $grid = new Grid(new MarketableSeed());
+      //order
+        $grid->model()->orderBy('id', 'desc');
 
+        //show a user only what belongs to him if he is not an admin
+        if (!Admin::user()->isRole('commissioner')) {
+            $grid->model()->where('user_id', Admin::user()->id);
+        }
+
+        //disable creation of new records
+        $grid->disableCreateButton();
+        //disable delete and edit buttons only
+        $grid->actions(function ($actions) {
+            $actions->disableDelete();
+            $actions->disableEdit();
+        });
         $grid->column('id', __('Id'));
-        $grid->column('user_id', __('User id'));
-        $grid->column('seed_lab_id', __('Seed lab id'));
-        $grid->column('load_stock_id', __('Load stock id'));
-        $grid->column('crop_variety_id', __('Crop variety id'));
+        $grid->column('user_id', __('User'))->display(function($user_id){
+            return \App\Models\User::find($user_id)->name;
+        });
+        $grid->column('crop_variety_id', __('Crop variety'))->display(function($crop_variety_id){
+            return \App\Models\CropVariety::find($crop_variety_id)->crop_variety_name;
+        });
         $grid->column('quantity', __('Quantity'));
         $grid->column('created_at', __('Created at'));
         $grid->column('updated_at', __('Updated at'));
@@ -48,14 +65,28 @@ class MarketableSeedController extends AdminController
     {
         $show = new Show(MarketableSeed::findOrFail($id));
 
-        $show->field('id', __('Id'));
-        $show->field('user_id', __('User id'));
-        $show->field('seed_lab_id', __('Seed lab id'));
-        $show->field('load_stock_id', __('Load stock id'));
-        $show->field('crop_variety_id', __('Crop variety id'));
+    
+        $show->field('user_id', __('User'))->as(function($user_id){
+            return \App\Models\User::find($user_id)->name;
+        });
+        $show->field('seed_lab_id', __('Seed lab number'))->as(function($seed_lab_id){
+            return \App\Models\SeedLab::find($seed_lab_id)->seed_lab_test_report_number;
+        });
+        $show->field('load_stock_id', __('Load stock number'))->as(function($load_stock_id){
+            return \App\Models\LoadStock::find($load_stock_id)->load_stock_number;
+        });
+        $show->field('crop_variety_id', __('Crop variety'))->as(function($crop_variety_id){
+            return \App\Models\CropVariety::find($crop_variety_id)->crop_variety_name;
+        });
         $show->field('quantity', __('Quantity'));
         $show->field('created_at', __('Created at'));
-        $show->field('updated_at', __('Updated at'));
+       
+
+        //disable edit and delete buttons
+        $show->panel()->tools(function ($tools) {
+            $tools->disableEdit();
+            $tools->disableDelete();
+        });
 
         return $show;
     }

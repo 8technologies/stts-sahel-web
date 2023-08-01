@@ -37,6 +37,8 @@ class FieldInspectionController extends AdminController
         $grid->actions(function ($actions) {
             $actions->disableDelete();
         });
+        //order the table according to the time
+        $grid->model()->orderBy('created_at', 'desc');
 
         $inspection = FieldInspection::where('applicant_id', auth('admin')->user()->id)->value('is_done');
 
@@ -66,7 +68,7 @@ class FieldInspectionController extends AdminController
             return \App\Models\User::find($applicant_id)->name;
         });
         $grid->column('field_decision', __('Field decision'))->display(function ($field_decision) {
-            return $field_decision ?? '-';
+            return \App\Models\Utils::tell_status($field_decision) ?? '-';
         });
         $grid->column('is_active', __('Is active'))->using([
             0 => 'Not active',
@@ -89,6 +91,7 @@ class FieldInspectionController extends AdminController
                 return '<b><a target="_blank" href="' . $link . '">Print Report</a></b>';
             });
         }
+        
 
         return $grid;
     }

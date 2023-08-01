@@ -74,6 +74,33 @@ class Dashboard
         return view('dashboard.usercards', ['data' => $data]);
     }
 
+     //function to get the user totals
+     public static function labCards()
+     {
+         
+ 
+         $data = [
+             'total_labs' => SeedLab::count(),
+             'pending_labs' => SeedLab::where('status', 'lab test assigned')->count(),
+           
+         ];
+ 
+         return view('dashboard.labcards', ['data' => $data]);
+     }
+
+     //function to get the user totals
+     public static function labosemCards()
+     {
+ 
+         $data = [
+             'total_labels' => SeedLabel::count(),
+             'pending_labels' => SeedLabel::where('status', 'accepted')->count(),
+           
+         ];
+ 
+         return view('dashboard.labosemcards', ['data' => $data]);
+     }
+
     //function to get the user totals
     public static function inspectorCards()
     {
