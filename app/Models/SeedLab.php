@@ -23,6 +23,7 @@ class SeedLab extends Model
         'seed_sample_request_number',
         'seed_sample_size',
         'seed_class',
+        'quantity',
         'testing_methods',
         'germination_test_results',
         'purity_test_results',

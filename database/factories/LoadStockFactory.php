@@ -5,6 +5,7 @@ namespace Database\Factories;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use App\Models\CropDeclaration;
 use App\Models\User; 
+use App\Models\CropVariety;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\LoadStock>
@@ -22,6 +23,7 @@ class LoadStockFactory extends Factory
             //
             'load_stock_number' => $this->faker->unique()->randomNumber(),
             'crop_declaration_id' =>CropDeclaration::factory(),
+            'crop_variety_id' => CropVariety::factory(),
             'applicant_id' =>User::factory(),
             'registration_number' =>$this->faker->unique()->randomNumber(),
             'seed_class' =>$this->faker->word(),

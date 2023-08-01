@@ -45,27 +45,67 @@ class Dashboard
         return view('dashboard.cards', ['data' => $data]);
     }
 
-      //function to get the user totals
-      public static function userCards()
-      {
-          $userId = Admin::user()->id;
+    //function to get the user totals
+    public static function userCards()
+    {
+        $userId = Admin::user()->id;
 
-          $data = [
-              'total_stock' => LoadStock::where('applicant_id', $userId)->count(),
-              'total_inspections' => FieldInspection::where('applicant_id', $userId)->count(),
-              'pending_inspections' => FieldInspection::where('field_decision', 'pending')->orWhere('field_decision', null)->count(),
-              'total_sales'=> Order::where('supplier', $userId)->orWhere('order_by',  $userId)->count(),
-              'pending_orders' => Order::where(function ($query) use ($userId) {
-                $query->where('supplier', $userId)
+        $data = [
+            'total_stock' => LoadStock::where('applicant_id', $userId)->count(),
+            'total_inspections' => FieldInspection::where('applicant_id', $userId)->count(),
+            'total_sales'=> Order::where('supplier', $userId)->orWhere('order_by',  $userId)->count(),
+            'pending_orders' => Order::where(function ($query) use ($userId) {
+            $query->where('supplier', $userId)
                     ->orWhere('order_by', $userId);
             })->where(function ($query) {
                 $query->where('status', 'pending')
                     ->orWhereNull('status');
             })->count(),
-          ];
-  
-          return view('dashboard.usercards', ['data' => $data]);
-      }
+            'pending_inspections' =>FieldInspection::where(function ($query) use ($userId) {
+                $query->where('applicant_id', $userId);
+    
+            })->where(function ($query) {
+                $query->where('field_decision', 'pending')
+                    ->orWhereNull('field_decision');
+            })->count(),
+
+        ];
+
+        return view('dashboard.usercards', ['data' => $data]);
+    }
+
+    //function to get the user totals
+    public static function inspectorCards()
+    {
+        $userId = Admin::user()->id;
+
+        $data = [
+            'total_seedproducers'=> SeedProducer::where('inspector_id', $userId)->count(),   
+            'pending_seedproducers' => SeedProducer::where(function ($query) use ($userId) {
+                $query->where('inspector_id', $userId);
+            })->where(function ($query) {
+                $query->where('status', 'pending')
+                    ->orWhereNull('status');
+            })->count(),
+            'total_samples'=> SeedLab::where('inspector_id', $userId)->count(),
+            'pending_samples' => SeedLab::where(function ($query) use ($userId) {
+                $query->where('inspector_id', $userId);
+            })->where(function ($query) {
+                $query->where('test_decision', 'pending')
+                    ->orWhereNull('test_decision');
+            })->count(),
+            
+            'total_inspections' => FieldInspection::where('inspector_id', $userId)->count(),
+            'pending_inspections' => FieldInspection::where(function ($query) use ($userId) {
+                $query->where('inspector_id', $userId);       
+                    })->where(function ($query) {
+                        $query->where('field_decision', 'pending')
+                            ->orWhereNull('field_decision');
+                    })->count(),
+            ];
+
+        return view('dashboard.inspectorcards', ['data' => $data]);
+    }
   
 
 
@@ -159,6 +199,7 @@ class Dashboard
     public static function inspectionsChart()
     {
         $inspections = FieldInspection::all();
+    
         if($inspections->count() == 0){
             $chartData = 0;
             return view('dashboard.inspections_stack', compact('chartData'));
@@ -324,7 +365,7 @@ class Dashboard
     {
         $userId = Admin::user()->id;
         // Retrieve the count of sales with status 'delivered' grouped by created_at for the specified user
-            $sales = Order::where('order_by', $userId)
+            $sales = Order::where('supplier', $userId)
             ->where('status', 'delivered')
             ->select(DB::raw('DATE(created_at) as date'), DB::raw('COUNT(*) as count'))
             ->groupBy('date')

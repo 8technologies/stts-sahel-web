@@ -2,9 +2,11 @@
 
 <div class="card">
     <div >
+    <div class="d-flex justify-content-between ">
         <div class="card-header4">
             <h3 class="card-title">Orders</h3>
         </div>
+    </div>
     </div>
     <div style="width: 100%; margin: auto;">
         <canvas id="orderChart"></canvas>

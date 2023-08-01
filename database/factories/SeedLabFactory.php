@@ -28,6 +28,7 @@ class SeedLabFactory extends Factory
             'additional_instructions' =>$this->faker->sentence(),
             'lab_receptionist_id' =>$this->faker->randomNumber(),
             'inspector_id' =>$this->faker->randomNumber(),
+            'quantity' =>$this->faker->randomFloat(2, 1, 100),
             'lab_officer_id' =>$this->faker->randomNumber(),
             'reporting_date' =>$this->faker->dateTime(),
             'seed_lab_test_report_number' =>$this->faker->word(),

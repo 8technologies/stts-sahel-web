@@ -18,6 +18,8 @@ class LabelPackageFactory extends Factory
     {
         return [
             //
+            'price' => $this->faker->randomFloat(2, 10, 100), // Generates a random float between 10 and 100 with 2 decimal places.
+            'quantity' => $this->faker->randomNumber(2),
         ];
     }
 }

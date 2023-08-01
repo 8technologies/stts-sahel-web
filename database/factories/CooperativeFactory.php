@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
+use App\Models\User;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Cooperative>
@@ -18,6 +19,7 @@ class CooperativeFactory extends Factory
     {
         return [
             //
+            'user_id'=> User::factory(),
             'cooperative_number' => $this->faker->unique()->randomNumber(6),
             'cooperative_name' => $this->faker->company,
             'registration_number' => $this->faker->optional()->randomNumber(6),

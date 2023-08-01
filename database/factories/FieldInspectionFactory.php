@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 use App\Models\CropDeclaration;
 use App\Models\CropVariety;
 use App\Models\User;
+use App\Models\InspectionType;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\FieldInspection>
@@ -23,7 +24,7 @@ class FieldInspectionFactory extends Factory
             'field_inspection_form_number' => $this->faker->unique()->randomNumber(),
             'crop_declaration_id' =>  CropDeclaration::factory(),
             'crop_variety_id' => CropVariety::factory(),
-            'inspection_type_id' => $this->faker->randomNumber(),
+            'inspection_type_id' => InspectionType::factory(),
             'applicant_id' => User::factory(),
             'physical_address' => $this->faker->address(),
             'type_of_inspection' => $this->faker->word(),
@@ -35,7 +36,7 @@ class FieldInspectionFactory extends Factory
             'remarks' => $this->faker->sentence(),
             'inspector_id' => User::factory(),
             'signature' => $this->faker->imageUrl(200, 200),
-            'field_decision' => $this->faker->word(),
+            'field_decision' => $this->faker->randomElement(['pending','accepted','rejected']),
             'is_active' => $this->faker->boolean(),
             'is_done' => $this->faker->boolean(),
             'inspection_date' => $this->faker->date(),

@@ -24,7 +24,7 @@ class SeedProducerFactory extends Factory
             'producer_category' =>$this->faker->randomElement(['Individual-grower','Seed-breeder','Seed-Company']),
             'name_of_applicant' =>$this->faker->name(),
             'applicant_phone_number' =>$this->faker->phoneNumber(),
-            'applicant_email' => $this->faker->email(),
+            'applicant_email' => $this->faker->unique()->email(),
             'premises_location' =>$this->faker->address(),
             'proposed_farm_location' => $this->faker->address(),
             'years_of_experience' => $this->faker->randomNumber(),

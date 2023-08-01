@@ -26,6 +26,7 @@ class OrderFactory extends Factory
             'price' => $this->faker->randomFloat(2, 10, 100), // Random float between 10 and 100 with 2 decimal places
             'supply_date' => $this->faker->date(),
             'order_by' => User::factory(),
+            'supplier'=> User::factory(),
             'details' => $this->faker->text,
             'status' => $this->faker->randomElement(['pending', 'processing', 'shipped','delivered']),
             'status_comment' => $this->faker->sentence,

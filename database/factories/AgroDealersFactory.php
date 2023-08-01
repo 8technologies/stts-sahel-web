@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
+use App\Models\User;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\AgroDealers>
@@ -17,6 +18,7 @@ class AgroDealersFactory extends Factory
     public function definition(): array
     {
         return [
+            'applicant_id'=> User::factory(),
             'agro_dealer_reg_number' => $this->faker->unique()->randomNumber(6),
             'first_name' => $this->faker->firstName,
             'last_name' => $this->faker->lastName,

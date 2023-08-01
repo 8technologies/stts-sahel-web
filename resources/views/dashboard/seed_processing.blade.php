@@ -6,7 +6,7 @@
         <div class="card-header">
             <h3 class="card-title">Marketable vs Raw Seed</h3>
             <div>
-                <select id="cropSelect" onchange="updateChart()">
+                <select id="cropSelect8" onchange="updateCharts()">
                     <option value="">Select Crop</option>
                     <option value="Show All">Show All</option>
                     <?php foreach ($crop_names as $crop_name) : ?>
@@ -33,8 +33,8 @@
         var ctx = document.getElementById('cropChart').getContext('2d');
         var cropChart;
 
-        function updateChart() {
-            var selectedCrop = document.getElementById('cropSelect').value;
+        function updateCharts() {
+            var selectedCrop = document.getElementById('cropSelect8').value;
 
             if (selectedCrop === "Show All") {
                 // Show all crops

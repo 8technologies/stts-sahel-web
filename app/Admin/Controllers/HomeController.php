@@ -24,8 +24,16 @@ class HomeController extends Controller
                 });
             }
             })
+            ->row(function (Row $row) use($user){
+                if($user->inRoles(['inspector'])){
+                $row->column(12, function (Column $column) {
+                    $column->append(Dashboard::inspectorCards());
+                });
+             
+            }
+            })
             ->row(function (Row $row) use($user) {
-                if($user->inRoles(['commissioner', 'developer','basic-user'])){
+                if($user->inRoles(['commissioner', 'developer','basic-user',])){
                 $row->column(8, function (Column $column) {
                     $column->append(Dashboard::crops());
                 });
@@ -35,21 +43,30 @@ class HomeController extends Controller
             }
                
             })
+            ->row(function (Row $row) use($user){
+                if($user->inRoles(['inspector'])){
+                $row->column(12, function (Column $column) {
+                    $column->append(Dashboard::inspectionsChart());
+                });
+             
+            }
+            })
         
             ->row(function (Row $row) use($user) {
                 if($user->inRoles(['commissioner', 'developer','basic-user'])){
-                $row->column(6, function (Column $column) {
-                    $column->append(Dashboard::getOrders());
-                });
+              
                 $row->column(6, function (Column $column) {
                     $column->append(Dashboard::getPreOrders());
+                });
+                $row->column(6, function (Column $column) {
+                    $column->append(Dashboard::getOrders());
                 });
             }
               
                })
 
              ->row(function (Row $row)  use($user){
-                if($user->inRoles(['commissioner', 'developer','basic-user'])){
+                if($user->inRoles(['commissioner', 'developer','basic-user','inspector'])){
                 $row->column(6, function (Column $column) {
                     $column->append(Dashboard::getProcessedAndUnprocessedSeedsPerCrop());
                 });
@@ -66,6 +83,7 @@ class HomeController extends Controller
              
             }
             })
+           
 
             ->row(function (Row $row) use($user){
                 if($user->inRoles(['cooperative', 'grower','agrodealers'])){

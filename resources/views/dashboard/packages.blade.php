@@ -5,13 +5,7 @@
     <div >
         <div class="card-header">
             <h3 class="card-title">Seed Packages</h3>
-            <div>
-                <select id="time">
-                    <option value="">This month</option>
-                    <option value="time">yesterday</option>
-                   
-                </select>
-            </div>
+            
         </div>
     </div>
     <div style="width: 100%; margin: auto;">
