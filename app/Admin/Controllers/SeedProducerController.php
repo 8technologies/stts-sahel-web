@@ -30,6 +30,8 @@ class SeedProducerController extends AdminController
     {
         $grid = new Grid(new SeedProducer());
         $user = Admin::user();
+        //order of table
+        $grid->model()->orderBy('id', 'desc');
 
         $seed_producer = SeedProducer::where('user_id', auth('admin')->user()->id)->value('status');
 
