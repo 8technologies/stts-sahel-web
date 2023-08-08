@@ -26,6 +26,7 @@ class FieldInspection extends Model
         'signature',
         'is_active',
         'is_done',
+        'order_number',
         'field_decision',
         'inspection_date',
     ];

@@ -1,57 +1,48 @@
 <?php
+
 namespace App\Http\Controllers;
 
-use App\Models\AdminRoleUser;
-use App\Models\Crop;
-use App\Models\CropDeclaration;
-use App\Models\CropVariety;
-use App\Models\FieldInspection;
-use App\Models\SeedProducer;
-use App\Models\User;
-use App\Models\Utils;
-use Dflydev\DotAccessData\Util;
-use DragonCode\Contracts\Cashier\Auth\Auth;
 use Illuminate\Http\Request;
+use App\Models\SeedProducer;
 use Tymon\JWTAuth\Facades\JWTAuth;
+use App\Models\Utils;
+
 class SeedProducerController extends Controller
 {
-    //
-    public function seed_producer_forms_post(Request $r)
+    public function index()
     {
-        $u = auth('api')->user();
-        $sp = SeedProducer::where('user_id', $u->id)->first();
-        if ($sp == null) {
-            $sp = new SeedProducer();
-            $sp->user_id = $u->id;
-        }
-        $sp->name_of_applicant = $r->name_of_applicant;
-        $sp->producer_category = $r->producer_category;
-        $sp->applicant_phone_number = $r->applicant_phone_number;
-        $sp->applicant_email = $r->applicant_email;
-        $sp->premises_location = $r->premises_location;
-        $sp->proposed_farm_location = $r->proposed_farm_location;
-        // $sp->premises_size = $r->premises_size;
-        $sp->years_of_experience = $r->years_of_experience;
-        $sp->gardening_history_description = $r->gardening_history_description;
-        $sp->storage_facilities_description = $r->storage_facilities_description;
-        $sp->have_adequate_isolation = $r->have_adequate_isolation;
-        $sp->labor_details = $r->labor_details;
-        $sp->receipt = $r->receipt; //file
-        $sp->status_comment = $r->status_comment;
-        try {
-            $sp->save();
-        } catch (\Throwable $th) {
-            return Utils::apiError('Error saving form. ' . $th->getMessage());
-        }
-        return Utils::apiSuccess($sp, 'Seed Producer form submitted successfully.');
+        $seedProducers = SeedProducer::all();
+        return response()->json($seedProducers);
     }
 
-    public function seed_producer_forms()
+    public function store(Request $request)
     {
-        $u = auth('api')->user();
-        //return Utils::apiSuccess(SeedProducer::where(['user_id', $u->id])->get());
-        return Utils::apiSuccess(SeedProducer::where([])->get());
+        $user = auth('api')->user();
+        $data = $request->all();
+        $seedProducer = SeedProducer::create($data);
+        return Utils::apiSuccess($seedProducer, 'Seed Producer form submitted successfully.');
     }
 
-   
+    public function show($id)
+    {
+        $seedProducer = SeedProducer::where('user_id', $id)->firstOrFail();
+
+        return response()->json($seedProducer);
+    }
+
+    public function update(Request $request, $id)
+    {
+        $seedProducer = SeedProducer::where('user_id', $id)->firstOrFail();
+
+        $data = $request->all();
+        $seedProducer->update($data);
+        return Utils::apiSuccess($seedProducer, 'Seed Producer form edited successfully.');
+    }
+
+    public function destroy($id)
+    {
+        $seedProducer = SeedProducer::where('user_id', $id)->firstOrFail();
+        $seedProducer->delete();
+        return Utils::apiSuccess($seedProducer, 'Seed Producer form deleted successfully.');
+    }
 }

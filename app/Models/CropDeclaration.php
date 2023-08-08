@@ -10,6 +10,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use App\Models\FieldInspection;
 use Carbon\Carbon;
 use Encore\Admin\Facades\Admin;
+use App\Models\SeedProducer;
+use App\Models\Utils;
 
 class CropDeclaration extends Model
 {
@@ -41,6 +43,7 @@ class CropDeclaration extends Model
         'garden_location_longitude',
         'status',
         'inspector_id',
+        'crop_variety_id',
         'lot_number',
         'remarks',
 
@@ -72,13 +75,32 @@ class CropDeclaration extends Model
     {
         parent::boot();
 
+        self::creating(function ($model) {
+            $user = auth('api')->user();
+          
+            $seed_producer = SeedProducer::where('user_id', $user->id)->first();
+            if ($seed_producer == null) {
+                return Utils::apiError('You need a valid Seed Producer Certiificate inorder to apply for crop declaration.');
+            }
+            if ($seed_producer->status != 'accepted') {
+                return Utils::apiError('Your Seed Producer Application has not yet been approved.');
+            }
+    
+            $crop_variety = CropVariety::find($model->crop_variety_id);
+            if ($crop_variety == null) {
+                return Utils::apiError('Invalid crop variety.');
+            }
+    
+        });
         //call back to send a notification to the user
         self::created(function ($model) {
             //Notification::send_notification($model, 'CropDeclaration', request()->segment(count(request()->segments())));
         });
 
         self::updating(function ($model){
-            if( Admin::user()->inRoles(['basic-user','grower']) )
+            $user = auth('api')->user();
+            
+            if($user || Admin::user()->inRoles(['basic-user','grower']))
             {
                 $model->status = 'pending';
                 $model->inspector_id = null;

@@ -60,7 +60,7 @@ class SeedProducer extends Model
 
 
         self::updating(function ($model){
-            if( Admin::user()->isRole('basic-user') )
+            if(auth()->check() && Admin::user()->isRole('basic-user'))
             {
                 $model->status = 'pending';
                 $model->inspector_id = null;

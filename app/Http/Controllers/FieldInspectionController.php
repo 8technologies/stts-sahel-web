@@ -2,27 +2,50 @@
 
 namespace App\Http\Controllers;
 
-
-use App\Models\AdminRoleUser;
-use App\Models\Crop;
-use App\Models\CropDeclaration;
-use App\Models\CropVariety;
-use App\Models\FieldInspection;
-use App\Models\SeedProducer;
-use App\Models\User;
-use App\Models\Utils;
-use Dflydev\DotAccessData\Util;
-use DragonCode\Contracts\Cashier\Auth\Auth;
 use Illuminate\Http\Request;
+use App\Models\FieldInspection;
 use Tymon\JWTAuth\Facades\JWTAuth;
+use App\Models\Utils;
 
-class FieldInspectionController extends Controller
+class  FieldInspectionController extends Controller
 {
-    //
-    public function field_inspections()
+    public function index()
     {
-        $u = auth('api')->user();
-        //return Utils::apiSuccess(FieldInspection::where('applicant_id', $u->id)->get());
-        return Utils::apiSuccess(FieldInspection::where([])->get());
+        $fieldInspections = FieldInspection::all();
+        return response()->json($fieldInspections);
+    }
+
+    public function store(Request $request)
+    {
+        $user = auth('api')->user();
+        $data = $request->all();
+        $fieldInspection = FieldInspection::create($data);
+        return Utils::apiSuccess($fieldInspection, 'Field inspection form submitted successfully.');
+    }
+
+    public function show($id)
+    {
+        $fieldInspection = FieldInspection::where('applicant_id', $id);
+
+        return response()->json($fieldInspection);
+    }
+
+    public function update(Request $request, $id)
+    {
+        $fieldInspection = FieldInspection::find($id);
+        // Check if the field inspection exists
+        if (!$fieldInspection) {
+            return Utils::apiError('Field inspection not found.', 404);
+        }
+        $data = $request->all();
+        $fieldInspection->update($data);
+        return Utils::apiSuccess($fieldInspection, 'Field inspection form edited successfully.');
+    }
+
+    public function destroy($id)
+    {
+        $fieldInspection = FieldInspection::where('applicant_id', $id);
+        $fieldInspection->delete();
+        return Utils::apiSuccess($fieldInspection, 'Field inspection form deleted successfully.');
     }
 }
