@@ -44,7 +44,7 @@ class  FieldInspectionController extends Controller
 
     public function destroy($id)
     {
-        $fieldInspection = FieldInspection::where('applicant_id', $id);
+        $fieldInspection = FieldInspection::find($id);
         $fieldInspection->delete();
         return Utils::apiSuccess($fieldInspection, 'Field inspection form deleted successfully.');
     }
