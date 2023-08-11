@@ -12,6 +12,7 @@ use App\Models\Utils;
             color: #00a65a;
             margin-right: 10px;
         }
+        
 
      
 
@@ -65,6 +66,36 @@ use App\Models\Utils;
         .btn-action i {
             margin-right: 5px;
         }
+        @media (max-width: 767px) {
+        .table th,
+        .table td {
+            padding: 6px;
+            font-size: 12px;
+        }
+
+        .table th {
+            min-width: auto;
+        }
+
+        .table th:nth-child(1),
+        .table td:nth-child(1),
+        .table th:nth-child(2),
+        .table td:nth-child(2),
+        .table th:nth-child(3),
+        .table td:nth-child(3) {
+            display: none;
+        }
+
+        .table td {
+            text-align: left;
+            white-space: normal; /* Allow text to wrap */
+            overflow-wrap: break-word; /* Handle word wrapping */
+        }
+
+        .table-row-gray-300 {
+            background-color: #fff; /* Reset background color for rows */
+        }
+    }
     </style>
 
     <div class="card" >
@@ -92,41 +123,41 @@ use App\Models\Utils;
                     $crop_variety = App\Models\CropVariety::find($crop->crop_variety_id)->crop_variety_name;
                     @endphp
                     <tr>
-                        <td>
-                            <div>
-                                <a href="#" style="color: black; font-weight: 600;">{{ $name }}</a>
-                                <br>
-                                <span class="text-muted">{{ $crop->field_name }}</span>
-                                <br>
-                                <span class="text-muted">
-                                    <b class="small text-dark">Garden Size:</b>
-                                    {{ Str::of($crop->garden_size)->limit(10) }}
-                                </span>
-                            </div>
-                        </td>
-                        <td>
-                            <div>
-                                <b style="color: black;">{{ Str::of($crop_variety)->limit(35) }}</b>
-                                <br>
-                                <span class="text-primary">{{ $crop->updated_at }}</span>
-                            </div>
-                        </td>
-                        <td class="text-end">
-                            <span>{!! Utils::tell_status($crop->status) ?? '-' !!}</span>
-                        </td>
-                        <td class="text-right">
-                            <div>
-                                <a href="{{ admin_url('/crop-declarations/'.$crop->id) }}" title="View" class="btn-action">
-                                    <i class="fa fa-eye"></i>
-                                    <span>View</span>
-                                </a>
-                                <br>
-                                <a href="{{ admin_url('/crop-declarations/'.$crop->id.'/edit') }}" title="Edit" class="btn-action">
-                                    <i class="fa fa-edit"></i>
-                                    <span>Edit</span>
-                                </a>
-                            </div>
-                        </td>
+                    <td>
+    <div class="table-cell-content">
+        <a href="#" style="color: black; font-weight: 600;">{{ $name }}</a>
+        <br>
+        <span class="text-muted">{{ $crop->field_name }}</span>
+        <br>
+        <span class="text-muted">
+            <b class="small text-dark">Garden Size:</b>
+            {{ Str::of($crop->garden_size)->limit(10) }}
+        </span>
+    </div>
+</td>
+<td>
+    <div class="table-cell-content">
+        <b style="color: black;">{{ Str::of($crop_variety)->limit(35) }}</b>
+        <br>
+        <span class="text-primary">{{ $crop->updated_at }}</span>
+    </div>
+</td>
+<td class="text-end">
+    <span>{!! Utils::tell_status($crop->status) ?? '-' !!}</span>
+</td>
+<td class="text-right">
+    <div>
+        <a href="{{ admin_url('/crop-declarations/'.$crop->id) }}" title="View" class="btn-action">
+            <i class="fa fa-eye"></i>
+            <span>View</span>
+        </a>
+        <br>
+        <a href="{{ admin_url('/crop-declarations/'.$crop->id.'/edit') }}" title="Edit" class="btn-action">
+            <i class="fa fa-edit"></i>
+            <span>Edit</span>
+        </a>
+    </div>
+</td>
                     </tr>
                     @endforeach
                 </tbody>

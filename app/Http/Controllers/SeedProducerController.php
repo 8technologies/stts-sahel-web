@@ -19,9 +19,16 @@ class SeedProducerController extends Controller
     {
         $user = auth('api')->user();
         $data = $request->all();
+        
+        if ($request->hasFile('receipt')) {
+            $imagePath = $request->file('receipt')->store('images', 'public');
+            $data['receipt'] = $imagePath;
+        }
+    
         $seedProducer = SeedProducer::create($data);
         return Utils::apiSuccess($seedProducer, 'Seed Producer form submitted successfully.');
     }
+    
 
     public function show($id)
     {
