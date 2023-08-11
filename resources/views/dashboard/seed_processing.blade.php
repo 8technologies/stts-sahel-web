@@ -73,10 +73,26 @@
             options: {
                 scales: {
                     x: {
-                        stacked: true
+                        stacked: true,
+                        title: {
+                    display: true,
+                    text: 'Crops', // Label for the x-axis
+                    font: {
+                        weight: 'bold', // Make the label bold
+                        size: 16,       // Set the font size
+                    },
+                },
                     },
                     y: {
-                        stacked: true
+                        stacked: true,
+                        title: {
+                    display: true,
+                    text: 'Quantity', // Label for the x-axis
+                    font: {
+                        weight: 'bold', // Make the label bold
+                        size: 16,       // Set the font size
+                    },
+                },
                     }
                 }
             }

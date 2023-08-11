@@ -68,12 +68,12 @@ use App\Models\Utils;
     </style>
 
     <div class="card" >
-        <div class="card-header">
-            <h3 class="card-title">Recent Crop Declarations</h3>
-            <div>
-                <a href="{{ admin_url('/crop-declarations') }}" class="btn-view-all">View All</a>
-            </div>
-        </div>
+    <div class="card-header" style="position: relative;">
+    <h3 class="card-title">Recent Crop Declarations</h3>
+    <div style="position: absolute; top: 0; right: 0;">
+        <a href="{{ admin_url('/crop-declarations') }}" class="btn-view-all">View All</a>
+    </div>
+</div>
 
         <div class="card-body">
             <table class="table">

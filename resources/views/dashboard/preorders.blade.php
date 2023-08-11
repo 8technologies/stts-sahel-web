@@ -3,12 +3,21 @@
     .preordercrop-dropdown {
         margin-top: 10px;
     }
+    .card {
+        border: 1px solid green;
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        margin-bottom: 30px;
+        /* padding around */
+        padding: 20px;
+    }
 </style>
 
 <div class="card">
     <div>
         <div class="card-header2">
             <h3 class="card-title">PreOrders</h3>
+            <p>A Summary of Pre-Orders over the months</p>
         </div>
     </div>
     <div style="width: 100%; margin: auto;">
@@ -93,7 +102,17 @@
                         responsive: true,
                         scales: {
                             y: {
-                                beginAtZero: true
+                                beginAtZero: true,
+                                title: {
+                    display: true,
+                    text: 'Quantity', // Label for the x-axis
+                    font: {
+                        weight: 'bold', // Make the label bold
+                        size: 16,       // Set the font size
+                    },
+                },
+                            
+                                
                             }
                         }
                     }

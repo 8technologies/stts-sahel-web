@@ -5,6 +5,7 @@
     <div class="d-flex justify-content-between ">
         <div class="card-header4">
             <h3 class="card-title">Orders</h3>
+            <p>A Summary of Orders over the months</p>
         </div>
     </div>
     </div>
@@ -92,7 +93,16 @@
                         responsive: true,
                         scales: {
                             y: {
-                                beginAtZero: true
+                                beginAtZero: true,
+                                title: {
+                    display: true,
+                    text: 'Quantity', // Label for the x-axis
+                    font: {
+                        weight: 'bold', // Make the label bold
+                        size: 16,       // Set the font size
+                    },
+                },
+
                             }
                         }
                     }

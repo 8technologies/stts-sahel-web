@@ -50,8 +50,26 @@
             options: {
                 responsive: true,
                 scales: {
+                    x:{
+                        title: {
+                    display: true,
+                    text: 'Package Size', // Label for the x-axis
+                    font: {
+                        weight: 'bold', // Make the label bold
+                        size: 16,       // Set the font size
+                    },
+                    },
+                    },
                     y: {
-                        beginAtZero: true
+                        beginAtZero: true,
+                        title: {
+                    display: true,
+                    text: 'Quantity', // Label for the x-axis
+                    font: {
+                        weight: 'bold', // Make the label bold
+                        size: 16,       // Set the font size
+                    },
+                },
                     }
                 }
             }
