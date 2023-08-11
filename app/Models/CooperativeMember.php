@@ -9,6 +9,7 @@ class CooperativeMember extends Model
 {
     use HasFactory;
     protected $fillable = [
+        'cooperative_id',
         'member_number',
         'farmer_first_name',
         'farmer_last_name',

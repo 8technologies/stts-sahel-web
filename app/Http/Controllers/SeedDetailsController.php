@@ -24,6 +24,7 @@ class SeedDetailsController extends Controller
         if($request-> lot_number){
           
             $seedLab = SeedLab::where('lot_number', $request->lot_number)->first();
+            
         
             if (!$seedLab) {
                 return response()->json(null);
@@ -32,7 +33,7 @@ class SeedDetailsController extends Controller
             $loadStock = LoadStock::where('id', $seedLab->load_stock_id)
                 ->where('applicant_id', $seedLab->applicant_id)
                 ->first();
-        
+            
             if (!$loadStock) {
                 return response()->json(null);
             }
@@ -86,14 +87,20 @@ class SeedDetailsController extends Controller
       }
       
 
+  
       public function track(Request $request)
-      {
-          if ($request->lot_number) {
-              $seed_details = SeedLab::where('mother_lot', $request->lot_number)
-                  ->get(['id', 'lot_number']);
-          }
-          
-          return response()->json($seed_details);
-      }
+        {
+            
+            $seed_details = [];
+           
+            if ($request->lot_number) {
+                $seed_details = SeedLab::where('mother_lot', $request->lot_number)
+                    ->get(['id', 'lot_number']);
+            }
+            
+ 
+
+            return response()->json($seed_details);
+        }
       
 }

@@ -16,6 +16,7 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\CooperativeController;
 use App\Http\Controllers\CooperativeMemberController;
 use App\Http\Controllers\AgroDealerController;
+use App\Http\Controllers\SeedDetailsController;
 
 
 use Illuminate\Http\Request;
@@ -53,6 +54,9 @@ Route::resource('orders', OrderController::class);
 Route::resource('cooperatives', CooperativeController::class);
 Route::resource('cooperative-members', CooperativeMemberController::class);
 Route::resource('agro-dealers', AgroDealerController::class);
+Route::post('track', [SeedDetailsController::class, 'track']);
+Route::post('trace', [SeedDetailsController::class, 'trace']);
+
 
 
 
