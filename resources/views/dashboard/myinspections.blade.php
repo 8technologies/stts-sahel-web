@@ -44,6 +44,14 @@
                 scales: {
                     y: {
                         beginAtZero: true
+                        title: {
+                    display: true,
+                    text: 'Number', // Label for the x-axis
+                    font: {
+                        weight: 'bold', // Make the label bold
+                        size: 16,       // Set the font size
+                    },
+                },
                     }
                 }
             }
