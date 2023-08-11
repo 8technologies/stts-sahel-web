@@ -30,14 +30,16 @@ class Quotation extends Model
         parent::boot();
 
         static::creating(function ($model) {
-            $model->quotation_by = auth()->user()->id;
+            $model->quotation_by = auth('api')->user() ? auth('api')->user()->id : Admin::user()->id;
+
         });
 
         //after updating the status of the quotation, enter the order details to the order table
         static::updated(function ($model) {
 
             //check if the person editing the quotation is not the person who made it
-            if ($model->quotation_by != Admin::user()->id) {
+            if ($model->quotation_by !== Admin::user()->id && $model->quotation_by !== auth('api')->user()->id
+            ) {
                 if ($model->status == 'accepted') {
                     $order = new Order();
                     $order->preorder_id = $model->preorder_id;

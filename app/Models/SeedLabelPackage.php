@@ -25,4 +25,7 @@ class SeedLabelPackage extends Model
     {
         return $this->belongsTo(LabelPackage::class, 'package_id');
     }
+
+    //api relationship
+  
 }

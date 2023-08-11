@@ -34,6 +34,7 @@ class GenController extends AdminController
             return '<a target="_blank" href="' . url('gen?id=' . $this->id) . '">Generate</a>';
         });
         return $grid;
+        
     }
 
     /**

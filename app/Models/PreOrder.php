@@ -10,6 +10,7 @@ class PreOrder extends Model
     use HasFactory;
 
     protected $fillable = [
+        'user_id',
         'crop_variety_id',
         'seed_class',
         'quantity',

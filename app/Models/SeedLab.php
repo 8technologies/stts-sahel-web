@@ -15,10 +15,10 @@ class SeedLab extends Model
         'sample_request_number',
         'applicant_id',
         'load_stock_id',
+        'crop_variety_id',
         'sample_request_date',
         'proof_of_payment',
         'applicant_remarks',
-
         'seed_lab_test_report_number',
         'seed_sample_request_number',
         'seed_sample_size',
@@ -65,7 +65,8 @@ class SeedLab extends Model
         });
 
         self::updating(function ($model) {
-            if (Admin::user()->isRole('basic-user')) {
+            $user = auth('api')->user();
+            if ($user || Admin::user()->isRole('basic-user')) {
                 $model->status = 'pending';
                 $model->inspector_id = null;
                 return $model;
