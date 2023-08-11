@@ -42,6 +42,16 @@
             },
             options: {
                 scales: {
+                    x:{
+                        title: {
+                    display: true,
+                    text: 'Status', // Label for the x-axis
+                    font: {
+                        weight: 'bold', // Make the label bold
+                        size: 16,       // Set the font size
+                    },
+                        }
+                    },
                     y: {
                         beginAtZero: true,
                         title: {
