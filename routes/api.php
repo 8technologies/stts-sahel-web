@@ -15,6 +15,7 @@ use App\Http\Controllers\QuotationController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\CooperativeController;
 use App\Http\Controllers\CooperativeMemberController;
+use App\Http\Controllers\AgroDealerController;
 
 
 use Illuminate\Http\Request;
@@ -51,6 +52,7 @@ Route::resource('quotations', QuotationController::class);
 Route::resource('orders', OrderController::class);
 Route::resource('cooperatives', CooperativeController::class);
 Route::resource('cooperative-members', CooperativeMemberController::class);
+Route::resource('agro-dealers', AgroDealerController::class);
 
 
 

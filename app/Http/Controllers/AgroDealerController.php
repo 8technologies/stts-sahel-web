@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\AgroDealer;
+use App\Models\AgroDealers;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use App\Models\Utils;
 
@@ -11,7 +11,7 @@ class AgroDealerController extends Controller
 {
     public function index()
     {
-        $agroDealers = AgroDealer::all();
+        $agroDealers = AgroDealers::all();
         return response()->json($agroDealers);
     }
 
@@ -19,20 +19,20 @@ class AgroDealerController extends Controller
     {
         $user = auth('api')->user();
         $data = $request->all();
-        $agroDealer = AgroDealer::create($data);
+        $agroDealer = AgroDealers::create($data);
         return Utils::apiSuccess($agroDealer, 'Agro Dealer submitted successfully.');
     }
 
     public function show($id)
     {
-        $agroDealer = AgroDealer::findOrFail($id);
+        $agroDealer = AgroDealers::findOrFail($id);
 
         return response()->json($agroDealer);
     }
 
     public function update(Request $request, $id)
     {
-        $agroDealer = AgroDealer::findOrFail($id);
+        $agroDealer = AgroDealers::findOrFail($id);
 
         $data = $request->all();
         $agroDealer->update($data);
@@ -41,7 +41,7 @@ class AgroDealerController extends Controller
 
     public function destroy($id)
     {
-        $agroDealer = AgroDealer::findOrFail($id);
+        $agroDealer = AgroDealers::findOrFail($id);
         $agroDealer->delete();
         return Utils::apiSuccess($agroDealer, 'Agro Dealer deleted successfully.');
     }

@@ -10,6 +10,7 @@ class AgroDealers extends Model
     use HasFactory;
 
     protected $fillable = [
+        'applicant_id',
         'agro_dealer_reg_number',
         'first_name',
         'last_name',
