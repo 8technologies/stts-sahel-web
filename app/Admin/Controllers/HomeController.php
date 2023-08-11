@@ -113,10 +113,10 @@ class HomeController extends Controller
             })
             ->row(function (Row $row) use($user){
                 if($user->inRoles(['cooperative', 'grower','agrodealers'])){
-                $row->column(8, function (Column $column) {
+                $row->column(6, function (Column $column) {
                     $column->append(Dashboard::getMyInspections());
                 });
-                $row->column(4, function (Column $column) {
+                $row->column(6, function (Column $column) {
                     $column->append(Dashboard::compareCropsByPackage());
                 });
             }
