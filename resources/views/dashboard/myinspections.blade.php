@@ -43,7 +43,7 @@
             options: {
                 scales: {
                     y: {
-                        beginAtZero: true
+                        beginAtZero: true,
                         title: {
                     display: true,
                     text: 'Number', // Label for the x-axis

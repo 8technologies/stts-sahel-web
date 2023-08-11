@@ -51,6 +51,7 @@
                         size: 16,       // Set the font size
                     },
                         }
+                    },
                     y: {
                         beginAtZero: true,
                         title: {
