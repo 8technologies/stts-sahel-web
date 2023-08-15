@@ -14,6 +14,8 @@ return new class extends Migration
         Schema::create('label_packages', function (Blueprint $table) {
             $table->id();
             $table->string('price');
+            $table->string('package_type');
+            $table->string('seed_generation');
             $table->string('quantity');
             
             $table->timestamps();

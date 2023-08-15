@@ -11,6 +11,8 @@ class LabelPackage extends Model
 
     protected $fillable = [
         'price',
+        'package_type',
+        'seed_generation',
         'quantity',
 
     ];

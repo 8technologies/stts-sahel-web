@@ -32,8 +32,8 @@ class CropController extends AdminController
         $grid->column('number_of_inspections', __('No. of inspections'))->display(function () {
             return $this->inspection_types()->count();
         })->sortable();
-        $grid->column('number_of_days_before_submission', __('Number of days before submission'));
-        $grid->column('seed_viability_period', __('Seed viability period'));
+        $grid->column('number_of_days_before_submission', __('Number of days before submission of planting return'));
+        $grid->column('seed_viability_period', __('Seed viability period (in days)'));
         $grid->column('number_of_inspections', __('Number of inspections'))->sortable();
 
         return $grid;
@@ -54,14 +54,14 @@ class CropController extends AdminController
         $show->field('updated_at', __('Updated at'));
         $show->field('crop_name', __('Crop name'));
         $show->field('crop_code', __('Crop code'));
-        $show->field('number_of_days_before_submission', __('Number of days before submission'));
-        $show->field('seed_viability_period', __('Seed viability period'));
+        $show->field('number_of_days_before_submission', __('Number of days before submission of planting return'));
+        $show->field('seed_viability_period', __('Seed viability period (in days)'));
 
         $show->crop_varieties('Crop varieties', function ($crop_varieties) {
             $crop_varieties->resource('/admin/crop_varieties');
             $crop_varieties->crop_variety_name();
             $crop_varieties->crop_variety_code();
-            $crop_varieties->crop_variety_generation();
+           // $crop_varieties->crop_variety_generation();
            
         });
 
@@ -87,14 +87,14 @@ class CropController extends AdminController
 
         $form->text('crop_name', __('Crop name'))->rules('required');
         $form->text('crop_code', __('Crop code'));
-        $form->decimal('number_of_days_before_submission', __('Number of days before submission'));
-        $form->decimal('seed_viability_period', __('Seed viability period')); 
+        $form->decimal('number_of_days_before_submission', __('Number of days before submission of planting return'));
+        $form->decimal('seed_viability_period', __('Seed viability period (in days)')); 
         $form->divider();
         $form->hasMany('crop_varieties', function (Form\NestedForm $form)  {
             $form->text('crop_variety_name', __('Crop Variety Name'));
             $form->text('crop_variety_code', __('Crop Variety Code'));
             //get all seed class and display in dropdown
-            $form->select('crop_variety_generation', __('Crop Variety Generation'))->options(\App\Models\SeedClass::all()->pluck('class_name', 'id'));
+           // $form->select('crop_variety_generation', __('Crop Variety Generation'))->options(\App\Models\SeedClass::all()->pluck('class_name', 'id'));
           
         });
 

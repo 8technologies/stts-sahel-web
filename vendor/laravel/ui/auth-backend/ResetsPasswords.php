@@ -142,8 +142,8 @@ trait ResetsPasswords
             return new JsonResponse(['message' => trans($response)], 200);
         }
 
-        return redirect($this->redirectPath())
-                            ->with('status', trans($response));
+        return redirect('http://127.0.0.1:8000/admin')
+                ->with('status', trans($response));
     }
 
     /**
