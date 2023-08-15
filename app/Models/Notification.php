@@ -31,6 +31,7 @@ class Notification extends Model
         return $this->belongsTo(Administrator::class, 'receiver_id');
     }
 
+
 //function to get notification and send it to the front end
 public static function get_notifications($user)
     {
@@ -90,54 +91,66 @@ public static function get_notifications($user)
     }
 
 //function to send notifications after an update
-    public static function update_notification($model, $model_name, $entity)
-    {
-        $notifications = Notification::where('model', $model_name)
-            ->where('model_id', $model->id)
-            ->get();
-        $notificationData = [
-            2 => [
-                'message' => "Dear {name}, you have been assigned to inspect {$entity}.",
-                'receiver_id' => $model->inspector_id,
-            ],
-            3 => [
-                'message' => "Dear {name}, your {$entity} is now under inspection.",
-                'receiver_id' => $model->user_id,
-            ],
-            4 => [
-                'message' => "Dear {name}, your {$entity} has been halted by the inspector.",
-                'receiver_id' => $model->user_id,
-            ],
-            5 => [
-                'message' => "Dear {name}, your {$entity} has been rejected by the inspector.",
-                'receiver_id' => $model->user_id,
-            ],
-        ];
+public static function update_notification($model, $model_name, $entity)
+{
+    $notifications = Notification::where('model', $model_name)
+        ->where('model_id', $model->id)
+        ->get();
+    
+    $name = Administrator::find($model->user_id)->name;
+    
 
-        foreach ($notifications as $notification) {
-            $notification->delete();
-        }
+    $notificationData = [
+        'inspector assigned' => [
+            'message' => "You have been assigned to inspect {$entity}.",
+            'receiver_id' => $model->inspector_id,
+        ],
+        'inspection assigned' => [ 
+            'message' => "Dear {$name}, your {$entity} is now under inspection.",
+            'receiver_id' => $model->user_id,
+        ],
+        'pending' => [
+            'message' => "Dear {$name}, your {$entity} is now pending.",
+            'receiver_id' => 1,
+        ],
+        'halted' => [
+            'message' => "Dear {$name}, your {$entity} has been halted by the inspector.",
+            'receiver_id' => $model->user_id,
+        ],
+        'rejected' => [
+            'message' => "Dear {$name}, your {$entity} has been rejected by the inspector.",
+            'receiver_id' => $model->user_id,
+        ],
+        'accepted' => [
+            'message' => "Dear {$name}, your {$entity} has been rejected by the inspector.",
+            'receiver_id' => $model->user_id,
+        ],
+    ];
 
-        foreach ($notificationData as $status => $data) {
-            if ($model->status == $status) {
-                $receiver = Administrator::find($data['receiver_id']);
-                $message = str_replace('{name}', $receiver->name, $data['message']);
+    foreach ($notifications as $notification) {
+        $notification->delete();
+    }
 
-                $notification = new Notification();
-                $notification->receiver_id = $receiver->id;
-                $notification->message = $message;
-                $notification->link = admin_url("auth/login");
-                $notification->form_link = admin_url("{$entity}/{$model->id}");
-                $notification->status = 'Unread';
-                $notification->model = $model_name;
-                $notification->model_id = $model->id;
+    foreach ($notificationData as $status => $data) {
+        if ($model->status == $status) {
+            $receiver = Administrator::find($data['receiver_id']);
+            $message = str_replace('{name}', $receiver->name, $data['message']);
 
-                $notification->save();
+            $notification = new Notification();
+            $notification->receiver_id = $receiver->id;
+            $notification->message = $message;
+            $notification->link = admin_url("auth/login");
+            $notification->form_link = admin_url("{$entity}/{$model->id}/edit");
+            $notification->status = 'Unread';
+            $notification->model = $model_name;
+            $notification->model_id = $model->id;
 
-                self::sendMail($notification);
-            }
+            $notification->save();
+
+            self::sendMail($notification);
         }
     }
+}
 
     
 //get notification receipients by either role or id
