@@ -49,8 +49,10 @@ $today = date("F j, Y");
     <h2>SEED PRODUCER REGISTRATION CARD</h2>
 
     <label for="from">FROM: (LABOSEM, SOCQC/OPA)</label><br>
- 
+    <label for="category">PRODUCER CATEGORY:{{$form->producer_category}}</label><br>
     <label for="date">DATE: {{$today}}</label><br>
+    <label for="date">VALIDITY:from {{$form->valid_from}} to {{$form->valid_until}} </label><br>
+
 
     <label for="application-number">APPLICATION NUMBER: {{$form->producer_registration_number}}</label><br>
     <p></p>
