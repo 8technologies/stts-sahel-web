@@ -56,17 +56,19 @@
 <body class="hold-transition login-page" style="background: url({{ asset('storage/assets/seeds.jpg') }}) no-repeat;background-size: cover;">
 <nav class="navbar navbar-default" role="navigation" style="border: 3px solid green; border-radius: 10px">
     <div class="container">
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbarSupportedContent" aria-expanded="false">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            <a class="navbar-brand" href="{{ url('/') }}">
-                {{ config('app.name', 'Sahel') }}
-            </a>
-        </div>
+       <div class="navbar-header">
+    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbarSupportedContent" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+    </button>
+    <a class="navbar-brand" href="{{ url('/') }}">
+        <span><img src="{{ asset('storage/assets/flag.png') }}" alt="Logo" class="logo-image" style="max-width: 50px; height: auto;"></span>
+        <span class="brand-text" style="font-size: 18px; font-weight: bold;">REPUBLIQUE DU MALI</span>
+    </a>
+</div>
+
 
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <!-- Left Side Of Navbar -->
@@ -131,10 +133,12 @@
   <!-- /.login-logo -->
   
 <div class="login-box-body" style="border: 3px solid green; border-radius: 25px;">
-  <div class="login-logo">
-    <a href="{{ admin_url('/') }}"><b>{{ __('Login') }}</b></a>
-  <hr>
-  </div>
+<div class="login-logo">
+    <a href="{{ admin_url('/') }}">
+    <img src="{{ asset('storage/assets/coat.png') }}" alt="Logo" style="max-width: 50%; height: 50%;">
+    </a>
+    <hr>
+</div>
 
   @isset($_SESSION['message'])
   <div class="alert alert-{{ $_SESSION['type'] }}">{{ $_SESSION['message'] }}</div> 
