@@ -72,4 +72,17 @@ class Validation extends Model
         }
       
     }
+
+    
+//check the form status before an inspector can edit
+public static function checkInspectionStatus($model, $id)
+{
+    $model = "App\\Models\\" .ucfirst($model);
+    $form = $model::find($id);
+    if ($form->field_decision == 'accepted'|| $form->field_decision == 'rejected'  ) {
+        return false;
+    }else{
+        return true;
+    }
+}
 }

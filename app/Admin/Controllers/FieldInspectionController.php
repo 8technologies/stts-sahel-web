@@ -105,18 +105,21 @@ class FieldInspectionController extends AdminController
 
         $grid->column('order_number', __('admin.form.Order number'));
 
+        //check user role
+        if(!auth('admin')->user()->isRole('inspector')){
+
         $grid->column('id', __('admin.form.Inspection Report'))->display(function ($id) use ($inspections) {
             $inspection = $inspections->firstWhere('id', $id);
         
             if ($inspection && $inspection->is_done == 1) {
                 $link = url('inspection?id=' . $id);
-                return '<b><a target="_blank" href="' . $link . '">Print Report</a></b>';
+                return '<b><a target="_blank" href="' . $link . '">Imprimer le rapport</a></b>';
             } else {
                
-                return '<b>Pending Inspection</b>';
+                return '<b>Inscription en attente</b>';
             }
         });
-        
+    } 
         return $grid;
     }
 
@@ -230,7 +233,7 @@ class FieldInspectionController extends AdminController
                         }
                   }
                   elseif($user->isRole('inspector')){
-                      $editable = Validation::checkFormStatus('FieldInspection', $id);
+                      $editable = Validation::checkInspectionStatus('FieldInspection', $id);
                       
                       if(!$editable){
                        //return admin_error('You do not have rights to edit this form. <a href="/admin/seed-producers"> Go Back </a>');
@@ -249,6 +252,11 @@ class FieldInspectionController extends AdminController
                   
               }
            }
+           //onsaved return to the list page
+              $form->saved(function (Form $form) {
+                admin_toastr(__('admin.form.Field Inspection saved successfully'), 'success');
+                return redirect('/admin/field-inspections');
+              });
           
 
         $form->display('applicant_id', __('admin.form.Applicant'))->with(function ($applicant_id) {

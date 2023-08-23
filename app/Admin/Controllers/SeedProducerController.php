@@ -84,8 +84,13 @@ class SeedProducerController extends AdminController
 
 
 
-        //diasable filter
-        $grid->disableFilter();
+       //filter by name
+       $grid->filter(function ($filter) {
+        // Remove the default id filter
+        $filter->disableIdFilter();
+        $filter->like('user_id', 'Applicant')->select(\App\Models\User::pluck('name', 'id'));
+       
+    });
 
         // show inspector what has been assigned to him
         if (auth('admin')->user()->isRole('inspector')) {

@@ -224,6 +224,38 @@ return [
         'Applicant' => 'Demandeur',
         'Crop Variety' => 'Variété de culture',
         'Inspection Report' => 'Rapport d\'inspection',
+        'Load stock saved successfully' => 'Chargement du stock enregistré avec succès',
+        'Field Inspection saved successfully' => 'Inspection sur le terrain enregistrée avec succès',
+        //load stock form
+        'Load stock number' => 'Numéro de chargement du stock',
+        'Crop Declaration' => 'Déclaration de culture',
+        'Seed class' => 'Classe de semences',
+        'Yield quantity' => 'Quantité de rendement',
+        'Load stock date' => 'Date de chargement du stock',
+        'Last field inspection date' => 'Date de la dernière inspection sur le terrain',
+        'Last field inspection remarks' => 'Dernières remarques d\'inspection sur le terrain',
+        //seed sample form
+        'Sample request number' => 'Numéro de demande d\'échantillon',
+        'Load stock number' => 'Numéro de chargement du stock',
+        'Quantity' => 'Quantité',
+        'Sample request date' => 'Date de demande d\'échantillon',
+        'Proof of payment' => 'Preuve de paiement',
+        'Applicant remarks' => 'Remarques du demandeur',
+        'Crop' => 'Culture',
+        'Variety' => 'Variété',
+        'Generation' => 'Génération',
+        'Priority' => 'Priorité',
+        'Additional instructions' => 'Instructions supplémentaires',
+        'Decision' => 'Décision',
+        'Expected reporting date' => 'Date de rapport prévue',
+        'Assign Lab Test' => 'Assigner un test de laboratoire',
+        'Analyst Information' => 'Informations sur l\'analyste',
+        'Assign Inspector' => 'Assigner un inspecteur',
+        
+
+
+        
+
 
 
 

@@ -229,7 +229,7 @@ return [
         'Estimated yield'=>'Estimated yield',
         'Remarks'=>'Remarks',
         'Signature'=>'Signature',
-        'Field Decision'=>'Field decision',
+        'Field decision'=>'Field decision',
         'Seed generation'=>'Seed generation',
         'Type of inspection'=>'Type of inspection',
         'Is active'=>'Is active',
@@ -237,6 +237,38 @@ return [
         'Applicant' => 'Applicant',
         'Crop Variety' => 'Crop Variety',
         'Inspection Report' => 'Inspection Report',
+        'Field Inspection saved successfully'=>'Field Inspection saved successfully',
+        'Load stock saved successfully'=>'Load stock saved successfully',
+        //load stock form
+        'Load stock number'=>'Load stock number',
+        'Crop Declaration'=>'Crop Declaration',
+        'Last field inspection date'=>'Last field inspection date',
+        'Seed class'=>'Seed class',
+        'Yield quantity'=>'Yield quantity',
+        'Last field inspection remarks'=>'Last field inspection remarks',
+        'Load stock date'=>'Load stock date',
+        //seed sample form
+        'Sample request number'=>'Sample request number',
+        'Load stock number'=>'Load stock number',
+        'Quantity'=>'Quantity',
+        'Sample request date'=>'Sample request date',
+        'Proof of payment'=>'Proof of payment',
+        'Applicant remarks'=>'Applicant remarks',
+        'Crop' => 'Crop',
+        'Variety' => 'Variety',
+        'Generation' => 'Generation',
+        'Priority' => 'Priority',
+        'Additional instructions' => 'Additional instructions',
+        'Decision' => 'Decision',
+        'Expected reporting date' => 'Expected reporting date',
+        'Assign Lab Test' => 'Assign Lab Test',
+        'Analyst Information' => 'Analyst Information',
+        'Assign inspector' => 'Assign Inspector',
+        
+
+
+
+
 
 
 
