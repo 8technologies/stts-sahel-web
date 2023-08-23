@@ -77,7 +77,7 @@ class CropDeclaration extends Model
 
         self::creating(function ($model) {
             $user = auth('api')->user();
-          
+          if($user != null){
             $seed_producer = SeedProducer::where('user_id', $user->id)->first();
             if ($seed_producer == null) {
                 return Utils::apiError('You need a valid Seed Producer Certiificate inorder to apply for crop declaration.');
@@ -90,7 +90,7 @@ class CropDeclaration extends Model
             if ($crop_variety == null) {
                 return Utils::apiError('Invalid crop variety.');
             }
-    
+        }
         });
         //call back to send a notification to the user
         self::created(function ($model) {

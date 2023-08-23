@@ -12,6 +12,8 @@ use App\Models\CropVariety;
 use App\Models\SeedProducer;
 use App\Models\Utils;
 use Encore\Admin\Auth\Database\Administrator;
+use Encore\Admin\Facades\Admin;
+use \App\Models\Validation;
 
 class CropDeclarationController extends AdminController
 {
@@ -30,25 +32,38 @@ class CropDeclarationController extends AdminController
     protected function grid()
     {
         $grid = new Grid(new CropDeclaration());
-
+        $crop_declaration = CropDeclaration::where('applicant_id', auth('admin')->user()->id)->value('status');
         $user = auth()->user();
-        if ($user->isRole('grower')) {
+        if ($user->isRole('grower')) 
+        {
             $seed_producer = SeedProducer::where(['user_id' => $user->id, 'status' => 'accepted'])->first();
             if ($seed_producer == null) {
                 $grid->disableCreateButton();
                 return admin_warning('No Valid Seed Producer Form Found.', 'You need to have at least one valid Seed Producer.');
             }
-        } else {
+        } 
+        elseif ($user->inRoles(['commissioner','developer'])) 
+        {
             $grid->disableCreateButton();
         }
+
         //disable delete action
         $grid->actions(function ($actions) {
             $actions->disableDelete();
         });
 
         //show the user only crop declarations belonging to them
-        if (!auth('admin')->user()->isRole('commissioner')) {
+        if (!$user->inRoles(['commissioner','developer'])) {
             $grid->model()->where('applicant_id', auth('admin')->user()->id);
+            if ($crop_declaration == 'inspector assigned') 
+            {
+                
+                $grid->actions(function ($actions) {
+                  
+                    $actions->disableEdit();
+                    $actions->disableDelete();
+                });
+            }
         }
 
         //disable filter
@@ -58,8 +73,12 @@ class CropDeclarationController extends AdminController
         $grid->quickSearch('applicant_registration_number', 'field_name', 'district_region', 'circle',  'seed_supplier_name', 'seed_supplier_registration_number', 'source_lot_number', 'origin_of_variety',);
 
 
-        $grid->column('applicant_id', __('admin.form.Applicant'))->display(function ($applicant_id) {
-            return \App\Models\User::find($applicant_id)->name;
+        // $grid->column('applicant_id', __('admin.form.Applicant'))->display(function ($applicant_id) {
+        //     return \App\Models\User::find($applicant_id)->name;
+        // });
+        //crop varietiy
+        $grid->column('crop_variety_id', __('admin.form.Crop Variety'))->display(function ($crop_variety_id) {
+            return CropVariety::find($crop_variety_id)->crop_variety_name;
         });
         $grid->column('phone_number', __('admin.form.Phone number'));
         $grid->column('applicant_registration_number', __('admin.form.Applicant registration number'));
@@ -92,6 +111,10 @@ class CropDeclarationController extends AdminController
         $show->field('applicant_id', __('admin.form.Applicant Name'))->as(function ($applicant_id) {
             return \App\Models\User::find($applicant_id)->name;
         });
+        //crop varietie
+        $show->field('crop_variety_id', __('admin.form.Crop Variety'))->as(function ($crop_variety_id) {
+            return CropVariety::find($crop_variety_id)->crop_variety_name;
+        });
         $show->field('phone_number', __('admin.form.Phone number'));
         $show->field('applicant_registration_number', __('admin.form.Applicant registration number'));
 
@@ -114,7 +137,9 @@ class CropDeclarationController extends AdminController
         $show->field('origin_of_variety', __('admin.form.Origin of variety'));
         $show->field('garden_location_latitude', __('admin.form.Garden location latitude'));
         $show->field('garden_location_longitude', __('admin.form.Garden location longitude'));
-        $show->field('status', __('admin.form.Status'));
+        $show->field('status', __('admin.form.Status'))->as(function ($status) {
+            return Utils::tell_status($status);
+        })->unescape();
         $show->field('remarks', __('admin.form.Remarks'))->as(function ($remarks) {
             return $remarks == null ? 'No remarks yet' : $remarks;
         });
@@ -156,20 +181,82 @@ class CropDeclarationController extends AdminController
         $form = new Form(new CropDeclaration());
 
         $user = auth()->user();
+        if ($form->isCreating()) 
+        {
+            $form->hidden('applicant_id')->default($user->id);
+        }
 
-        if ($user->isRole('grower')) {
+           //check if the form is being edited
+           if ($form->isEditing()) 
+           {
+                   //get request id
+                  $id = request()->route()->parameters()['crop_declaration'];
+                 
+                  if($user->inRoles(['basic-user', 'grower'])){
+                   //check if the user is the owner of the form
+                      $editable = Validation::checkUser('CropDeclaration', $id);
+                      if(!$editable){
+                         $form->html(' <p class="alert alert-warning">You do not have rights to edit this form. <a href="/admin/crop-declarations"> Go Back </a></p> ');
+                         $form->footer(function ($footer) 
+                         {
+     
+                             // disable reset btn
+                             $footer->disableReset();
+     
+                             // disable submit btn
+                             $footer->disableSubmit();
+                        });
+                      }
+                      //check if the form has been accepted
+                      $editable_status = Validation::checkFormUserStatus('CropDeclaration', $id);
+                        if(!$editable_status){
+                         $form->html(' <p class="alert alert-warning">You cannot edit this form because it has been accepted. <a href="/admin/crop-declarations"> Go Back </a></p> ');
+                         $form->footer(function ($footer) 
+                         {
+         
+                               // disable reset btn
+                               $footer->disableReset();
+         
+                               // disable submit btn
+                               $footer->disableSubmit();
+                        });
+                        }
+                  }
+                  elseif($user->isRole('inspector')){
+                      $editable = Validation::checkFormStatus('CropDeclaration', $id);
+                      
+                      if(!$editable){
+                       //return admin_error('You do not have rights to edit this form. <a href="/admin/seed-producers"> Go Back </a>');
+                     
+                          $form->html(' <p class="alert alert-warning">You do not have rights to edit this form. <a href="/admin/crop-declarations"> Go Back </a></p> ');
+                          $form->footer(function ($footer) 
+                       {
+   
+                           // disable reset btn
+                           $footer->disableReset();
+   
+                           // disable submit btn
+                           $footer->disableSubmit();
+                      });
+                  }
+                  
+              }
+           }
+          
+
+        if ($user->isRole('grower')) 
+        {
             $seed_producer = SeedProducer::where(['user_id' => $user->id, 'status' => 'accepted'])->first();
             if ($seed_producer == null) {
                 return admin_warning('No Valid Seed Producer Form Found.', 'You need to have at least one valid Seed Producer.');
             }
-            if ($form->isCreating()) {
-                $form->hidden('applicant_id')->default($user->id);
-            }
+         
 
             $form->hidden('seed_producer_id')->default($seed_producer->id);
         }
 
-        if ($user->inRoles(['basic-user', 'grower'])) {
+        if ($user->inRoles(['basic-user', 'grower','agro-dealer'])) 
+        {
             $form->select('crop_variety_id', __('admin.form.Crop Variety'))
                 ->options(CropVariety::all()->pluck('crop_variety_name', 'id'))
                 ->required();
@@ -215,10 +302,8 @@ class CropDeclarationController extends AdminController
             $form->textarea('details', __('admin.form.Provide more details about the garden'));
         }
 
-
-
-
-        if ($user->isRole('commissioner')) {
+        if ($user->inRoles(['commissioner','developer'])) 
+        {
             $form->display('crop_variety_id', __('admin.form.Crop variety'))
                 ->with(function ($crop_variety_id) {
                     return CropVariety::find($crop_variety_id)->crop_variety_name;
@@ -259,21 +344,23 @@ class CropDeclarationController extends AdminController
             $form->textarea('details', __('admin.form.Provide more details about the garden'));
 
             $form->divider(__('admin.form.Administrator decision'));
-            $form->select('status', __('admin.form.Status'))
-                ->options([
-                    'inspector assigned' => __('admin.form.Inspection assigned'),
-                    'rejected' => __('admin.form.Rejected'),
-                    'halted' => __('admin.form.Halted'),
-                   
-                ])
-                ->default('pending');
-            $form->textarea('remarks', __('admin.form.Status comment'));
+            $form->radioButton('status', __('admin.form.Status'))
+            ->options([
+                'rejected' => 'Rejected',
+                'halted' => 'Halted',
+                'inspector assigned' => 'Assign Inspector',
 
-            //get all inspectors
-            $inspectors = \App\Models\Utils::get_inspectors();
+            ])
+            ->when('in', ['rejected', 'halted'], function (Form $form) {
+                $form->textarea('status_comment', __('admin.form.Status comment'));
+            })
+            ->when('inspector assigned', function (Form $form) {
 
-            $form->select('inspector_id', __('admin.form.Inspector'))
-                ->options($inspectors);
+                //get all inspectors
+                $inspectors = \App\Models\Utils::get_inspectors();
+                $form->select('inspector_id', __('admin.form.Inspector'))
+                    ->options($inspectors);
+            })->required();
         }
 
         //disable delete and view button

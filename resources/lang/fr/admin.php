@@ -207,6 +207,24 @@ return [
         'Agro-dealer approval date' => 'Date d\'approbation de l\'agro-distributeur',
         'Administrator decision' => 'Décision de l\'administrateur',
         'Inspector decision' => 'Décision de l\'inspecteur',
+        //field inspection form
+        'Field inspection form number' => 'Numéro de formulaire d\'inspection sur le terrain',
+        'Field size' => 'Taille du champ',
+        'Inspection date' => 'Date d\'inspection',
+        'Crop condition' => 'État de la culture',
+        'Field spacing' => 'Espacement des champs',
+        'Estimated yield' => 'Rendement estimé',
+        'Remarks' => 'Remarques',
+        'Signature' => 'Signature',
+        'Field decision' => 'Décision sur le terrain',
+        'Type of inspection' => 'Type d\'inspection',
+        'Is active' => 'Est actif',
+        'Order number' => 'Numéro de commande',
+        'Inspection type' => 'Type d\'inspection',
+        'Applicant' => 'Demandeur',
+        'Crop Variety' => 'Variété de culture',
+        'Inspection Report' => 'Rapport d\'inspection',
+
 
 
     ]

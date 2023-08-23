@@ -56,4 +56,20 @@ class Validation extends Model
 
 
     }
+
+    //Check the user role before allowing him to access the form
+    public static function checkUserRole()
+    {
+        //get authenticated user role
+        $user = auth()->user();
+        if($user != null)
+        {
+            if (!$user->isRole('inspector')) {
+                return false;
+            }else{
+                return true;
+            }
+        }
+      
+    }
 }

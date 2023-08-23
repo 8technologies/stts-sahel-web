@@ -219,6 +219,29 @@ return [
         'Agro-dealer approval date'=>'Agro-dealer approval date',
         'Administrator decision'=>'Administrator decision',
         'Inspector decision'=>'Inspector decision',
+        //field inspection form
+        'Inspection type'=>'Inspection type',
+        'Field inspection form number'=>'Field inspection form number',
+        'Field size'=>'Field size',
+        'Inspection date'=>'Inspection date',
+        'Crop condition'=>'Crop condition',
+        'Field spacing'=>'Field spacing',
+        'Estimated yield'=>'Estimated yield',
+        'Remarks'=>'Remarks',
+        'Signature'=>'Signature',
+        'Field Decision'=>'Field decision',
+        'Seed generation'=>'Seed generation',
+        'Type of inspection'=>'Type of inspection',
+        'Is active'=>'Is active',
+        'Order number'=>'Order number',
+        'Applicant' => 'Applicant',
+        'Crop Variety' => 'Crop Variety',
+        'Inspection Report' => 'Inspection Report',
+
+
+
+
+
 
         
         
