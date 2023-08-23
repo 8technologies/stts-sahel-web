@@ -1,21 +1,41 @@
+<?php
+$link = public_path('css/bootstrap-print.css');
+$form = App\Models\AgroDealers::find($_GET['id']);
+
+// Obtenir la date actuelle
+$aujourdHui = date("j F Y");
+?>
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Registration Certificate</title>
+  <title>Certificat d'Enregistrement</title>
   <style>
     body {
       font-family: Arial, sans-serif;
     }
-    .form-container {
-      margin: 20px;
+    .card {
+      border: 1px solid #ccc;
+      box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+      max-width: 500px;
+      margin: 0 auto;
+      padding: 20px;
+      text-align: center;
+      background-color: #f9f9f9;
     }
-    .form-section {
-      margin-bottom: 20px;
+    .card-header {
+      background-image: url('chemin_vers_votre_image.jpg');
+      background-size: cover;
+      background-position: center;
+      height: 150px;
+      border-top-left-radius: 4px;
+      border-top-right-radius: 4px;
     }
     .form-heading {
-      font-size: 18px;
+      font-size: 24px;
       font-weight: bold;
-      margin-bottom: 10px;
+      color: white;
+      padding: 20px;
+      margin: 0;
     }
     .form-field-label {
       font-weight: bold;
@@ -27,46 +47,47 @@
   </style>
 </head>
 <body>
-  <div class="form-container">
-    <div class="form-heading">Registration Certificate</div>
-
+  <div class="card">
+    <div class="card-header">
+    <img src="{{ public_path('storage/assets/logo.png') }}" alt="logo">
+    </div>
     <div class="form-section">
       <div class="form-field">
-        <label for="dealer-number" class="form-field-label">Agricultural Dealer Number:</label>
-        <input type="text" id="dealer-number" name="dealer-number" required>
+        <label for="dealer-number" class="form-field-label">Numéro de l'Agrocommerçant : {{$form->agro_dealer_reg_number}}</label>
+       
       </div>
       <div class="form-field">
-        <label for="last-name" class="form-field-label">Last Name:</label>
-        <input type="text" id="last-name" name="last-name" required>
+        <label for="last-name" class="form-field-label">Nom de Famille : {{$form->last_name}}</label>
+       
       </div>
       <div class="form-field">
-        <label for="first-name" class="form-field-label">First Name:</label>
-        <input type="text" id="first-name" name="first-name" required>
+        <label for="first-name" class="form-field-label">Prénom : {{$form->first_name}}</label>
+       
+      </div>
+      
+      <div class="form-field">
+        <label for="physical-address" class="form-field-label">Adresse Physique : {{$form->physical_address}}</label>
+     
       </div>
       <div class="form-field">
-        <label for="dealer-number-2" class="form-field-label">Agricultural Dealer Number:</label>
-        <input type="text" id="dealer-number-2" name="dealer-number-2" required>
+        <label for="start-date" class="form-field-label">Date de Début : {{$form->valid_from}}</label>
+       
       </div>
       <div class="form-field">
-        <label for="physical-address" class="form-field-label">Physical Address:</label>
-        <input type="text" id="physical-address" name="physical-address" required>
+        <label for="end-date" class="form-field-label">Date de Fin : {{$form->valid_until}}</label>
+      
       </div>
-      <div class="form-field">
-        <label for="start-date" class="form-field-label">Start Date:</label>
-        <input type="text" id="start-date" name="start-date" required>
-      </div>
-      <div class="form-field">
-        <label for="end-date" class="form-field-label">End Date:</label>
-        <input type="text" id="end-date" name="end-date" required>
-      </div>
+      <div class="form-section">
+      <p>Fait à Bamako, le [date]</p>
+      <p>Chef de la Division de Législation et de Contrôle Sanitaire (DLCP)</p>
+      <p>Direction Nationale de l'Agriculture</p>
+      <p>(Tampon et signature)</p>
     </div>
-
-    <div class="form-section">
-      <p>Done at: Bamako, on [date]</p>
-      <p>Head of Legislation and Sanitary Control Division (DLCP)</p>
-      <p>National Directorate of Agriculture</p>
-      <p>(Stamp and signature)</p>
     </div>
+    </div>
+  
   </div>
 </body>
 </html>
+
+

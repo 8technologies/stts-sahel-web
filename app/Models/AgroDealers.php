@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Encore\Admin\Facades\Admin;
 
 class AgroDealers extends Model
 {
@@ -31,5 +32,43 @@ class AgroDealers extends Model
         'insuring authority',
         'attachments_certificate',
         'proof_of_payment',
+        
     ];
+
+    //update the role of the user on update
+    public static function boot()
+    {
+        parent::boot();
+
+        //call back to send a notification to the user
+        self::created(function ($model) {
+           // Notification::send_notification($model, 'AgroDealers', request()->segment(count(request()->segments())));
+        });
+
+
+        self::updating(function ($model) {
+            $user = auth('api')->user();
+            if ($user || Admin::user()->isRole('basic-user')) {
+                $model->status = 'pending';
+                $model->inspector_id = null;
+                return $model;
+            }
+        });
+
+        self::updated(function ($model) {
+            //call back to send a notification to the user after form is updated
+           // Notification::update_notification($model, 'AgroDealers', request()->segment(count(request()->segments()) - 1));
+
+            //change the role of the basic user to that of an agro-dealer if approved
+            if ($model->status == 'accepted') {
+                AdminRoleUser::where([
+                    'user_id' => $model->applicant_id
+                ])->delete();
+                $new_role = new AdminRoleUser();
+                $new_role->user_id = $model->applicant_id;
+                $new_role->role_id = 9;
+                $new_role->save();
+            }
+        });
+    }
 }

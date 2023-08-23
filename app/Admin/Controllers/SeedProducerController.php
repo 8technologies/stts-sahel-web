@@ -22,7 +22,7 @@ class SeedProducerController extends AdminController
      * @var string
      */
     protected $title = 'Seed Producer';
-
+ 
     /**
      * Make a grid builder.
      *
@@ -46,31 +46,32 @@ class SeedProducerController extends AdminController
             });
         }
 
-        if ($user->isRole('basic-user')) {
-            if ($seed_producer != null) {
-                if ($seed_producer == 'inspector assigned') {
-                    //disable create button 
-                    $grid->disableCreateButton();
-                    $grid->actions(function ($actions) {
-                        $actions->disableDelete();
-                        $actions->disableEdit();
-                    });
-                }elseif($seed_producer == 'halted' || $seed_producer == 'pending'){
-                      //disable create button 
-                      $grid->disableCreateButton();
-                      $grid->actions(function ($actions) {
-                          $actions->disableDelete();
-                        
-                      });
-                }elseif($seed_producer == 'rejected'){
-                  
-                    $grid->actions(function ($actions) {
-                        $actions->disableDelete();
-                        $actions->disableEdit();
-                    });
+        if ($user->isRole('basic-user'))
+        {
+                if ($seed_producer != null) {
+                    if ($seed_producer == 'inspector assigned') {
+                        //disable create button 
+                        $grid->disableCreateButton();
+                        $grid->actions(function ($actions) {
+                            $actions->disableDelete();
+                            $actions->disableEdit();
+                        });
+                    }elseif($seed_producer == 'halted' || $seed_producer == 'pending'){
+                        //disable create button 
+                        $grid->disableCreateButton();
+                        $grid->actions(function ($actions) {
+                            $actions->disableDelete();
+                            
+                        });
+                    }elseif($seed_producer == 'rejected'){
+                    
+                        $grid->actions(function ($actions) {
+                            $actions->disableDelete();
+                            $actions->disableEdit();
+                        });
+                }
             }
         }
-    }
 
         if ($user->isRole('grower')) {
             //disable create button 
@@ -173,7 +174,9 @@ class SeedProducerController extends AdminController
         });
         $show->field('labor_details', __('admin.form.Detail the labor you have at the farm in terms of numbers and competencies'));
         $show->field('receipt', __('admin.form.Proof of payment of application fees'))->file();
-        $show->field('status', __('admin.form.Status'));
+        $show->field('status', __('admin.form.Status'))->as(function ($status) {
+            return \App\Models\Utils::tell_status($status) ?? '-';
+        })->unescape();
         $show->field('status_comment', __('admin.form.Status comment'))->as(function ($value) {
             return $value ?? '-';
         });
@@ -222,7 +225,8 @@ class SeedProducerController extends AdminController
                 //get request id
                $id = request()->route()->parameters()['seed_producer'];
               
-               if($user->isRole('basic-user')){
+               if($user->inRoles(['basic-user', 'grower'])){
+                //check if the user is the owner of the form
                    $editable = Validation::checkUser('SeedProducer', $id);
                    if(!$editable){
                       $form->html(' <p class="alert alert-warning">You do not have rights to edit this form. <a href="/admin/seed-producers"> Go Back </a></p> ');
@@ -236,6 +240,20 @@ class SeedProducerController extends AdminController
                           $footer->disableSubmit();
                      });
                    }
+                   //check if the form has been accepted
+                   $editable_status = Validation::checkFormUserStatus('SeedProducer', $id);
+                     if(!$editable_status){
+                      $form->html(' <p class="alert alert-warning">You cannot edit this form because it has been accepted. <a href="/admin/seed-producers"> Go Back </a></p> ');
+                      $form->footer(function ($footer) 
+                      {
+      
+                            // disable reset btn
+                            $footer->disableReset();
+      
+                            // disable submit btn
+                            $footer->disableSubmit();
+                     });
+                     }
                }
                elseif($user->isRole('inspector')){
                    $editable = Validation::checkFormStatus('SeedProducer', $id);

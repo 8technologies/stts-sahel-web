@@ -104,26 +104,32 @@ public static function update_notification($model, $model_name, $entity)
         'inspector assigned' => [
             'message' => "You have been assigned to inspect {$entity}.",
             'receiver_id' => $model->inspector_id,
+            'form_link' => admin_url("{$entity}/{$model->id}/edit"),
         ],
         'inspection assigned' => [ 
             'message' => "Dear {$name}, your {$entity} is now under inspection.",
             'receiver_id' => $model->user_id,
+            'form_link' => admin_url("{$entity}/{$model->id}/edit"),
         ],
         'pending' => [
             'message' => "Dear {$name}, your {$entity} is now pending.",
             'receiver_id' => 1,
+            'form_link' => admin_url("{$entity}/{$model->id}/edit"),
         ],
         'halted' => [
             'message' => "Dear {$name}, your {$entity} has been halted by the inspector.",
             'receiver_id' => $model->user_id,
+            'form_link' => admin_url("{$entity}/{$model->id}/edit"),
         ],
         'rejected' => [
             'message' => "Dear {$name}, your {$entity} has been rejected by the inspector.",
             'receiver_id' => $model->user_id,
+            'form_link' => admin_url("{$entity}/{$model->id}"),
         ],
         'accepted' => [
-            'message' => "Dear {$name}, your {$entity} has been rejected by the inspector.",
+            'message' => "Dear {$name}, your {$entity} has been accepted by the inspector.",
             'receiver_id' => $model->user_id,
+            'form_link' => admin_url("{$entity}/{$model->id}"),
         ],
     ];
 
@@ -135,12 +141,13 @@ public static function update_notification($model, $model_name, $entity)
         if ($model->status == $status) {
             $receiver = Administrator::find($data['receiver_id']);
             $message = str_replace('{name}', $receiver->name, $data['message']);
+            $link = $data['form_link'];
 
             $notification = new Notification();
             $notification->receiver_id = $receiver->id;
             $notification->message = $message;
             $notification->link = admin_url("auth/login");
-            $notification->form_link = admin_url("{$entity}/{$model->id}/edit");
+            $notification->form_link = $link;
             $notification->status = 'Unread';
             $notification->model = $model_name;
             $notification->model_id = $model->id;

@@ -1,7 +1,9 @@
 <?php
 
 return [
+    'action'                => 'Action',
     'online'                => 'En ligne',
+    'Member since '          => 'Membre depuis',
     'login'                 => 'Connexion',
     'logout'                => 'Déconnexion',
     'setting'               => 'Paramètres',
@@ -67,6 +69,7 @@ return [
     'updated_at'            => 'Mis à jour à',
     'alert'                 => 'Alerte',
     'parent_id'             => 'Parent',
+    
     'icon'                  => 'Icône',
     'uri'                   => 'URI',
     'operation_log'         => 'Journal des opérations',
@@ -101,6 +104,9 @@ return [
     'menu_titles'           => [],
     'form' => [
         //Seed Producer form
+        'Applicant Name' => 'Nom du demandeur',
+        'Date' => 'Date',
+        'Producer category' => 'Catégorie de producteur',
         'Knowledge of crops and varieties' => 'Connaissance des cultures et des variétés',
         'Valid until' => 'Valide jusqu\'au',
         'Inspector' => 'Inspecteur',
@@ -113,7 +119,7 @@ return [
         'Garden history of the proposed seed production field for the last three season or years' => 'Historique du jardin du champ de production de semences proposé pour les trois dernières saisons ou années',
         'If seed company, years of experience as a seed producer' => 'Si société de semences, années d\'expérience en tant que producteur de semences',
         'Proposed farm location' => 'Emplacement de la ferme proposée',
-        'Applicant physcial address' => 'Adresse physique du demandeur',
+        'Applicant physical address' => 'Adresse physique du demandeur',
         'Proposed farm location' => 'Emplacement de la ferme proposée',
         'Applicant email' => 'Email du demandeur',
         'Applicant phone number' => 'Numéro de téléphone du demandeur',
@@ -162,6 +168,46 @@ return [
         'Halted' => 'Arrêté', 
         'Status comment' => 'Commentaire sur le statut', 
         'Accepted' => 'Accepté', 
+        //cooperative form
+        'Cooperative name' => 'Nom de la coopérative',
+        'Registration number' => 'Numéro d\'enregistrement',
+        'Cooperative number' => 'Numéro de coopérative',
+        'Membership type' => 'Type d\'adhésion',
+        'Services to members' => 'Services aux membres',
+        'Objectives or goals' => 'Objectifs ou buts',
+        'Cooperative physical address' => 'Adresse physique de la coopérative',
+        'Contact person name' => 'Nom de la personne à contacter',
+        'Contact phone number' => 'Numéro de téléphone du contact',
+        'Contact email' => 'Email du contact',
+        'Status comment' => 'Commentaire sur le statut',
+        'Inspector' => 'Inspecteur',
+        'Assign Inspector'=>'Assigner un inspecteur',
+        //agro dealer form
+        'First name' => 'Prénom',
+        'Last name' => 'Nom de famille',
+        'Email' => 'Email',
+        'Physical address' => 'Adresse physique',
+        'District' => 'District',
+        'Circle' => 'Cercle',
+        'Township' => 'Canton',
+        'Town plot number' => 'Numéro de parcelle de ville',
+        'Shop number' => 'Numéro de magasin',
+        'Company name' => 'Nom de la compagnie',
+        'Retailers in' => 'Détaillants en',
+        'Business registration number' => 'Numéro d\'enregistrement de l\'entreprise',
+        'Years in operation' => 'Années d\'opération',
+        'Business description'=>'Description de l\'entreprise',
+        'Trading license number' => 'Numéro de licence de commerce',
+        'Trading license expiry date' => 'Date d\'expiration de la licence de commerce',
+        'Trading license period' => 'Période de licence de commerce',
+        'Insuring authority' => 'Autorité d\'assurance',
+        'Attachments certificate'=>'Certificat de pièces jointes',
+        'Proof of payment'=>'Preuve de paiement',
+        'Agro-dealer registration number' => 'Numéro d\'enregistrement de l\'agro-distributeur',
+        'Agro-dealer approval date' => 'Date d\'approbation de l\'agro-distributeur',
+        'Administrator decision' => 'Décision de l\'administrateur',
+        'Inspector decision' => 'Décision de l\'inspecteur',
+
 
     ]
 

@@ -1,15 +1,15 @@
 <?php
 $link = public_path('css/bootstrap-print.css');
 $form = App\Models\SeedProducer::find($_GET['id']);
-//get current date
-$today = date("F j, Y");
+// Obtenir la date actuelle
+$aujourdHui = date("j F Y");
 ?>
 <!DOCTYPE html>
 <html>
 <head>
-  <title>SEED PRODUCER REGISTRATION CARD</title>
+  <title>CARTE D'ENREGISTREMENT DU PRODUCTEUR DE SEMENCES</title>
   <style>
-    /* Center the page content */
+    /* Centrer le contenu de la page */
     body {
       display: flex;
       justify-content: center;
@@ -46,25 +46,24 @@ $today = date("F j, Y");
   <img src="{{ public_path('storage/assets/logo.png') }}" alt="logo">
   </div>
   <div class="card">
-    <h2>SEED PRODUCER REGISTRATION CARD</h2>
+    <h2>CARTE D'ENREGISTREMENT DU PRODUCTEUR DE SEMENCES</h2>
 
-    <label for="from">FROM: (LABOSEM, SOCQC/OPA)</label><br>
-    <label for="category">PRODUCER CATEGORY:{{$form->producer_category}}</label><br>
-    <label for="date">DATE: {{$today}}</label><br>
-    <label for="date">VALIDITY:from {{$form->valid_from}} to {{$form->valid_until}} </label><br>
+    <label for="from">DE : (LABOSEM, SOCQC/OPA)</label><br>
+    <label for="category">CATÉGORIE DU PRODUCTEUR : {{$form->producer_category}}</label><br>
+    <label for="date">DATE : {{$aujourdHui}}</label><br>
+    <label for="date">VALIDITÉ : de {{$form->valid_from}} à {{$form->valid_until}} </label><br>
 
-
-    <label for="application-number">APPLICATION NUMBER: {{$form->producer_registration_number}}</label><br>
+    <label for="application-number">NUMÉRO DE LA DEMANDE : {{$form->producer_registration_number}}</label><br>
     <p></p>
 
-    <p>Your Application number {{$form->producer_registration_number}}, requesting seed operator approval, has been approved.</p>
-    <p>Enclosed is the appraisal report.</p>
-    <p>You may appeal this decision in accordance with the regulations in force.</p>
+    <p>Votre numéro de demande {{$form->producer_registration_number}}, demandant l'approbation en tant qu'opérateur de semences, a été approuvé.</p>
+    <p>Vous trouverez ci-joint le rapport d'évaluation.</p>
+    <p>Vous pouvez contester cette décision conformément à la réglementation en vigueur.</p>
 
     <br>
 
     <p>______________________________</p>
-    <p>SIGNATURE OF LABOSEM MANAGER</p>
+    <p>SIGNATURE DU DIRECTEUR DE LABOSEM</p>
     <p>SOCQC/OPA</p>
   </div>
 </div>

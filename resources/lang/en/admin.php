@@ -113,6 +113,11 @@ return [
     'quick_create'           => 'Quick create',
     'form'=>[
         //Seed Producer form
+        //Seed Producer form
+        //Seed Producer form
+        'Applicant name' => 'Applicant name',
+        'Date' => 'Date',
+        'Producer category' => 'Producer Category',
         'Knowledge of crops and varieties' =>  'Knowledge of crops and varieties', 
         'Valid until' => 'Valid until',
         'Inspector' => 'Inspector',
@@ -125,7 +130,7 @@ return [
         'Garden history of the proposed seed production field for the last three season or years' => 'Garden history of the proposed seed production field for the last three season or years',
         'If seed company, years of experience as a seed producer' => 'If seed company, years of experience as a seed producer',
         'Proposed farm location' => 'Proposed farm location',
-        'Applicant physical address' => 'Applicant physcial address',
+        'Applicant physical address' => 'Applicant physical address',
         'Proposed farm location' => 'Proposed farm location',
         'Applicant email' => 'Applicant email',
         'Applicant phone number' => 'Applicant phone number',
@@ -174,6 +179,51 @@ return [
         'Halted' => 'Halted',
         'Status comment' => 'Status comment',
         'Accepted' => 'Accepted',
+        //cooperative form
+        'Cooperative number' => 'Cooperative number',
+        'Cooperative name' => 'Cooperative name',
+        'Registration number' => 'Registration number',
+        'Cooperative physical address' => 'Cooperative physical address',
+        'Contact person name' => 'Contact person name',
+        'Contact phone number' => 'Contact phone number',
+        'Contact email' => 'Contact email',
+        'Membership type' => 'Membership type',
+        'Services to members' => 'Services to members',
+        'Objectives or goals' => 'Objectives or goals',
+        'Status' => 'Status',
+        'Status comment' => 'Status comment',
+        'Inspector' => 'Inspector',
+        'Assign Inspector'=>'Assign Inspector',
+        //agro dealer form
+        'First name'=> 'First name',
+        'Last name'=>'Last name',
+        'Email'=>'Email',
+        'Physical address'=>'Physical address',
+        'District'=>'District',
+        'Circle'=>'Circle',
+        'Township'=>'Township',
+        'Town plot number'=>'Town plot number',
+        'Shop number'=>'Shop number',
+        'Company name'=>'Company name',
+        'Retailers in'=>'Retailers in',
+        'Business registration number'=>'Business registration number',
+        'Years in operation'=>'Years in operation',
+        'Business description'=>'Business description',
+        'Trading license number'=>'Trading license number',
+        'Trading license period'=>'Trading license period',
+        'Trading license expiry date'=>'Trading license expiry date',
+        'Insuring authority'=>'Insuring authority',
+        'Attachments certificate'=>'Attachments certificate',
+        'Proof of payment'=>'Proof of payment',
+        'Agro-dealer registration number'=>'Agro-dealer registration number',
+        'Agro-dealer approval date'=>'Agro-dealer approval date',
+        'Administrator decision'=>'Administrator decision',
+        'Inspector decision'=>'Inspector decision',
+
+        
+        
+
+        
 
         
 
