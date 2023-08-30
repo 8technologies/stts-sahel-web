@@ -83,7 +83,7 @@ class Utils extends Model
         }
         return $label->format('M - Y');
     }
-    
+
     //get all inspectors
     public static function get_inspectors()
     {
@@ -111,7 +111,7 @@ class Utils extends Model
                 });
         }
 
-        if ($user->inRoles(['basic-user', 'cooperative']))
+        if ($user->inRoles(['basic-user', 'cooperative','grower']))
         {
                  
             $grid->actions(function ($actions) 

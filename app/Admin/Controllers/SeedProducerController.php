@@ -192,62 +192,13 @@ class SeedProducerController extends AdminController
         {
                 //get request id
                $id = request()->route()->parameters()['seed_producer'];
-              
-               if($user->inRoles(['basic-user', 'grower'])){
-                //check if the user is the owner of the form
-                   $editable = Validation::checkUser('SeedProducer', $id);
-                   if(!$editable){
-                      $form->html(' <p class="alert alert-warning">You do not have rights to edit this form. <a href="/admin/seed-producers"> Go Back </a></p> ');
-                      $form->footer(function ($footer) 
-                      {
-  
-                          // disable reset btn
-                          $footer->disableReset();
-  
-                          // disable submit btn
-                          $footer->disableSubmit();
-                     });
-                   }
-                   //check if the form has been accepted
-                   $editable_status = Validation::checkFormUserStatus('SeedProducer', $id);
-                     if(!$editable_status){
-                      $form->html(' <p class="alert alert-warning">You cannot edit this form because it has been accepted. <a href="/admin/seed-producers"> Go Back </a></p> ');
-                      $form->footer(function ($footer) 
-                      {
-      
-                            // disable reset btn
-                            $footer->disableReset();
-      
-                            // disable submit btn
-                            $footer->disableSubmit();
-                     });
-                     }
-               }
-               elseif($user->isRole('inspector')){
-                   $editable = Validation::checkFormStatus('SeedProducer', $id);
-                   
-                   if(!$editable){
-                    //return admin_error('You do not have rights to edit this form. <a href="/admin/seed-producers"> Go Back </a>');
-                  
-                       $form->html(' <p class="alert alert-warning">You do not have rights to edit this form. <a href="/admin/seed-producers"> Go Back </a></p> ');
-                       $form->footer(function ($footer) 
-                    {
-
-                        // disable reset btn
-                        $footer->disableReset();
-
-                        // disable submit btn
-                        $footer->disableSubmit();
-                   });
-               }
-               
-           }
+               Validation::checkFormEditable($form, $id);
         }
        
         //redirect to the list after saving
         $form->saved(function (Form $form) 
         {
-            return redirect(admin_url('seed-producers'));
+         return redirect(admin_url('seed-producers'));
         });
 
       
@@ -308,9 +259,9 @@ class SeedProducerController extends AdminController
                 $form->divider('Inspectors decision');
                 $form->radioButton('status', __('admin.form.Status'))
                     ->options([
-                        'accepted' => 'Accepted',
-                        'rejected' => 'Rejected',
-                        'halted' => 'Halted',
+                        'accepted'=> __('admin.form.Accepted'),
+                        'halted' => __('admin.form.Halted'),
+                        'rejected' => __('admin.form.Rejected'),
                     ])
                     ->when('in', ['rejected', 'halted'], function (Form $form) {
                         $form->textarea('status_comment', __('admin.form.Status comment'));
@@ -333,10 +284,10 @@ class SeedProducerController extends AdminController
         {
 
             $form->radioCard('producer_category', __('admin.form.Seed producer category'))->options([
-                'Individual-grower' => 'Individual-grower',
-                'Seed-breeder' => 'Seed-breeder',
-                'Seed-Company' => 'Seed-Company',
-                'Cooperative' => 'Cooperative',
+                'Individual-grower' => __('admin.form.Individual-grower'),
+                'Seed-breeder' => __('admin.form.Seed-breeder'),
+                'Seed-Company' =>  __('admin.form.Seed-company'),
+                'Cooperative' => __('admin.form.Cooperative'),
             ])
             ->when('Cooperative', function (Form $form) {
                 

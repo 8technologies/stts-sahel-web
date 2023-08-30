@@ -264,7 +264,11 @@ return [
         'Agriculture value chains'=>'Chaînes de valeur agricoles',
         'Female' => 'féminin',
         'Male'=> 'masculin',
-        'Other'=> 'autre',        
+        'Other'=> 'autre',   
+        'Seed-company' => 'Société de semences',
+        'Individual-grower' => 'Producteur individuel',
+        'Cooperative' => 'Coopérative',
+        'Seed-breeder' => 'Producteur de semences',     
 
 
         

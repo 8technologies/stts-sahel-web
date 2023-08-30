@@ -279,6 +279,10 @@ return [
         'Female' => 'Female',
         'Male' => 'Male',
         'Other' => 'Other',
+        'Seed-company' => 'Seed-company',
+        'Individual-grower' => 'Individual-grower',
+        'Cooperative' => 'Cooperative',
+        'Seed-breeder' => 'Seed-breeder',
 
         
 
