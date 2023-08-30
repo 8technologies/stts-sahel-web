@@ -39,7 +39,7 @@ class Cooperative extends Model
 
         //call back to send a notification to the user
         self::created(function ($model) {
-           // Notification::send_notification($model, 'Cooperative', request()->segment(count(request()->segments())));
+            Notification::send_notification($model, 'Cooperative', request()->segment(count(request()->segments())));
         });
 
 
@@ -54,7 +54,7 @@ class Cooperative extends Model
 
         self::updated(function ($model) {
             //call back to send a notification to the user after form is updated
-           // Notification::update_notification($model, 'Cooperative', request()->segment(count(request()->segments()) - 1));
+            Notification::update_notification($model, 'Cooperative', request()->segment(count(request()->segments()) - 1));
 
             //change the role of the basic user to that of the seed producer if approved
             if ($model->status == 'accepted') {

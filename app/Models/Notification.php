@@ -187,13 +187,16 @@ public static function update_notification($model, $model_name, $entity)
             $receivers = self::get_users_by_id($notification->receiver_id);
                 
         } else
-        {
-            $receivers = self::get_users_by_role($notification->role_id);
+        {    
+            $receivers = self::get_users_by_role($notification->role_id);     
         }
 
+        if ($receivers->isEmpty()) {
+            return "No receivers found."; // Return an error message
+        }
+    
         $emails = $receivers->pluck('email')->toArray();
 
-        error_log($notification->link);
         Mail::to($emails)->send(new MyNotification($notification->message, $notification->link));
     }
 

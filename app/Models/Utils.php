@@ -91,4 +91,75 @@ class Utils extends Model
         })->pluck('name', 'id');
         return $users;
     }
+
+    //disable action buttons depending on the status of the form
+    public static function disable_buttons($model, $grid)
+    {
+        $model = "App\\Models\\" .ucfirst($model);
+        $form = $model::where('user_id', auth('admin')->user()->id)->value('status');
+        $user = auth('admin')->user();
+        if ($user->inRoles(['commissioner', 'inspector'])) {
+                //disable create button and delete
+                $grid->disableCreateButton();
+                $grid->actions(function ($actions) {
+                    $actions->disableView();
+                    $actions->disableDelete();
+                });
+            }
+    
+            if ($user->isRole('basic-user'))
+            {
+                    if ($form != null) {
+                        if ($form == 'inspector assigned') {
+                            //disable create button 
+                            $grid->disableCreateButton();
+                            $grid->actions(function ($actions) {
+                                $actions->disableDelete();
+                                $actions->disableEdit();
+                            });
+                        }elseif($form == 'halted' || $form == 'pending'){
+                            //disable create button 
+                            $grid->disableCreateButton();
+                            $grid->actions(function ($actions) {
+                                $actions->disableDelete();
+                                
+                            });
+                        }elseif($form == 'rejected'){
+                        
+                            $grid->actions(function ($actions) {
+                                $actions->disableDelete();
+                                $actions->disableEdit();
+                            });
+                    }
+                }
+            }
+    
+            if ($user->isRole('cooperative')) {
+                //disable create button 
+                $grid->disableCreateButton();
+                $grid->actions(function ($actions) {
+                    $actions->disableDelete();
+                    $actions->disableEdit();
+                });
+            }
+    
+    }
+
+    //delete notification after the form has been viewed
+    public static function delete_notification($model_name, $id)
+    {
+        $model = "App\\Models\\" .ucfirst($model_name);
+        $user =auth('admin')->user();
+        $form = $model::findOrFail($id);
+        //delete the notification from the database once a user views the form
+        if(!$user->inRoles(['developer','commissioner','inspector']) )
+        {
+            if($form->status == 'pending'|| $form->status =='halted' || $form->status == 'rejected' || $form->status == 'accepted')
+            {
+                \App\Models\Notification::where(['receiver_id' => $user->id, 'model_id' => $id, 'model' => $model_name])->delete();
+        
+            }
+
+        }
+    }
 }

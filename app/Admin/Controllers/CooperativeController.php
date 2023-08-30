@@ -9,6 +9,7 @@ use Encore\Admin\Show;
 use Encore\Admin\Facades\Admin;
 use \App\Models\Cooperative;
 use \App\Models\Validation;
+use \App\Models\Utils;
 
 class CooperativeController extends AdminController
 {
@@ -28,6 +29,10 @@ class CooperativeController extends AdminController
     {
         $grid = new Grid(new Cooperative());
         $user = Admin::user();
+
+        //function to show the loggedin user only what belongs to them
+        Validation::showUserForms($grid);
+
         //order in descending order
         $grid->model()->orderBy('id', 'desc');
 
@@ -37,37 +42,10 @@ class CooperativeController extends AdminController
             $filter->disableIdFilter();
             $filter->like('cooperative_name', __('admin.form.Cooperative name'));
         });
-
-        if (!$user->isRole('basic-user')) {
-            //disable create button and delete
-            $grid->disableCreateButton();
-            $grid->actions(function ($actions) {
-                $actions->disableDelete();
-            });
-        }
-        if ($user->isRole('cooperative')) {
-            $grid->actions(function ($actions) {
-                $actions->disableEdit();
-                $actions->disableDelete();
-            });
-        }
-        // show inspector what has been assigned to him
-        if (auth('admin')->user()->isRole('inspector')) {
-            $grid->model()->where('inspector_id', auth('admin')->user()->id);
-        }
-
-        //show the user only his records
-        if (auth('admin')->user()->isRole('basic-user')) {
-            $grid->model()->where('user_id', auth('admin')->user()->id);
-        }
-
-        //show the cooperative only his records
-        if (auth('admin')->user()->isRole('cooperative')) {
-            $grid->model()->where('user_id', auth('admin')->user()->id);
-        }
-
-
-        $grid->column('id', __('Id'));
+       
+        //disable action buttons appropriately
+        Utils::disable_buttons('cooperative', $grid);
+      
         $grid->column('cooperative_number', __('admin.form.Cooperative number'));
         $grid->column('cooperative_name', __('admin.form.Cooperative name'));
         $grid->column('registration_number', __('admin.form.Registration number'))->display(function ($value) {
@@ -91,8 +69,9 @@ class CooperativeController extends AdminController
     protected function detail($id)
     {
         $show = new Show(Cooperative::findOrFail($id));
-
-        $show->field('id', __('Id'));
+        //delete notification after viewing the form
+        Utils::delete_notification('Cooperative', $id);
+       
         $show->field('cooperative_number', __('admin.form.Cooperative number'));
         $show->field('cooperative_name', __('admin.form.Cooperative name'));
         $show->field('registration_number', __('admin.form.Registration number'))->as(function ($value) {
@@ -127,65 +106,17 @@ class CooperativeController extends AdminController
 
         $user = auth()->user();
 
-        if ($form->isCreating()) {
+        if ($form->isCreating()) 
+        {
             $form->hidden('user_id')->default($user->id);
         }
 
         //check if the form is being edited
         if ($form->isEditing()) 
         {
-                //get request id
-               $id = request()->route()->parameters()['cooperative'];
-              
-               if($user->inRoles(['basic-user', 'cooperative'])){
-                //check if the user is the owner of the form
-                   $editable = Validation::checkUser('Cooperative', $id);
-                   if(!$editable){
-                      $form->html(' <p class="alert alert-warning">You do not have rights to edit this form. <a href="/admin/cooperatives"> Go Back </a></p> ');
-                      $form->footer(function ($footer) 
-                      {
-  
-                          // disable reset btn
-                          $footer->disableReset();
-  
-                          // disable submit btn
-                          $footer->disableSubmit();
-                     });
-                   }
-                   //check if the form has been accepted
-                   $editable_status = Validation::checkFormUserStatus('Cooperative', $id);
-                     if(!$editable_status){
-                      $form->html(' <p class="alert alert-warning">You cannot edit this form because it has been accepted. <a href="/admin/cooperatives"> Go Back </a></p> ');
-                      $form->footer(function ($footer) 
-                      {
-      
-                            // disable reset btn
-                            $footer->disableReset();
-      
-                            // disable submit btn
-                            $footer->disableSubmit();
-                     });
-                     }
-               }
-               elseif($user->isRole('inspector')){
-                   $editable = Validation::checkFormStatus('Cooperative', $id);
-                   
-                   if(!$editable){
-
-                  
-                       $form->html(' <p class="alert alert-warning">You do not have rights to edit this form. <a href="/admin/cooperatives"> Go Back </a></p> ');
-                       $form->footer(function ($footer) 
-                    {
-
-                        // disable reset btn
-                        $footer->disableReset();
-
-                        // disable submit btn
-                        $footer->disableSubmit();
-                   });
-               }
-               
-           }
+            //get request id
+            $id = request()->route()->parameters()['cooperative'];
+             Validation::checkFormEditable($form, $id);
         }
 
         if ($user->inRoles(['commissioner', 'inspector', 'developer'])) 
@@ -200,7 +131,8 @@ class CooperativeController extends AdminController
             $form->display('services_to_members', __('admin.form.Services to members'));
             $form->display('objectives_or_goals', __('admin.form.Objectives or goals'));
             //admin decision
-            if ($user->inRoles(['commissioner','developer'])) {
+            if ($user->inRoles(['commissioner','developer'])) 
+            {
                 $form->divider('Administartor decision');
                 $form->radioButton('status', __('admin.form.Status'))
                     ->options([
@@ -225,7 +157,8 @@ class CooperativeController extends AdminController
                     })->required();
             }
             //inspector decision
-            if ($user->isRole('inspector')) {
+            if ($user->isRole('inspector')) 
+            {
                 $form->divider('Inspector decision');
                 $form->radioButton('status', __('admin.form.Status'))
                     ->options([
@@ -242,20 +175,23 @@ class CooperativeController extends AdminController
                     })->required();
             }
         } 
+
         else 
         {
-            $form->text('cooperative_number', __('Cooperative number'));
-            $form->text('cooperative_name', __('Cooperative name'));
-            $form->text('cooperative_physical_address', __('Cooperative physical address'));
-            $form->text('contact_person_name', __('Contact person name'));
-            $form->text('contact_phone_number', __('Contact phone number'));
-            $form->text('contact_email', __('Contact email'));
-            $form->text('membership_type', __('Membership type'));
-            $form->text('services_to_members', __('Services to members'));
-            $form->text('objectives_or_goals', __('Objectives or goals'));
+            $form->text('cooperative_number', __('admin.form.Cooperative number'));
+            $form->text('cooperative_name', __('admin.form.Cooperative name'));
+            $form->text('cooperative_physical_address', __('admin.form.Cooperative physical address'));
+            $form->text('contact_person_name', __('admin.form.Contact person name'));
+            $form->text('contact_phone_number', __('admin.form.Contact phone number'));
+            $form->text('contact_email', __('admin.form.Contact email'));
+            $form->text('membership_type', __('admin.form.Membership type'));
+            $form->text('services_to_members', __('admin.form.Services to members'));
+            $form->text('objectives_or_goals', __('admin.form.Objectives or goals'));
         }
+
         //disable delete button
-        $form->tools(function (Form\Tools $tools) {
+        $form->tools(function (Form\Tools $tools) 
+        {
             $tools->disableView();
             $tools->disableDelete();
         });

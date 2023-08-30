@@ -32,7 +32,7 @@ class Validation extends Model
         }
     }
 
- //check the user before givig hi,e roghts to access the form
+ //check the user before givig him roghts to access the form
     public static function checkUser($model, $id)
     {
         $model = "App\\Models\\" .ucfirst($model);
@@ -84,5 +84,81 @@ public static function checkInspectionStatus($model, $id)
     }else{
         return true;
     }
+}
+
+
+//check if the form is editable by the user
+public static function checkFormEditable($form, $id)
+{
+    $user = auth()->user();
+    if($user->inRoles(['basic-user', 'cooperative'])){
+        //check if the user is the owner of the form
+           $editable = Validation::checkUser('Cooperative', $id);
+           if(!$editable){
+              $form->html(' <p class="alert alert-warning">You do not have rights to edit this form. <a href="/admin/cooperatives"> Go Back </a></p> ');
+              $form->footer(function ($footer) 
+              {
+
+                  // disable reset btn
+                  $footer->disableReset();
+
+                  // disable submit btn
+                  $footer->disableSubmit();
+             });
+           }
+           //check if the form has been accepted
+           $editable_status = Validation::checkFormUserStatus('Cooperative', $id);
+             if(!$editable_status){
+              $form->html(' <p class="alert alert-warning">You can nolonger edit this form because a decision has already been made. <a href="/admin/cooperatives"> Go Back </a></p> ');
+              $form->footer(function ($footer) 
+              {
+
+                    // disable reset btn
+                    $footer->disableReset();
+
+                    // disable submit btn
+                    $footer->disableSubmit();
+             });
+             }
+       }
+       elseif($user->isRole('inspector')){
+           $editable = Validation::checkFormStatus('Cooperative', $id);
+           
+           if(!$editable){
+
+          
+               $form->html(' <p class="alert alert-warning">You do not have rights to edit this form again. <a href="/admin/cooperatives"> Go Back </a></p> ');
+               $form->footer(function ($footer) 
+            {
+
+                // disable reset btn
+                $footer->disableReset();
+
+                // disable submit btn
+                $footer->disableSubmit();
+           });
+       }
+       
+   }
+}
+
+//show the logged in user, only the forms that belong to him
+public static function showUserForms($grid)
+{
+  // show inspector what has been assigned to him
+  if (auth('admin')->user()->isRole('inspector')) {
+    $grid->model()->where('inspector_id', auth('admin')->user()->id);
+}
+
+//show the user only his records
+if (auth('admin')->user()->isRole('basic-user')) {
+    $grid->model()->where('user_id', auth('admin')->user()->id);
+}
+
+//show the cooperative only his records
+if (auth('admin')->user()->isRole('cooperative')) {
+    $grid->model()->where('user_id', auth('admin')->user()->id);
+}
+
 }
 }
