@@ -115,6 +115,9 @@ class SeedProducerController extends AdminController
     protected function detail($id)
     {
         $show = new Show(SeedProducer::findOrFail($id));
+          //delete notification after viewing the form
+          Utils::delete_notification('SeedProducer', $id);
+
         //check if the user is the owner of the form
         $showable = Validation::checkUser('SeedProducer', $id);
         if (!$showable) {
