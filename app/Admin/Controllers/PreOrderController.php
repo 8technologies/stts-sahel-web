@@ -15,7 +15,7 @@ class PreOrderController extends AdminController
      *
      * @var string
      */
-    protected $title = 'PreOrder';
+    protected $title = 'Pre-Order';
 
     /**
      * Make a grid builder.
