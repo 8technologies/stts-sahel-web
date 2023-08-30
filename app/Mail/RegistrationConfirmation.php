@@ -22,7 +22,7 @@ class RegistrationConfirmation extends Mailable
 
     public function build()
     {
-        return $this->subject('Welcome to Our Website')
+        return $this->subject('Welcome to the National Seed Tracing and Tracking System! ')
             ->view('emails.registration_confirmation');
     }
 }
