@@ -93,13 +93,13 @@ class CropController extends AdminController
         $form = new Form(new Crop());
 
         $form->text('crop_name', __('Crop name'))->rules('required');
-        $form->text('crop_code', __('Crop code'));
-        $form->decimal('number_of_days_before_submission', __('Number of days before submission of planting return'));
-        $form->decimal('seed_viability_period', __('Seed viability period (in days)')); 
+        $form->text('crop_code', __('Crop code'))->required();
+        $form->decimal('number_of_days_before_submission', __('Number of days before submission of planting return'))->required();
+        $form->decimal('seed_viability_period', __('Seed viability period (in days)'))->required(); 
         $form->divider();
         $form->hasMany('crop_varieties', function (Form\NestedForm $form)  {
-            $form->text('crop_variety_name', __('Crop Variety Name'));
-            $form->text('crop_variety_code', __('Crop Variety Code'));
+            $form->text('crop_variety_name', __('Crop Variety Name'))->required();
+            $form->text('crop_variety_code', __('Crop Variety Code'))->required();
             //get all seed class and display in dropdown
            // $form->select('crop_variety_generation', __('Crop Variety Generation'))->options(\App\Models\SeedClass::all()->pluck('class_name', 'id'));
           
