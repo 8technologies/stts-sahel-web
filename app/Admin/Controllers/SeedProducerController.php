@@ -12,6 +12,7 @@ use Encore\Admin\Auth\Database\Administrator;
 use Illuminate\Support\Carbon;
 use \App\Models\Cooperative;
 use \App\Models\Validation;
+use \App\Models\Utils;
 use Illuminate\Support\Str;
 
 class SeedProducerController extends AdminController
@@ -31,76 +32,32 @@ class SeedProducerController extends AdminController
     protected function grid()
     {
         $grid = new Grid(new SeedProducer());
+        $seed_producers = SeedProducer::where('user_id', auth('admin')->user()->id)->get();
         $user = Admin::user();
+
+        //function to show the loggedin user only what belongs to them
+        Validation::showUserForms($grid);
+
         //order of table
         $grid->model()->orderBy('id', 'desc');
 
-        $seed_producer = SeedProducer::where('user_id', auth('admin')->user()->id)->value('status');
+        //disable action buttons appropriately
+        Utils::disable_buttons('SeedProducer', $grid);
 
-        if ($user->inRoles(['commissioner', 'inspector'])) {
-            //disable create button and delete
-            $grid->disableCreateButton();
-            $grid->actions(function ($actions) {
-                $actions->disableView();
-                $actions->disableDelete();
-            });
-        }
-
-        if ($user->isRole('basic-user'))
+        //disable create button 
+        if ($user->inRoles(['grower'])) 
         {
-                if ($seed_producer != null) {
-                    if ($seed_producer == 'inspector assigned') {
-                        //disable create button 
-                        $grid->disableCreateButton();
-                        $grid->actions(function ($actions) {
-                            $actions->disableDelete();
-                            $actions->disableEdit();
-                        });
-                    }elseif($seed_producer == 'halted' || $seed_producer == 'pending'){
-                        //disable create button 
-                        $grid->disableCreateButton();
-                        $grid->actions(function ($actions) {
-                            $actions->disableDelete();
-                            
-                        });
-                    }elseif($seed_producer == 'rejected'){
-                    
-                        $grid->actions(function ($actions) {
-                            $actions->disableDelete();
-                            $actions->disableEdit();
-                        });
-                }
-            }
-        }
-
-        if ($user->isRole('grower')) {
-            //disable create button 
             $grid->disableCreateButton();
-            $grid->actions(function ($actions) {
-                $actions->disableDelete();
-                $actions->disableEdit();
-            });
         }
-
-
 
        //filter by name
-       $grid->filter(function ($filter) {
+       $grid->filter(function ($filter) 
+       {
         // Remove the default id filter
         $filter->disableIdFilter();
         $filter->like('user_id', 'Applicant')->select(\App\Models\User::pluck('name', 'id'));
        
-    });
-
-        // show inspector what has been assigned to him
-        if (auth('admin')->user()->isRole('inspector')) {
-            $grid->model()->where('inspector_id', auth('admin')->user()->id);
-        }
-
-        //show the user only his records
-        if (!auth('admin')->user()->inRoles(['commissioner', 'inspector'])) {
-            $grid->model()->where('user_id', auth('admin')->user()->id);
-        }
+       });
 
 
         $grid->model()->orderBy('id', 'desc');
@@ -130,10 +87,20 @@ class SeedProducerController extends AdminController
 
         //check the status field of the form
 
-        if ($seed_producer == 'accepted') {
-            $grid->column('id', __('admin.form.Certificate'))->display(function ($id) {
-                $link = url('certificate?id=' . $id);
-                return '<b><a target="_blank" href="' . $link . '">Print Certificate</a></b>';
+
+          //check user role
+          if(!auth('admin')->user()->isRole('inspector')){
+
+            $grid->column('id', __('admin.form.Certificate'))->display(function ($id) use ( $seed_producers) {
+                $seed_producer =  $seed_producers->firstWhere('id', $id);
+            
+                if ($seed_producer&& $seed_producer->status == 'accepted') {
+                    $link = url('certificate?id=' . $id);
+                    return '<b><a target="_blank" href="' . $link . '">Imprimer le certificat</a></b>';
+                } else {
+                   
+                    return '<b>Aucun certificat disponible</b>';
+                }
             });
         }
 
@@ -315,13 +282,12 @@ class SeedProducerController extends AdminController
             {
                 $form->divider('Administartor decision');
                 $form->radioButton('status', __('admin.form.Status'))
-                    ->options([
-                        'accepted' => 'Accepted',
-                        'rejected' => 'Rejected',
-                        'halted' => 'Halted',
-                        'inspector assigned' => 'Assign Inspector',
-
-                    ])
+                ->options([
+                    'accepted'=> __('admin.form.Accepted'),
+                    'halted' => __('admin.form.Halted'),
+                    'rejected' => __('admin.form.Rejected'),
+                    'inspector assigned' => __('admin.form.Assign Inspector'),
+                ])
                     ->when('in', ['rejected', 'halted'], function (Form $form) {
                         $form->textarea('status_comment', __('admin.form.Status comment'));
                     })

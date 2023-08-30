@@ -83,6 +83,7 @@ class Utils extends Model
         }
         return $label->format('M - Y');
     }
+    
     //get all inspectors
     public static function get_inspectors()
     {
@@ -96,52 +97,39 @@ class Utils extends Model
     public static function disable_buttons($model, $grid)
     {
         $model = "App\\Models\\" .ucfirst($model);
-        $form = $model::where('user_id', auth('admin')->user()->id)->value('status');
+        $forms = $model::where('user_id', auth('admin')->user()->id)->get();
+        
+       
         $user = auth('admin')->user();
-        if ($user->inRoles(['commissioner', 'inspector'])) {
+        if ($user->inRoles(['commissioner', 'inspector'])) 
+        {
                 //disable create button and delete
                 $grid->disableCreateButton();
                 $grid->actions(function ($actions) {
                     $actions->disableView();
                     $actions->disableDelete();
                 });
-            }
-    
-            if ($user->isRole('basic-user'))
+        }
+
+        if ($user->inRoles(['basic-user', 'cooperative']))
+        {
+                 
+            $grid->actions(function ($actions) 
             {
-                    if ($form != null) {
-                        if ($form == 'inspector assigned') {
-                            //disable create button 
-                            $grid->disableCreateButton();
-                            $grid->actions(function ($actions) {
-                                $actions->disableDelete();
-                                $actions->disableEdit();
-                            });
-                        }elseif($form == 'halted' || $form == 'pending'){
-                            //disable create button 
-                            $grid->disableCreateButton();
-                            $grid->actions(function ($actions) {
-                                $actions->disableDelete();
-                                
-                            });
-                        }elseif($form == 'rejected'){
-                        
-                            $grid->actions(function ($actions) {
-                                $actions->disableDelete();
-                                $actions->disableEdit();
-                            });
-                    }
+                if ($actions->row->status == 'halted' || $actions->row->status == 'pending') {
+                    $actions->disableDelete();
                 }
-            }
-    
-            if ($user->isRole('cooperative')) {
-                //disable create button 
-                $grid->disableCreateButton();
-                $grid->actions(function ($actions) {
+                if($actions->row->status == 'rejected' || $actions->row->status == 'accepted' || $actions->row->status == 'inspector assigned')
+                {
                     $actions->disableDelete();
                     $actions->disableEdit();
-                });
-            }
+                }
+         
+            });
+                    
+                
+        }
+    
     
     }
 

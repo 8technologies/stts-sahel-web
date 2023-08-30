@@ -162,16 +162,16 @@ class CooperativeController extends AdminController
                 $form->divider('Inspector decision');
                 $form->radioButton('status', __('admin.form.Status'))
                     ->options([
-                        'accepted' => 'Accepted',
-                        'rejected' => 'Rejected',
-                        'halted' => 'Halted',
-
+                        'accepted'=> __('admin.form.Accepted'),
+                    'halted' => __('admin.form.Halted'),
+                    'rejected' => __('admin.form.Rejected'),
+                   
                     ])
                     ->when('in', ['rejected', 'halted'], function (Form $form) {
                         $form->textarea('status_comment', __('admin.form.Status comment'));
                     })
                     ->when('accepted', function (Form $form) {
-                        $form->text('registration_number', __('Registration number'))->default(rand(1000, 100000))->required();
+                        $form->text('registration_number', __('Registration number'))->default('cooperative'.'/'.rand(1000, 100000))->readonly();
                     })->required();
             }
         } 

@@ -251,6 +251,24 @@ return [
         'Assign Lab Test' => 'Assigner un test de laboratoire',
         'Analyst Information' => 'Informations sur l\'analyste',
         'Assign Inspector' => 'Assigner un inspecteur',
+        //cooperative member
+        'Member number' => 'Numéro de membre',
+        'Farmer first name' => 'Prénom de l\'agriculteur',
+        'Farmer last name' => 'Nom de l\'agriculteur',
+        'Gender'=>'Genre',
+        'Date of birth'=>'Date de naissance',
+        'Nationality'=>'Nationalité',
+        'Phone number'=>'Numéro de téléphone',
+        'Email address'=>'Adresse e-mail',
+        'Residential physical address'=>'Adresse physique résidentielle',
+        'Agriculture value chains'=>'Chaînes de valeur agricoles',
+        'Female' => 'féminin',
+        'Male'=> 'masculin',
+        'Other'=> 'autre',        
+
+
+        
+
         
 
 

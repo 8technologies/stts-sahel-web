@@ -145,20 +145,25 @@ public static function checkFormEditable($form, $id)
 //show the logged in user, only the forms that belong to him
 public static function showUserForms($grid)
 {
-  // show inspector what has been assigned to him
-  if (auth('admin')->user()->isRole('inspector')) {
-    $grid->model()->where('inspector_id', auth('admin')->user()->id);
-}
+    // show inspector what has been assigned to him
+    if (auth('admin')->user()->isRole('inspector')) {
+        $grid->model()->where('inspector_id', auth('admin')->user()->id);
+    }
 
-//show the user only his records
-if (auth('admin')->user()->isRole('basic-user')) {
-    $grid->model()->where('user_id', auth('admin')->user()->id);
-}
+    //show the user only his records
+    if (auth('admin')->user()->isRole('basic-user')) {
+        $grid->model()->where('user_id', auth('admin')->user()->id);
+    }
 
-//show the cooperative only his records
-if (auth('admin')->user()->isRole('cooperative')) {
-    $grid->model()->where('user_id', auth('admin')->user()->id);
-}
+    //show the cooperative only his records
+    if (auth('admin')->user()->isRole('cooperative')) {
+        $grid->model()->where('user_id', auth('admin')->user()->id);
+    }
 
+    //show the seed producer only his records
+    if (auth('admin')->user()->isRole('grower')) {
+        $grid->model()->where('user_id', auth('admin')->user()->id);
+
+    }
 }
 }

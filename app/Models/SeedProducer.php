@@ -55,7 +55,7 @@ class SeedProducer extends Model
         //call back to send a notification to the user
         self::created(function ($model) 
         {
-            //Notification::send_notification($model, 'SeedProducer', request()->segment(count(request()->segments())));
+            Notification::send_notification($model, 'SeedProducer', request()->segment(count(request()->segments())));
         });
 
 

@@ -264,6 +264,22 @@ return [
         'Assign Lab Test' => 'Assign Lab Test',
         'Analyst Information' => 'Analyst Information',
         'Assign inspector' => 'Assign Inspector',
+        //cooperaive member form
+        'Member number'=>'Member number',
+        'Farmer first name'=>'Farmer first name',
+        'Farmer last name' => 'Farmer last name',
+        'Gender'=> 'Gender',
+        'Date of birth'=>'Date of birth',
+        'Nationality'=>'Nationality',
+        'Phone number'=>'Phone number',
+        'Email address'=>'Email address',
+        'Residential physical address'=>'Residential physical address',
+        'Agriculture value chains'=>'Agriculture value chains',
+        'Cooperative member saved successfully'=>'Cooperative member saved successfully',
+        'Female' => 'Female',
+        'Male' => 'Male',
+        'Other' => 'Other',
+
         
 
 
