@@ -72,9 +72,7 @@ class SeedProducerController extends AdminController
             return $value ?? '-';
         })->sortable();
         $grid->column('producer_category', __('admin.form.Seed producer category'))->sortable();
-        $grid->column('grower_number', __('admin.form.Seed producer approval number'))->display(function ($value) {
-            return $value ?? '-';
-        });
+      
         $grid->column('status', __('admin.form.Status'))->display(function ($status) {
             return \App\Models\Utils::tell_status($status);
         })->sortable();
@@ -152,9 +150,7 @@ class SeedProducerController extends AdminController
         $show->field('status_comment', __('admin.form.Status comment'))->as(function ($value) {
             return $value ?? '-';
         });
-        $show->field('grower_number', __('admin.form.Seed producer approval number'))->as(function ($value) {
-            return $value ?? '-';
-        });
+      
         $show->field('valid_from', __('admin.form.Seed producer approval date'))->as(function ($value) {
             return $value ?? '-';
         });
