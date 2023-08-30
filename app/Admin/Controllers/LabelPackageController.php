@@ -73,7 +73,7 @@ class LabelPackageController extends AdminController
         $form = new Form(new LabelPackage());
 
         $form->text('package_type', __('Package Type'))->required();
-        $form->select('seed_generation', __('Seed Generation'))->options(\App\Models\SeedClass::all()->pluck('class_name', 'id'));
+        $form->select('seed_generation', __('Seed Generation'))->options(\App\Models\SeedClass::all()->pluck('class_name', 'id'))->required();
         $form->text('quantity', __('Quantity'))->attribute( 
             [
                 'type' => 'number',
