@@ -26,6 +26,13 @@ class CropController extends AdminController
     {
         $grid = new Grid(new Crop());
 
+        //filter by crop name
+        $grid->filter(function ($filter) {
+            // Remove the default id filter
+            $filter->disableIdFilter();
+            $filter->like('crop_name', 'Crop name');
+        });
+
         $grid->disableBatchActions();
         $grid->column('id', __('Id'))->sortable();
         $grid->column('crop_name', __('Crop name'));
