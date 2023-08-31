@@ -193,7 +193,7 @@ class SeedProducerController extends AdminController
             //get request id
             $id = request()->route()->parameters()['seed_producer'];
             //check if its valid to edit the form
-            Validation::checkFormEditable($form, $id);
+            Validation::checkFormEditable($form, $id, 'SeedProducer');
         }
        
          //onsaved return to the list page
@@ -243,7 +243,12 @@ class SeedProducerController extends AdminController
                     ->when('accepted', function (Form $form) {
                         $form->text('producer_registration_number', __('admin.form.Seed producer registration number')) ->default('Labosem/' . date('Y/M/') . rand(1000, 100000))->required();
                         $form->datetime('valid_from', __('admin.form.Seed producer approval date'))->default(date('Y-m-d H:i:s'))->required();
-                        $form->datetime('valid_until', __('admin.form.Valid until'))->default(date('Y-m-d H:i:s'))->required();
+                        $nextYear = Carbon::now()->addYear(); // Get the date one year from now
+                        $defaultDateTime = $nextYear->format('Y-m-d H:i:s'); // Format the date for default value
+                        
+                        $form->datetime('valid_until', __('admin.form.Valid until'))
+                            ->default($defaultDateTime)
+                            ->required();
                     })
                     ->when('inspector assigned', function (Form $form) {
 

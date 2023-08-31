@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('crop_declarations', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('applicant_id');
+            $table->unsignedBigInteger('user_id');
             $table->string('phone_number');
             $table->string('applicant_registration_number');
             $table->unsignedBigInteger('seed_producer_id');

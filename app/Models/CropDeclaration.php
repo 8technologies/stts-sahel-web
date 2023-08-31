@@ -18,7 +18,7 @@ class CropDeclaration extends Model
     use HasFactory;
 
     protected $fillable = [
-        'applicant_id',
+        'user_id',
         'phone_number',
         'applicant_registration_number',
         'seed_producer_id',
@@ -139,7 +139,7 @@ class CropDeclaration extends Model
                     $inspection->crop_variety_id = $crop_variety->id;
                     $inspection->inspection_type_id = $type->id;
                     $inspection->crop_declaration_id = $model->id;
-                    $inspection->applicant_id = $model->applicant_id;
+                    $inspection->user_id = $model->user_id;
                     $inspection->physical_address = $model->village;
                     $inspection->field_size = $model->garden_size;
                     $inspection->inspector_id = $model->inspector_id;

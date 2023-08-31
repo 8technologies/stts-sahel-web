@@ -96,10 +96,6 @@ class Utils extends Model
     //disable action buttons depending on the status of the form
     public static function disable_buttons($model, $grid)
     {
-        $model = "App\\Models\\" .ucfirst($model);
-        $forms = $model::where('user_id', auth('admin')->user()->id)->get();
-        
-       
         $user = auth('admin')->user();
         if ($user->inRoles(['commissioner', 'inspector'])) 
         {

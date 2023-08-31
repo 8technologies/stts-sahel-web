@@ -59,7 +59,7 @@
 </head>
 <body>
     <div id="app" style="background: url({{ asset('storage/assets/seeds.jpg') }}) no-repeat;background-size: cover;">
-        <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm"  style="border: 3px solid green; border-radius: 10px;">
+        <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm"  style="border: 3px solid green;">
             <div class="container">
                 <a class="navbar-brand" href="{{ url('/') }}">
                     {{ config('app.name', 'Sahel') }}

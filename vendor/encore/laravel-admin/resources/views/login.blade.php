@@ -54,7 +54,7 @@
   
 </head>
 <body class="hold-transition login-page" style="background: url({{ asset('storage/assets/seeds.jpg') }}) no-repeat;background-size: cover;">
-<nav class="navbar navbar-default" role="navigation" style="border: 3px solid green; border-radius: 10px">
+<nav class="navbar navbar-default" role="navigation" style="border: 3px solid green; ">
     <div class="container">
        <div class="navbar-header">
     <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbarSupportedContent" aria-expanded="false">
@@ -147,8 +147,7 @@
   unset($_SESSION['type']);
   @endphp     
   @endisset
-
-
+ 
     <!-- <p class="login-box-msg">{{ trans('admin.login') }}</p> -->
 
     <form action="{{ admin_url('auth/login') }}" method="post">

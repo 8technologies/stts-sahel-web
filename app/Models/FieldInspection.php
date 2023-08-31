@@ -14,7 +14,7 @@ class FieldInspection extends Model
         'inspection_type_id',
         'field_inspection_form_number',
         'crop_declaration_id',
-        'applicant_id',
+        'user_id',
         'physical_address',
         'field_size',
         'seed_generation',

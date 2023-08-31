@@ -114,12 +114,12 @@ public static function update_notification($model, $model_name, $entity)
         'pending' => [
             'message' => "Dear {$name}, your {$entity} is now pending.",
             'receiver_id' => 1,
-            'form_link' => admin_url("{$entity}/{$model->id}/edit"),
+            'form_link' => admin_url("{$entity}/{$model->id}"),
         ],
         'halted' => [
             'message' => "Dear {$name}, your {$entity} has been halted by the inspector.",
             'receiver_id' => $model->user_id,
-            'form_link' => admin_url("{$entity}/{$model->id}/edit"),
+            'form_link' => admin_url("{$entity}/{$model->id}"),
         ],
         'rejected' => [
             'message' => "Dear {$name}, your {$entity} has been rejected by the inspector.",
