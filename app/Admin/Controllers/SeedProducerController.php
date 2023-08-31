@@ -59,15 +59,13 @@ class SeedProducerController extends AdminController
        
        });
 
-
-        $grid->model()->orderBy('id', 'desc');
         $grid->column('created_at', __('admin.form.Date'))->display(function ($created_at) {
             return date('d-m-Y', strtotime($created_at));
         });
         $grid->column('user_id', __('admin.form.Applicant'))->display(function ($user_id) {
             return \App\Models\User::find($user_id)->name;
         });
-        $grid->quicksearch('user_id', 'producer_registration_number', 'producer_category', 'grower_number', 'status', 'valid_from', 'valid_until');
+    
         $grid->column('producer_registration_number', __('admin.form.Seed producer registration number'))->display(function ($value) {
             return $value ?? '-';
         })->sortable();
@@ -83,11 +81,9 @@ class SeedProducerController extends AdminController
             return $value ?? '-';
         });
 
-        //check the status field of the form
-
-
-          //check user role
-          if(!auth('admin')->user()->isRole('inspector')){
+        //check user role then show a certificate button
+        if(!auth('admin')->user()->isRole('inspector'))
+        {
 
             $grid->column('id', __('admin.form.Certificate'))->display(function ($id) use ( $seed_producers) {
                 $seed_producer =  $seed_producers->firstWhere('id', $id);
@@ -115,12 +111,13 @@ class SeedProducerController extends AdminController
     protected function detail($id)
     {
         $show = new Show(SeedProducer::findOrFail($id));
-          //delete notification after viewing the form
-          Utils::delete_notification('SeedProducer', $id);
+        //delete notification after viewing the form
+        Utils::delete_notification('SeedProducer', $id);
 
         //check if the user is the owner of the form
         $showable = Validation::checkUser('SeedProducer', $id);
-        if (!$showable) {
+        if (!$showable) 
+        {
             return(' <p class="alert alert-danger">You do not have rights to view this form. <a href="/admin/seed-producers"> Go Back </a></p> ');
         }
 
@@ -183,7 +180,7 @@ class SeedProducerController extends AdminController
 
         $user = auth()->user();
 
-        //When form is creating check type 
+        //When form is creating, assign user id
         if ($form->isCreating()) 
         {
             $form->hidden('user_id')->default($user->id);
@@ -193,20 +190,22 @@ class SeedProducerController extends AdminController
         //check if the form is being edited
         if ($form->isEditing()) 
         {
-                //get request id
-               $id = request()->route()->parameters()['seed_producer'];
-               Validation::checkFormEditable($form, $id);
+            //get request id
+            $id = request()->route()->parameters()['seed_producer'];
+            //check if its valid to edit the form
+            Validation::checkFormEditable($form, $id);
         }
        
-        //redirect to the list after saving
-        $form->saved(function (Form $form) 
+         //onsaved return to the list page
+         $form->saved(function (Form $form) 
         {
-         return redirect(admin_url('seed-producers'));
+            admin_toastr(__('admin.form.Form submitted successfully'), 'success');
+            return redirect('/admin/seed-producers');
         });
-
+       
       
 
-        if ($user->inRoles(['commissioner', 'inspector'])) 
+        if ($user->inRoles(['commissioner','developer', 'inspector'])) 
         {
 
             $form->display('producer_category', __('admin.form.Seed producer category'));

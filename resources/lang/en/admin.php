@@ -283,6 +283,7 @@ return [
         'Individual-grower' => 'Individual-grower',
         'Cooperative' => 'Cooperative',
         'Seed-breeder' => 'Seed-breeder',
+        'Form submitted successfully' => 'Form submitted successfully',
 
         
 

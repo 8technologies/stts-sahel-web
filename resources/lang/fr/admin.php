@@ -268,7 +268,8 @@ return [
         'Seed-company' => 'Société de semences',
         'Individual-grower' => 'Producteur individuel',
         'Cooperative' => 'Coopérative',
-        'Seed-breeder' => 'Producteur de semences',     
+        'Seed-breeder' => 'Producteur de semences',  
+        'Form submitted successfully' => 'Formulaire soumis avec succès',
 
 
         
