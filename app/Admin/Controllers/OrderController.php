@@ -52,21 +52,21 @@ class OrderController extends AdminController
         //only view orders made by you or to you
         $grid->model()->where('order_by', '=', Admin::user()->id)->orWhere('supplier', '=', Admin::user()->id);
 
-        $grid->column('order_number', __('Order number'));
-        $grid->column('preorder_id', __('Crop variety'))->display(function ($preorder_id) 
+        $grid->column('order_number', __('admin.form.Order number'));
+        $grid->column('preorder_id', __('admin.form.Crop variety'))->display(function ($preorder_id) 
         {
             $crop_variety_id = PreOrder::find($preorder_id)->crop_variety_id;
             return \App\Models\CropVariety::find($crop_variety_id)->crop_variety_name;
         });
-        $grid->column('quantity', __('Quantity'));
-        $grid->column('price', __('Price'));
-        $grid->column('order_date', __('Order date'));
-        $grid->column('supply_date', __('Supply date'));
-        $grid->column('order_by', __('Order by'))->display(function ($order_by) 
+        $grid->column('quantity', __('admin.form.Quantity'));
+        $grid->column('price', __('admin.form.Price'));
+        $grid->column('order_date', __('admin.form.Order date'));
+        $grid->column('supply_date', __('admin.form.Supply date'));
+        $grid->column('order_by', __('admin.form.Order by'))->display(function ($order_by) 
         {
             return User::find($order_by)->name;
         });
-        $grid->column('status', __('Status'))->display(function ($status) 
+        $grid->column('status', __('admin.form.Status'))->display(function ($status) 
         {
             return Utils::tell_status($status)?? '-';
         })->sortable();
@@ -90,27 +90,27 @@ class OrderController extends AdminController
         $order = Order::find($id);
         $preOrder = PreOrder::find($order->preorder_id);
         
-        $show->field('order_number', __('Order number'));
-        $show->field('order_date', __('Order date'));
+        $show->field('order_number', __('admin.form.Order number'));
+        $show->field('order_date', __('admin.form.Order date'));
 
-        $show->field('crop_variety_id', __('Crop variety'))->as(function () use ($preOrder)
+        $show->field('crop_variety_id', __('admin.form.Crop variety'))->as(function () use ($preOrder)
         {
             return \App\Models\CropVariety::find($preOrder->crop_variety_id)->crop_variety_name;
         });
-        $show->field('seed_class', __('Seed class'))->as(function () use ($preOrder)
+        $show->field('seed_class', __('admin.form.Seed class'))->as(function () use ($preOrder)
         {
             return $preOrder->seed_class;
         });
     
-        $show->field('quantity', __('Quantity to be supplied'));
-        $show->field('price', __('Price'));
-        $show->field('supply_date', __('Supply date'));
-        $show->field('order_by', __('Order by'))->as(function ($order_by) 
+        $show->field('quantity', __('admin.form.Quantity to be supplied'));
+        $show->field('price', __('admin.form.Price'));
+        $show->field('supply_date', __('admin.form.Supply date'));
+        $show->field('order_by', __('admin.form.Order by'))->as(function ($order_by) 
         {
             return User::find($order_by)->name;
         });
-        $show->field('details', __('Details'));
-        $show->field('status', __('Status'));
+        $show->field('details', __('admin.form.Details'));
+        $show->field('status', __('admin.form.Status'));
      
       //disable action button
         $show->panel()->tools(function ($tools) {
@@ -130,31 +130,31 @@ class OrderController extends AdminController
     {
         $form = new Form(new Order());
 
-        $form->display('order_number', __('Order number'));
+        $form->display('order_number', __('admin.form.Order number'));
 
-        $form->display('order_by', __('Order by'))->with(function ($order_by) 
+        $form->display('order_by', __('admin.form.Order by'))->with(function ($order_by) 
         {
             return User::find($order_by)->name;
         });
 
-        $form->display('preorder_id', __('Crop Variety'))->with(function ($preorder_id) 
+        $form->display('preorder_id', __('admin.form.Crop Variety'))->with(function ($preorder_id) 
         {
             $crop_variety_id = PreOrder::find($preorder_id)->crop_variety_id;
             return \App\Models\CropVariety::find($crop_variety_id)->crop_variety_name;
         });
         
-        $form->display('quantity', __('Quantity'));
-        $form->display('price', __('Price'));
-        $form->display('order_date', __('Order date'));
-        $form->display('details', __('Details'));
-        $form->radio('status', __('Status'))
+        $form->display('quantity', __('admin.form.Quantity'));
+        $form->display('price', __('admin.form.Price'));
+        $form->display('order_date', __('admin.form.Order date'));
+        $form->display('details', __('admin.form.Details'));
+        $form->radio('status', __('admin.form.Status'))
         ->options([
-            'processing' => 'Processing', 
-            'shipping' => 'Shipping',
-            'delivered' => 'Delivered',
-            'canceled' => 'Canceled',
+            'processing' => __('admin.form.Processing'), 
+            'shipping' => __('admin.form.Shipping'),
+            'delivered' => __('admin.form.Delivered'),
+            'canceled' => __('admin.form.Canceled'),
            ]);
-        $form->text('status_comment', __('Comment'));
+        $form->text('status_comment', __('admin.form.Comment'));
      
        
 

@@ -53,17 +53,17 @@ class QuotationController extends AdminController
             }
         });
 
-        $grid->column('preorder_id', __('Crop variety'))->display(function ($preorder_id) {
+        $grid->column('preorder_id', __('admin.form.Crop variety'))->display(function ($preorder_id) {
             $crop_variety_id = \App\Models\PreOrder::find($preorder_id)->crop_variety_id;
             return \App\Models\CropVariety::find($crop_variety_id)->crop_variety_name;
         });
-        $grid->column('quantity', __('Quantity'));
-        $grid->column('price', __('Price'));
-        $grid->column('supply_date', __('Supply date'));
-        $grid->column('quotation_by', __('Quotation by'))->display(function ($quotation_by) {
+        $grid->column('quantity', __('admin.form.Quantity'));
+        $grid->column('price', __('admin.form.Price'));
+        $grid->column('supply_date', __('admin.form.Supply date'));
+        $grid->column('quotation_by', __('admin.form.Quotation by'))->display(function ($quotation_by) {
             return \App\Models\User::find($quotation_by)->name;
         });
-        $grid->column('status', __('Status'))->display(function ($status) {
+        $grid->column('status', __('admin.form.Status'))->display(function ($status) {
             return \App\Models\Utils::tell_status($status) ?? '-';
         })->sortable();
 
@@ -84,24 +84,24 @@ class QuotationController extends AdminController
         $quotation = Quotation::find($id);
         $preOrder = PreOrder::find($quotation->preorder_id);
 
-        $show->field('crop_variety_id', __('Crop variety'))->as(function () use ($preOrder) {
+        $show->field('crop_variety_id', __('admin.form.Crop variety'))->as(function () use ($preOrder) {
             return \App\Models\CropVariety::find($preOrder->crop_variety_id)->crop_variety_name;
         });
-        $show->field('seed_class', __('Seed class'))->as(function () use ($preOrder) {
+        $show->field('seed_class', __('admin.form.Seed class'))->as(function () use ($preOrder) {
             return $preOrder->seed_class;
         });
-        $show->field('quantityy', __('Requested Quantity'))->as(function () use ($preOrder) {
+        $show->field('quantityy', __('admin.form.Requested Quantity'))->as(function () use ($preOrder) {
             return $preOrder->quantity;
         });
-        $show->field('quantity', __('Quantity to be supplied'));
-        $show->field('price', __('Price'));
-        $show->field('preferred_delivery_date', __('Preferred delivery date'))->as(function () use ($preOrder) {
+        $show->field('quantity', __('admin.form.Quantity to be supplied'));
+        $show->field('price', __('admin.form.Price'));
+        $show->field('preferred_delivery_date', __('admin.form.Preferred delivery date'))->as(function () use ($preOrder) {
             return $preOrder->preferred_delivery_date;
         });
-        $show->field('supply_date', __('Supply date'));
-        $show->field('quotation_by', __('Quotation by'));
-        $show->field('details', __('Details'));
-        $show->field('status', __('Status'))->unescape()->as(function ($status) {
+        $show->field('supply_date', __('admin.form.Supply date'));
+        $show->field('quotation_by', __('admin.form.Quotation by'));
+        $show->field('details', __('admin.form.Details'));
+        $show->field('status', __('admin.form.Status'))->unescape()->as(function ($status) {
             return \App\Models\Utils::tell_status($status) ?? '-';
         });
 
@@ -150,19 +150,19 @@ class QuotationController extends AdminController
                 return admin_error('Warning', "You cannot create a quotation for your own pre-order.");
             }
 
-            $form->text('preorder_id', __('Preorder id'))->readonly()->value($id);
-            $form->display('crop_variety_id', __('Crop variety'))->with(function () use ($preOrder) {
+            $form->text('preorder_id', __('admin.form.Preorder id'))->readonly()->value($id);
+            $form->display('crop_variety_id', __('admin.form.Crop variety'))->with(function () use ($preOrder) {
                 return \App\Models\CropVariety::find($preOrder->crop_variety_id)->crop_variety_name;
             });
-            $form->display('seed_class', __('Seed class'))->default($preOrder->seed_class);
-            $form->display('quantity', __('Requested Quantity'))->default($preOrder->quantity);
-            $form->text('quantity', __('Quantity'));
-            $form->text('price', __('Price'));
-            $form->display('preferred_delivery_date', __('Preferred delivery date'))->default($preOrder->preferred_delivery_date);
-            $form->date('supply_date', __('Supply date'));
-            $form->hidden('quotation_by', __('Quotation by'))->readonly()->value(Admin::user()->id);
-            $form->hidden('quotation_to', __('Quotation to'))->readonly()->value($preOrder->user_id);
-            $form->textarea('details', __('Details'));
+            $form->display('seed_class', __('admin.form.Seed class'))->default($preOrder->seed_class);
+            $form->display('quantity', __('admin.form.Requested Quantity'))->default($preOrder->quantity);
+            $form->text('quantity', __('admin.form.Quantity'));
+            $form->text('price', __('admin.form.Price per unit'));
+            $form->display('preferred_delivery_date', __('admin.form.Preferred delivery date'))->default($preOrder->preferred_delivery_date);
+            $form->date('supply_date', __('admin.form.Supply date'));
+            $form->hidden('quotation_by', __('admin.form.Quotation by'))->readonly()->value(Admin::user()->id);
+            $form->hidden('quotation_to', __('admin.form.Quotation to'))->readonly()->value($preOrder->user_id);
+            $form->textarea('details', __('admin.form.Details'));
             if ($form->saved(function () {
                 if (isset($_SESSION['preorder_id'])) {
                     unset($_SESSION['preorder_id']);
@@ -178,20 +178,20 @@ class QuotationController extends AdminController
             $preOrder = PreOrder::find($quotation->preorder_id);
             if ($quotation->quotation_by != Admin::user()->id) {
 
-                $form->display('preorder_id', __('Preorder id'))->readonly()->value($id);
-                $form->display('crop_variety_id', __('Crop variety'))->with(function () use ($preOrder) {
+                $form->display('preorder_id', __('admin.form.Preorder id'))->readonly()->value($id);
+                $form->display('crop_variety_id', __('admin.form.Crop variety'))->with(function () use ($preOrder) {
                     return \App\Models\CropVariety::find($preOrder->crop_variety_id)->crop_variety_name;
                 });
-                $form->display('seed_class', __('Seed class'))->default($preOrder->seed_class);
-                $form->display('quantity', __('Requested Quantity'))->default($preOrder->quantity);
-                $form->display('quantity', __('Quantity'));
-                $form->display('price', __('Price'));
-                $form->display('preferred_delivery_date', __('Preferred delivery date'))->default($preOrder->preferred_delivery_date);
-                $form->display('supply_date', __('Supply date'));
-                $form->display('quotation_by', __('Quotation by'))->with(function ($quotation_by) {
+                $form->display('seed_class', __('admin.form.Seed class'))->default($preOrder->seed_class);
+                $form->display('quantity', __('admin.form.Requested Quantity'))->default($preOrder->quantity);
+                $form->display('quantity', __('admin.form.Quantity'));
+                $form->display('price', __('admin.form.Price'));
+                $form->display('preferred_delivery_date', __('admin.form.Preferred delivery date'))->default($preOrder->preferred_delivery_date);
+                $form->display('supply_date', __('admin.form.Supply date'));
+                $form->display('quotation_by', __('admin.form.Quotation by'))->with(function ($quotation_by) {
                     return \App\Models\User::find($quotation_by)->name;
                 });
-                $form->radio('status', __('Decision on this quotation'))
+                $form->radio('status', __('admin.form.Decision on this quotation'))
                     ->required()
                     ->options([
                         'accepted' => 'Accept',
@@ -199,11 +199,11 @@ class QuotationController extends AdminController
                     ])
                     ->help("NOTE: Once you accept this quotation, the decision cannot be reversed.")
                     ->when('rejected', function (Form $form) {
-                        $form->textarea('status_comment', __('Reason why declined'))
+                        $form->textarea('status_comment', __('admin.form.Reason why declined'))
                             ->help("Optional");
                     })
                     ->when('accepted', function (Form $form) {
-                        $form->radio('payment_method', __('Payment method'))->options([
+                        $form->radio('payment_method', __('admin.form.Payment method'))->options([
                             'cash' => 'Cash',
                             'bank_transfer' => 'Bank transfer',
                             'mobile_money' => 'Mobile money',

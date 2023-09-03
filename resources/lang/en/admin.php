@@ -300,6 +300,41 @@ return [
         'Label package' => 'Label package',
         'Applicant name' => 'Applicant name',
         'print' => 'Print',
+        //quotation form
+        'Preorder id' => 'Preorder id',
+        'Seed class' => 'Seed class',
+        'Requested Quantity' => 'Requested Quantity',
+        'Price per unit' => 'Price per unit', 
+        'Preferred delivery date' => 'Preferred delivery date', 
+        'Supply date' => 'Supply date', 
+        'Quotation by' => 'Quotation by', 
+        'Quotation to' => 'Quotation to',
+        'Details' => 'Details', 
+        'Decision on this quotation' => 'Decision on this quotation', 
+        'Reason why declined' => 'Reason why declined', 
+        'Payment method' => 'Payment method', 
+        'Quantity to be supplied' => 'Quantity to be supplied', 
+          //preorder form
+          'Order date' => 'Order date', 
+          'Client name' => 'Client name', 
+          'Client physical address' => 'Client physical address', 
+          'Client contact number' => 'Client contact number', 
+          'Client email address' => 'Client email address', 
+          'Preferred payment method' => 'Preferred payment method', 
+          'Seed delivery preference' => 'Seed delivery preference', 
+          'Other information' => 'Other information', 
+          'Contract' => 'Contract', 
+          //order form
+          'Order number' => 'Order number', 
+          'Order date' => 'Order date',
+          'Order by' => 'Order by', 
+          'Price' => 'Price', 
+          'Comment' => 'Comment', 
+          'Processing' => 'Processing', 
+          'Shipping' => 'Shipping', 
+          'Delivered' => 'Delivered', 
+          'Cancelled' => 'Cancelled', 
+
 
 
 

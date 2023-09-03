@@ -37,14 +37,14 @@ class PreOrderController extends AdminController
             }
         });
 
-        $grid->column('id', __('Id'));
-        $grid->column('crop_variety_id', __('Crop variety'))->display(function ($crop_variety_id) {
+     
+        $grid->column('crop_variety_id', __('admin.form.Crop variety'))->display(function ($crop_variety_id) {
             return \App\Models\CropVariety::find($crop_variety_id)->crop_variety_name;
         });
-        $grid->column('seed_class', __('Seed class'));
-        $grid->column('quantity', __('Quantity'));
-        $grid->column('preferred_delivery_date', __('Preferred delivery date'));
-        $grid->column('client_name', __('Client name'));
+        $grid->column('seed_class', __('admin.form.Seed class'));
+        $grid->column('quantity', __('admin.form.Quantity'));
+        $grid->column('preferred_delivery_date', __('admin.form.Preferred delivery date'));
+        $grid->column('client_name', __('admin.form.Client name'));
 
         $grid->column('id', __('admin.form.Contract'))->display(function ($id) {
             $link = url('contract?id=' . $id);
@@ -67,22 +67,22 @@ class PreOrderController extends AdminController
         $show = new Show(PreOrder::findOrFail($id));
 
 
-        $show->field('crop_variety_id', __('Crop variety'))->as(function ($crop_variety_id) {
+        $show->field('crop_variety_id', __('admin.form.Crop variety'))->as(function ($crop_variety_id) {
             return \App\Models\CropVariety::find($crop_variety_id)->crop_variety_name;
         });
-        $show->field('seed_class', __('Seed class'));
-        $show->field('quantity', __('Quantity'));
-        $show->field('preferred_delivery_date', __('Preferred delivery date'));
-        $show->field('order_date', __('Order date'));
-        $show->field('client_name', __('Client name'));
-        $show->field('client_physical_address', __('Client physical address'));
-        $show->field('client_contact_number', __('Client contact number'));
-        $show->field('client_email_address', __('Client email address'));
-        $show->field('preferred_payment_method', __('Preferred payment method'));
-        $show->field('seed_delivery_preferences', __('Seed delivery preferences'));
-        $show->field('other_information', __('Other information'));
-        $show->field('created_at', __('Created at'));
-        $show->field('updated_at', __('Updated at'));
+        $show->field('seed_class', __('admin.form.Seed class'));
+        $show->field('quantity', __('admin.form.Quantity'));
+        $show->field('preferred_delivery_date', __('admin.form.Preferred delivery date'));
+        $show->field('order_date', __('admin.form.Order date'));
+        $show->field('client_name', __('admin.form.Client name'));
+        $show->field('client_physical_address', __('admin.form.Client physical address'));
+        $show->field('client_contact_number', __('admin.form.Client contact number'));
+        $show->field('client_email_address', __('admin.form.Client email address'));
+        $show->field('preferred_payment_method', __('admin.form.Preferred payment method'));
+        $show->field('seed_delivery_preferences', __('admin.form.Seed delivery preference'));
+        $show->field('other_information', __('admin.form.Other information'));
+        $show->field('created_at', __('admin.form.Created at'));
+
 
         //disable delete button
         $show->panel()->tools(function ($tools) {
@@ -116,18 +116,18 @@ class PreOrderController extends AdminController
         if ($form->isCreating()) {
             $form->hidden('user_id')->default($user->id);
         }
-        $form->select('crop_variety_id', __('Crop variety'))->options(\App\Models\CropVariety::all()->pluck('crop_variety_name', 'id'));
-        $form->text('seed_class', __('Seed class'));
-        $form->decimal('quantity', __('Quantity'));
-        $form->date('preferred_delivery_date', __('Preferred delivery date'))->default(date('Y-m-d'));
-        $form->date('order_date', __('Order date'))->default(date('Y-m-d'));
-        $form->text('client_name', __('Client name'));
-        $form->text('client_physical_address', __('Client physical address'));
-        $form->text('client_contact_number', __('Client contact number'));
-        $form->text('client_email_address', __('Client email address'));
-        $form->text('preferred_payment_method', __('Preferred payment method'));
-        $form->text('seed_delivery_preferences', __('Seed delivery preferences'));
-        $form->textarea('other_information', __('Other information'));
+        $form->select('crop_variety_id', __('admin.form.Crop variety'))->options(\App\Models\CropVariety::all()->pluck('crop_variety_name', 'id'));
+        $form->text('seed_class', __('admin.form.Seed class'));
+        $form->decimal('quantity', __('admin.form.Quantity'));
+        $form->date('preferred_delivery_date', __('admin.form.Preferred delivery date'))->default(date('Y-m-d'));
+        $form->date('order_date', __('admin.form.Order date'))->default(date('Y-m-d'));
+        $form->text('client_name', __('admin.form.Client name'));
+        $form->text('client_physical_address', __('admin.form.Client physical address'));
+        $form->text('client_contact_number', __('admin.form.Client contact number'));
+        $form->text('client_email_address', __('admin.form.Client email address'));
+        $form->text('preferred_payment_method', __('admin.form.Preferred payment method'));
+        $form->text('seed_delivery_preferences', __('admin.form.Seed delivery preference'));
+        $form->textarea('other_information', __('admin.form.Other information'));
 
 
 
