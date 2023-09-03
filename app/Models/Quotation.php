@@ -38,7 +38,7 @@ class Quotation extends Model
         static::updated(function ($model) {
 
             //check if the person editing the quotation is not the person who made it
-            if ($model->quotation_by !== Admin::user()->id && $model->quotation_by !== auth('api')->user()->id
+            if ($model->quotation_by !== Admin::user()->id || $model->quotation_by !== auth('api')->user()->id
             ) {
                 if ($model->status == 'accepted') {
                     $order = new Order();

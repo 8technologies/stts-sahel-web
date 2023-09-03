@@ -53,7 +53,7 @@ class QuotationController extends AdminController
             }
         });
 
-        $grid->column('preorder_id', __('admin.form.Crop variety'))->display(function ($preorder_id) {
+        $grid->column('preorder_id', __('admin.form.Crop Variety'))->display(function ($preorder_id) {
             $crop_variety_id = \App\Models\PreOrder::find($preorder_id)->crop_variety_id;
             return \App\Models\CropVariety::find($crop_variety_id)->crop_variety_name;
         });
@@ -84,7 +84,7 @@ class QuotationController extends AdminController
         $quotation = Quotation::find($id);
         $preOrder = PreOrder::find($quotation->preorder_id);
 
-        $show->field('crop_variety_id', __('admin.form.Crop variety'))->as(function () use ($preOrder) {
+        $show->field('crop_variety_id', __('admin.form.Crop Variety'))->as(function () use ($preOrder) {
             return \App\Models\CropVariety::find($preOrder->crop_variety_id)->crop_variety_name;
         });
         $show->field('seed_class', __('admin.form.Seed class'))->as(function () use ($preOrder) {
@@ -151,7 +151,7 @@ class QuotationController extends AdminController
             }
 
             $form->text('preorder_id', __('admin.form.Preorder id'))->readonly()->value($id);
-            $form->display('crop_variety_id', __('admin.form.Crop variety'))->with(function () use ($preOrder) {
+            $form->display('crop_variety_id', __('admin.form.Crop Variety'))->with(function () use ($preOrder) {
                 return \App\Models\CropVariety::find($preOrder->crop_variety_id)->crop_variety_name;
             });
             $form->display('seed_class', __('admin.form.Seed class'))->default($preOrder->seed_class);

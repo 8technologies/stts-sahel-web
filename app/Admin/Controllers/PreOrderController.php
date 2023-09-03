@@ -38,7 +38,7 @@ class PreOrderController extends AdminController
         });
 
      
-        $grid->column('crop_variety_id', __('admin.form.Crop variety'))->display(function ($crop_variety_id) {
+        $grid->column('crop_variety_id', __('admin.form.Crop Variety'))->display(function ($crop_variety_id) {
             return \App\Models\CropVariety::find($crop_variety_id)->crop_variety_name;
         });
         $grid->column('seed_class', __('admin.form.Seed class'));
@@ -67,7 +67,7 @@ class PreOrderController extends AdminController
         $show = new Show(PreOrder::findOrFail($id));
 
 
-        $show->field('crop_variety_id', __('admin.form.Crop variety'))->as(function ($crop_variety_id) {
+        $show->field('crop_variety_id', __('admin.form.Crop Variety'))->as(function ($crop_variety_id) {
             return \App\Models\CropVariety::find($crop_variety_id)->crop_variety_name;
         });
         $show->field('seed_class', __('admin.form.Seed class'));
@@ -116,7 +116,7 @@ class PreOrderController extends AdminController
         if ($form->isCreating()) {
             $form->hidden('user_id')->default($user->id);
         }
-        $form->select('crop_variety_id', __('admin.form.Crop variety'))->options(\App\Models\CropVariety::all()->pluck('crop_variety_name', 'id'));
+        $form->select('crop_variety_id', __('admin.form.Crop Variety'))->options(\App\Models\CropVariety::all()->pluck('crop_variety_name', 'id'));
         $form->text('seed_class', __('admin.form.Seed class'));
         $form->decimal('quantity', __('admin.form.Quantity'));
         $form->date('preferred_delivery_date', __('admin.form.Preferred delivery date'))->default(date('Y-m-d'));
