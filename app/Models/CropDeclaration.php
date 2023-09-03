@@ -75,7 +75,8 @@ class CropDeclaration extends Model
     {
         parent::boot();
 
-        self::creating(function ($model) {
+        self::creating(function ($model) 
+        {
             $user = auth('api')->user();
           if($user != null){
             $seed_producer = SeedProducer::where('user_id', $user->id)->first();
@@ -90,11 +91,11 @@ class CropDeclaration extends Model
             if ($crop_variety == null) {
                 return Utils::apiError('Invalid crop variety.');
             }
-        }
+            }
         });
         //call back to send a notification to the user
         self::created(function ($model) {
-            //Notification::send_notification($model, 'CropDeclaration', request()->segment(count(request()->segments())));
+            Notification::send_notification($model, 'CropDeclaration', request()->segment(count(request()->segments())));
         });
 
         self::updating(function ($model){
@@ -111,8 +112,6 @@ class CropDeclaration extends Model
 
         self::updated(function ($model) {
             //call back to send a notification to the user after form is updated
-            
-           // Notification::update_notification($model, 'CropDeclaration', request()->segment(count(request()->segments())-1));
 
             if ($model->status == 'inspector assigned') {
                 $crop_variety = CropVariety::find($model->crop_variety_id);

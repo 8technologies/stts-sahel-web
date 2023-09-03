@@ -226,6 +226,7 @@ return [
         'Inspection Report' => 'Rapport d\'inspection',
         'Load stock saved successfully' => 'Chargement du stock enregistré avec succès',
         'Field Inspection saved successfully' => 'Inspection sur le terrain enregistrée avec succès',
+
         //load stock form
         'Load stock number' => 'Numéro de chargement du stock',
         'Crop Declaration' => 'Déclaration de culture',
@@ -251,6 +252,7 @@ return [
         'Assign Lab Test' => 'Assigner un test de laboratoire',
         'Analyst Information' => 'Informations sur l\'analyste',
         'Assign Inspector' => 'Assigner un inspecteur',
+        'Print results' => 'Imprimer les résultats',
         //cooperative member
         'Member number' => 'Numéro de membre',
         'Farmer first name' => 'Prénom de l\'agriculteur',
@@ -270,6 +272,24 @@ return [
         'Cooperative' => 'Coopérative',
         'Seed-breeder' => 'Producteur de semences',  
         'Form submitted successfully' => 'Formulaire soumis avec succès',
+        //marketable seeds
+        'User'=> 'Utilisateur',
+        'Crop variety'=> 'Variété de culture',
+        'Load stock number'=> 'Numéro de chargement du stock',
+        'Quantity'=> 'Quantité',
+        'Seed Lab Number'=> 'Numéro de laboratoire de semences',
+        'Created at'=> 'Créé à',
+        //seed label form
+        'Seed label request number' => 'Numéro de demande d\'étiquette de semences',
+        'Request date' => 'Date de demande',
+        'Applicant remarks' => 'Remarques du demandeur',
+        'Seed label request saved successfully' => 'Demande d\'étiquette de semences enregistrée avec succès',
+        'Label package Type' => 'Type d\'emballage d\'étiquette',
+        'Packages' => 'Paquets',
+        'Label package' => 'Paquet d\'étiquettes',
+        'Applicant name' => 'Nom du demandeur',
+        'print' => 'Imprimer',
+
 
 
         

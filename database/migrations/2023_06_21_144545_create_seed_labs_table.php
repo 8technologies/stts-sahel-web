@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('seed_labs', function (Blueprint $table) {
             $table->id();
             $table->string('sample_request_number')->nullable();
-            $table->unsignedBigInteger('applicant_id')->nullable();
+            $table->unsignedBigInteger('user_id')->nullable();
             $table->unsignedBigInteger('load_stock_id')->nullable();
             $table->date('sample_request_date')->nullable();
             $table->string('proof_of_payment')->nullable();

@@ -14,6 +14,8 @@ use \App\Models\CropDeclaration;
 use \App\Models\CropVariety;
 use \App\Models\Crop;
 use \App\Models\SeedClass;
+use \App\Models\Validation;
+use \App\Models\Utils;
 
 
 class SeedLabController extends AdminController
@@ -34,9 +36,14 @@ class SeedLabController extends AdminController
     {
         $grid = new Grid(new SeedLab());
         $user = Admin::user();
-        $lab_results = SeedLab::where('applicant_id', auth('admin')->user()->id)->value('test_decision');
+        $lab_results = SeedLab::where('user_id', auth('admin')->user()->id)->value('test_decision');
         //check the status of the form before displaying it
-        $grid->model()->where('status', '=', 'lab test assigned');
+       
+        if($user->inRoles(['grower', 'agro-dealer'])){
+          $grid->model()->where('user_id', '=', $user->id)->where('status', '=', 'lab test assigned');
+         }else{
+            $grid->model()->where('status', '=', 'lab test assigned');
+         }
 
         //disable create button
         $grid->disableCreateButton();
@@ -56,8 +63,8 @@ class SeedLabController extends AdminController
         $grid->column('lot_number', __('Lot Number'))->display(function ($lot_number) {
             return $lot_number ?? 'Not yet assigned';
         });
-        $grid->column('applicant_id', __('Applicant'))->display(function ($applicant_id) {
-            return \App\Models\User::find($applicant_id)->name;
+        $grid->column('user_id', __('Applicant'))->display(function ($user_id) {
+            return \App\Models\User::find($user_id)->name;
         });
 
         $grid->column('seed_lab_test_report_number', __('Seed lab test report number'))->display(function ($seed_lab_test_report_number) {
@@ -74,7 +81,7 @@ class SeedLabController extends AdminController
             return \App\Models\Utils::tell_status($test_decision) ?? 'Not yet assigned';
         });
         if ($lab_results != null) {
-            $grid->column('id', __('admin.form.Print Results'))->display(function ($id) {
+            $grid->column('id', __('admin.form.Print results'))->display(function ($id) {
                 $link = url('lab_results?id=' . $id);
                 return '<b><a target="_blank" href="' . $link . '">Print Results</a></b>';
             });
@@ -95,8 +102,8 @@ class SeedLabController extends AdminController
 
 
 
-        $show->field('applicant_id', __('Applicant'))->as(function ($applicant_id) {
-            return \App\Models\User::find($applicant_id)->name;
+        $show->field('user_id', __('Applicant'))->as(function ($user_id) {
+            return \App\Models\User::find($user_id)->name;
         });
         $show->field('load_stock_number', __('Load stock number'));
         $show->field('seed_lab_test_report_number', __('Seed lab test report number'));
@@ -133,10 +140,10 @@ class SeedLabController extends AdminController
         //get looged in user
         $user = Admin::user();
         if ($form->isCreating()) {
-            $form->hidden('applicant_id')->default($user->id);
+            $form->hidden('user_id')->default($user->id);
         }
 
-        $crop_stock = LoadStock::where('applicant_id', $user->id);
+        $crop_stock = LoadStock::where('user_id', $user->id);
 
 
         if ($form->isEditing()) {
@@ -145,7 +152,7 @@ class SeedLabController extends AdminController
             $seed_lab = SeedLab::find($form_id);
 
             
-            $crop_declaration = LoadStock::where('id', $seed_lab->load_stock_id)->where('applicant_id', $seed_lab->applicant_id)->value('crop_declaration_id');
+            $crop_declaration = LoadStock::where('id', $seed_lab->load_stock_id)->where('user_id', $seed_lab->user_id)->value('crop_declaration_id');
             //get crop variety from crop_declaration id
             $crop_variety_id = CropDeclaration::where('id', $crop_declaration)->value('crop_variety_id');
             //get mother_lot from crop_declaration
@@ -153,14 +160,14 @@ class SeedLabController extends AdminController
             //get crop variety name from crop_variety id
             $crop_variety = CropVariety::where('id', $crop_variety_id)->first();
             //get crop name from crop variety
-            $crop_name = Crop::where('id', $crop_variety->crop_id)->value('crop_name');
+            $crop = Crop::where('id', $crop_variety->crop_id);
 
-            $applicant_name = Administrator::where('id', $seed_lab->applicant_id)->value('name');
+            $applicant_name = Administrator::where('id', $seed_lab->user_id)->value('name');
             $seed_class = SeedClass::where('id', $crop_variety->crop_variety_generation)->value('class_name');
 
             $form->display('', __('Applicant name'))->default($applicant_name);
             $form->display('load_stock_id', __('Load stock number'))->readonly();
-            $form->display('', __('Crop'))->default($crop_name);
+            $form->display('', __('Crop'))->default($crop->crop_name);
             $form->display('', __('Variety'))->default($crop_variety->crop_variety_name);
             $form->display('', __('Generation'))->default($seed_class);
             $form->number('quantity', __('Quantity'))->readonly();
@@ -176,7 +183,7 @@ class SeedLabController extends AdminController
             $form->radio('test_decision', __('Test decision'))
                 ->options(['marketable' => 'Marketable', 'not marketable' => 'Not Marketable'])
                 ->when('marketable', function (Form $form) use ($crop_variety) {
-                    $form->text('lot_number', __('Lot number'))->default($crop_variety->crop_variety_name . "/" . mt_rand(10000000, 99999999))->readonly();
+                    $form->text('lot_number', __('Lot number'))->default($crop->crop_code.$crop_variety->crop_variety_code. mt_rand(10000000, 99999999))->readonly();
                 });
             $form->textarea('reporting_and_signature', __('Reporting and signature'));
         }

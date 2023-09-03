@@ -11,8 +11,9 @@ class LoadStock extends Model
 
     protected $fillable = [
         'load_stock_number',
-        'planting_return_number',
-        'name_of_applicant',
+        'crop_declaration_id',
+        'crop_variety_id',
+        'user_id',
         'registration_number',
         'seed_class',
         'field_size',

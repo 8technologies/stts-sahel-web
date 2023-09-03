@@ -27,7 +27,7 @@ class FieldInspectionController extends AdminController
     {
         // $m = FieldInspection::find(3);
         // $m->is_done = 0;
-        // $m->field_decision = 'rejected';
+        // $m->status = 'rejected';
         // $m->save();
         // die("romina");
         $grid = new Grid(new FieldInspection());
@@ -39,15 +39,15 @@ class FieldInspectionController extends AdminController
         $grid->filter(function ($filter) {
             // Remove the default id filter
             $filter->disableIdFilter();
-            $filter->like('applicant_id', 'Applicant')->select(\App\Models\User::pluck('name', 'id'));
+            $filter->like('user_id', 'Applicant')->select(\App\Models\User::pluck('name', 'id'));
            
         });
        
         //order the table according to the time
         $grid->model()->orderBy('created_at', 'desc');
 
-        //$inspection = FieldInspection::where('applicant_id', auth('admin')->user()->id)->value('is_done');
-        $inspections = FieldInspection::where('applicant_id', auth('admin')->user()->id)
+        //$inspection = FieldInspection::where('user_id', auth('admin')->user()->id)->value('is_done');
+        $inspections = FieldInspection::where('user_id', auth('admin')->user()->id)
         ->get();
         //dd($inspections);
 
@@ -57,7 +57,7 @@ class FieldInspectionController extends AdminController
 
             if (!auth('admin')->user()->isRole('inspector')) {
              
-                $grid->model()->where('applicant_id', auth('admin')->user()->id);
+                $grid->model()->where('user_id', auth('admin')->user()->id);
                  //disable delete action
                 $grid->actions(function ($actions) {
                     $actions->disableDelete();
@@ -78,17 +78,16 @@ class FieldInspectionController extends AdminController
             }
         }
 
-        $grid->model()->orderBy('order_number', 'asc');
         $grid->column('created_at', __('admin.form.Date'))->display(function ($created_at) {
             return date('d-m-Y', strtotime($created_at));
         });
 
      
-        $grid->column('applicant_id', __('admin.form.Applicant'))->display(function ($applicant_id) {
-            return \App\Models\User::find($applicant_id)->name;
+        $grid->column('user_id', __('admin.form.Applicant'))->display(function ($user_id) {
+            return \App\Models\User::find($user_id)->name;
         });
-        $grid->column('field_decision', __('admin.form.Field decision'))->display(function ($field_decision) {
-            return \App\Models\Utils::tell_status($field_decision) ?? '-';
+        $grid->column('status', __('admin.form.Field decision'))->display(function ($status) {
+            return \App\Models\Utils::tell_status($status) ?? '-';
         });
         $grid->column('is_active', __('admin.form.Is active'))->using([
             0 => 'Not active',
@@ -111,16 +110,17 @@ class FieldInspectionController extends AdminController
         $grid->column('id', __('admin.form.Inspection Report'))->display(function ($id) use ($inspections) {
             $inspection = $inspections->firstWhere('id', $id);
         
-            if ($inspection && $inspection->is_done == 1) {
-                $link = url('inspection?id=' . $id);
-                return '<b><a target="_blank" href="' . $link . '">Imprimer le rapport</a></b>';
-            } else {
-               
-                return '<b>Inscription en attente</b>';
-            }
-        });
-    } 
-        return $grid;
+        if ($inspection && $inspection->is_done == 1) 
+        {
+                    $link = url('inspection?id=' . $id);
+                    return '<b><a target="_blank" href="' . $link . '">Imprimer le rapport</a></b>';
+                } else {
+                
+                    return '<b>Inscription en attente</b>';
+                }
+            });
+        } 
+            return $grid;
     }
 
     /**
@@ -132,9 +132,18 @@ class FieldInspectionController extends AdminController
     protected function detail($id)
     {
         $show = new Show(FieldInspection::findOrFail($id));
+           //delete notification after viewing the form
+           Utils::delete_notification('FieldInspection', $id);
 
-        $show->field('applicant_id', __('admin.form.Applicant'))->as(function ($applicant_id) {
-            return \App\Models\User::find($applicant_id)->name;
+          //check if the user is the owner of the form
+          $showable = Validation::checkUser('FieldInspection', $id);
+          if (!$showable) 
+          {
+              return(' <p class="alert alert-danger">You do not have rights to view this form. <a href="/admin/field-inspections"> Go Back </a></p> ');
+          }
+
+        $show->field('user_id', __('admin.form.Applicant'))->as(function ($user_id) {
+            return \App\Models\User::find($user_id)->name;
         });
 
 
@@ -169,7 +178,7 @@ class FieldInspectionController extends AdminController
         $show->field('signature', __('admin.form.Signature'))->as(function ($value) {
             return $value ?? '-';
         });
-        $show->field('field_decision', __('admin.form.Field decision'))->as(function ($value) {
+        $show->field('status', __('admin.form.Field decision'))->as(function ($value) {
             return $value ?? '-';
         });
 
@@ -199,68 +208,20 @@ class FieldInspectionController extends AdminController
            //check if the form is being edited
            if ($form->isEditing()) 
            {
-                   //get request id
-                  $id = request()->route()->parameters()['field_inspection'];
-                 
-                  if($user->inRoles(['basic-user', 'grower','agro-dealer'])){
-                   //check if the user is the owner of the form
-                      $editable = Validation:: checkUserRole();
-                      if(!$editable){
-                         $form->html(' <p class="alert alert-warning">You do not have rights to edit this form. <a href="/admin/field-inspections"> Go Back </a></p> ');
-                         $form->footer(function ($footer) 
-                         {
-     
-                             // disable reset btn
-                             $footer->disableReset();
-     
-                             // disable submit btn
-                             $footer->disableSubmit();
-                        });
-                      }
-                      //check if the form has been accepted
-                      $editable_status = Validation::checkFormUserStatus('FieldInspection', $id);
-                        if(!$editable_status){
-                         $form->html(' <p class="alert alert-warning">You cannot edit this form because it has been accepted. <a href="/admin/field-inspections"> Go Back </a></p> ');
-                         $form->footer(function ($footer) 
-                         {
-         
-                               // disable reset btn
-                               $footer->disableReset();
-         
-                               // disable submit btn
-                               $footer->disableSubmit();
-                        });
-                        }
-                  }
-                  elseif($user->isRole('inspector')){
-                      $editable = Validation::checkInspectionStatus('FieldInspection', $id);
-                      
-                      if(!$editable){
-                       //return admin_error('You do not have rights to edit this form. <a href="/admin/seed-producers"> Go Back </a>');
-                     
-                          $form->html(' <p class="alert alert-warning">You do not have rights to edit this form. <a href="/admin/field-inspections"> Go Back </a></p> ');
-                          $form->footer(function ($footer) 
-                       {
-   
-                           // disable reset btn
-                           $footer->disableReset();
-   
-                           // disable submit btn
-                           $footer->disableSubmit();
-                      });
-                  }
-                  
-              }
+               //get request id
+               $id = request()->route()->parameters()['field_inspection'];
+               //check if its valid to edit the form
+               Validation::checkFormEditable($form, $id, 'FieldInspection');
            }
            //onsaved return to the list page
-              $form->saved(function (Form $form) {
-                admin_toastr(__('admin.form.Field Inspection saved successfully'), 'success');
-                return redirect('/admin/field-inspections');
-              });
+            $form->saved(function (Form $form) {
+            admin_toastr(__('admin.form.Field Inspection saved successfully'), 'success');
+            return redirect('/admin/field-inspections');
+            });
           
 
-        $form->display('applicant_id', __('admin.form.Applicant'))->with(function ($applicant_id) {
-            return \App\Models\User::find($applicant_id)->name;
+        $form->display('user_id', __('admin.form.Applicant'))->with(function ($user_id) {
+            return \App\Models\User::find($user_id)->name;
         });
         $form->display('crop_variety_id', __('admin.form.Crop Variety'))->with(function ($crop_variety_id) {
             return \App\Models\CropVariety::find($crop_variety_id)->crop_variety_name;
@@ -274,7 +235,7 @@ class FieldInspectionController extends AdminController
             return \App\Models\User::find($inspector_id)->name;
         });
 
-        $form->text('field_inspection_form_number', __('admin.form.Field inspection form number'));
+        $form->text('field_inspection_form_number', __('admin.form.Field inspection form number'))->default('FieldInspection/' . date('Y/') . rand(1000, 9999))->readonly();
         $form->decimal('field_size', __('admin.form.Field size'));
         $form->text('type_of_inspection', __('admin.form.Type of inspection'));
         $form->text('seed_generation', __('admin.form.Seed generation'));
@@ -285,7 +246,7 @@ class FieldInspectionController extends AdminController
 
         $form->divider();
 
-        $form->select('field_decision', __('admin.form.Field Decision'))
+        $form->select('status', __('admin.form.Field decision'))
             ->options([
                 'accepted' => 'Approved',
                 'rejected' => 'Rejected'

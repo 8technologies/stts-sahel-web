@@ -131,6 +131,11 @@ public static function update_notification($model, $model_name, $entity)
             'receiver_id' => $model->user_id,
             'form_link' => admin_url("{$entity}/{$model->id}"),
         ],
+        'lab test assigned' => [
+            'message' => "Dear {$name}, your {$entity} has been assigned to the lab technician.",
+            'receiver_id' => $model->user_id,
+            'form_link' => admin_url("{$entity}/{$model->id}"),
+        ],
     ];
 
     foreach ($notifications as $notification) {

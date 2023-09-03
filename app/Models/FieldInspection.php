@@ -27,7 +27,7 @@ class FieldInspection extends Model
         'is_active',
         'is_done',
         'order_number',
-        'field_decision',
+        'status',
         'inspection_date',
     ];
 
@@ -52,7 +52,7 @@ class FieldInspection extends Model
 
         //call back to send a notification to the user
         self::created(function ($model) {
-            //Notification::send_notification($model, 'FieldInspection', request()->segment(count(request()->segments())));
+            Notification::update_notification($model, 'CropDeclaration', request()->segment(count(request()->segments())));
 
         });
 
@@ -64,7 +64,7 @@ class FieldInspection extends Model
 
         self::updated(function ($model) {
 
-            if ($model->field_decision == 'accepted' && $model->is_done == 0) {
+            if ($model->status == 'accepted' && $model->is_done == 0) {
                 $next = $model->getNext();
                 if ($next != null) {
                     $model->is_done = 1;
@@ -83,7 +83,7 @@ class FieldInspection extends Model
                     }
                 }
             }
-            if ($model->field_decision == 'rejected' && $model->is_done == 0) {
+            if ($model->status == 'rejected' && $model->is_done == 0) {
                 $crop_declaration = CropDeclaration::find($model->crop_declaration_id);
                 if ($crop_declaration != null) {
                     $crop_declaration->status = 'rejected';
@@ -94,7 +94,7 @@ class FieldInspection extends Model
                 }
             }
 
-            //Notification::update_notification($model, 'FieldInspection', request()->segment(count(request()->segments())-1));
+            Notification::update_notification($model, 'FieldInspection', request()->segment(count(request()->segments())-1));
         });
     }
 

@@ -4,7 +4,7 @@ $package = App\Models\SeedLabelPackage::find($_GET['id']);
 $label =App\Models\LabelPackage::find( $package->package_id);
 $seed_label = App\Models\SeedLabel::find($package->seed_label_id);
 $seed_lab = App\Models\SeedLab::find($seed_label->seed_lab_id);
-$crop_declaration = App\Models\LoadStock::where('id', $seed_lab->load_stock_id)->where('applicant_id', $seed_lab->applicant_id )->value('crop_declaration_id');
+$crop_declaration = App\Models\LoadStock::where('id', $seed_lab->load_stock_id)->where('user_id', $seed_lab->user_id )->value('crop_declaration_id');
 //get crop variety from crop_declaration id
 $crop_variety_id = App\Models\CropDeclaration::where('id', $crop_declaration)->value('crop_variety_id');
 //get crop variety name from crop_variety id
@@ -55,14 +55,21 @@ $today = date("F j, Y");
     .form-field-column:not(:last-child) {
       padding-right: 10px;
     }
+    .card {
+            border: 1px solid #ccc;
+            padding: 20px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
     /* Add additional styles as needed */
   </style>
 </head>
 <body>
   <div class="form-container">
-    <div class="form-heading">Issuance of Seed Tags</div>
+
     <div class="card">
-      <div class="card-header"></div>
+      <div class="card-header">
+      </div>
       <div class="form-section">
       <div class="form-field-column">
     <div class="card-body">
@@ -86,9 +93,12 @@ $today = date("F j, Y");
           </div>
           <div class="form-field">
             <label for="seed-category" class="form-field-label">Quantity:{{ $label->quantity . ' kgs' }}</label>
-            
-
           </div>
+        
+      <div>
+        
+      <img src="{{ public_path('storage/assets/logo.png') }}" alt="logo">
+      </div>
          
         </div>
       </div>

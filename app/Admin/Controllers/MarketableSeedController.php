@@ -41,16 +41,16 @@ class MarketableSeedController extends AdminController
             $actions->disableDelete();
             $actions->disableEdit();
         });
-        $grid->column('id', __('Id'));
-        $grid->column('user_id', __('User'))->display(function($user_id){
+      
+        $grid->column('user_id', __('admin.form.User'))->display(function($user_id){
             return \App\Models\User::find($user_id)->name;
         });
-        $grid->column('crop_variety_id', __('Crop variety'))->display(function($crop_variety_id){
+        $grid->column('crop_variety_id', __('admin.form.Crop variety'))->display(function($crop_variety_id){
             return \App\Models\CropVariety::find($crop_variety_id)->crop_variety_name;
         });
-        $grid->column('quantity', __('Quantity'));
-        $grid->column('created_at', __('Created at'));
-        $grid->column('updated_at', __('Updated at'));
+        $grid->column('quantity', __('admin.form.Quantity'));
+        $grid->column('created_at', __('admin.form.Created at'));
+       
 
         return $grid;
     }
@@ -66,20 +66,20 @@ class MarketableSeedController extends AdminController
         $show = new Show(MarketableSeed::findOrFail($id));
 
     
-        $show->field('user_id', __('User'))->as(function($user_id){
+        $show->field('user_id', __('admin.form.User'))->as(function($user_id){
             return \App\Models\User::find($user_id)->name;
         });
-        $show->field('seed_lab_id', __('Seed lab number'))->as(function($seed_lab_id){
+        $show->field('seed_lab_id', __('admin.form.Seed lab number'))->as(function($seed_lab_id){
             return \App\Models\SeedLab::find($seed_lab_id)->seed_lab_test_report_number;
         });
-        $show->field('load_stock_id', __('Load stock number'))->as(function($load_stock_id){
+        $show->field('load_stock_id', __('admin.form.Load stock number'))->as(function($load_stock_id){
             return \App\Models\LoadStock::find($load_stock_id)->load_stock_number;
         });
-        $show->field('crop_variety_id', __('Crop variety'))->as(function($crop_variety_id){
+        $show->field('crop_variety_id', __('admin.form.Crop variety'))->as(function($crop_variety_id){
             return \App\Models\CropVariety::find($crop_variety_id)->crop_variety_name;
         });
-        $show->field('quantity', __('Quantity'));
-        $show->field('created_at', __('Created at'));
+        $show->field('quantity', __('admin.form.Quantity'));
+        $show->field('created_at', __('admin.form.Created at'));
        
 
         //disable edit and delete buttons
@@ -100,11 +100,11 @@ class MarketableSeedController extends AdminController
     {
         $form = new Form(new MarketableSeed());
 
-        $form->number('user_id', __('User id'));
-        $form->number('seed_lab_id', __('Seed lab id'));
-        $form->number('load_stock_id', __('Load stock id'));
-        $form->number('crop_variety_id', __('Crop variety id'));
-        $form->number('quantity', __('Quantity'));
+        $form->number('user_id', __('admin.form.User id'));
+        $form->number('seed_lab_id', __('admin.form.Seed lab id'));
+        $form->number('load_stock_id', __('admin.form.Load stock id'));
+        $form->number('crop_variety_id', __('admin.form.Crop variety id'));
+        $form->number('quantity', __('admin.form.Quantity'));
 
         return $form;
     }

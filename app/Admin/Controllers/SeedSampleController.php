@@ -14,7 +14,8 @@ use \App\Models\CropDeclaration;
 use \App\Models\CropVariety;
 use \App\Models\Crop;
 use \App\Models\SeedClass;
-
+use \App\Models\Utils;
+use \App\Models\Validation;
 
 class SeedSampleController extends AdminController
 {
@@ -33,26 +34,21 @@ class SeedSampleController extends AdminController
     protected function grid()
     {
         $grid = new Grid(new SeedLab());
+        $user = Admin::user();
+
           //filter by name
           $grid->filter(function ($filter) {
             // Remove the default id filter
             $filter->disableIdFilter();
-            $filter->like('applicant_id', 'Applicant')->select(\App\Models\User::pluck('name', 'id'));
+            $filter->like('user', 'Applicant')->select(\App\Models\User::pluck('name', 'id'));
            
         });
 
         //order of the table 
-
         $grid->model()->orderBy('id', 'desc');
-        $user = Admin::user();
-        if (!$user->inRoles(['commissioner','developer'])) {
-
-            if (!$user->isRole('inspector')) {
-                $grid->model()->where('applicant_id', auth('admin')->user()->id);
-            } else {
-                $grid->model()->where('inspector_id', auth('admin')->user()->id);
-            }
-        }
+       
+       //function to show the loggedin user only what belongs to them
+       Validation::showUserForms($grid);
 
         if (!$user->inRoles(['basic-user', 'grower','agro-dealer'])) {
             $grid->disableCreateButton();
@@ -61,10 +57,10 @@ class SeedSampleController extends AdminController
 
         $grid->column('id', __('Id'));
         $grid->column('sample_request_number', __('admin.form.Sample request number'));
-         $grid->column('applicant_id', __('admin.form.Applicant'));
-        // ->display(function ($user_id) {
-        //     return \App\Models\User::find($user_id)->name;
-        // });
+         $grid->column('user_id', __('admin.form.Applicant'))
+        ->display(function ($user_id) {
+            return \App\Models\User::find($user_id)->name??'-';
+        });
         $grid->column('load_stock_id', __('admin.form.Load stock number'));
         $grid->column('sample_request_date', __('admin.form.Sample request date'));
         $grid->column('status', __('admin.form.Status'))->display(function ($status) {
@@ -88,11 +84,20 @@ class SeedSampleController extends AdminController
     protected function detail($id)
     {
         $show = new Show(SeedLab::findOrFail($id));
+           //delete notification after viewing the form
+           Utils::delete_notification('SeedLab', $id);
+
+           //check if the user is the owner of the form
+           $showable = Validation::checkUser('SeedLab', $id);
+           if (!$showable) 
+           {
+               return(' <p class="alert alert-danger">You do not have rights to view this form. <a href="/admin/seed-sample-requests"> Go Back </a></p> ');
+           }
 
 
         $show->field('sample_request_number', __('admin.form.Sample request number'));
-        $show->field('applicant_id', __('admin.form.Applicant id'))->as(function ($applicant_id) {
-            return \App\Models\User::find($applicant_id)->name;
+        $show->field('user_id', __('admin.form.Applicant id'))->as(function ($user_id) {
+            return \App\Models\User::find($user_id)->name;
         });
         $show->field('load_stock_id', __('admin.form.Load stock number'));
         $show->field('sample_request_date', __('admin.form.Sample request date'));
@@ -122,7 +127,7 @@ class SeedSampleController extends AdminController
        
         if ($form->isCreating()) 
         {
-            $form->hidden('applicant_id')->default($user->id);
+            $form->hidden('user_id')->default($user->id);
 
             //if form is saving get the crop variety id from the crop declaration
             $form->saving(function (Form $form) {
@@ -135,7 +140,7 @@ class SeedSampleController extends AdminController
             });
         }
 
-        $crop_stock = LoadStock::where('applicant_id', $user->id);
+        $crop_stock = LoadStock::where('user_id', $user->id);
 
         //forms for user and seed producer
         if (auth('admin')->user()->inRoles(['basic-user', 'grower','agro-dealer'])) {
@@ -150,9 +155,11 @@ class SeedSampleController extends AdminController
         if ($form->isEditing()) {
 
             $form_id = request()->route()->parameters()['seed_sample_request'];
+             //check if its valid to edit the form
+            Validation::checkFormEditable($form, $form_id , 'SeedLab');
             $seed_lab = SeedLab::find($form_id);
 
-            $crop_declaration = LoadStock::where('id', $seed_lab->load_stock_id)->where('applicant_id', $seed_lab->applicant_id)->value('crop_declaration_id');
+            $crop_declaration = LoadStock::where('id', $seed_lab->load_stock_id)->where('user_id', $seed_lab->user_id)->value('crop_declaration_id');
             if($crop_declaration != null){
             //get crop variety from crop_declaration id
             $crop_variety_id = CropDeclaration::where('id', $crop_declaration)->value('crop_variety_id');
@@ -161,8 +168,8 @@ class SeedSampleController extends AdminController
             //get crop name from crop variety
             $crop_name = Crop::where('id', $crop_variety->crop_id)->value('crop_name');
 
-            $applicant_name = Administrator::where('id', $seed_lab->applicant_id)->value('name');
-            $seed_class = LoadStock::where('id', $seed_lab->load_stock_id)->where('applicant_id', $seed_lab->applicant_id)->value('seed_class');
+            $applicant_name = Administrator::where('id', $seed_lab->user_id)->value('name');
+            $seed_class = LoadStock::where('id', $seed_lab->load_stock_id)->where('user_id', $seed_lab->user_id)->value('seed_class');
             $seed_class_name = SeedClass::where('id',$seed_class)->value('class_name');
 
             if (auth('admin')->user()->inRoles(['inspector', 'commissioner','developer'])) 
@@ -185,7 +192,7 @@ class SeedSampleController extends AdminController
             //get the seed class
             $seed_class = LoadStock::where('id', $seed_lab->load_stock_id)->value('seed_class');
             $seed_class_name = SeedClass::where('id',$seed_class)->value('class_name');
-            $applicant_name = Administrator::where('id', $seed_lab->applicant_id)->value('name');
+            $applicant_name = Administrator::where('id', $seed_lab->user_id)->value('name');
 
             if (auth('admin')->user()->inRoles(['inspector', 'commissioner','developer'])) 
             {
@@ -210,7 +217,7 @@ class SeedSampleController extends AdminController
                     'accepted'=> __('admin.form.Accepted'),
                     'halted' => __('admin.form.Halted'),
                     'rejected' => __('admin.form.Rejected'),
-                    'inspection assigned' => __('admin.form.Assign Inspector')]);
+                    'inspector assigned' => __('admin.form.Assign Inspector')]);
 
                 //get the users in the admin_user table whose role is inspector
                 $inspectors = Administrator::whereHas('roles', function ($query) {

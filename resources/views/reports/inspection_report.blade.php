@@ -1,7 +1,7 @@
 <?php
 $form = \App\Models\FieldInspection::find($_GET['id']);
 $fieldData = [
-    'Applicant' => \App\Models\User::find($form->applicant_id)->name,
+    'Applicant' => \App\Models\User::find($form->user_id)->name,
     'Crop Variety' => \App\Models\CropVariety::find($form->crop_variety_id)->crop_variety_name,
     'Inspection type' => \App\Models\InspectionType::find($form->inspection_type_id)->inspection_type_name,
     'Physical address' => $form->physical_address,
@@ -14,7 +14,7 @@ $fieldData = [
     'Field spacing' => $form->field_spacing,
     'Estimated yield' => $form->estimated_yield,
     'Signature' => $form->signature,
-    'Field Decision' => $form->field_decision === 'accepted' ? 'Approved' : 'Rejected',
+    'Field Decision' => $form->field_decision,
     'Remarks' => $form->remarks,
 ];
 ?>

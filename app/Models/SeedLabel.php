@@ -11,7 +11,7 @@ class SeedLabel extends Model
 
     protected $fillable = [
         'seed_label_request_number',
-        'applicant_id',
+        'user_id',
         'registration_number',
         'seed_lab_id',
         'quantity_of_seed',

@@ -113,8 +113,6 @@ return [
     'quick_create'           => 'Quick create',
     'form'=>[
         //Seed Producer form
-        //Seed Producer form
-        //Seed Producer form
         'Applicant name' => 'Applicant name',
         'Date' => 'Date',
         'Producer category' => 'Producer Category',
@@ -284,6 +282,26 @@ return [
         'Cooperative' => 'Cooperative',
         'Seed-breeder' => 'Seed-breeder',
         'Form submitted successfully' => 'Form submitted successfully',
+        'Print results' => 'Print results',
+        //marketable seeds
+        'User' => 'User',
+        'Crop Variety' => 'Crop Variety',
+        'Load stock number' => 'Load stock number',
+        'Quantity' => 'Quantity',
+        'Seed lab number' => 'Seed lab number',
+        'Created at' => 'Created at',
+        //seed label form
+        'Seed label request number' => 'Seed label request number',
+        'Request date' => 'Request date',
+        'Applicant remarks' => 'Applicant remarks',
+        'Seed label request saved successfully' => 'Seed label request saved successfully',
+        'Label package Type' => 'Label package type',
+        'Packages' => 'Packages',
+        'Label package' => 'Label package',
+        'Applicant name' => 'Applicant name',
+        'print' => 'Print',
+
+
 
         
 

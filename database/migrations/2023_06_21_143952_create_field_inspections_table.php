@@ -28,7 +28,7 @@ return new class extends Migration
             $table->text('remarks')->nullable();
             $table->string('inspector_id')->nullable();
             $table->string('signature')->nullable();
-            $table->string('field_decision')->nullable();
+            $table->string('status')->nullable();
             $table->integer('is_active');
             $table->integer('is_done');
             $table->date('inspection_date')->nullable();

@@ -31,7 +31,7 @@ class LoadStockController extends AdminController
         $grid = new Grid(new LoadStock());
         $user = Admin::user();
         if(!$user->isRole('commissioner')){
-            $grid->model()->where('applicant_id', auth('admin')->user()->id);
+            $grid->model()->where('user_id', auth('admin')->user()->id);
         }
 
         if (!$user->inRoles(['basic-user','grower','agro-dealer'])){
@@ -40,8 +40,8 @@ class LoadStockController extends AdminController
 
         $grid->column('id', __('Id'));
         $grid->column('load_stock_number', __('admin.form.Load stock number'));
-        $grid->column('applicant_id', __('admin.form.Applicant Name'))->display(function ($applicant_id) {
-            return \App\Models\User::find($applicant_id)->name;
+        $grid->column('user_id', __('admin.form.Applicant Name'))->display(function ($user_id) {
+            return \App\Models\User::find($user_id)->name;
         });
         $grid->column('yield_quantity', __('admin.form.Yield quantity'));
         $grid->column('last_field_inspection_date', __('admin.form.Last field inspection date'));
@@ -61,12 +61,19 @@ class LoadStockController extends AdminController
     {
         $show = new Show(LoadStock::findOrFail($id));
 
+          //check if the user is the owner of the form
+          $showable = Validation::checkUser('LoadStock', $id);
+          if (!$showable) 
+          {
+              return(' <p class="alert alert-danger">You do not have rights to view this form. <a href="/admin/load-stocks"> Go Back </a></p> ');
+          }
+
         $show->field('load_stock_number', __('admin.form.Load stock number'));
         $show->field('crop_declaration_id', __('admin.form.Crop Declaration'))->as(function ($value) {
             $crop_variety_id = \App\Models\CropDeclaration::find($value)->crop_variety_id;
             return \App\Models\CropVariety::find($crop_variety_id)->crop_variety_name ?? '-';
         });;
-        $show->field('applicant_id', __('admin.form.Applicant'))->as(function ($value) {
+        $show->field('user_id', __('admin.form.Applicant'))->as(function ($value) {
             return \App\Models\User::find($value)->name ?? '-';
         });
         $show->field('registration_number', __('admin.form.Registration number'))->as(function ($value) {
@@ -102,7 +109,7 @@ class LoadStockController extends AdminController
            
         if ($form->isCreating()) 
         {
-            $form->hidden('applicant_id')->default($user->id);
+            $form->hidden('user_id')->default($user->id);
 
             //if form is saving get the crop variety id from the crop declaration
             $form->saving(function (Form $form) {
@@ -123,40 +130,27 @@ class LoadStockController extends AdminController
             });
         }
 
-           //check if the form is being edited
-           if ($form->isEditing()) 
-           {
-                   //get request id
-                  $id = request()->route()->parameters()['load_stock'];
-
-                   //check if the user is the owner of the form
-                      $editable = Validation::checkUser('LoadStock', $id);
-                      if(!$editable){
-                         $form->html(' <p class="alert alert-warning">You do not have rights to edit this form. <a href="/admin/field-inspections"> Go Back </a></p> ');
-                         $form->footer(function ($footer) 
-                         {
-     
-                             // disable reset btn
-                             $footer->disableReset();
-     
-                             // disable submit btn
-                             $footer->disableSubmit();
-                        });
-                      }
-           }
+         //check if the form is being edited
+         if ($form->isEditing()) 
+         {
+             //get request id
+             $id = request()->route()->parameters()['load_stock'];
+             //check if its valid to edit the form
+             Validation::checkFormEditable($form, $id, 'LoadStock');
+         }
 
         $form->saved(function (Form $form) 
         {
             admin_toastr(__('admin.form.Load stock saved successfully'), 'success');
             return redirect('/admin/load-stocks');
-          });
+        });
         $form->text('load_stock_number', __('admin.form.Load stock number'))->default('LS'.rand(1000, 100000))->readonly();
 
         //get all crop varieties
         $crop_varieties = \App\Models\CropVariety::all();
         //get all seed classes
         $seed_classes = \App\Models\SeedClass::all();
-        $crop_declarations = CropDeclaration::where('applicant_id', $user->id)
+        $crop_declarations = CropDeclaration::where('user_id', $user->id)
         ->where('status', 'accepted')->get();
         if(!$user->isRole('agro-dealer')){
             $form->select('crop_declaration_id', __('admin.form.Crop Declaration'))->options($crop_declarations->pluck('field_name', 'id'))->required();

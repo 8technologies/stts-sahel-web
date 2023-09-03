@@ -52,7 +52,7 @@ class Dashboard
 
         $data = [
             'total_stock' => LoadStock::where('applicant_id', $userId)->count(),
-            'total_inspections' => FieldInspection::where('applicant_id', $userId)->count(),
+            'total_inspections' => FieldInspection::where('user_id', $userId)->count(),
             'total_sales'=> Order::where('supplier', $userId)->orWhere('order_by',  $userId)->count(),
             'pending_orders' => Order::where(function ($query) use ($userId) {
             $query->where('supplier', $userId)
@@ -62,11 +62,11 @@ class Dashboard
                     ->orWhereNull('status');
             })->count(),
             'pending_inspections' =>FieldInspection::where(function ($query) use ($userId) {
-                $query->where('applicant_id', $userId);
+                $query->where('user_id', $userId);
     
             })->where(function ($query) {
-                $query->where('field_decision', 'pending')
-                    ->orWhereNull('field_decision');
+                $query->where('status', 'pending')
+                    ->orWhereNull('status');
             })->count(),
 
         ];
@@ -126,8 +126,8 @@ class Dashboard
             'pending_inspections' => FieldInspection::where(function ($query) use ($userId) {
                 $query->where('inspector_id', $userId);       
                     })->where(function ($query) {
-                        $query->where('field_decision', 'pending')
-                            ->orWhereNull('field_decision');
+                        $query->where('status', 'pending')
+                            ->orWhereNull('status');
                     })->count(),
             ];
 
@@ -233,7 +233,7 @@ class Dashboard
         }
 
         // Group inspections by status
-        $statusGroups = $inspections->groupBy('field_decision');
+        $statusGroups = $inspections->groupBy('status');
 
         // Prepare the data for the chart
         $chartData = [
@@ -379,10 +379,10 @@ class Dashboard
     {
         $userId = Admin::user()->id;
     
-        $inspections = FieldInspection::where('applicant_id', $userId)
-            ->select('field_decision', DB::raw('count(*) as count'))
-            ->groupBy('field_decision')
-            ->pluck('count', 'field_decision');
+        $inspections = FieldInspection::where('user_id', $userId)
+            ->select('status', DB::raw('count(*) as count'))
+            ->groupBy('status')
+            ->pluck('count', 'status');
     
         return view('dashboard.myinspections', compact('inspections'));
     }
