@@ -323,6 +323,31 @@ return [
         'Shipping' => 'Expédition',
         'Delivered' => 'Livré',
         'Cancelled' => 'Annulé',
+        //crops
+        'Crop name' => 'Nom de la culture',
+        'Crop code' => 'Code de culture',
+        'Number of inspections' => 'Nombre d\'inspections',
+        'Number of days before submission of planting return' => 'Nombre de jours avant la soumission du retour de plantation',
+        'Seed viability period (in days)' => 'Période de viabilité des semences (en jours)',
+        'Crop varieties' => 'Variétés de cultures',
+        'Crop Variety Name' => 'Nom de la variété de culture',
+        'Crop Variety Code' => 'Code de variété de culture',
+        'Crop Variety Generation' => 'Génération de variété de culture',
+        'Inspection types' => 'Types d\'inspection',
+        'Inspection type name' => 'Nom du type d\'inspection',
+        'Order' => 'Ordre',
+        'Days after planting' => 'Jours après la plantation',
+        //seed class
+        'Class name' => 'Nom de classe',
+        'Class code' => 'Code de classe',
+        'Seed class saved successfully' => 'Classe de semences enregistrée avec succès',
+        'Inspection Types' => 'Types d\'inspection',
+        'Crop Varieties' => 'Variétés de cultures',
+        'Crop variety name' => 'Nom de la variété de culture',
+        'Crop variety code' => 'Code de variété de culture',
+        'Package Type' => 'Type d\'emballage',
+
+
 
 
 

@@ -69,8 +69,12 @@
     "Menu": "Menu",
     "Home": "Maison",
     "Agro Dealers": "Revendeurs d'agro",
-    "Load stock saved successfully": "Chargement du stock enregistré avec succès"
-    
-
+    "Load stock saved successfully": "Chargement du stock enregistré avec succès",
+    "System settings": "Paramètres du système",
+    "Add Members": "Ajouter des membres",
+    "Admin": "Administrateur",
+    "Seed Generation": "Génération de semences",
+    "Label Packages": "Paquets d'étiquettes",
+    "Crops": "Cultures"
 
 }

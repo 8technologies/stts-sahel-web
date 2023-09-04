@@ -28,14 +28,14 @@ class LabelPackageController extends AdminController
         $grid = new Grid(new LabelPackage());
 
         //order by quantity
-        $grid->model()->orderBy('quantity', 'asc');
+        $grid->model()->orderBy('quantity', 'desc');
 
-        $grid->column('package_type', __('Package Type'));
+        $grid->column('package_type', __('admin.form.Package Type'));
         $grid->column('seed_generation', __('Seed Generation'))->display(function ($value) {
             return SeedClass::find($value)->class_name ?? '-';
         });
-        $grid->column('price', __('Price'));
-        $grid->column('quantity', __('Quantity'));
+        $grid->column('price', __('admin.form.Price'));
+        $grid->column('quantity', __('admin.form.Quantity'));
        
 
         return $grid;
@@ -51,14 +51,13 @@ class LabelPackageController extends AdminController
     {
         $show = new Show(LabelPackage::findOrFail($id));
 
-        $show->field('package_type', __('Package Type'));
+        $show->field('package_type', __('admin.form.Package Type'));
         $show->field('seed_generation', __('Seed Generation'))->as(function ($value) {
             return SeedClass::find($value)->class_name ?? '-';
         });
-        $show->field('price', __('Price'));
-        $show->field('quantity', __('Quantity'));
-        $show->field('created_at', __('Created at'));
-        $show->field('updated_at', __('Updated at'));
+        $show->field('price', __('admin.form.Price'));
+        $show->field('quantity', __('admin.form.Quantity'));
+      
 
         return $show;
     }
@@ -72,16 +71,16 @@ class LabelPackageController extends AdminController
     {
         $form = new Form(new LabelPackage());
 
-        $form->text('package_type', __('Package Type'))->required();
+        $form->text('package_type', __('admin.form.Package Type'))->required();
         $form->select('seed_generation', __('Seed Generation'))->options(\App\Models\SeedClass::all()->pluck('class_name', 'id'))->required();
-        $form->text('quantity', __('Quantity'))->attribute( 
+        $form->text('quantity', __('admin.form.Quantity'))->attribute( 
             [
                 'type' => 'number',
                 'step' => 'any'
             ]
         )
         ->required();
-        $form->text('price', __('Price'))->attribute( 
+        $form->text('price', __('admin.form.Price'))->attribute( 
             [
                 'type' => 'number',
                 'step' => 'any'

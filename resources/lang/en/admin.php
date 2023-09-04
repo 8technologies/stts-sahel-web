@@ -334,6 +334,29 @@ return [
         'Shipping' => 'Shipping', 
         'Delivered' => 'Delivered', 
         'Cancelled' => 'Cancelled', 
+        //crops
+        'Crop name' => 'Crop name',
+        'Crop code' => 'Crop code',
+        'Number of days before submission of planting return' => 'Number of days before submission of planting return',
+        'Seed viability period (in days)' => 'Seed viability period (in days)',
+        'Crop varieties' => 'Crop varieties',
+        'Crop Variety Name' => 'Crop Variety Name',
+        'Crop Variety Code' => 'Crop Variety Code',
+        'Crop Variety Generation' => 'Crop Variety Generation',
+        'Inspection types' => 'Inspection types',
+        'Inspection type name' => 'Inspection type name',
+        'Order' => 'Order',
+        'Days after planting' => 'Days after planting',
+        //seed class
+        'Class name' => 'Class name',
+        'Class code' => 'Class code',
+        'Seed class saved successfully' => 'Seed class saved successfully',
+        'Inspection Types' => 'Inspection Types',
+        'Crop Varieties' => 'Crop Varieties',
+        'Crop variety name' => 'Crop variety name',
+        'Crop variety code' => 'Crop variety code',
+        'Package Type' => 'Package Type',
+
 
 
 
