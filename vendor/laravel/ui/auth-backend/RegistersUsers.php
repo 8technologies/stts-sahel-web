@@ -34,26 +34,32 @@ trait RegistersUsers
     public function register(Request $request)
     {
         $this->validator($request->all())->validate();
-
+    
         // Get the user and random password from the create method
         $userData = $this->create($request->all());
+    
+        if ($userData === null) {
+            // Handle the case where email sending failed in the create method
+            Session::flash('error', 'Registration failed. Please try again later.');
+    
+            // Redirect back to the registration page with the error flash message
+            return redirect(url('/register'));
+        }
+    
         $user = $userData['user'];
         $randomPassword = $userData['password'];
-
+    
         event(new Registered($user));
-
-        // Send the confirmation email with the random password
-        Mail::to($user->email)->send(new RegistrationConfirmation($user->username, $user->email, $randomPassword));
-
+    
         $this->guard()->login($user);
-
+    
         // Set success flash message
         Session::flash('success', 'Registration successful! Please check your email for the confirmation.');
-
+    
         // Redirect back to the registration page with the success flash message
         return redirect(url('/register'));
     }
-
+    
     /**
      * Get the guard to be used during registration.
      *

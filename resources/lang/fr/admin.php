@@ -66,6 +66,8 @@ return [
     'permissions'           => 'Droits',
     'slug'                  => 'Slug',
     'created_at'            => 'Créé à',
+
+
     'updated_at'            => 'Mis à jour à',
     'alert'                 => 'Alerte',
     'parent_id'             => 'Parent',
@@ -101,7 +103,9 @@ return [
         'filter_clear'       => 'Affichez tous',
         'filter_placeholder' => 'Filtre',
     ],
-    'menu_titles'           => [],
+    'menu_titles'           => [
+      
+    ],
     'form' => [
         //Seed Producer form
         'Applicant Name' => 'Nom du demandeur',
@@ -346,6 +350,7 @@ return [
         'Crop variety name' => 'Nom de la variété de culture',
         'Crop variety code' => 'Code de variété de culture',
         'Package Type' => 'Type d\'emballage',
+        'Updated at' => 'Mis à jour à',
 
 
 

@@ -169,6 +169,7 @@ return [
         App\Providers\EventServiceProvider::class,
         SimpleSoftwareIO\QrCode\QrCodeServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
+        Illuminate\Mail\MailServiceProvider::class,
         Tymon\JWTAuth\Providers\LaravelServiceProvider::class,
     ])->toArray(),
 

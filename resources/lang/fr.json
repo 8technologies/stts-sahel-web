@@ -75,6 +75,11 @@
     "Admin": "Administrateur",
     "Seed Generation": "Génération de semences",
     "Label Packages": "Paquets d'étiquettes",
-    "Crops": "Cultures"
+    "Crops": "Cultures",
+    "Users": "Utilisateurs",
+    "Roles": "Rôles",
+    "Permission": "Autorisation",
+    "Operation log": "Journaux d'opération"
+   
 
 }

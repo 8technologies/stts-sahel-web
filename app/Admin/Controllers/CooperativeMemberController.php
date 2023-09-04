@@ -86,7 +86,7 @@ class CooperativeMemberController extends AdminController
         $form->date('date_of_birth', __('admin.form.Date of birth'))->default(date('Y-m-d'));
         $form->text('nationality', __('admin.form.Nationality'));
         $form->text('phone_number', __('admin.form.Phone number'));
-        $form->text('email_address', __('Eadmin.form.mail address'));
+        $form->text('email_address', __('admin.form.mail address'));
         $form->text('residential_physical_address', __('admin.form.Residential physical address'));
         $form->text('agriculture_value_chains', __('admin.form.Agriculture value chains'));
 

@@ -27,10 +27,15 @@ class SeedClassController extends AdminController
         $grid = new Grid(new SeedClass());
 
         $grid->column('id', __('Id'));
-        $grid->column('class_name', __('Class name'));
-        $grid->column('class_code', __('Class code'));
-        $grid->column('created_at', __('Created at'));
-        $grid->column('updated_at', __('Updated at'));
+        $grid->column('class_name', __('admin.form.Class name'));
+        $grid->column('class_code', __('admin.form.Class code'));
+        //display created at in human readable format
+        $grid->column('created_at', __('admin.form.Created at'))->display(function ($created_at) {
+            return date('d-m-Y H:i:s', strtotime($created_at));
+        });
+        $grid->column('updated_at', __('admin.form.Updated at'))->display(function ($updated_at) {
+            return date('d-m-Y H:i:s', strtotime($updated_at));
+        });
 
         return $grid;
     }
@@ -46,10 +51,14 @@ class SeedClassController extends AdminController
         $show = new Show(SeedClass::findOrFail($id));
 
         $show->field('id', __('Id'));
-        $show->field('class_name', __('Class name'));
-        $show->field('class_code', __('Class code'));
-        $show->field('created_at', __('Created at'));
-        $show->field('updated_at', __('Updated at'));
+        $show->field('class_name', __('admin.form.Class name'));
+        $show->field('class_code', __('admin.form.Class code'));
+        $show->field('created_at', __('admin.form.Created at'))->display(function ($created_at) {
+            return date('d-m-Y H:i:s', strtotime($created_at));
+        });
+        $show->field('updated_at', __('admin.form.Updated at'))->display(function ($updated_at) {
+            return date('d-m-Y H:i:s', strtotime($updated_at));
+        });
 
         return $show;
     }
@@ -63,8 +72,8 @@ class SeedClassController extends AdminController
     {
         $form = new Form(new SeedClass());
 
-        $form->text('class_name', __('Class name'));
-        $form->text('class_code', __('Class code'));
+        $form->text('class_name', __('admin.form.Class name'))->required();
+        $form->text('class_code', __('admin.form.Class code'))->required();
 
         return $form;
     }

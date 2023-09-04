@@ -356,6 +356,7 @@ return [
         'Crop variety name' => 'Crop variety name',
         'Crop variety code' => 'Crop variety code',
         'Package Type' => 'Package Type',
+        'Updated at' => 'Updated at',
 
 
 

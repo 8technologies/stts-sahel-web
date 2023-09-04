@@ -16,7 +16,7 @@ class LabelPackageController extends AdminController
      *
      * @var string
      */
-    protected $title = 'LabelPackage';
+    protected $title = 'Label Packages';
 
     /**
      * Make a grid builder.
@@ -28,7 +28,8 @@ class LabelPackageController extends AdminController
         $grid = new Grid(new LabelPackage());
 
         //order by quantity
-        $grid->model()->orderBy('quantity', 'desc');
+       $grid->model()->orderBy('quantity', 'asc');
+
 
         $grid->column('package_type', __('admin.form.Package Type'));
         $grid->column('seed_generation', __('Seed Generation'))->display(function ($value) {
