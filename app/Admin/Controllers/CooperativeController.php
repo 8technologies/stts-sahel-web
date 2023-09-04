@@ -18,7 +18,7 @@ class CooperativeController extends AdminController
      *
      * @var string
      */
-    protected $title = 'Cooperative';
+    protected $title = 'Cooperative Registration';
 
     /**
      * Make a grid builder.
@@ -116,7 +116,7 @@ class CooperativeController extends AdminController
         {
             //get request id
             $id = request()->route()->parameters()['cooperative'];
-             Validation::checkFormEditable($form, $id);
+             Validation::checkFormEditable($form, $id, 'Cooperative');
         }
 
         if ($user->inRoles(['commissioner', 'inspector', 'developer'])) 
