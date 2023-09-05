@@ -263,7 +263,7 @@ class AgroDealersController extends AdminController
                         //get all inspectors
                         $inspectors = \App\Models\Utils::get_inspectors();
                         $form->select('inspector_id', __('admin.form.Inspector'))
-                            ->options($inspectors);
+                            ->options($inspectors)->rules('required');
                     })->required();
             }
 
