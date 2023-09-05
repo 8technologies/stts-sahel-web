@@ -351,6 +351,9 @@ return [
         'Crop variety code' => 'Code de variété de culture',
         'Package Type' => 'Type d\'emballage',
         'Updated at' => 'Mis à jour à',
+        'Email address' => 'Adresse e-mail',
+        'Town/Plot number' => 'Ville/Numéro de parcelle',
+        'Attachments (certificate)' => 'Pièces jointes (certificat)',
 
 
 

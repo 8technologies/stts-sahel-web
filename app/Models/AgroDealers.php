@@ -11,7 +11,7 @@ class AgroDealers extends Model
     use HasFactory;
 
     protected $fillable = [
-        'applicant_id',
+        'user_id',
         'agro_dealer_reg_number',
         'first_name',
         'last_name',
@@ -21,7 +21,7 @@ class AgroDealers extends Model
         'circle',
         'township',
         'town_plot_number',
-        'shop number',
+        'shop_number',
         'company_name',
         'retailers_in',
         'business_registration_number',
@@ -42,7 +42,7 @@ class AgroDealers extends Model
 
         //call back to send a notification to the user
         self::created(function ($model) {
-           // Notification::send_notification($model, 'AgroDealers', request()->segment(count(request()->segments())));
+            Notification::send_notification($model, 'AgroDealers', request()->segment(count(request()->segments())));
         });
 
 
@@ -57,15 +57,15 @@ class AgroDealers extends Model
 
         self::updated(function ($model) {
             //call back to send a notification to the user after form is updated
-           // Notification::update_notification($model, 'AgroDealers', request()->segment(count(request()->segments()) - 1));
+            Notification::update_notification($model, 'AgroDealers', request()->segment(count(request()->segments()) - 1));
 
             //change the role of the basic user to that of an agro-dealer if approved
             if ($model->status == 'accepted') {
                 AdminRoleUser::where([
-                    'user_id' => $model->applicant_id
+                    'user_id' => $model->user_id
                 ])->delete();
                 $new_role = new AdminRoleUser();
-                $new_role->user_id = $model->applicant_id;
+                $new_role->user_id = $model->user_id;
                 $new_role->role_id = 9;
                 $new_role->save();
             }

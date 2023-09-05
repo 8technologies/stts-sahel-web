@@ -107,7 +107,7 @@ class Utils extends Model
                 });
         }
 
-        if ($user->inRoles(['basic-user', 'cooperative','grower']))
+        if ($user->inRoles(['basic-user', 'cooperative','grower','agro-dealer']))
         {
                  
             $grid->actions(function ($actions) 

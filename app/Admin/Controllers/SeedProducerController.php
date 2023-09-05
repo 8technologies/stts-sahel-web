@@ -196,7 +196,7 @@ class SeedProducerController extends AdminController
             Validation::checkFormEditable($form, $id, 'SeedProducer');
         }
        
-         //onsaved return to the list page
+        //onsaved return to the list page
          $form->saved(function (Form $form) 
         {
             admin_toastr(__('admin.form.Form submitted successfully'), 'success');
@@ -204,7 +204,7 @@ class SeedProducerController extends AdminController
         });
        
       
-
+        //admin, inspector and developer
         if ($user->inRoles(['commissioner','developer', 'inspector'])) 
         {
 
@@ -238,7 +238,7 @@ class SeedProducerController extends AdminController
                     'inspector assigned' => __('admin.form.Assign Inspector'),
                 ])
                     ->when('in', ['rejected', 'halted'], function (Form $form) {
-                        $form->textarea('status_comment', __('admin.form.Status comment'));
+                        $form->textarea('status_comment', __('admin.form.Status comment'))->rules('required');
                     })
                     ->when('accepted', function (Form $form) {
                         $form->text('producer_registration_number', __('admin.form.Seed producer registration number')) ->default('Labosem/' . date('Y/M/') . rand(1000, 100000))->required();
@@ -271,7 +271,7 @@ class SeedProducerController extends AdminController
                         'rejected' => __('admin.form.Rejected'),
                     ])
                     ->when('in', ['rejected', 'halted'], function (Form $form) {
-                        $form->textarea('status_comment', __('admin.form.Status comment'));
+                        $form->textarea('status_comment', __('admin.form.Status comment'))->rules('required');
                     })
 
                     ->when('accepted', function (Form $form) {
@@ -287,6 +287,7 @@ class SeedProducerController extends AdminController
             }
         }
 
+        //basic user
         else 
         {
 
@@ -339,7 +340,7 @@ class SeedProducerController extends AdminController
             $tools->disableView();
         });
 
-        //disable bottom buttons
+        //disable bottom buttons/checkboxes
         $form->disableViewCheck();
         $form->disableEditingCheck();
         $form->disableCreatingCheck();

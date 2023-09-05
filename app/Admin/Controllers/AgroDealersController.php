@@ -9,6 +9,9 @@ use Encore\Admin\Show;
 use Encore\Admin\Facades\Admin;
 use App\Models\Utils;
 use App\Models\Validation;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Str;
+
 
 use \App\Models\AgroDealers;
 
@@ -28,108 +31,61 @@ class AgroDealersController extends AdminController
      */
     protected function grid()
     {
-        $grid = new Grid(new AgroDealers());
+        $grid = new Grid(new AgroDealers()); 
+        $agro_dealers = AgroDealers::where('user_id', auth('admin')->user()->id)->get();;
+        $user = Admin::user();
+        //function to show the loggedin user only what belongs to them
+        Validation::showUserForms($grid);
+
         //order of table
         $grid->model()->orderBy('id', 'desc');
 
-        $agro_dealer = AgroDealers::where('applicant_id', auth('admin')->user()->id)->value('status');
-    
-        $user = Admin::user();
+        //disable action buttons appropriately
+        Utils::disable_buttons('AgroDealers', $grid);
 
-        //filter by first name
-        $grid->filter(function ($filter) 
+        //disable create button 
+        if($user->inRoles(['agro-dealer'])) 
         {
-            // Remove the default id filter
-            $filter->disableIdFilter();
-            $filter->like('first_name', __('admin.form.First name'));
-        });
-
-       // show inspector what has been assigned to him
-       if (auth('admin')->user()->isRole('inspector')) 
-        {
-            $grid->model()->where('inspector_id', auth('admin')->user()->id);
-        }
-       
-       
-        if (!$user->inRoles(['basic-user'])) 
-        {
-            //disable create button and delete
             $grid->disableCreateButton();
-        
-            $grid->actions(function ($actions) 
-            {
-                $actions->disableDelete();
-            });
         }
-       
-        if ($user->isRole('basic-user'))
-        {
-             //show the user only his records
-                $grid->model()->where('applicant_id', auth('admin')->user()->id);
-                if ($agro_dealer != null) {
-                    if ($agro_dealer == 'inspector assigned') {
-                        //disable create button 
-                        $grid->disableCreateButton();
-                        $grid->actions(function ($actions) {
-                            $actions->disableDelete();
-                            $actions->disableEdit();
-                        });
-                    }elseif($agro_dealer == 'halted' || $agro_dealer == 'pending'){
-                        //disable create button 
-                        $grid->disableCreateButton();
-                        $grid->actions(function ($actions) {
-                            $actions->disableDelete();
-                            
-                        });
-                    }elseif($agro_dealer == 'rejected'){
-                    
-                        $grid->actions(function ($actions) {
-                            $actions->disableDelete();
-                            $actions->disableEdit();
-                        });
-                }
-            }else{
-                //disable create button 
-                $grid->disableCreateButton();
-                $grid->actions(function ($actions) {
-                    $actions->disableDelete();
-                    
-                });
-            }
-        }
-       
 
-        if ($user->isRole('agro-dealer'))
-        {
-            $grid->model()->where('applicant_id', auth('admin')->user()->id);
-            $grid->disableCreateButton();
-            $grid->actions(function ($actions) {
-                $actions->disableEdit();
-                $actions->disableDelete();
-            });
-        }
+       //filter by name
+       $grid->filter(function ($filter) 
+       {
+        // Remove the default id filter
+        $filter->disableIdFilter();
+        $filter->like('user_id', 'Applicant')->select(\App\Models\User::pluck('name', 'id'));
+       
+       });
 
         $grid->column('agro_dealer_reg_number', __('admin.form.Agro-dealer registration number'))->display(function ($value) {
             return $value ?? '-';
         })->sortable();
         $grid->column('first_name', __('admin.form.First name'));
         $grid->column('last_name', __('admin.form.Last name'));
-        $grid->column('email', __('admin.form.Email'));
+        $grid->column('email', __('admin.form.Email address'));
         $grid->column('physical_address', __('admin.form.Physical address'));
         $grid->column('status', __('admin.form.Status'))->display(function ($status) {
-            return \App\Models\Utils::tell_status($status);
+            return \App\Models\Utils::tell_status($status)??'-';
         })->sortable();
 
-        //show the print certificate button if the status is accepted
-        if ($agro_dealer == 'accepted') 
+        //check user role then show a certificate button
+        if(!auth('admin')->user()->isRole('inspector'))
         {
 
-            $grid->column('id', __('admin.form.Certificate'))->display(function ($id) {
-                $link = url('agro_certificate?id=' . $id);
-                return '<b><a target="_blank" href="' . $link . '">Print Certificate</a></b>';
+            $grid->column('id', __('admin.form.Certificate'))->display(function ($id) use ( $agro_dealers) {
+            
+            $agro_dealer = $agro_dealers->firstWhere('id', $id);
+            
+                if ($agro_dealer&& $agro_dealer->status == 'accepted') {
+                    $link = url('agro_certificate?id=' . $id);
+                    return '<b><a target="_blank" href="' . $link . '">Imprimer le certificat</a></b>';
+                } else {
+                    
+                    return '<b>Aucun certificat disponible</b>';
+                }
             });
         }
-
 
         return $grid;
     }
@@ -140,19 +96,30 @@ class AgroDealersController extends AdminController
      * @param mixed $id
      * @return Show
      */
+
     protected function detail($id)
     {
         $show = new Show(AgroDealers::findOrFail($id));
+          //delete notification after viewing the form
+          Utils::delete_notification('AgroDealers', $id);
+
+          //check if the user is the owner of the form
+          $showable = Validation::checkUser('AgroDealers', $id);
+          if (!$showable) 
+          {
+              return(' <p class="alert alert-danger">You do not have rights to view this form. <a href="/admin/agro-dealers"> Go Back </a></p> ');
+          }
+  
 
         $show->field('agro_dealer_reg_number', __('admin.form.Agro-dealer registration number'));
         $show->field('first_name', __('admin.form.First name'));
         $show->field('last_name', __('admin.form.Last name'));
-        $show->field('email', __('admin.form.Email'));
+        $show->field('email', __('admin.form.Email address'));
         $show->field('physical_address', __('admin.form.Physical address'));
         $show->field('district', __('admin.form.District'));
         $show->field('circle', __('admin.form.Circle'));
         $show->field('township', __('admin.form.Township'));
-        $show->field('town_plot_number', __('admin.form.Town plot number'));
+        $show->field('town_plot_number', __('admin.form.Town/plot number'));
         $show->field('shop_number', __('admin.form.Shop number'));
         $show->field('company_name', __('admin.form.Company name'));
         $show->field('retailers_in', __('admin.form.Retailers in'));
@@ -162,7 +129,7 @@ class AgroDealersController extends AdminController
         $show->field('trading_license_number', __('admin.form.Trading license number'));
         $show->field('trading_license_period', __('admin.form.Trading license period'));
         $show->field('insuring_authority', __('admin.form.Insuring authority'));
-        $show->field('attachments_certificate', __('admin.form.Attachments certificate'));
+        $show->field('attachments_certificate', __('admin.form.Attachments (certificate)'));
         $show->field('proof_of_payment', __('admin.form.Proof of payment'));
         $show->field('status', __('admin.form.Status'))->as(function ($status) {
             return \App\Models\Utils::tell_status($status) ?? '-';
@@ -186,93 +153,60 @@ class AgroDealersController extends AdminController
         $form = new Form(new AgroDealers());
         $user = Admin::user();
 
+        //When form is creating, assign user id
         if ($form->isCreating()) 
         {
-            $form->hidden('applicant_id')->default($user->id);
+            $form->hidden('user_id')->default($user->id);
         }
 
         
         //check if the form is being edited
         if ($form->isEditing()) 
         {
-                //get request id
-               $id = request()->route()->parameters()['agro_dealer'];
-              
-               if($user->inRoles(['basic-user', 'agro-dealer'])){
-                //check if the user is the owner of the form
-                   $editable = Validation::checkUser('AgroDealers', $id);
-                   if(!$editable){
-                      $form->html(' <p class="alert alert-warning">You do not have rights to edit this form. <a href="/admin/agro-dealers"> Go Back </a></p> ');
-                      $form->footer(function ($footer) 
-                      {
-  
-                          // disable reset btn
-                          $footer->disableReset();
-  
-                          // disable submit btn
-                          $footer->disableSubmit();
-                     });
-                   }
-                   //check if the form has been accepted
-                   $editable_status = Validation::checkFormUserStatus('AgroDealers', $id);
-                     if(!$editable_status){
-                      $form->html(' <p class="alert alert-warning">You cannot edit this form because it has been accepted. <a href="/admin/agro-dealers"> Go Back </a></p> ');
-                      $form->footer(function ($footer) 
-                      {
-      
-                            // disable reset btn
-                            $footer->disableReset();
-      
-                            // disable submit btn
-                            $footer->disableSubmit();
-                     });
-                     }
-               }
-               elseif($user->isRole('inspector'))
-                {
-                   $editable = Validation::checkFormStatus('AgroDealers', $id);
-                   
-                    if(!$editable)
-                    {
-                        //return admin_error('You do not have rights to edit this form. <a href="/admin/seed-producers"> Go Back </a>');
-                    
-                        $form->html(' <p class="alert alert-warning">You do not have rights to edit this form. <a href="/admin/agro-dealers"> Go Back </a></p> ');
-                        $form->footer(function ($footer) 
-                        {
-
-                            // disable reset btn
-                            $footer->disableReset();
-
-                            // disable submit btn
-                            $footer->disableSubmit();
-                        });
-                    }
-               
-                }
+            //get request id
+            $id = request()->route()->parameters()['agro_dealer'];
+            //check if its valid to edit the form
+            Validation::checkFormEditable($form, $id, 'AgroDealers');
+            
         }
+
+        //onsaved return to the list page
+        $form->saved(function (Form $form) 
+        {
+            admin_toastr(__('admin.form.Form submitted successfully'), 'success');
+            return redirect('/admin/agro-dealers');
+        });
+
         //basic user
         if ($user->isRole('basic-user')) 
         {
           
-            $form->text('first_name', __('admin.form.First name'));
-            $form->text('last_name', __('admin.form.Last name'));
-            $form->email('email', __('admin.form.Email'));
-            $form->text('physical_address', __('admin.form.Physical address'));
-            $form->text('district', __('admin.form.District'));
-            $form->text('circle', __('admin.form.Circle'));
-            $form->text('township', __('admin.form.Township'));
-            $form->text('town_plot_number', __('admin.form.Town plot number'));
-            $form->text('shop_number', __('admin.form.Shop number'));
-            $form->text('company_name', __('admin.form.Company name'));
-            $form->text('retailers_in', __('admin.form.Retailers in'));
-            $form->text('business_registration_number', __('admin.form.Business registration number'));
-            $form->number('years_in_operation', __('admin.form.Years in operation'));
-            $form->textarea('business_description', __('admin.form.Business description'));
-            $form->text('trading_license_number', __('admin.form.Trading license number'));
-            $form->text('trading_license_period', __('admin.form.Trading license period'));
-            $form->text('insuring_authority', __('admin.form.Insuring authority'));
-            $form->file('attachments_certificate', __('admin.form.Attachments certificate'));
-            $form->file('proof_of_payment', __('admin.form.Proof of payment'));
+            $form->text('first_name', __('admin.form.First name'))->required();
+            $form->text('last_name', __('admin.form.Last name'))->required();
+            $form->email('email', __('admin.form.Email address'))->required();
+            $form->text('physical_address', __('admin.form.Physical address'))->required();
+            $form->text('district', __('admin.form.District/Region'))->required();
+            $form->text('circle', __('admin.form.Circle'))->required();
+            $form->text('township', __('admin.form.Township'))->required();
+            $form->text('town_plot_number', __('admin.form.Town/Plot number'))->required();
+            $form->text('shop_number', __('admin.form.Shop number'))->required();
+            $form->text('company_name', __('admin.form.Company name'))->required();
+            $form->text('retailers_in', __('admin.form.Retailers in'))->required();
+            $form->text('business_registration_number', __('admin.form.Business registration number'))->required();
+            $form->number('years_in_operation', __('admin.form.Years in operation'))->required();
+            $form->textarea('business_description', __('admin.form.Business description'))->required();
+            $form->text('trading_license_number', __('admin.form.Trading license number'))->required();
+            $form->text('trading_license_period', __('admin.form.Trading license period'))->required();
+            $form->text('insuring_authority', __('admin.form.Insuring authority'))->required();
+            $form->file('attachments_certificate', __('admin.form.Attachments (certificate)'))
+            ->rules(['mimes:pdf', 'max:2048']) // Assuming a maximum file size of 2MB 
+            ->help('Attach a copy of your certificate, and should be in pdf format')
+            ->required();
+            $form->file('proof_of_payment', __('admin.form.Proof of payment'))
+            ->rules(['mimes:jpeg,pdf,jpg', 'max:2048']) // Assuming a maximum file size of 2MB 
+            ->help('Attach a copy of your proof of payment, and should be in pdf, jpg or jpeg format')
+            ->required();
+            
         }
 
         //admin, inspector and developer
@@ -311,13 +245,19 @@ class AgroDealersController extends AdminController
 
                     ])
                     ->when('in', ['rejected', 'halted'], function (Form $form) {
-                        $form->textarea('status_comment', __('admin.form.Status comment'))->required();
+                        $form->textarea('status_comment', __('admin.form.Status comment'))->rules('required');
                     })
                     ->when('accepted', function (Form $form) {
                         $form->text('agro_dealer_reg_number', __('admin.form.Agro-dealer registration number'))->default('agrodealer'.'/'.rand(1000, 100000))->readonly();
                         $form->datetime('valid_from', __('admin.form.Agro-dealer approval date'))->default(date('Y-m-d H:i:s'))->required();
-                        $form->datetime('valid_until', __('admin.form.Valid until'))->default(date('Y-m-d H:i:s'))->required();
+                        $nextYear = Carbon::now()->addYear(); // Get the date one year from now
+                        $defaultDateTime = $nextYear->format('Y-m-d H:i:s'); // Format the date for default value
+                        
+                        $form->datetime('valid_until', __('admin.form.Valid until'))
+                            ->default($defaultDateTime)
+                            ->required();
                     })
+
                     ->when('inspector assigned', function (Form $form) {
 
                         //get all inspectors
@@ -326,6 +266,7 @@ class AgroDealersController extends AdminController
                             ->options($inspectors);
                     })->required();
             }
+
             //inspectors decision
             if ($user->isRole('inspector')) 
             {
@@ -335,24 +276,37 @@ class AgroDealersController extends AdminController
                         'accepted' =>__('admin.form.Accepted'),
                         'rejected' => __('admin.form.Rejected'),
                         'halted' => __('admin.form.Halted'),
-                        'inspector assigned' => __('admin.form.Assign Inspector'),
+                        
                     ])
                     ->when('in', ['rejected', 'halted'], function (Form $form) {
-                        $form->textarea('status_comment', __('admin.form.Status comment'))->required();
+                        $form->textarea('status_comment', __('admin.form.Status comment'))->rules('required');
                     })
 
                     ->when('accepted', function (Form $form) {
                         $form->text('agro_dealer_reg_number', __('admin.form.Agro-dealer registration number'))->default('agrodealer'.'/'.rand(1000, 100000))->readonly();
                         $form->datetime('valid_from', __('admin.form.Agro-dealer approval date'))->default(date('Y-m-d H:i:s'))->required();
-                        $form->datetime('valid_until', __('admin.form.Valid until'))->default(date('Y-m-d H:i:s'))->required();
+                        $nextYear = Carbon::now()->addYear(); // Get the date one year from now
+                        $defaultDateTime = $nextYear->format('Y-m-d H:i:s'); // Format the date for default value
+                        
+                        $form->datetime('valid_until', __('admin.form.Valid until'))
+                            ->default($defaultDateTime)
+                            ->required();
                     })->required();
             }
         }
+
         //disable the edit and delete action buttons
-        $form->tools(function (Form\Tools $tools) {
+        $form->tools(function (Form\Tools $tools) 
+        {
             $tools->disableDelete();
             $tools->disableView();
         });
+
+        //disable checkboxes
+        $form->disableViewCheck();
+        $form->disableEditingCheck();
+        $form->disableCreatingCheck();
+
         return $form;
     }
 }

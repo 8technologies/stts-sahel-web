@@ -2,6 +2,7 @@
 
 return [
     'online'                => 'Online',
+    'Member since '         => 'Member since ',
     'email'                 => 'Email',
     'login'                 => 'Login',
     'logout'                => 'Logout',
@@ -357,6 +358,9 @@ return [
         'Crop variety code' => 'Crop variety code',
         'Package Type' => 'Package Type',
         'Updated at' => 'Updated at',
+        'Email address' => 'Email address',
+        'Town/Plot number' => 'Town/Plot number',
+        'Attachments (certificate)' => 'Attachments (certificate)',
 
 
 

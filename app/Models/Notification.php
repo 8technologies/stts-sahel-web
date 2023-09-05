@@ -72,12 +72,18 @@ public static function get_notifications($user)
 //function to send notifications after creation
     public static function send_notification($model, $model_name, $entity)
     {
+        $name = '';
+        if (Admin::user() != null) {
+            $name = Admin::user()->name;
+        }else{
+            $name = auth('api')->user()->name;
+        }
         //check if $entity is a string
         if(is_string($entity))
         {
             $notification = new Notification();
-            $notification->role_id = 2;
-            $notification->message =  "New {$entity} has been submitted by ".Admin::user()->name.' ';
+            $notification->role_id = 1;
+            $notification->message =  "New {$entity} has been submitted by ". $name .' ';
             $notification->link = admin_url("auth/login"); 
             $notification->form_link = admin_url("{$entity}/{$model->id}/edit");
             $notification->status = 'Unread'; 
@@ -99,7 +105,6 @@ public static function update_notification($model, $model_name, $entity)
     
     $name = Administrator::find($model->user_id)->name;
     
-
     $notificationData = [
         'inspector assigned' => [
             'message' => "You have been assigned to inspect {$entity}.",
@@ -185,25 +190,30 @@ public static function update_notification($model, $model_name, $entity)
     }
     
  //send an email notification
-    public static function sendMail($notification)
+ public static function sendMail($notification)
     {
-        if($notification->receiver_id != null)
-        { 
+        if ($notification->receiver_id != null) {
             $receivers = self::get_users_by_id($notification->receiver_id);
-                
-        } else
-        {    
-            $receivers = self::get_users_by_role($notification->role_id);     
+        } else {
+            $receivers = self::get_users_by_role($notification->role_id);
         }
-
+    
         if ($receivers->isEmpty()) {
             return "No receivers found."; // Return an error message
         }
     
         $emails = $receivers->pluck('email')->toArray();
-
-        Mail::to($emails)->send(new MyNotification($notification->message, $notification->link));
+    
+        try {
+            Mail::to($emails)->send(new MyNotification($notification->message, $notification->link));
+        } catch (\Exception $e) {
+            // Handle the exception (e.g., log the error or send another notification)
+            return "Email sending failed: " . $e->getMessage();
+        }
+    
+        return "Email sent successfully.";
     }
+    
 
 
 }

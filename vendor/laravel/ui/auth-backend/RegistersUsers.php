@@ -40,7 +40,7 @@ trait RegistersUsers
     
         if ($userData === null) {
             // Handle the case where email sending failed in the create method
-            Session::flash('error', 'Registration failed. Please try again later.');
+            Session::flash('error', 'Registration failed. Please check your internet and try again.');
     
             // Redirect back to the registration page with the error flash message
             return redirect(url('/register'));

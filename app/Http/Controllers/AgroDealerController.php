@@ -19,6 +19,16 @@ class AgroDealerController extends Controller
     {
         $user = auth('api')->user();
         $data = $request->all();
+
+        if ($request->hasFile('attachments_certificate')) {
+            $imagePath = $request->file('attachments_certificate')->store('images', 'public');
+            $data['attachments_certificate'] = $imagePath;
+        }
+        if ($request->hasFile('proof_of_payment')) {
+            $imagePath = $request->file('proof_of_payment')->store('images', 'public');
+            $data['proof_of_payment'] = $imagePath;
+        }  
+
         $agroDealer = AgroDealers::create($data);
         return Utils::apiSuccess($agroDealer, 'Agro Dealer submitted successfully.');
     }
