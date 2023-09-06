@@ -267,7 +267,7 @@ return [
         'Phone number'=>'Numéro de téléphone',
         'Email address'=>'Adresse e-mail',
         'Residential physical address'=>'Adresse physique résidentielle',
-        'Agriculture value chains'=>'Chaînes de valeur agricoles',
+        'Agriculture value chain'=>'Chaînes de valeur agricole',
         'Female' => 'féminin',
         'Male'=> 'masculin',
         'Other'=> 'autre',   
@@ -354,6 +354,9 @@ return [
         'Email address' => 'Adresse e-mail',
         'Town/Plot number' => 'Ville/Numéro de parcelle',
         'Attachments (certificate)' => 'Pièces jointes (certificat)',
+        'Inspectors decision' => 'Décision des inspecteurs',
+        'Name of cooperative president' => 'Nom du président de la coopérative',
+        'Cooperative approval date' => 'Date d\'approbation de la coopérative',
 
 
 

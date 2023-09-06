@@ -75,5 +75,11 @@ Route::get('agro_certificate', function () {
     return $pdf->stream();
 });
 
+Route::get('cooperative', function () {
+    $pdf = App::make('dompdf.wrapper');
+    $pdf->loadHTML(view('reports/cooperative'));
+    return $pdf->stream();
+});
+
 Route::get('/feedback/{lotId}', [FeedBackController::class, 'feedbackDetails']);
 //Route::get('/contract/{id}', [ContractController::show])->name('contract.show');

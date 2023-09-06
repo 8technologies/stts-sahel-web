@@ -273,7 +273,7 @@ return [
         'Phone number'=>'Phone number',
         'Email address'=>'Email address',
         'Residential physical address'=>'Residential physical address',
-        'Agriculture value chains'=>'Agriculture value chains',
+        'Agriculture value chain'=>'Agriculture value chain',
         'Cooperative member saved successfully'=>'Cooperative member saved successfully',
         'Female' => 'Female',
         'Male' => 'Male',
@@ -361,6 +361,10 @@ return [
         'Email address' => 'Email address',
         'Town/Plot number' => 'Town/Plot number',
         'Attachments (certificate)' => 'Attachments (certificate)',
+        'Administartor decision' => 'Administartor decision',
+        'Inspectors decision' => 'Inspector decision',
+        'Name of cooperative president' => 'Name of cooperative president',
+        'Cooperative approval date' => 'Cooperative approval date',
 
 
 

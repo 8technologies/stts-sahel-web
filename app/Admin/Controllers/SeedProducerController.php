@@ -63,7 +63,7 @@ class SeedProducerController extends AdminController
             return date('d-m-Y', strtotime($created_at));
         });
         $grid->column('user_id', __('admin.form.Applicant'))->display(function ($user_id) {
-            return \App\Models\User::find($user_id)->name;
+            return \App\Models\User::find($user_id)->name??'-';
         });
     
         $grid->column('producer_registration_number', __('admin.form.Seed producer registration number'))->display(function ($value) {
@@ -72,7 +72,7 @@ class SeedProducerController extends AdminController
         $grid->column('producer_category', __('admin.form.Seed producer category'))->sortable();
       
         $grid->column('status', __('admin.form.Status'))->display(function ($status) {
-            return \App\Models\Utils::tell_status($status);
+            return \App\Models\Utils::tell_status($status)??'-';
         })->sortable();
         $grid->column('valid_from', __('admin.form.Seed producer approval date'))->display(function ($value) {
             return $value ?? '-';
@@ -82,7 +82,7 @@ class SeedProducerController extends AdminController
         });
 
         //check user role then show a certificate button
-        if(!auth('admin')->user()->isRole('inspector'))
+        if(!auth('admin')->user()->inRoles(['inspector','commissioner']))
         {
 
             $grid->column('id', __('admin.form.Certificate'))->display(function ($id) use ( $seed_producers) {
@@ -330,7 +330,10 @@ class SeedProducerController extends AdminController
                 });
             }
 
-            $form->file('receipt', __('admin.form.Proof of payment of application fees'))->required();
+            $form->file('receipt', __('admin.form.Proof of payment of application fees'))
+            ->rules(['mimes:jpeg,pdf,jpg', 'max:2048']) // Assuming a maximum file size of 2MB 
+            ->help('Attach a copy of your proof of payment, and should be in pdf, jpg or jpeg format')
+            ->required();
         }
 
         //disable delete and view button

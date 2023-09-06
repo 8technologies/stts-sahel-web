@@ -25,7 +25,9 @@ class Cooperative extends Model
         'objectives_or_goals',
         'status',
         'inspector_id',
-        'status_comment'
+        'status_comment',
+        'valid_from',
+        'valid_until',
     ];
 
     //relatinship with coperative members

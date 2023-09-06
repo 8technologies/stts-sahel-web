@@ -70,7 +70,7 @@ class AgroDealersController extends AdminController
         })->sortable();
 
         //check user role then show a certificate button
-        if(!auth('admin')->user()->isRole('inspector'))
+        if(!auth('admin')->user()->inRoles(['inspector','commissioner']))
         {
 
             $grid->column('id', __('admin.form.Certificate'))->display(function ($id) use ( $agro_dealers) {
