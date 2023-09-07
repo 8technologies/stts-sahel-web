@@ -46,11 +46,6 @@ class PreOrderController extends AdminController
         $grid->column('preferred_delivery_date', __('admin.form.Preferred delivery date'));
         $grid->column('client_name', __('admin.form.Client name'));
 
-        $grid->column('id', __('admin.form.Contract'))->display(function ($id) {
-            $link = url('contract?id=' . $id);
-            return '<b><a target="_blank" href="' . $link . '">Review Contract</a></b>';
-        });
-
 
 
         return $grid;
@@ -88,7 +83,7 @@ class PreOrderController extends AdminController
         $show->panel()->tools(function ($tools) {
             $tools->disableDelete();
             $tools->disableEdit();
-            $tools->disableList();
+          
 
             //check if the user is not the owner of the pre-order
             $user = auth()->user();
@@ -117,7 +112,7 @@ class PreOrderController extends AdminController
             $form->hidden('user_id')->default($user->id);
         }
         $form->select('crop_variety_id', __('admin.form.Crop Variety'))->options(\App\Models\CropVariety::all()->pluck('crop_variety_name', 'id'));
-        $form->text('seed_class', __('admin.form.Seed class'));
+        $form->select('seed_class', __('admin.form.Seed generation'))->options(\App\Models\SeedClass::all()->pluck('class_name', 'id'));
         $form->decimal('quantity', __('admin.form.Quantity'));
         $form->date('preferred_delivery_date', __('admin.form.Preferred delivery date'))->default(date('Y-m-d'));
         $form->date('order_date', __('admin.form.Order date'))->default(date('Y-m-d'));
@@ -130,7 +125,19 @@ class PreOrderController extends AdminController
         $form->textarea('other_information', __('admin.form.Other information'));
 
 
+        //disable tools
+        $form->tools(function (Form\Tools $tools) {
+            $tools->disableDelete();
+            
+            
+        });
 
+        //disable check boxes
+        $form->footer(function ($footer) {
+            $footer->disableViewCheck();
+            $footer->disableEditingCheck();
+            $footer->disableCreatingCheck();
+        });
         return $form;
     }
 }

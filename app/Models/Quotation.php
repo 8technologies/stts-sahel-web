@@ -36,6 +36,8 @@ class Quotation extends Model
 
         //after updating the status of the quotation, enter the order details to the order table
         static::updated(function ($model) {
+            //send notification to the user who made the quotation
+            Notification::update_notification($model, 'Quotation', request()->segment(count(request()->segments())-1));
 
             //check if the person editing the quotation is not the person who made it
             if ($model->quotation_by !== Admin::user()->id || $model->quotation_by !== auth('api')->user()->id

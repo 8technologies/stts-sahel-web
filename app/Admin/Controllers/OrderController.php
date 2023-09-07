@@ -53,7 +53,7 @@ class OrderController extends AdminController
         $grid->model()->where('order_by', '=', Admin::user()->id)->orWhere('supplier', '=', Admin::user()->id);
 
         $grid->column('order_number', __('admin.form.Order number'));
-        $grid->column('preorder_id', __('admin.form.Crop variety'))->display(function ($preorder_id) 
+        $grid->column('preorder_id', __('admin.form.Crop Variety'))->display(function ($preorder_id) 
         {
             $crop_variety_id = PreOrder::find($preorder_id)->crop_variety_id;
             return \App\Models\CropVariety::find($crop_variety_id)->crop_variety_name;
@@ -86,6 +86,10 @@ class OrderController extends AdminController
     protected function detail($id)
     {
         $show = new Show(Order::findOrFail($id));
+        
+         //delete notification after viewing the form
+         Utils::delete_notification('Order', $id);
+
 
         $order = Order::find($id);
         $preOrder = PreOrder::find($order->preorder_id);
@@ -93,13 +97,13 @@ class OrderController extends AdminController
         $show->field('order_number', __('admin.form.Order number'));
         $show->field('order_date', __('admin.form.Order date'));
 
-        $show->field('crop_variety_id', __('admin.form.Crop variety'))->as(function () use ($preOrder)
+        $show->field('crop_variety_id', __('admin.form.Crop Variety'))->as(function () use ($preOrder)
         {
             return \App\Models\CropVariety::find($preOrder->crop_variety_id)->crop_variety_name;
         });
         $show->field('seed_class', __('admin.form.Seed class'))->as(function () use ($preOrder)
         {
-            return $preOrder->seed_class;
+            return \App\Models\SeedClass::find($preOrder->seed_class)->class_name;
         });
     
         $show->field('quantity', __('admin.form.Quantity to be supplied'));
@@ -152,7 +156,7 @@ class OrderController extends AdminController
             'processing' => __('admin.form.Processing'), 
             'shipping' => __('admin.form.Shipping'),
             'delivered' => __('admin.form.Delivered'),
-            'canceled' => __('admin.form.Canceled'),
+            'cancelled' => __('admin.form.Cancelled'),
            ]);
         $form->text('status_comment', __('admin.form.Comment'));
      
@@ -162,6 +166,13 @@ class OrderController extends AdminController
         $form->tools(function (Form\Tools $tools) {
             $tools->disableView();
             $tools->disableDelete();
+        });
+
+        //disable checkboxes
+        $form->footer(function ($footer) {
+            $footer->disableViewCheck();
+            $footer->disableEditingCheck();
+            $footer->disableCreatingCheck();
         });
 
         return $form;

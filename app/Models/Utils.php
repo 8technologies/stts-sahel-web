@@ -56,6 +56,14 @@ class Utils extends Model
             return '<span class="label label-success">Marketable</span>';
         if ($status == 'not marketable')
             return '<span class="label label-danger">Not Marketable</span>';
+        if ($status == 'processing')
+            return '<span class="label label-warning">Processing</span>';
+        if ($status == 'shipping')
+            return '<span class="label label-warning">Shipping</span>';
+        if ($status == 'delivered')
+            return '<span class="label label-success">Delivered</span>';
+        if ($status == 'cancelled')
+            return '<span class="label label-danger">Cancelled</span>';
         if ($status == 'inspector assigned')
             return '<span class="label" style="background-color: yellow; color: black;">Inspection Assigned</span>';
 
@@ -138,7 +146,11 @@ class Utils extends Model
         //delete the notification from the database once a user views the form
         if(!$user->inRoles(['developer','commissioner','inspector']) )
         {
-            if($form->status == 'pending'|| $form->status =='halted' || $form->status == 'rejected' || $form->status == 'accepted' || $form->status == 'inspector assigned' || $form->status == 'lab test assigned' || $form->status == 'printed' || $form->status == 'marketable' || $form->status == 'not marketable')
+            if($form->status == 'pending'|| $form->status =='halted' || $form->status == 'rejected' || 
+               $form->status == 'accepted' || $form->status == 'inspector assigned' || 
+               $form->status == 'lab test assigned' || $form->status == 'printed' || 
+               $form->status == 'marketable' || $form->status == 'not marketable' || $form->status == 'processing'
+               || $form->status == 'shipping' || $form->status == 'delivered' || $form->status == 'cancelled')
             {
                 \App\Models\Notification::where(['receiver_id' => $user->id, 'model_id' => $id, 'model' => $model_name])->delete();
         

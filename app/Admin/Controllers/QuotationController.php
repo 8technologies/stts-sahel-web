@@ -10,6 +10,7 @@ use Encore\Admin\Show;
 use \App\Models\Quotation;
 use Encore\Admin\Facades\Admin;
 use \App\Models\Utils;
+use \App\Models\Validation;
 
 Utils::start_session();
 
@@ -82,13 +83,18 @@ class QuotationController extends AdminController
     {
         $show = new Show(Quotation::findOrFail($id));
         $quotation = Quotation::find($id);
+
+         //delete notification after viewing the form
+         Utils::delete_notification('Quotation', $id);
+
+    
         $preOrder = PreOrder::find($quotation->preorder_id);
 
         $show->field('crop_variety_id', __('admin.form.Crop Variety'))->as(function () use ($preOrder) {
             return \App\Models\CropVariety::find($preOrder->crop_variety_id)->crop_variety_name;
         });
         $show->field('seed_class', __('admin.form.Seed class'))->as(function () use ($preOrder) {
-            return $preOrder->seed_class;
+            return \App\Models\SeedClass::find($preOrder->seed_class)->class_name;
         });
         $show->field('quantityy', __('admin.form.Requested Quantity'))->as(function () use ($preOrder) {
             return $preOrder->quantity;
@@ -99,7 +105,9 @@ class QuotationController extends AdminController
             return $preOrder->preferred_delivery_date;
         });
         $show->field('supply_date', __('admin.form.Supply date'));
-        $show->field('quotation_by', __('admin.form.Quotation by'));
+        $show->field('quotation_by', __('admin.form.Quotation by'))->as(function ($quotation_by) {
+            return \App\Models\User::find($quotation_by)->name;
+        });
         $show->field('details', __('admin.form.Details'));
         $show->field('status', __('admin.form.Status'))->unescape()->as(function ($status) {
             return \App\Models\Utils::tell_status($status) ?? '-';
@@ -218,6 +226,13 @@ class QuotationController extends AdminController
         $form->tools(function (Form\Tools $tools) {
             $tools->disableDelete();
             $tools->disableView();
+        });
+
+        //disable the checkboxes
+        $form->footer(function ($footer) {
+            $footer->disableCreatingCheck();
+            $footer->disableViewCheck();
+            $footer->disableEditingCheck();
         });
 
         return $form;

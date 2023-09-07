@@ -372,6 +372,7 @@ return [
         'Not Marketable' => 'Non commercialisable',
         'Reporting and signature' => 'Rapport et signature',
         'Lot Number' => 'Numéro de lot',
+        'Cancelled' => 'Annulé',
 
 
 

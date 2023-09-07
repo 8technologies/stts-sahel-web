@@ -381,6 +381,7 @@ return [
         'Reporting and signature' => 'Reporting and signature',
         'Lot Number' => 'Lot Number',
         'Seed lab test report number' => 'Seed lab test report number',
+        'Cancelled' => 'Cancelled',
 
 
 

@@ -198,12 +198,12 @@ class SeedLabController extends AdminController
             $form->hidden('crop_variety_id', __('admin.form.Crop Variety'))->default($crop_variety->id);
             $form->text('mother_lot',__('admin.form.Mother lot number'))->default($mother_lot)->readonly();
             $form->text('seed_lab_test_report_number', __('admin.form.Seed lab test report number'))->default('labtest' . "/" . mt_rand(10000000, 99999999))->readonly();
-            $form->decimal('seed_sample_size', __('admin.form.Seed sample size'));
-            $form->text('testing_methods', __('admin.form.Testing method'));
-            $form->decimal('germination_test_results', __('admin.form.Germination test results'));
-            $form->decimal('purity_test_results', __('admin.form.Purity test results'));
-            $form->decimal('moisture_content_test_results', __('admin.form.Moisture content test results'));
-            $form->textarea('additional_tests_results', __('admin.form.Additional tests results'));
+            $form->decimal('seed_sample_size', __('admin.form.Seed sample size'))->required();
+            $form->text('testing_methods', __('admin.form.Testing method'))->required();
+            $form->decimal('germination_test_results', __('admin.form.Germination test results'))->required();
+            $form->decimal('purity_test_results', __('admin.form.Purity test results'))->required();
+            $form->decimal('moisture_content_test_results', __('admin.form.Moisture content test results'))->required();
+            $form->textarea('additional_tests_results', __('admin.form.Additional tests results'))->required();
             $form->radio('test_decision', __('admin.form.Test decision'))
                 ->options(
                     ['marketable' => __('admin.form.Marketable'), 
@@ -211,8 +211,8 @@ class SeedLabController extends AdminController
                     ])
                 ->when('marketable', function (Form $form) use ($crop_variety, $crop) {
                     $form->text('lot_number', __('admin.form.Lot number'))->default($crop->crop_code.$crop_variety->crop_variety_code. mt_rand(10000, 999999))->readonly();
-                });
-            $form->textarea('reporting_and_signature', __('admin.form.Reporting and signature'));
+                })->required();
+            $form->textarea('reporting_and_signature', __('admin.form.Reporting and signature'))->required();
         }
 
         //disable edit and delete buttons

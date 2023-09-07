@@ -25,4 +25,21 @@ class Order extends Model
         'order_date',
         'supplier',
     ];
+
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($model) {
+
+        });
+
+        //after updating the status of the order, enter the order details to the order table
+        static::updated(function ($model) {
+            //send notification to the user who made the order
+            Notification::order_notification($model, 'Order', request()->segment(count(request()->segments())-1));
+
+        });
+    }
 }
