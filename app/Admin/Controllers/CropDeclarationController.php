@@ -60,8 +60,6 @@ class CropDeclarationController extends AdminController
         $grid->column('crop_variety_id', __('admin.form.Crop Variety'))->display(function ($crop_variety_id) {
             return CropVariety::find($crop_variety_id)->crop_variety_name;
         });
-        $grid->column('phone_number', __('admin.form.Phone number'));
-        $grid->column('applicant_registration_number', __('admin.form.Applicant registration number'));
         $grid->column('garden_size', __('admin.form.Garden size'));
         $grid->column('field_name', __('admin.form.Field name'));
         $grid->column('planting_date', __('admin.form.Planting date'))->display(function ($planting_date) {
@@ -106,8 +104,6 @@ class CropDeclarationController extends AdminController
             return CropVariety::find($crop_variety_id)->crop_variety_name;
         });
         $show->field('phone_number', __('admin.form.Phone number'));
-        $show->field('applicant_registration_number', __('admin.form.Applicant registration number'));
-
         $show->field('garden_size', __('admin.form.Garden size'));
         $show->field('gps_coordinates_1', __('admin.form.GPS coordinates 1'));
         $show->field('gps_coordinates_2', __('admin.form.GPS coordinates 2'));
@@ -193,7 +189,6 @@ class CropDeclarationController extends AdminController
                 ->required();
 
             $form->text('phone_number', __('admin.form.Phone number'))->required();
-            $form->text('applicant_registration_number', __('admin.form.Applicant registration number'));
             $form->decimal('garden_size', __('admin.form.Garden size'))->required();
             $form->decimal('gps_coordinates_1', __('admin.form.GPS coordinates 1'))
                 ->rules('required|numeric|between:-9999.999999,9999.999999', [
@@ -242,7 +237,6 @@ class CropDeclarationController extends AdminController
                 ->required();
 
             $form->display('phone_number', __('admin.form.Phone number'));
-            $form->display('applicant_registration_number', __('admin.form.Applicant registration number'));
             $form->display('garden_size', __('admin.form.Garden size'));
             $form->display('gps_coordinates_1', __('admin.form.Gps coordinates 1'));
             $form->display('gps_coordinates_2', __('admin.form.Gps coordinates 2'));
@@ -292,6 +286,8 @@ class CropDeclarationController extends AdminController
                 $form->select('inspector_id', __('admin.form.Inspector'))
                     ->options($inspectors);
             })->required();
+
+            
         }
 
         //disable delete and view button

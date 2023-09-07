@@ -237,18 +237,18 @@ return [
         'Crop Variety' => 'Crop Variety',
         'Inspection Report' => 'Inspection Report',
         'Field Inspection saved successfully'=>'Field Inspection saved successfully',
-        'Load stock saved successfully'=>'Load stock saved successfully',
+        'Crop stock saved successfully'=>'Crop stock saved successfully',
         //load stock form
-        'Load stock number'=>'Load stock number',
+        'Crop stock number'=> 'Crop stock number',
         'Crop Declaration'=>'Crop Declaration',
         'Last field inspection date'=>'Last field inspection date',
         'Seed class'=>'Seed class',
         'Yield quantity'=>'Yield quantity',
         'Last field inspection remarks'=>'Last field inspection remarks',
-        'Load stock date'=>'Load stock date',
+        'Crop stock date'=>'Crop stock date',
         //seed sample form
         'Sample request number'=>'Sample request number',
-        'Load stock number'=>'Load stock number',
+        'Crop stock number'=>'Crop stock number',
         'Quantity'=>'Quantity',
         'Sample request date'=>'Sample request date',
         'Proof of payment'=>'Proof of payment',
@@ -365,7 +365,22 @@ return [
         'Inspectors decision' => 'Inspector decision',
         'Name of cooperative president' => 'Name of cooperative president',
         'Cooperative approval date' => 'Cooperative approval date',
-
+        //seed lab
+        'Mother lot number' => 'Mother lot number',
+        'Seed lab number' => 'Seed lab number',
+        'Seed sample size' => 'Seed sample size',
+        'Testing method' => 'Testing method',
+        'Germination test results' => 'Germination test results',
+        'Purity test results' => 'Purity test results',
+        'Moisture content test results' => 'Moisture content test results',
+        'Additional tests results' => 'Additional tests results',
+        'Test decision' => 'Test decision',
+        'Test date' => 'Test date',
+        'Marketable'=>'Marketable',
+        'Not Marketable'=>'Not Marketable',
+        'Reporting and signature' => 'Reporting and signature',
+        'Lot Number' => 'Lot Number',
+        'Seed lab test report number' => 'Seed lab test report number',
 
 
 

@@ -15,8 +15,6 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('user_id');
             $table->string('phone_number');
-            $table->string('applicant_registration_number');
-            $table->unsignedBigInteger('seed_producer_id');
             $table->decimal('garden_size', 8, 2);
             $table->decimal('gps_coordinates_1', 10, 6);
             $table->decimal('gps_coordinates_2', 10, 6);
@@ -43,7 +41,7 @@ return new class extends Migration
             
             $table->timestamps();
 
-            $table->foreign('seed_producer_id')->references('id')->on('seed_producers')->onDelete('cascade');
+         
         
 
         });

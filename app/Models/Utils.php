@@ -138,7 +138,7 @@ class Utils extends Model
         //delete the notification from the database once a user views the form
         if(!$user->inRoles(['developer','commissioner','inspector']) )
         {
-            if($form->status == 'pending'|| $form->status =='halted' || $form->status == 'rejected' || $form->status == 'accepted')
+            if($form->status == 'pending'|| $form->status =='halted' || $form->status == 'rejected' || $form->status == 'accepted' || $form->status == 'inspector assigned' || $form->status == 'lab test assigned' || $form->status == 'printed' || $form->status == 'marketable' || $form->status == 'not marketable')
             {
                 \App\Models\Notification::where(['receiver_id' => $user->id, 'model_id' => $id, 'model' => $model_name])->delete();
         

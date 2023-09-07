@@ -51,7 +51,7 @@ class Dashboard
         $userId = Admin::user()->id;
 
         $data = [
-            'total_stock' => LoadStock::where('applicant_id', $userId)->count(),
+            'total_stock' => LoadStock::where('user_id', $userId)->count(),
             'total_inspections' => FieldInspection::where('user_id', $userId)->count(),
             'total_sales'=> Order::where('supplier', $userId)->orWhere('order_by',  $userId)->count(),
             'pending_orders' => Order::where(function ($query) use ($userId) {
@@ -227,7 +227,7 @@ class Dashboard
     {
         $inspections = FieldInspection::all();
     
-        if($inspections->count() == 0){
+        if ($inspections === null || $inspections->isEmpty()){
             $chartData = 0;
             return view('dashboard.inspections_stack', compact('chartData'));
         }
@@ -242,7 +242,7 @@ class Dashboard
                 [
                     'label' => 'Accepted',
                     'data' => [
-                        $statusGroups->get('accepted')->count(),
+                        $statusGroups->has('accepted') ? $statusGroups->get('accepted')->count() : 0,
                         0, // 0 count for the "Pending/Processed" label
                     ],
                     'backgroundColor' => 'rgba(54, 162, 235, 0.5)',
@@ -250,7 +250,7 @@ class Dashboard
                 [
                     'label' => 'Rejected',
                     'data' => [
-                        $statusGroups->get('rejected')->count(),
+                        $statusGroups->has('rejected') ? $statusGroups->get('rejected')->count() : 0,
                         0, // 0 count for the "Pending/Processed" label
                     ],
                     'backgroundColor' => 'rgba(255, 99, 132, 0.5)',
@@ -259,7 +259,8 @@ class Dashboard
                     'label' => 'Pending',
                     'data' => [
                         0, // 0 count for the "Accepted/Rejected" label
-                        $statusGroups->get('pending')->count(),
+                        $statusGroups->has('pending') ? $statusGroups->get('pending')->count() : 0,
+                        
                     ],
                     'backgroundColor' => 'rgba(75, 192, 192, 0.5)',
                 ],
@@ -364,9 +365,9 @@ class Dashboard
     {
             //find the authenticated user
             $userId = Admin::user()->id;
-            $stockCount = Loadstock::where('applicant_id', $userId)->sum('yield_quantity');
-            $seedLabsCount = Seedlab::where('applicant_id', $userId)->sum('quantity');
-            $seedLabelsCount = Seedlabel::where('applicant_id', $userId)->sum('quantity_of_seed');
+            $stockCount = Loadstock::where('user_id', $userId)->sum('yield_quantity');
+            $seedLabsCount = Seedlab::where('user_id', $userId)->sum('quantity');
+            $seedLabelsCount = Seedlabel::where('user_id', $userId)->sum('quantity_of_seed');
       
         // Pass the user stats data to the view
         return view('dashboard.mystock', [ 'stock_count' => $stockCount,

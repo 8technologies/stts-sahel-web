@@ -119,7 +119,7 @@ use App\Models\Utils;
                 <tbody>
                     @foreach ($crops as $crop)
                     @php
-                    $name = App\Models\User::find($crop->applicant_id)->name;
+                    $name = App\Models\User::find($crop->user_id)->name;
                     $crop_variety = App\Models\CropVariety::find($crop->crop_variety_id)->crop_variety_name;
                     @endphp
                     <tr>

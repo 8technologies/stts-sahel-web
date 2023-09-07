@@ -41,11 +41,11 @@ class SeedLab extends Model
 
         //call back to send a notification to the user
         self::created(function ($model) {
-            Notification::send_notification($model, 'SeedProducer', request()->segment(count(request()->segments())));
+            Notification::send_notification($model, 'SeedLab', request()->segment(count(request()->segments())));
         });
 
         self::updated(function ($model) {
-            Notification::send_notification($model, 'SeedProducer', request()->segment(count(request()->segments())));
+            Notification::update_notification($model, 'SeedLab', request()->segment(count(request()->segments())-1)); 
 
             //if the test_decision is marketable ,add it to the marketable seeds table
             if($model->test_decision == 'marketable'){

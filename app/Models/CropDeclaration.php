@@ -20,8 +20,6 @@ class CropDeclaration extends Model
     protected $fillable = [
         'user_id',
         'phone_number',
-        'applicant_registration_number',
-        'seed_producer_id',
         'garden_size',
         'gps_coordinates_1',
         'gps_coordinates_2',
@@ -112,6 +110,8 @@ class CropDeclaration extends Model
 
         self::updated(function ($model) {
             //call back to send a notification to the user after form is updated
+            
+           Notification::update_notification($model, 'CropDeclaration', request()->segment(count(request()->segments())-1));
 
             if ($model->status == 'inspector assigned') {
                 $crop_variety = CropVariety::find($model->crop_variety_id);
@@ -143,6 +143,7 @@ class CropDeclaration extends Model
                     $inspection->field_size = $model->garden_size;
                     $inspection->inspector_id = $model->inspector_id;
                     $inspection->order_number = $type->order;
+                    $inspection->status = 'inspector assigned';
                     $inspection->is_done = 0;
                     try {
                         $pd = Carbon::parse($model->planting_date);

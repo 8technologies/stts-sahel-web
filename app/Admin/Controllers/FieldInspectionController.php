@@ -8,6 +8,7 @@ use Encore\Admin\Grid;
 use Encore\Admin\Show;
 use \App\Models\FieldInspection;
 use \App\Models\Validation;
+use \App\Models\Utils;
 
 class FieldInspectionController extends AdminController
 {
@@ -178,9 +179,9 @@ class FieldInspectionController extends AdminController
         $show->field('signature', __('admin.form.Signature'))->as(function ($value) {
             return $value ?? '-';
         });
-        $show->field('status', __('admin.form.Field decision'))->as(function ($value) {
-            return $value ?? '-';
-        });
+        $show->field('status', __('admin.form.Status'))->as(function ($status) {
+            return Utils::tell_status($status);
+        })->unescape();
 
 
         $show->field('field_inspection_form_number', __('admin.form.Field inspection form number'))->as(function ($value) {
@@ -236,12 +237,12 @@ class FieldInspectionController extends AdminController
         });
 
         $form->text('field_inspection_form_number', __('admin.form.Field inspection form number'))->default('FieldInspection/' . date('Y/') . rand(1000, 9999))->readonly();
-        $form->decimal('field_size', __('admin.form.Field size'));
-        $form->text('type_of_inspection', __('admin.form.Type of inspection'));
-        $form->text('seed_generation', __('admin.form.Seed generation'));
-        $form->text('crop_condition', __('admin.form.Crop condition'));
-        $form->text('field_spacing', __('admin.form.Field spacing'));
-        $form->decimal('estimated_yield', __('admin.form.Estimated yield'));
+        $form->decimal('field_size', __('admin.form.Field size'))->required();
+        $form->text('type_of_inspection', __('admin.form.Type of inspection'))->required();
+        $form->text('seed_generation', __('admin.form.Seed generation'))->required();
+        $form->text('crop_condition', __('admin.form.Crop condition'))->required();
+        $form->text('field_spacing', __('admin.form.Field spacing'))->required();
+        $form->decimal('estimated_yield', __('admin.form.Estimated yield'))->required();
         $form->text('signature', __('admin.form.Signature'));
 
         $form->divider();

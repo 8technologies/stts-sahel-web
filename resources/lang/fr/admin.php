@@ -232,11 +232,12 @@ return [
         'Field Inspection saved successfully' => 'Inspection sur le terrain enregistrée avec succès',
 
         //load stock form
-        'Load stock number' => 'Numéro de chargement du stock',
+        'Crop stock number' => 'Numéro de stock de cultures',
         'Crop Declaration' => 'Déclaration de culture',
         'Seed class' => 'Classe de semences',
         'Yield quantity' => 'Quantité de rendement',
-        'Load stock date' => 'Date de chargement du stock',
+        'Crop stock saved successfully' => 'Stock de cultures enregistré avec succès',
+        'Crop stock date' => 'Date de stock de cultures',
         'Last field inspection date' => 'Date de la dernière inspection sur le terrain',
         'Last field inspection remarks' => 'Dernières remarques d\'inspection sur le terrain',
         //seed sample form
@@ -357,6 +358,20 @@ return [
         'Inspectors decision' => 'Décision des inspecteurs',
         'Name of cooperative president' => 'Nom du président de la coopérative',
         'Cooperative approval date' => 'Date d\'approbation de la coopérative',
+        //seed lab
+        'Mother lot number' => 'Numéro de lot mère',
+        'Seed lab test report number' => 'Numéro de rapport de test de laboratoire de semences',
+        'Seed sample size' => 'Taille de l\'échantillon de semences',
+        'Testing method' => 'Méthode de test',
+        'Germination test results' => 'Résultats du test de germination',
+        'Purity test results' => 'Résultats du test de pureté',
+        'Moisture content test results' => 'Résultats du test de teneur en humidité',
+        'Addditional test results' => 'Résultats de test supplémentaires',
+        'Test decision' => 'Décision de test',
+        'Marketable' => 'Commercialisable',
+        'Not Marketable' => 'Non commercialisable',
+        'Reporting and signature' => 'Rapport et signature',
+        'Lot Number' => 'Numéro de lot',
 
 
 

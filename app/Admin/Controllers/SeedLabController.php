@@ -25,7 +25,7 @@ class SeedLabController extends AdminController
      *
      * @var string
      */
-    protected $title = 'SeedLab';
+    protected $title = 'Seed Lab Tests';
 
     /**
      * Make a grid builder.
@@ -36,7 +36,7 @@ class SeedLabController extends AdminController
     {
         $grid = new Grid(new SeedLab());
         $user = Admin::user();
-        $lab_results = SeedLab::where('user_id', auth('admin')->user()->id)->value('test_decision');
+        $lab_results = SeedLab::where('user_id', auth('admin')->user()->id)->get();
         //check the status of the form before displaying it
        
         if($user->inRoles(['grower', 'agro-dealer'])){
@@ -54,38 +54,50 @@ class SeedLabController extends AdminController
                 $actions->disableDelete();
                 $actions->disableEdit();
             });
+        }else{
+            $grid->actions(function ($actions) {
+                $actions->disableDelete();
+            });
         }
 
-        $grid->actions(function ($actions) {
-            $actions->disableDelete();
-        });
-
-        $grid->column('lot_number', __('Lot Number'))->display(function ($lot_number) {
+        $grid->column('lot_number', __('admin.form.Lot Number'))->display(function ($lot_number) {
             return $lot_number ?? 'Not yet assigned';
         });
-        $grid->column('user_id', __('Applicant'))->display(function ($user_id) {
+        $grid->column('user_id', __('admin.form.Applicant'))->display(function ($user_id) {
             return \App\Models\User::find($user_id)->name;
         });
 
-        $grid->column('seed_lab_test_report_number', __('Seed lab test report number'))->display(function ($seed_lab_test_report_number) {
+        $grid->column('seed_lab_test_report_number', __('admin.form.Seed lab test report number'))->display(function ($seed_lab_test_report_number) {
             return $seed_lab_test_report_number ?? 'Not yet assigned';
         });
-        $grid->column('germination_test_results', __('Germination test results'))->display(function ($germination_test_results) {
+        $grid->column('germination_test_results', __('admin.form.Germination test results'))->display(function ($germination_test_results) {
             return $germination_test_results ?? 'Not yet assigned';
         });
-        $grid->column('purity_test_results', __('Purity test results'))->display(function ($purity_test_results) {
+        $grid->column('purity_test_results', __('admin.form.Purity test results'))->display(function ($purity_test_results) {
             return $purity_test_results ?? 'Not yet assigned';
         });
-        $grid->column('test_decision', __('Test decision'))->display(function ($test_decision) {
+        $grid->column('test_decision', __('admin.form.Test decision'))->display(function ($test_decision) {
 
             return \App\Models\Utils::tell_status($test_decision) ?? 'Not yet assigned';
         });
-        if ($lab_results != null) {
-            $grid->column('id', __('admin.form.Print results'))->display(function ($id) {
-                $link = url('lab_results?id=' . $id);
-                return '<b><a target="_blank" href="' . $link . '">Print Results</a></b>';
+       
+        //check user role then show a certificate button
+        if(!auth('admin')->user()->inRoles(['inspector','commissioner']))
+        {
+
+            $grid->column('id', __('admin.form.Print results'))->display(function ($id) use ( $lab_results) {
+                $lab_result =  $lab_results->firstWhere('id', $id);
+            
+                if ($lab_result && $lab_result->test_decision == 'marketable') {
+                    $link = url('lab_results?id=' . $id);
+                    return '<b><a target="_blank" href="' . $link . '">Imprimer les résultats</a></b>';
+                } else {
+                   
+                    return '<b>Résultats Indisponibles</b>';
+                }
             });
         }
+
 
         return $grid;
     }
@@ -99,25 +111,36 @@ class SeedLabController extends AdminController
     protected function detail($id)
     {
         $show = new Show(SeedLab::findOrFail($id));
+        //delete notification after viewing the form
+        Utils::delete_notification('SeedLab', $id);
+
+        //check if the user is the owner of the form
+        $showable = Validation::checkUser('SeedLab', $id);
+        if (!$showable) 
+        {
+            return(' <p class="alert alert-danger">You do not have rights to view this form. <a href="/admin/seed-lab-tests"> Go Back </a></p> ');
+        }
 
 
-
-        $show->field('user_id', __('Applicant'))->as(function ($user_id) {
+        $show->field('user_id', __('admin.form.Applicant'))->as(function ($user_id) {
             return \App\Models\User::find($user_id)->name;
         });
-        $show->field('load_stock_number', __('Load stock number'));
-        $show->field('seed_lab_test_report_number', __('Seed lab test report number'));
-        $show->field('seed_sample_request_number', __('Seed sample request number'));
-        $show->field('seed_sample_size', __('Seed sample size'));
-        $show->field('testing_methods', __('Testing methods'));
-        $show->field('germination_test_results', __('Germination test results'));
-        $show->field('purity_test_results', __('Purity test results'));
-        $show->field('moisture_content_test_results', __('Moisture content test results'));
-        $show->field('additional_tests_results', __('Additional tests results'));
-        $show->field('test_decision', __('Test decision'));
-        $show->field('reporting_and_signature', __('Reporting and signature'));
-        $show->field('created_at', __('Created at'));
-        $show->field('updated_at', __('Updated at'));
+        $show->field('load_stock_id', __('admin.form.Crop stock number'))->as(function ($load_stock_id) {
+            return \App\Models\LoadStock::find($load_stock_id)->load_stock_number;
+        });
+        $show->field('seed_lab_test_report_number', __('admin.form.Seed lab test report number'));
+        $show->field('sample_request_number', __('admin.form.Seed sample request number'));
+        $show->field('seed_sample_size', __('admin.form.Seed sample size'));
+        $show->field('testing_methods', __('admin.form.Testing method'));
+        $show->field('germination_test_results', __('admin.form.Germination test results'));
+        $show->field('purity_test_results', __('admin.form.Purity test results'));
+        $show->field('moisture_content_test_results', __('admin.form.Moisture content test results'));
+        $show->field('additional_tests_results', __('admin.form.Additional tests results'));
+        $show->field('test_decision', __('admin.form.Test decision'))->as(function ($test_decision) {
+            return \App\Models\Utils::tell_status($test_decision)?? 'Not yet assigned';
+        })->unescape();
+        $show->field('reporting_and_signature', __('admin.form.Reporting and signature'));
+       
 
         //disable edit button 
         $show->panel()->tools(function ($tools) {
@@ -160,38 +183,49 @@ class SeedLabController extends AdminController
             //get crop variety name from crop_variety id
             $crop_variety = CropVariety::where('id', $crop_variety_id)->first();
             //get crop name from crop variety
-            $crop = Crop::where('id', $crop_variety->crop_id);
+            $crop = Crop::find($crop_variety->crop_id);
+            $load_stock_id = LoadStock::where('id', $seed_lab->load_stock_id)->value('load_stock_number');
 
             $applicant_name = Administrator::where('id', $seed_lab->user_id)->value('name');
             $seed_class = SeedClass::where('id', $crop_variety->crop_variety_generation)->value('class_name');
 
-            $form->display('', __('Applicant name'))->default($applicant_name);
-            $form->display('load_stock_id', __('Load stock number'))->readonly();
-            $form->display('', __('Crop'))->default($crop->crop_name);
-            $form->display('', __('Variety'))->default($crop_variety->crop_variety_name);
-            $form->display('', __('Generation'))->default($seed_class);
-            $form->number('quantity', __('Quantity'))->readonly();
-            $form->hidden('crop_variety_id', __('Crop Variety'))->default($crop_variety->id);
-            $form->text('mother_lot',__('Mother lot'))->default($mother_lot)->readonly();
-            $form->text('seed_lab_test_report_number', __('Seed lab test report number'))->default('labtest' . "/" . mt_rand(10000000, 99999999))->readonly();
-            $form->decimal('seed_sample_size', __('Seed sample size'));
-            $form->text('testing_methods', __('Testing methods'));
-            $form->decimal('germination_test_results', __('Germination test results'));
-            $form->decimal('purity_test_results', __('Purity test results'));
-            $form->decimal('moisture_content_test_results', __('Moisture content test results'));
-            $form->textarea('additional_tests_results', __('Additional tests results'));
-            $form->radio('test_decision', __('Test decision'))
-                ->options(['marketable' => 'Marketable', 'not marketable' => 'Not Marketable'])
-                ->when('marketable', function (Form $form) use ($crop_variety) {
-                    $form->text('lot_number', __('Lot number'))->default($crop->crop_code.$crop_variety->crop_variety_code. mt_rand(10000000, 99999999))->readonly();
+            $form->display('', __('admin.form.Applicant name'))->default($applicant_name);
+            $form->display('', __('admin.form.Crop stock number'))->default($load_stock_id);
+            $form->display('', __('admin.form.Crop'))->default($crop->crop_name);
+            $form->display('', __('admin.form.Variety'))->default($crop_variety->crop_variety_name);
+            // $form->display('', __('Generation'))->default($seed_class);
+            $form->number('quantity', __('admin.form.Quantity'))->readonly();
+            $form->hidden('crop_variety_id', __('admin.form.Crop Variety'))->default($crop_variety->id);
+            $form->text('mother_lot',__('admin.form.Mother lot number'))->default($mother_lot)->readonly();
+            $form->text('seed_lab_test_report_number', __('admin.form.Seed lab test report number'))->default('labtest' . "/" . mt_rand(10000000, 99999999))->readonly();
+            $form->decimal('seed_sample_size', __('admin.form.Seed sample size'));
+            $form->text('testing_methods', __('admin.form.Testing method'));
+            $form->decimal('germination_test_results', __('admin.form.Germination test results'));
+            $form->decimal('purity_test_results', __('admin.form.Purity test results'));
+            $form->decimal('moisture_content_test_results', __('admin.form.Moisture content test results'));
+            $form->textarea('additional_tests_results', __('admin.form.Additional tests results'));
+            $form->radio('test_decision', __('admin.form.Test decision'))
+                ->options(
+                    ['marketable' => __('admin.form.Marketable'), 
+                    'not marketable' => __('admin.form.Not Marketable')
+                    ])
+                ->when('marketable', function (Form $form) use ($crop_variety, $crop) {
+                    $form->text('lot_number', __('admin.form.Lot number'))->default($crop->crop_code.$crop_variety->crop_variety_code. mt_rand(10000, 999999))->readonly();
                 });
-            $form->textarea('reporting_and_signature', __('Reporting and signature'));
+            $form->textarea('reporting_and_signature', __('admin.form.Reporting and signature'));
         }
 
         //disable edit and delete buttons
         $form->tools(function (Form\Tools $tools) {
             $tools->disableDelete();
             $tools->disableView();
+        });
+
+        //disable checkboxes
+        $form->footer(function ($footer) {
+            $footer->disableViewCheck();
+            $footer->disableEditingCheck();
+            $footer->disableCreatingCheck();
         });
 
         return $form;

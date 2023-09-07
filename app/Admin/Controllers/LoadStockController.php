@@ -19,7 +19,7 @@ class LoadStockController extends AdminController
      *
      * @var string
      */
-    protected $title = 'LoadStock';
+    protected $title = ' Crop Stock';
 
     /**
      * Make a grid builder.
@@ -37,10 +37,9 @@ class LoadStockController extends AdminController
         if (!$user->inRoles(['basic-user','grower','agro-dealer'])){
             $grid->disableCreateButton();
         }
-
-        $grid->column('id', __('Id'));
-        $grid->column('load_stock_number', __('admin.form.Load stock number'));
-        $grid->column('user_id', __('admin.form.Applicant Name'))->display(function ($user_id) {
+        
+        $grid->column('load_stock_number', __('admin.form.Crop stock number'));
+        $grid->column('user_id', __('admin.form.Applicant name'))->display(function ($user_id) {
             return \App\Models\User::find($user_id)->name;
         });
         $grid->column('yield_quantity', __('admin.form.Yield quantity'));
@@ -85,7 +84,7 @@ class LoadStockController extends AdminController
         $show->field('field_size', __('admin.form.Field size'));
         $show->field('yield_quantity', __('admin.form.Yield quantity'));
         $show->field('last_field_inspection_date', __('admin.form.Last field inspection date'));
-        $show->field('load_stock_date', __('admin.form.Load stock date'));
+        $show->field('load_stock_date', __('admin.form.Crop stock date'));
         $show->field('last_field_inspection_remarks', __('admin.form.Last field inspection remarks'));
        
         //disable edit button and delete button
@@ -118,7 +117,7 @@ class LoadStockController extends AdminController
                 if(!$user->isRole('agro-dealer')){   
                     $form->crop_variety_id = $crop_declaration->crop_variety_id;
                     $form->last_field_inspection_date = $crop_declaration->updated_at->format('Y-m-d');
-                    $form->registration_number = $crop_declaration->seed_producer_id;
+                    
                 }else{
                     if($form->crop_declaration_id != null)
                     {
@@ -141,10 +140,10 @@ class LoadStockController extends AdminController
 
         $form->saved(function (Form $form) 
         {
-            admin_toastr(__('admin.form.Load stock saved successfully'), 'success');
+            admin_toastr(__('admin.form.Crop stock saved successfully'), 'success');
             return redirect('/admin/load-stocks');
         });
-        $form->text('load_stock_number', __('admin.form.Load stock number'))->default('LS'.rand(1000, 100000))->readonly();
+        $form->text('load_stock_number', __('admin.form.Crop stock number'))->default('LS'.rand(1000, 100000))->readonly();
 
         //get all crop varieties
         $crop_varieties = \App\Models\CropVariety::all();
@@ -156,7 +155,6 @@ class LoadStockController extends AdminController
             $form->select('crop_declaration_id', __('admin.form.Crop Declaration'))->options($crop_declarations->pluck('field_name', 'id'))->required();
             $form->hidden('crop_variety_id', __('Crop Variety'));
             $form->hidden('last_field_inspection_date', __('Date'));
-            $form->hidden('registration_number',__('admin.form.producer Registration number'));
 
             
         }else{
@@ -172,7 +170,7 @@ class LoadStockController extends AdminController
         $form->decimal('field_size', __('admin.form.Field size'));
         $form->decimal('yield_quantity', __('admin.form.Yield quantity'));
        
-        $form->date('load_stock_date', __('admin.form.Load stock date'))->default(date('Y-m-d'));
+        $form->date('load_stock_date', __('admin.form.Crop stock date'))->default(date('Y-m-d'));
         $form->textarea('last_field_inspection_remarks', __('admin.form.Last field inspection remarks'));
      
 
@@ -180,6 +178,13 @@ class LoadStockController extends AdminController
         $form->tools(function (Form\Tools $tools) {
             $tools->disableDelete();
             $tools->disableView();
+        });
+
+        //disable check boxes
+        $form->footer(function ($footer) {
+            $footer->disableViewCheck();
+            $footer->disableEditingCheck();
+            $footer->disableCreatingCheck();
         });
 
         return $form;

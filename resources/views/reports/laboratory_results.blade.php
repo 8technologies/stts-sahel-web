@@ -55,7 +55,7 @@ $fieldData = [
         <div class="header">
          <img src="{{ public_path('storage/assets/logo.png') }}" alt="logo">
         </div>
-        <h2>Field Inspection Report Card</h2>
+        <h2>Lab Test Results</h2>
         @foreach ($fieldData as $fieldLabel => $fieldValue)
             <p><span class="field-label">{{ $fieldLabel }}:</span> {{ $fieldValue }}</p>
         @endforeach

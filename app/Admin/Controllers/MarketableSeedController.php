@@ -45,7 +45,7 @@ class MarketableSeedController extends AdminController
         $grid->column('user_id', __('admin.form.User'))->display(function($user_id){
             return \App\Models\User::find($user_id)->name;
         });
-        $grid->column('crop_variety_id', __('admin.form.Crop variety'))->display(function($crop_variety_id){
+        $grid->column('crop_variety_id', __('admin.form.Crop Variety'))->display(function($crop_variety_id){
             return \App\Models\CropVariety::find($crop_variety_id)->crop_variety_name;
         });
         $grid->column('quantity', __('admin.form.Quantity'));
@@ -75,7 +75,7 @@ class MarketableSeedController extends AdminController
         $show->field('load_stock_id', __('admin.form.Load stock number'))->as(function($load_stock_id){
             return \App\Models\LoadStock::find($load_stock_id)->load_stock_number;
         });
-        $show->field('crop_variety_id', __('admin.form.Crop variety'))->as(function($crop_variety_id){
+        $show->field('crop_variety_id', __('admin.form.Crop Variety'))->as(function($crop_variety_id){
             return \App\Models\CropVariety::find($crop_variety_id)->crop_variety_name;
         });
         $show->field('quantity', __('admin.form.Quantity'));
