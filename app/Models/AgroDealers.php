@@ -32,6 +32,9 @@ class AgroDealers extends Model
         'insuring authority',
         'attachments_certificate',
         'proof_of_payment',
+        'cancellation_clauses',
+        'confidentiality_obligations',
+        'non_disclosure_agreement'
         
     ];
 

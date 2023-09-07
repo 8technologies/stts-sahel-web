@@ -13,26 +13,36 @@ return new class extends Migration
     {
         Schema::create('agro_dealers', function (Blueprint $table) {
             $table->id();
-            $table->string('agro_dealer_reg_number');
-            $table->string('first_name');
-            $table->string('last_name');
-            $table->string('email');
-            $table->string('physical_address');
-            $table->string('district');
-            $table->string('circle');
-            $table->string('township');
-            $table->string('town_plot_number');
-            $table->string('shop_number');
-            $table->string('company_name');
-            $table->string('retailers_in');
-            $table->string('business_registration_number');
-            $table->integer('years_in_operation');
-            $table->text('business_description');
-            $table->string('trading_license_number');
-            $table->string('trading_license_period');
-            $table->string('insuring_authority');
-            $table->string('attachments_certificate');
-            $table->string('proof_of_payment');
+            $table->unsignedBigInteger('user_id');
+            $table->string('agro_dealer_reg_number')->nullable();
+            $table->string('first_name')->nullable();
+            $table->string('last_name')->nullable();
+            $table->string('email')->nullable();
+            $table->string('physical_address')->nullable();
+            $table->string('district')->nullable();
+            $table->string('circle')->nullable();
+            $table->string('township')->nullable();
+            $table->string('town_plot_number')->nullable();
+            $table->string('shop_number')->nullable();
+            $table->string('company_name')->nullable();
+            $table->string('retailers_in')->nullable();
+            $table->string('business_registration_number')->nullable();
+            $table->integer('years_in_operation')->nullable();
+            $table->text('business_description')->nullable();
+            $table->string('trading_license_number')->nullable();
+            $table->string('trading_license_period')->nullable();
+            $table->string('insuring_authority')->nullable();
+            $table->string('attachments_certificate')->nullable();
+            $table->string('proof_of_payment')->nullable();
+            $table->string('cancellation_clauses')->nullable();
+            $table->string('confidentiality_obligations')->nullable();
+            $table->string('non_disclosure_agreement')->nullable();
+            $table->string('status')->default('pending');
+            $table->string('status_comment')->nullable();
+            $table->string('valid_from')->nullable();
+            $table->string('valid_until')->nullable();
+            $table->unsignedBigInteger('inspector_id')->nullable();
+
             $table->timestamps();
         });
     }

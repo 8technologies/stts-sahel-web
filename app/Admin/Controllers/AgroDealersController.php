@@ -54,15 +54,16 @@ class AgroDealersController extends AdminController
        {
         // Remove the default id filter
         $filter->disableIdFilter();
-        $filter->like('user_id', 'Applicant')->select(\App\Models\User::pluck('name', 'id'));
+        $filter->like('company_name', 'Company name')->placeholder('Search by company name');
        
        });
 
         $grid->column('agro_dealer_reg_number', __('admin.form.Agro-dealer registration number'))->display(function ($value) {
             return $value ?? '-';
         })->sortable();
-        $grid->column('first_name', __('admin.form.First name'));
-        $grid->column('last_name', __('admin.form.Last name'));
+        $grid->column('company_name', __('admin.form.Company name'))->display(function ($value) {
+            return $value ?? '-';
+        })->sortable();
         $grid->column('email', __('admin.form.Email address'));
         $grid->column('physical_address', __('admin.form.Physical address'));
         $grid->column('status', __('admin.form.Status'))->display(function ($status) {
@@ -111,9 +112,12 @@ class AgroDealersController extends AdminController
           }
   
 
-        $show->field('agro_dealer_reg_number', __('admin.form.Agro-dealer registration number'));
+        $show->field('agro_dealer_reg_number', __('admin.form.Agro-dealer registration number'))->as(function ($agro_dealer_reg_number) {
+            return $agro_dealer_reg_number ?? 'Not yet assigned';
+        })->unescape();
         $show->field('first_name', __('admin.form.First name'));
         $show->field('last_name', __('admin.form.Last name'));
+        $show->field('company_name', __('admin.form.Company name'));
         $show->field('email', __('admin.form.Email address'));
         $show->field('physical_address', __('admin.form.Physical address'));
         $show->field('district', __('admin.form.District'));
@@ -121,7 +125,6 @@ class AgroDealersController extends AdminController
         $show->field('township', __('admin.form.Township'));
         $show->field('town_plot_number', __('admin.form.Town/plot number'));
         $show->field('shop_number', __('admin.form.Shop number'));
-        $show->field('company_name', __('admin.form.Company name'));
         $show->field('retailers_in', __('admin.form.Retailers in'));
         $show->field('business_registration_number', __('admin.form.Business registration number'));
         $show->field('years_in_operation', __('admin.form.Years in operation'));
@@ -134,6 +137,26 @@ class AgroDealersController extends AdminController
         $show->field('status', __('admin.form.Status'))->as(function ($status) {
             return \App\Models\Utils::tell_status($status) ?? '-';
         })->unescape();
+        $show->field('status_comment', __('admin.form.Status comment'))->as(function ($status_comment) {
+            return $status_comment ?? '-';
+        })->unescape();
+        $show->field('valid_from', __('admin.form.Agro-dealer approval date'))->as(function ($valid_from) {
+            return $valid_from ?? '-';
+        })->unescape();
+        $show->field('valid_until', __('admin.form.Valid until'))->as(function ($valid_until) {
+            return $valid_until ?? '-';
+        })->unescape();
+        $show->field('cancellation_clauses', __('admin.form.Cancellation clauses and conditions'))->as(function ($cancellation_clauses) {
+            return $cancellation_clauses ?? '-';
+        })->unescape();
+        $show->field('confidentiality_obligations', __('admin.form.Confidentiality obligations'))->as(function ($confidentiality_obligations) {
+            return $confidentiality_obligations ?? '-';
+        })->unescape();
+        $show->field('non_disclosure_agreement', __('admin.form.Non-disclosure agreement'))->as(function ($non_disclosure_agreement) {
+            return $non_disclosure_agreement ?? '-';
+        })->unescape();
+       
+
       
         //disable the edit and delete action buttons
         $show->panel()->tools(function ($tools) {
@@ -183,6 +206,7 @@ class AgroDealersController extends AdminController
           
             $form->text('first_name', __('admin.form.First name'))->required();
             $form->text('last_name', __('admin.form.Last name'))->required();
+            $form->text('company_name', __('admin.form.Company name'))->required();
             $form->email('email', __('admin.form.Email address'))->required();
             $form->text('physical_address', __('admin.form.Physical address'))->required();
             $form->text('district', __('admin.form.District/Region'))->required();
@@ -190,7 +214,6 @@ class AgroDealersController extends AdminController
             $form->text('township', __('admin.form.Township'))->required();
             $form->text('town_plot_number', __('admin.form.Town/Plot number'))->required();
             $form->text('shop_number', __('admin.form.Shop number'))->required();
-            $form->text('company_name', __('admin.form.Company name'))->required();
             $form->text('retailers_in', __('admin.form.Retailers in'))->required();
             $form->text('business_registration_number', __('admin.form.Business registration number'))->required();
             $form->number('years_in_operation', __('admin.form.Years in operation'))->required();
@@ -215,6 +238,7 @@ class AgroDealersController extends AdminController
 
             $form->display('first_name', __('admin.form.First name'));
             $form->display('last_name', __('admin.form.Last name'));
+            $form->display('company_name', __('admin.form.Company name'));
             $form->display('email', __('admin.form.Email'));
             $form->display('physical_address', __('admin.form.Physical address'));
             $form->display('district', __('admin.form.District'));
@@ -222,7 +246,6 @@ class AgroDealersController extends AdminController
             $form->display('township', __('admin.form.Township'));
             $form->display('town_plot_number', __('admin.form.Town plot number'));
             $form->display('shop_number', __('admin.form.Shop number'));
-            $form->display('company_name', __('admin.form.Company name'));
             $form->display('retailers_in', __('admin.form.Retailers in'));
             $form->display('business_registration_number', __('admin.form.Business registration number'));
             $form->display('years_in_operation', __('admin.form.Years in operation'));
@@ -256,6 +279,9 @@ class AgroDealersController extends AdminController
                         $form->datetime('valid_until', __('admin.form.Valid until'))
                             ->default($defaultDateTime)
                             ->required();
+                        $form->textarea('cancellation_clauses', __('admin.form.Cancellation clauses and conditions'))->rules('required');
+                        $form->textarea('confidentiality_obligations', __('admin.form.Confidentiality obligations'))->rules('required');
+                        $form->textarea('non_disclosure_agreement', __('admin.form.Non-disclosure agreement'))->rules('required');
                     })
 
                     ->when('inspector assigned', function (Form $form) {
@@ -291,6 +317,9 @@ class AgroDealersController extends AdminController
                         $form->datetime('valid_until', __('admin.form.Valid until'))
                             ->default($defaultDateTime)
                             ->required();
+                        $form->textarea('cancellation_clauses', __('admin.form.Cancellation clauses and conditions'))->rules('required');
+                        $form->textarea('confidentiality_obligations', __('admin.form.Confidentiality obligations'))->rules('required');
+                        $form->textarea('non_disclosure_agreement', __('admin.form.Non-disclosure agreement'))->rules('required');
                     })->required();
             }
         }
