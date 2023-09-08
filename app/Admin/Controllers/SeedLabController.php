@@ -113,20 +113,27 @@ class SeedLabController extends AdminController
         $show = new Show(SeedLab::findOrFail($id));
         //delete notification after viewing the form
         Utils::delete_notification('SeedLab', $id);
-
-        //check if the user is the owner of the form
-        $showable = Validation::checkUser('SeedLab', $id);
-        if (!$showable) 
-        {
-            return(' <p class="alert alert-danger">You do not have rights to view this form. <a href="/admin/seed-lab-tests"> Go Back </a></p> ');
-        }
-
+        $crop_variety_id = SeedLab::where('id', $id)->value('crop_variety_id');
+        $load_stock_id = SeedLab::where('id', $id)->value('load_stock_id');
 
         $show->field('user_id', __('admin.form.Applicant'))->as(function ($user_id) {
             return \App\Models\User::find($user_id)->name;
         });
         $show->field('load_stock_id', __('admin.form.Crop stock number'))->as(function ($load_stock_id) {
             return \App\Models\LoadStock::find($load_stock_id)->load_stock_number;
+        });
+        $show->field('c', __('admin.form.Crop'))->as(function () use ($crop_variety_id) {
+            $crop_id = \App\Models\CropVariety::find($crop_variety_id)->crop_id;
+            return \App\Models\Crop::find($crop_id)->crop_name;
+        });
+
+        $show->field('crop_variety_id', __('admin.form.Crop Variety'))->as(function ($crop_variety_id) {
+            return \App\Models\CropVariety::find($crop_variety_id)->crop_variety_name;
+        });
+
+        $show->field('', __('Generation'))->as(function () use ($load_stock_id) {
+            $seed_class_id = \App\Models\LoadStock::find($load_stock_id)->seed_class;
+            return \App\Models\SeedClass::find($seed_class_id)->class_name;
         });
         $show->field('seed_lab_test_report_number', __('admin.form.Seed lab test report number'));
         $show->field('sample_request_number', __('admin.form.Seed sample request number'));
