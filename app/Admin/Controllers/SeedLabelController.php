@@ -18,6 +18,8 @@ use \App\Models\CropDeclaration;
 use \App\Models\LoadStock;
 use \App\Models\LabelPackage;
 use \App\Models\SeedClass;
+use \App\Models\Utils;
+use \App\Models\Validation;
 
 
 class SeedLabelController extends AdminController
@@ -39,21 +41,37 @@ class SeedLabelController extends AdminController
         $grid = new Grid(new SeedLabel());
         $user = Admin::user();
         if (Admin::user()->isRole('labosem')) {
-            $grid->model()->where('status', '=', 'accepted');
+            $grid->model()->where('status', '=', 'accepted')->orWhere('status', '=', 'printed');
         }
 
-        //disable create button and delete button for admin users
-        if (!$user->inRoles(['basic-user', 'grower'])) {
+       //function to show the loggedin user only what belongs to them
+       Validation::showUserForms($grid);
 
-            $grid->disableCreateButton();
-        }
-        //order
-        $grid->model()->orderBy('id', 'desc');
+       //order of table
+       $grid->model()->orderBy('id', 'desc');
 
-        //show a user only what belongs to him if he is not an admin or labosem
-        if (!$user->inRoles(['labosem','commissioner'])) {
-            $grid->model()->where('user_id', '=', $user->id);
-        }
+       //disable action buttons appropriately
+       Utils::disable_buttons('SeedLabel', $grid);
+
+       if(Admin::user()->isRole('labosem')){
+        //actions
+        $grid->actions(function ($actions) {
+            //disable delete
+            $actions->disableDelete();
+            //disable edit
+            $actions->disableEdit();
+           
+        });
+       }
+
+      //filter by name
+      $grid->filter(function ($filter) 
+      {
+       // Remove the default id filter
+       $filter->disableIdFilter();
+       $filter->like('user_id', 'Applicant')->select(\App\Models\User::pluck('name', 'id'));
+      
+      });
 
         $grid->column('seed_label_request_number', __('admin.form.Seed label request number'));
         $grid->column('user_id', __('admin.form.Applicant name'))->display(function ($user_id) {
@@ -66,25 +84,53 @@ class SeedLabelController extends AdminController
                 return \App\Models\Utils::tell_status($status);
             });
         }
+        if(Admin::user()->isRole('labosem')){
+          //confirm order button
+          $grid->column('id', __('Confirm Printed'))->display(function ($id) 
+          {
+              $seed_label = SeedLabel::findOrFail($id);
+              $confirmedClass =  $seed_label->status == 'printed' ? 'btn-success' : 'btn-primary';
+              $confirmedText =  $seed_label->status == 'printed' ? 'Printed' : 'Processing';
+              if( $seed_label->status == 'printed') 
+              {
+                  return "<a  class='btn btn-success' data-id='{$id} ' disabled>$confirmedText</a>";
+              }
+              return "<a id='confirm-print-{$id}' href='" . route('print.confirm', ['id' => $id]) . "' class='btn btn-xs $confirmedClass confirm-print' data-id='{$id}'>$confirmedText</a>";
+          })->sortable();
+        } 
+          // css styling the button to blue initially
+          Admin::style('.btn-blue {color: #fff; background-color: #0000FF; border-color: #0000FF;}');
+          
+          //Script to edit the form status field to 2 on click of the confirm order button
+          Admin::script
+          ('
+              $(".confirm-print").click(function(e) 
+              {
+                  e.preventDefault();
+                  var id = $(this).data("id");
+                  var url = "' . route('print.confirm', ['id' => ':id']) . '";
+                  url = url.replace(":id", id);
+                  var button = $("#confirm-print-" + id);
+                  $.ajax(
+                      {
+                          url: url,
+                          type: "PUT",
+                          data: 
+                          {
+                              _method: "PUT",
+                              _token: LA.token,
+                              status: 6,
+                          },
+                          success: function (data) 
+                          {
+                              $.pjax.reload("#pjax-container");
+                              toastr.success("Printing confirmed successfully");
+              
+                          }
+                      });
+              });
+          ');
        
-        //check if the user is not labosem or admin and disable edit if the status is not pending
-        if (!Admin::user()->isRole('labosem')) {
-            $grid->actions(function ($actions) {
-                if ($actions->row->status != 'pending' && $actions->row->status != null) {
-                    $actions->disableEdit();
-                    $actions->disableDelete();
-                }
-                if (Admin::user()->isRole('commissioner')) {
-                    $actions->disableDelete();
-                }
-            });
-        }else{
-            $grid->actions(function ($actions) {
-                $actions->disableDelete();
-                $actions->disableEdit();
-            });
-        }
-
 
         return $grid;
     }
@@ -102,9 +148,9 @@ class SeedLabelController extends AdminController
         $seed_label = SeedLabel::find($id);
         //get the users successfully registered seed labs
         $seed_lab = SeedLab::where('id', $seed_label->seed_lab_id)->first();
-        $crop_declaration = LoadStock::where('id', $seed_lab->load_stock_id)->where('user_id', $seed_lab->user_id)->value('crop_declaration_id');
+        $load_stock = LoadStock::where('id', $seed_lab->load_stock_id)->where('user_id', $seed_lab->user_id)->first();
         //get crop variety from crop_declaration id
-        $crop_variety_id = CropDeclaration::where('id', $crop_declaration)->value('crop_variety_id');
+        $crop_variety_id = CropDeclaration::where('id', $load_stock->crop_declaration_id )->value('crop_variety_id');
         //get crop variety name from crop_variety id
         $crop_variety = CropVariety::where('id', $crop_variety_id)->first();
         //get crop name from crop variety
@@ -120,9 +166,10 @@ class SeedLabelController extends AdminController
         $show->field('a', __('admin.form.Variety'))->as(function ($variety) use ($crop_variety) {
             return $crop_variety->crop_variety_name;
         });
-        $show->field('', __('admin.form.Generation'))->as(function ($generation) use ($crop_variety) {
-            return \App\Models\SeedClass::find($crop_variety->crop_variety_generation)->class_name;
-    });
+        $show->field('', __('admin.form.Generation'))->as(function () use ($load_stock) {
+            return \App\Models\SeedClass::find( $load_stock->seed_class)->class_name;
+        });
+
         $show->field('label_packages', __('admin.form.Label package'));
         $show->field('proof_of_payment', __('admin.form.Proof of payment'))->file();
         $show->field('request_date', __('admin.form.Request date'));
@@ -141,7 +188,7 @@ class SeedLabelController extends AdminController
                 $packages->column('id', __('admin.form.print'))->display(function ($id) {
                     $link = url('label?id=' . $id);
     
-                    return '<a href="' . $link . '" class="btn btn-sm btn-success" target="_blank">Print</a>';
+                    return '<a href="' . $link . '" class="btn btn-sm btn-primary" target="_blank">Print</a>';
                 });
             }
           
@@ -203,7 +250,8 @@ class SeedLabelController extends AdminController
         });
 
         //disable the edit button and delete button
-        $show->panel()->tools(function ($tools) {
+        $show->panel()->tools(function ($tools) 
+        {
             $tools->disableEdit();
             $tools->disableDelete();
         });
@@ -226,14 +274,26 @@ class SeedLabelController extends AdminController
         if ($form->isCreating()) {
             $form->hidden('user_id')->default($user->id);
         }
+
+         //onsaved return to the list page
+         $form->saved(function (Form $form) 
+        {
+            admin_toastr(__('admin.form.Form submitted successfully'), 'success');
+            return redirect('/admin/seed-labels');
+        });
+       
         //get the users successfully registered seed labs
         $seed_lab_id = SeedLab::where('user_id', Auth::user()->id)->where('test_decision', 'marketable')->get();
 
-        if ($user->inRoles(['basic-user', 'grower','agro-dealer','cooperative'])) {
+        if ($user->inRoles(['basic-user', 'grower','agro-dealer','cooperative'])) 
+        {
 
             $form->select('seed_lab_id', __('admin.form.Lot number'))->options($seed_lab_id->pluck('lot_number', 'id'))->required();
             $form->text('seed_label_request_number', __('admin.form.Seed label request number'))->default('SLR' . date('YmdHis') . rand(1000, 9999))->readonly();
-            $form->file('proof_of_payment', __('admin.form.Proof of payment'));
+            $form->file('proof_of_payment', __('admin.form.Proof of payment'))
+            ->rules(['mimes:jpeg,pdf,jpg', 'max:2048']) // Assuming a maximum file size of 2MB 
+            ->help('Attach a copy of your proof of payment, and should be in pdf, jpg or jpeg format')
+            ->required();
             $form->date('request_date', __('admin.form.Request date'))->default(date('Y-m-d'));
             $form->textarea('applicant_remarks', __('admin.form.Applicant remarks'));
 
@@ -251,23 +311,25 @@ class SeedLabelController extends AdminController
             });
         }
 
-        if ($form->isEditing()) {
+        if ($form->isEditing()) 
+        {
 
             $form_id = request()->route()->parameters()['seed_label'];
             $seed_label = SeedLabel::find($form_id);
             //get the users successfully registered seed labs
             $seed_lab = SeedLab::where('id', $seed_label->seed_lab_id)->first();
-            $crop_declaration = LoadStock::where('id', $seed_lab->load_stock_id)->where('user_id', $seed_lab->user_id)->value('crop_declaration_id');
+            $load_stock = LoadStock::where('id', $seed_lab->load_stock_id)->where('user_id', $seed_lab->user_id)->first();
             //get crop variety from crop_declaration id
-            $crop_variety_id = CropDeclaration::where('id', $crop_declaration)->value('crop_variety_id');
+            $crop_variety_id = CropDeclaration::where('id', $load_stock->crop_declaration_id )->value('crop_variety_id');
             //get crop variety name from crop_variety id
             $crop_variety = CropVariety::where('id', $crop_variety_id)->first();
             //get crop name from crop variety
             $crop_name = Crop::where('id', $crop_variety->crop_id)->value('crop_name');
 
             $applicant_name = Administrator::where('id', $seed_lab->user_id)->value('name');
-            $seed_class = SeedClass::where('id',$crop_variety->crop_variety_generation)->value('class_name');
-            if ($user->inRoles(['commissioner', 'labosem'])) {
+            $seed_class = SeedClass::where('id',$load_stock->seed_class)->value('class_name');
+            if ($user->inRoles(['commissioner', 'labosem'])) 
+            {
 
                 $form->display('seed_label_request_number', __('admin.form.Seed label request number'));
                
@@ -281,26 +343,30 @@ class SeedLabelController extends AdminController
                 $form->display('request_date', __('admin.form.Request date'))->default(date('Y-m-d'));
                 $form->display('applicant_remarks', __('admin.form.Applicant remarks'));
               
-                $form->hasMany('packages', __('admin.form.Packages'), function (Form\NestedForm $form) {
-                    //drop down of the price and quantity from the label package table
-                    $label_package = LabelPackage::all();
+                $form->hasMany('packages', __('admin.form.Packages'), function (Form\NestedForm $form) use ($seed_label){
+                    //get the label package id for this seed label from the pivot table seed_label_packages
+                    $label_package_id = $seed_label->labelPackages()->pluck('package_id');
+                    $label_package = LabelPackage::whereIn('id', $label_package_id)->get();
                     $label_package_array = [];
                     foreach ($label_package as $label) {
                         $label_package_array[$label->id] = $label->quantity . 'kgs' . ' @ ' . $label->price;
                     }
-                    $form_id = request()->route()->parameters()['seed_label'];
-                    $seed_label = SeedLabel::find($form_id);
-                    $form->display('package_id', __('admin.form.Label package'));
+                    $form->select('package_id', __('admin.form.Label package'))->options($label_package_array)->readonly();
+
+                    
                     $form->display('quantity', __('admin.form.Quantity'))->readonly();
                 })->readonly();
             }
-            if ($user->isRole('commissioner')) {
-$form->divider('Administrator descision');
+
+            if ($user->isRole('commissioner')) 
+            {
+                $form->divider('Administrator descision');
                 $form->select('status', __('admin.form.Status'))->options(['accepted' => 'Approved', 'rejected' => 'Rejected'])->default('pending');
             }
 
-            if ($user->isRole('labosem')) {
-$form->divider('Administrator descision');
+            if ($user->isRole('labosem')) 
+            {
+                $form->divider('Administrator descision');
                 $form->select('status', __('admin.form.Status'))->options(['printed' => 'Printed', 'rejected' => 'Rejected'])->default('pending');
             }
 
@@ -308,11 +374,28 @@ $form->divider('Administrator descision');
         }
 
         //disable delete button
-        $form->tools(function (Form\Tools $tools) {
+        $form->tools(function (Form\Tools $tools) 
+        {
             $tools->disableView();
             $tools->disableDelete();
         });
 
+        //disable checkboxes
+        $form->footer(function ($footer) {
+            $footer->disableViewCheck();
+            $footer->disableEditingCheck();
+            $footer->disableCreatingCheck();
+        });
+
         return $form;
     }
+
+    public function confirm($id)
+    {
+        $print = SeedLabel::findOrFail($id);
+        $print->status = 'printed'; 
+        $print->save();
+        return response()->json(['status' => 'success']);
+    }
+    
 }

@@ -105,7 +105,7 @@ class Utils extends Model
     public static function disable_buttons($model, $grid)
     {
         $user = auth('admin')->user();
-        if ($user->inRoles(['commissioner', 'inspector'])) 
+        if ($user->inRoles(['commissioner', 'inspector','labosem'])) 
         {
                 //disable create button and delete
                 $grid->disableCreateButton();
@@ -123,7 +123,17 @@ class Utils extends Model
                 if ($actions->row->status == 'halted' || $actions->row->status == 'pending') {
                     $actions->disableDelete();
                 }
-                if($actions->row->status == 'rejected' || $actions->row->status == 'accepted' || $actions->row->status == 'inspector assigned')
+                if($actions->row->status == 'rejected' || 
+                 $actions->row->status == 'accepted' || 
+                 $actions->row->status == 'inspector assigned' ||
+                 $actions->row->status == 'lab test assigned' || 
+                 $actions->row->status == 'printed' || 
+                 $actions->row->status == 'marketable' || 
+                 $actions->row->status == 'not marketable' ||
+                 $actions->row->status == 'processing' || 
+                 $actions->row->status == 'shipping' || 
+                 $actions->row->status == 'delivered' || 
+                 $actions->row->status == 'cancelled')
                 {
                     $actions->disableDelete();
                     $actions->disableEdit();

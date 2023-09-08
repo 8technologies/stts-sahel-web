@@ -35,4 +35,21 @@ class SeedLabel extends Model
             ->withPivot('quantity'); // Add pivot fields as needed
     }
 
+    //boot
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($model) {
+           
+        });
+
+          //call back to send a notification to the user
+          self::created(function ($model) 
+          {
+              Notification::send_notification($model, 'SeedLabel', request()->segment(count(request()->segments())));
+          });
+  
+    }
+
 }
