@@ -7,13 +7,25 @@
             align-items: center;
             padding: 10px;
         }
+        /* Custom CSS for alignment */
+.details-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px; /* Adjust as needed */
+}
+
+.details-col {
+    flex: 1;
+    margin-left: 80px; /* Adjust as needed */
+}
+
     </style>
 
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-8">
                 <div class="panel panel-default">
-                    <div class="panel-heading">{{ __('QR Code Scanner') }}</div>
+                    <div class="panel-heading">{{ __('admin.form.Track and Trace') }}</div>
 
                     <div class="panel-body">
                         <form id="myform" method="POST">
@@ -23,17 +35,17 @@
                                     placeholder="Enter lot number">
                                 <div class="input-group-btn">
                                     <button class="btn btn-primary" id="btnscan" type="button"
-                                        onclick="startScan()">Scan QR Code</button>
+                                        onclick="startScan()">{{ __('admin.form.Scan QR Code') }}</button>
                                 </div>
                             </div>
                             <div id="qr-reader" style="width: 100%; margin-top: 20px;"></div>
-                            <p id="scan-error" style="color: red; display: none;">QR code scanning failed. Please
-                                ensure the QR code is visible and try again.</p>
+                            <p id="scan-error" style="color: red; display: none;">{{ __('admin.form.QR code scanning failed. Please
+                                ensure the QR code is visible and try again.') }}</p>
                                 <div class="button-container">
                                 <button type="button" class="btn btn-primary mt-3" data-toggle="modal"
-                                    data-target="#trackModal" onclick="openModal('trackModal')">Track</button>
+                                    data-target="#trackModal" onclick="openModal('trackModal')">{{ __('admin.form.Track') }}</button>
                                 <button type="button" class="btn btn-primary mt-3" data-toggle="modal"
-                                    data-target="#traceModal" onclick="openModal('traceModal')">Trace</button>
+                                    data-target="#traceModal" onclick="openModal('traceModal')">{{ __('admin.form.Trace') }}</button>
                             </div>
                         </form>
                     </div>
@@ -137,7 +149,7 @@
                             response.forEach(function(item) {
                                 tableHTML += "<tr>";
                                 tableHTML += "<td>"+ lot_number + "</td>";
-                                tableHTML += "<td><a href='http://127.0.0.1:8000/admin/seed-labs/" + item.id + "' onclick='closeModalAndRedirect(this)' data-dismiss='modal'>" + item.lot_number + "</a></td>";
+                                tableHTML += "<td><a href='http://127.0.0.1:8000/admin/seed-lab-tests/" + item.id + "' onclick='closeModalAndRedirect(this)' data-dismiss='modal'>" + item.lot_number + "</a></td>";
 
                                 tableHTML += "</tr>";
                             });
@@ -170,73 +182,78 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Batch details</h5>
+                    <h5 class="modal-title" id="exampleModalLabel">{{ __('admin.form.Batch details')}}</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
                     <ul class="nav nav-tabs">
-                        <li class="active"><a data-toggle="tab" href="#home">Seed Details</a></li>
-                        <li><a data-toggle="tab" href="#profile">Seed Lab Details</a></li>
-                        <li><a data-toggle="tab" href="#contact">Mother Lot</a></li>
+                        <li class="active"><a data-toggle="tab" href="#home">{{ __('admin.form.Seed Details')}}</a></li>
+                        <li><a data-toggle="tab" href="#profile">{{ __('admin.form.Seed Lab Details')}}</a></li>
+                        <li><a data-toggle="tab" href="#contact">{{ __('admin.form.Mother Lot Number')}}</a></li>
                     </ul>
                     <div class="tab-content">
-                        <div class="tab-pane active" id="home">
-                            <div class="card">
-                                <div class="card-body">
-                                
-                                    <div class="details">
-                                        <strong>Lot Number:</strong>
-                                        <p class="text-muted" id="seed_lot_number"></p>
-                                    </div>
-                                    <div class="details">
-                                        <strong>Crop:</strong>
-                                        <p class="text-muted" id="crop"></p>
-                                    </div>
-                                    <div class="details">
-                                        <strong>Crop Variety:</strong>
-                                        <p class="text-muted" id="crop_variety"></p>
-                                    </div>
-                                    <div class="details">
-                                        <strong>Generation:</strong>
-                                        <p class="text-muted" id="generation"></p>
-                                    </div>
-                                
-                                </div>
+                    <div class="tab-pane active" id="home">
+                        <div class="details-row">
+                            <div class="details-col">
+                                <strong>{{ __('admin.form.Lot Number:')}}</strong>
+                                <p class="text-muted" id="seed_lot_number"></p>
+                            </div>
+                            <div class="details-col">
+                                <strong>{{ __('admin.form.Crop:')}}</strong>
+                                <p class="text-muted" id="crop"></p>
                             </div>
                         </div>
-                        <div class="tab-pane" id="profile">
-                            <div class="card">
-                                <div class="card-body">
-                                    <div class="details">
-                                        <strong>Lab Test Number:</strong>
+                        <div class="details-row">
+                            <div class="details-col">
+                                <strong>{{ __('admin.form.Crop Variety:')}}</strong>
+                                <p class="text-muted" id="crop_variety"></p>
+                            </div>
+                            <div class="details-col">
+                                <strong>{{ __('admin.form.Seed Generation:')}}</strong>
+                                <p class="text-muted" id="generation"></p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="tab-pane" id="profile">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="details-row">
+                                    <div class="details-col">
+                                        <strong>{{ __('admin.form.Lab Test Number:')}}</strong>
                                         <p class="text-muted" id="lab_test_number"></p>
                                     </div>
-                                    <div class="details">
-                                        <strong>Germination Test:</strong>
+                                    <div class="details-col">
+                                        <strong>{{ __('admin.form.Germination Test Result:')}}</strong>
                                         <p class="text-muted" id="germination"></p>
                                     </div>
-                                    <div class="details">
-                                        <strong>Purity Test:</strong>
+                                </div>
+                                <div class="details-row">
+                                    <div class="details-col">
+                                        <strong>{{ __('admin.form.Purity Test Result:')}}</strong>
                                         <p class="text-muted" id="purity"></p>
                                     </div>
-                                    <div class="details">
-                                        <strong>Testing Method:</strong>
+                                    <div class="details-col">
+                                        <strong>{{ __('admin.form.Testing Method:')}}</strong>
                                         <p class="text-muted" id="testing_methods"></p>
                                     </div>
-                                    <div class="details">
-                                        <strong>Test Decision:</strong>
+                                </div>
+                                <div class="details-row">
+                                    <div class="details-col">
+                                        <strong>{{ __('admin.form.Test Decision:')}}</strong>
                                         <p class="text-muted" id="decision"></p>
                                     </div>
                                 </div>
                             </div>
                         </div>
+                    </div>
                         <div class="tab-pane" id="contact">
                             <div class="card">
                                 <div class="card-body">
                                     <div class="details">
-                                        <strong>Mother Lot:</strong>
+                                        <strong>{{ __('admin.form.Mother Lot Number:')}}</strong>
                                         <p class="text-muted" id="mother_lot"></p>
                                     </div>
                                 </div>
@@ -245,7 +262,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">{{ __('admin.form.Close')}}</button>
                 </div>
             </div>
         </div>
@@ -257,7 +274,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Batch details</h5>
+                <h5 class="modal-title" id="exampleModalLabel">{{ __('admin.form.Batch details')}}</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
                         aria-hidden="true">&times;</span></button>
             </div>
@@ -265,8 +282,8 @@
                 <table class="table">
                     <thead>
                         <tr>
-                            <th>Mother Lot</th>
-                            <th>Child Lot</th>
+                            <th>{{ __('admin.form.Mother Lot Number')}}</th>
+                            <th>{{ __('admin.form.Child Lot Number')}}</th>
                         </tr>
                     </thead>
                     <tbody id="trace_result-container">
@@ -275,7 +292,7 @@
                 </table>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ __('admin.form.Close')}}</button>
             </div>
         </div>
     </div>

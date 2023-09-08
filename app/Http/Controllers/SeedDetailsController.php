@@ -9,6 +9,7 @@ use App\Models\LoadStock;
 use App\Models\CropDeclaration;
 use App\Models\CropVariety;
 use App\Models\Crop;
+use App\Models\SeedClass;
 
 
 class SeedDetailsController extends Controller
@@ -18,7 +19,7 @@ class SeedDetailsController extends Controller
         return view('track_and_trace.track_trace_form');
     }
 
-      public function trace(Request $request)
+    public function trace(Request $request)
       {
        
         if($request-> lot_number){
@@ -31,7 +32,7 @@ class SeedDetailsController extends Controller
             }
         
             $loadStock = LoadStock::where('id', $seedLab->load_stock_id)
-                ->where('applicant_id', $seedLab->applicant_id)
+                ->where('user_id', $seedLab->user_id)
                 ->first();
             
             if (!$loadStock) {
@@ -64,11 +65,18 @@ class SeedDetailsController extends Controller
             if (!$crop) {
                 return response()->json(null);
             }
+
+            $generation = SeedClass::where('id', $loadStock->seed_class)
+                ->value('class_name');
+            
+            if (!$generation) {
+                return response()->json(null);
+            }
         
             $data = [
                 'crop' => $crop,
                 'crop_variety' => $crop_variety->crop_variety_name,
-                'generation' => $crop_variety->crop_variety_generation,
+                'generation' =>  $generation,
                 'seed_class' => $seedLab->seed_class,
                 'lab_test_number'=> $seedLab->seed_lab_test_report_number,
                 'germination' => $seedLab->germination_test_results,

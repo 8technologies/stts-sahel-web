@@ -382,9 +382,35 @@ return [
         'Lot Number' => 'Lot Number',
         'Seed lab test report number' => 'Seed lab test report number',
         'Cancelled' => 'Cancelled',
-
-
-
+        //track and trace
+        'Track and Trace' => 'Track and Trace',
+        'Scan QR Code' => 'Scan QR Code',
+        'QR code scanning failed. Please ensure the QR code is visible and try again.' => 'QR code scanning failed. Please ensure the QR code is visible and try again.',
+        'Track' => 'Track',
+        'Trace' => 'Trace',
+        'Seed lot number' => 'Seed lot number',
+        'Batch details' => 'Batch details',
+        'Seed Details' => 'Seed Details',
+        'Seed Lab Details' => 'Seed Lab Details',
+        'Mother Lot Number' => 'Mother Lot Number',
+        'Lot Number:' => 'Lot Number:',
+        'Crop:' => 'Crop:',
+        'Crop Variety:' => 'Crop Variety:',
+        'Seed Generation:' => 'Seed Generation:',
+        'Lab Test Number:' => 'Lab Test Number:',
+        'Germination Test Result:' => 'Germination Test Result:',
+        'Purity Test Result:' => 'Purity Test Result:',
+        'Moisture Content Test:' => 'Moisture Content Test:',
+        'Additional Test:' => 'Additional Test:',
+        'Test Decision:' => 'Test Decision:',
+        'Test Date:' => 'Test Date:',
+        'Purity Test Results:' => 'Purity Test Results:',
+        'Testing Method:' => 'Testing Method:',
+        'Batch details' => 'Batch details',
+        'Close' => 'Close',
+        'Child Lot Number' => 'Child Lot Number',
+        'Mother Lot Number:' => 'Mother Lot Number:',
+        'Seed sample request number' => 'Seed sample request number',
 
         
 

@@ -184,16 +184,16 @@ class SeedLabController extends AdminController
             $crop_variety = CropVariety::where('id', $crop_variety_id)->first();
             //get crop name from crop variety
             $crop = Crop::find($crop_variety->crop_id);
-            $load_stock_id = LoadStock::where('id', $seed_lab->load_stock_id)->value('load_stock_number');
+            $load_stock = LoadStock::where('id', $seed_lab->load_stock_id)->first();
 
             $applicant_name = Administrator::where('id', $seed_lab->user_id)->value('name');
-            $seed_class = SeedClass::where('id', $crop_variety->crop_variety_generation)->value('class_name');
+            $seed_class = SeedClass::where('id', $load_stock->seed_class)->value('class_name');
 
             $form->display('', __('admin.form.Applicant name'))->default($applicant_name);
-            $form->display('', __('admin.form.Crop stock number'))->default($load_stock_id);
+            $form->display('', __('admin.form.Crop stock number'))->default($load_stock->load_stock_number);
             $form->display('', __('admin.form.Crop'))->default($crop->crop_name);
             $form->display('', __('admin.form.Variety'))->default($crop_variety->crop_variety_name);
-            // $form->display('', __('Generation'))->default($seed_class);
+            $form->display('', __('Generation'))->default($seed_class);
             $form->number('quantity', __('admin.form.Quantity'))->readonly();
             $form->hidden('crop_variety_id', __('admin.form.Crop Variety'))->default($crop_variety->id);
             $form->text('mother_lot',__('admin.form.Mother lot number'))->default($mother_lot)->readonly();
