@@ -18,14 +18,18 @@ class CropController extends Controller
 {
     //
     
-    
     public function crops()
     {
-        return Utils::apiSuccess(Crop::where([])->get());
+        $crops = Crop::all();
+        return response()->json($crops);
     }
+
+
     public function crop_varieties()
     {
-        return Utils::apiSuccess(CropVariety::where([])->get());
+        $crop_varieties = CropVariety::all();
+        return response()->json($crop_varieties);
+
     }
    
 }
