@@ -266,10 +266,10 @@ class Dashboard
                 ],
                 [
                     'label' => 'Processed',
-                    'data' => [
-                        0, // 0 count for the "Accepted/Rejected" label
-                        $inspections->count() - $statusGroups->get('pending')->count(),
-                    ],
+                'data' => [
+                    0, // 0 count for the "Accepted/Rejected" label
+                    ($inspections ? $inspections->count() : 0) - ($statusGroups && $statusGroups->get('pending') ? $statusGroups->get('pending')->count() : 0),
+                ],
                     'backgroundColor' => 'rgba(255, 206, 86, 0.5)',
                 ],
             ],
