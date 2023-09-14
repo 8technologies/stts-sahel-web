@@ -128,6 +128,6 @@ class ApiController extends Controller
             return Utils::apiError('Invalid credentials.');
         }
         $u->token = $token;
-        return Utils::apiSuccess($u, 'User registered successfully.');
+        return Utils::apiSuccess($u, 'User logged in successfully.');
     }
 }
