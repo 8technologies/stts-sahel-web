@@ -331,7 +331,7 @@ class SeedProducerController extends AdminController
             }
 
             $form->file('receipt', __('admin.form.Proof of payment of application fees'))
-            ->rules(['mimes:jpeg,pdf,jpg', 'max:2048']) // Assuming a maximum file size of 2MB 
+            ->rules(['mimes:jpeg,pdf,jpg', 'max:1048']) // Assuming a maximum file size of 2MB 
             ->help('Attach a copy of your proof of payment, and should be in pdf, jpg or jpeg format')
             ->required();
         }
