@@ -433,6 +433,18 @@ return [
         'pending applications' => 'pending applications',
         'marketable seeds' => 'marketable seeds',
         'Dashboard' => 'Dashboard',
+        'Seed Sample Requests' => 'Seed Sample Requests',
+        'Seed Lab Requests' => 'Seed Lab Requests',
+        'Seed Label Requests' => 'Seed Label Requests',
+        'My Inspections' => 'My Inspections',
+        'Sales' => 'Sales',
+        'My Total Sales' => 'My Total Sales',
+        'My Total Inspections' => 'My Total Inspections',
+        'My Stock' => 'My Stock',
+        'My Total Stock' => 'My Total Stock',
+        'View Stock' => 'View Stock',
+
+
 
         
 

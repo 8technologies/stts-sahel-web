@@ -424,7 +424,17 @@ return [
         'pending applications' => 'demandes en attente',
         'marketable seeds' => 'semences commercialisables',
         'Dashboard' => 'Tableau de bord',
-
+        'Seed Sample Requests' => 'Demandes d\'échantillons de semences',
+        'Field Inspections' => 'Inspections sur le terrain',
+        'Seed Lab Requests' => 'Demandes de laboratoire de semences',
+        'Seed Label Requests' => 'Demandes d\'étiquettes de semences',
+        'My Inspections' => 'Mes inspections',
+        'Sales' => 'Ventes',
+        'My Stock' => 'Mon stock',
+        'My Total Stock' => 'Mon stock total',
+        'My Total Sales' => 'Mes ventes totales',
+        'My Total Inspections' => 'Mes inspections totales',
+        'View Stock' => 'Voir le stock',
 
 
 

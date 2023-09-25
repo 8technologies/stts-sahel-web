@@ -3,7 +3,7 @@
 <!-- Updated HTML Structure -->
 <div class="card">
         <div class="card-header3">
-            <h3 class="card-title">Sales</h3>
+            <h3 class="card-title">{{ __('admin.form.Sales')}}</h3>
         </div>
     <div style="width: 100%; margin: auto;">
         <canvas id="salesChart"></canvas>
