@@ -432,6 +432,7 @@ return [
         'View all' => 'View all',
         'pending applications' => 'pending applications',
         'marketable seeds' => 'marketable seeds',
+        'Dashboard' => 'Dashboard',
 
         
 

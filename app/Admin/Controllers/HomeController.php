@@ -16,7 +16,7 @@ class HomeController extends Controller
     {
         $user = Admin::user();
         return $content
-            ->title('Dashboard')
+            ->title(__('admin.form.Dashboard'))
             ->row(function (Row $row) use($user) {
                 if($user->inRoles(['commissioner', 'developer',])){
                 $row->column(12, function (Column $column) {

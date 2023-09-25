@@ -423,6 +423,7 @@ return [
         'View all' => 'Voir tout',
         'pending applications' => 'demandes en attente',
         'marketable seeds' => 'semences commercialisables',
+        'Dashboard' => 'Tableau de bord',
 
 
 
