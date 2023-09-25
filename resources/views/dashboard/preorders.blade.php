@@ -16,8 +16,8 @@
 <div class="card">
     <div>
         <div class="card-header2">
-            <h3 class="card-title">Pre-Orders</h3>
-            <p>A Summary of Pre-Orders over the months</p>
+            <h3 class="card-title">{{__('admin.form.Pre-Orders')}}</h3>
+            <p>{{__('admin.form.A Summary of Pre-Orders over the months')}}</p>
         </div>
     </div>
     <div style="width: 100%; margin: auto;">
@@ -27,6 +27,28 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <script>
+           // Assuming you have set the current locale in a JavaScript variable
+        const currentLocale = '{{ app()->getLocale() }}';
+        
+        // Create a JavaScript object to store translations
+        const translations = {
+            en: {
+                showAllCrops: 'Show All Crops',
+                quantity: 'Quantity',
+                package: 'Package Size(kg)',
+                status: 'Status',
+                number: 'Number',
+                crops: 'Crops',
+            },
+            fr: {
+                showAllCrops: 'Afficher toutes les cultures',
+                quantity: 'Quantité',
+                package: 'Taille du paquet(kg)',
+                status: 'Statut',
+                number: 'Nombre',
+                crops: 'Cultures',
+            },
+        };
         const preorderData = <?php echo json_encode($pre_order_data); ?>;
         const preorderSortedData = preorderData.slice().sort((a, b) => new Date(a.order_date) - new Date(b.order_date));
         const preorderAllCrops = Array.from(new Set(preorderData.map(item => item.crop_name)));
@@ -50,7 +72,7 @@
         function preorderInitializeDatasets(crops) {
             return crops.map(crop => {
                 const counts = preorderAllMonths.map(date => {
-                    const matchingItem = preorderSortedData.find(item => item.crop_name === crop && new Intl.DateTimeFormat('en', { year: 'numeric', month: 'long' }).format(new Date(item.order_date)) === date);
+                    const matchingItem = preorderSortedData.find(item => item.crop_name === crop && new Intl.DateTimeFormat(currentLocale, { year: 'numeric', month: 'long' }).format(new Date(item.order_date)) === date);
                     return matchingItem ? matchingItem.total_quantity : 0;
                 });
 
@@ -81,7 +103,8 @@
                     break;
                 }
                 const date = new Date(selectedYear, month - 1, 1);
-                preorderAllMonths.push(new Intl.DateTimeFormat('en', { year: 'numeric', month: 'long' }).format(date));
+                preorderAllMonths.push(new Intl.DateTimeFormat(currentLocale, { year: 'numeric', month: 'long' }).format(date));
+                console.log(new Intl.DateTimeFormat(currentLocale, { year: 'numeric', month: 'long' }).format(date));
             }
 
             const filteredData = filterDataForCrops(cropsToShow, selectedYear);
@@ -105,7 +128,7 @@
                                 beginAtZero: true,
                                 title: {
                     display: true,
-                    text: 'Quantity', // Label for the x-axis
+                    text:  translations[currentLocale].quantity, // Label for the x-axis
                     font: {
                         weight: 'bold', // Make the label bold
                         size: 16,       // Set the font size
@@ -145,10 +168,16 @@
                 preorderUpdateChart([selectedCrop], selectedYear);
             }
         });
+     
+
+        
+
+// Use the current locale to get the translation
+const translatedText = translations[currentLocale].showAllCrops;
 
         const preorderShowAllOption = document.createElement('option');
         preorderShowAllOption.value = 'all';
-        preorderShowAllOption.textContent = 'Show All Crops';
+        preorderShowAllOption.textContent =translatedText;
         preorderCropSelect.appendChild(preorderShowAllOption);
 
         preorderAllCrops.forEach(cropName => {

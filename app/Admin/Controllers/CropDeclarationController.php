@@ -223,8 +223,14 @@ class CropDeclarationController extends AdminController
             $form->text('seed_supplier_registration_number', __('admin.form.Seed supplier registration number'))->required();
             $form->text('source_lot_number', __('admin.form.Source lot number'))->required();
             $form->text('origin_of_variety', __('admin.form.Origin of variety'))->required();
-            $form->decimal('garden_location_latitude', __('admin.form.Garden location latitude'));
-            $form->decimal('garden_location_longitude', __('admin.form.Garden location longitude'));
+            $form->decimal('garden_location_latitude', __('admin.form.Garden location latitude'))->rules('required|numeric|between:-9999.999999,9999.999999', [
+                'numeric' => 'Coordinates must be a numeric value.',
+                'between' => 'Coordinates must be between -9999.999999 and 9999.999999.',
+            ]);
+            $form->decimal('garden_location_longitude', __('admin.form.Garden location longitude'))->rules('required|numeric|between:-9999.999999,9999.999999', [
+                'numeric' => 'Coordinates must be a numeric value.',
+                'between' => 'Coordinates must be between -9999.999999 and 9999.999999.',
+            ]);
             $form->textarea('details', __('admin.form.Provide more details about the garden'));
         }
 

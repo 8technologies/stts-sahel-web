@@ -14,14 +14,14 @@
 <div class="card">
     <div>
         <div class="card-header">
-            <h3 class="card-title">Seed Packages</h3>
-            <p>Compare Crop Quantities by Package</p>
+            <h3 class="card-title">{{__('admin.form.Seed Packages')}}</h3>
+            <p>{{__('admin.form.Compare Crop Quantities by Package')}}</p>
         </div>
     </div>
     <div>
      
         <select id="crop-select" class="preordercrop-dropdown">
-            <option value="all">Show All Crops</option>
+            <option value="all">{{__('admin.form.Show All Crops')}}</option>
         </select>
       
         <select id="year-select" class="year-dropdown">
@@ -99,7 +99,7 @@
                                
                                 title: {
                                     display: true,
-                                    text: 'Package Size(kg)',
+                                    text: translations[currentLocale].package,
                                     font: {
                                         weight: 'bold',
                                         size: 16,
@@ -110,7 +110,7 @@
                                 beginAtZero: true,
                                 title: {
                                     display: true,
-                                    text: 'Quantity',
+                                    text:  translations[currentLocale].quantity, 
                                     font: {
                                         weight: 'bold',
                                         size: 16,

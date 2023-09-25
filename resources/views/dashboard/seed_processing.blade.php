@@ -4,11 +4,11 @@
     <!--begin::Header-->
     <div class="d-flex justify-content-between ">
         <div class="card-header">
-            <h3 class="card-title">Marketable vs Raw Seed</h3>
+            <h3 class="card-title">{{__('admin.form.Marketable vs Raw Seed')}}</h3>
             <div>
                 <select id="cropSelect8" onchange="updateCharts()">
-                    <option value="">Select Crop</option>
-                    <option value="Show All">Show All</option>
+                    <option value="">{{__('admin.form.Select Crop')}}</option>
+                    <option value="Show All">{{__('admin.form.Show All Crops')}}</option>
                     <?php foreach ($crop_names as $crop_name) : ?>
                         <option value="<?php echo $crop_name; ?>"><?php echo $crop_name; ?></option>
                     <?php endforeach; ?>
@@ -76,7 +76,7 @@
                         stacked: true,
                         title: {
                     display: true,
-                    text: 'Crops', // Label for the x-axis
+                    text: translations[currentLocale].crops, // Label for the x-axis
                     font: {
                         weight: 'bold', // Make the label bold
                         size: 16,       // Set the font size
@@ -87,7 +87,7 @@
                         stacked: true,
                         title: {
                     display: true,
-                    text: 'Quantity', // Label for the x-axis
+                    text:  translations[currentLocale].quantity, // Label for the x-axis
                     font: {
                         weight: 'bold', // Make the label bold
                         size: 16,       // Set the font size

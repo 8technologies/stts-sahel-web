@@ -100,9 +100,9 @@ use App\Models\Utils;
 
     <div class="card" >
     <div class="card-header" style="position: relative;">
-    <h3 class="card-title">Recent Crop Declarations</h3>
+    <h3 class="card-title">{{__('admin.form.Recent Crop Declarations')}}</h3>
     <div style="position: absolute; top: 0; right: 0;">
-        <a href="{{ admin_url('/crop-declarations') }}" class="btn-view-all">View All</a>
+        <a href="{{ admin_url('/crop-declarations') }}" class="btn-view-all">{{__('admin.form.View all')}}</a>
     </div>
 </div>
 
@@ -110,10 +110,10 @@ use App\Models\Utils;
             <table class="table">
                 <thead>
                     <tr>
-                        <th style="min-width: 200px;">Applicant</th>
-                        <th style="min-width: 150px;">Crop Variety</th>
-                        <th style="min-width: 150px;">Status</th>
-                        <th class="text-right">Actions</th>
+                        <th style="min-width: 200px;">{{__('admin.form.Applicant')}}</th>
+                            <th style="min-width: 150px;">{{__('admin.form.Crop Variety')}}</th>
+                        <th style="min-width: 150px;">{{__('admin.form.Status')}}</th>
+                        <th class="text-right">{{__('admin.form.Actions')}}</th>
                     </tr>
                 </thead>
                 <tbody>

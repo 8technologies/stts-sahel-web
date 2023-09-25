@@ -402,6 +402,33 @@ return [
         'Child Lot Number' => 'Numéro de lot enfant',
         'Mother Lot Number:' => 'Numéro de lot mère:',
         'Seed sample request number' => 'Numéro de demande d\'échantillon de semences',
+        'Seed Producers' => 'Producteurs de semences',
+        'Co-operatives' => 'Coopératives',
+        'Agro-Dealers' => 'Agro-distributeurs',
+        'Marketable Seeds' => 'Semences commercialisables',
+        'Recent Crop Declarations' => 'Déclarations de cultures récentes',
+        'Field Inspections' => 'Inspections sur le terrain',
+        'Pre-Orders' => 'Pré-commandes',
+        'Orders' => 'Ordres',
+        'Marketable vs Raw Seed' => 'Semences commercialisables vs semences brutes',
+        'Seed Packages' => 'Paquets de semences',
+        'A summary of the field inspections and their statuses' => 'Un résumé des inspections sur le terrain et de leurs statuts',
+        'A Summary of Pre-Orders over the months' => 'Résumé des précommandes au fil des mois',
+        'A Summary of Orders over the months' => 'Un résumé des commandes au fil des mois',
+        'Compare Crop Quantities by Package' => 'Comparer les quantités de cultures par paquet',
+        'Actions' => 'Actions',
+        'View' => 'Voir',
+        'Show All Crops' => 'Afficher toutes les cultures',
+        'Select Crop' => 'Sélectionnez une culture',
+        'View all' => 'Voir tout',
+        'pending applications' => 'demandes en attente',
+        'marketable seeds' => 'semences commercialisables',
+
+
+
+
+
+       
 
 
 

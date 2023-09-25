@@ -4,8 +4,8 @@
     <div >
     <div class="d-flex justify-content-between ">
         <div class="card-header4">
-            <h3 class="card-title">Orders</h3>
-            <p>A Summary of Orders over the months</p>
+            <h3 class="card-title">{{__('admin.form.Orders')}}</h3>
+            <p>{{__('admin.form.A Summary of Orders over the months')}}</p>
         </div>
     </div>
     </div>
@@ -44,7 +44,7 @@
         function initializeDatasets(crops) {
             return crops.map(crop => {
                 const counts = allMonths.map(date => {
-                    const matchingItem = sortedData.find(item => item.crop_name === crop && new Intl.DateTimeFormat('en', { year: 'numeric', month: 'long' }).format(new Date(item.order_date)) === date);
+                    const matchingItem = sortedData.find(item => item.crop_name === crop && new Intl.DateTimeFormat(currentLocale, { year: 'numeric', month: 'long' }).format(new Date(item.order_date)) === date);
                     return matchingItem ? matchingItem.total_quantity : 0;
                 });
 
@@ -72,7 +72,7 @@
                     break;
                 }
                 const date = new Date(selectedYear, month - 1, 1);
-                allMonths.push(new Intl.DateTimeFormat('en', { year: 'numeric', month: 'long' }).format(date));
+                allMonths.push(new Intl.DateTimeFormat(currentLocale, { year: 'numeric', month: 'long' }).format(date));
             }
 
             const filteredData = filterDataForCrops(cropsToShow, selectedYear);
@@ -96,7 +96,7 @@
                                 beginAtZero: true,
                                 title: {
                     display: true,
-                    text: 'Quantity', // Label for the x-axis
+                    text:  translations[currentLocale].quantity, // Label for the x-axis
                     font: {
                         weight: 'bold', // Make the label bold
                         size: 16,       // Set the font size
@@ -136,9 +136,11 @@
             }
         });
 
+       // const translatedText = "{{__('admin.form.Show All')}}";
+
         const showAllOption = document.createElement('option');
         showAllOption.value = 'all';
-        showAllOption.textContent = 'Show All Crops';
+        showAllOption.textContent = translatedText ;
         cropSelect.appendChild(showAllOption);
 
         allCrops.forEach(cropName => {
