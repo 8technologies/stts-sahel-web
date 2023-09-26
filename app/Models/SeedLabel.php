@@ -31,7 +31,7 @@ class SeedLabel extends Model
     //api relationships
     public function labelPackages()
     {
-        return $this->belongsToMany(LabelPackage::class, 'seed_label_packageS', 'seed_label_id', 'package_id')
+        return $this->belongsToMany(LabelPackage::class, 'seed_label_packages', 'seed_label_id', 'package_id')
             ->withPivot('quantity'); // Add pivot fields as needed
     }
 

@@ -91,7 +91,7 @@ public static function get_notifications($user)
             $notification->model_id = $model->id; 
             $notification->save();
 
-            self::sendMail($notification); 
+            //self::sendMail($notification); 
         }
 
     }
@@ -161,7 +161,7 @@ public static function update_notification($model, $model_name, $entity)
                 $notification_inspector->model_id = $model->id;
                 $notification_inspector->save();
 
-                self::sendMail($notification_inspector);
+               // self::sendMail($notification_inspector);
             }
 
             $receiver = Administrator::find($data['receiver_id']);
@@ -177,7 +177,7 @@ public static function update_notification($model, $model_name, $entity)
             $notification_user->model_id = $model->id;
             $notification_user->save();
 
-            self::sendMail($notification_user);
+           // self::sendMail($notification_user);
         }
     }
 }
@@ -238,7 +238,7 @@ public static function order_notification($model, $model_name, $entity)
 
             $notification->save();
 
-            self::sendMail($notification);
+           // self::sendMail($notification);
         }
     }
 
