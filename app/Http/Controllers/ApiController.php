@@ -104,14 +104,13 @@ class ApiController extends Controller
     public function login(Request $r)
     {
 
-        if ($r->email == null) {
-            return Utils::apiError('Email is required.');
+        if ($r->username == null) {
+            return Utils::apiError('Username is required.');
         }
         if ($r->password == null) {
             return Utils::apiError('Password is required.');
         }
-        $u = User::where('email', $r->email)
-            ->orWhere('username', $r->email)
+        $u = User::where('username', $r->email)
             ->first();
         if ($u == null) {
             return Utils::apiError('User account not found.');
@@ -120,7 +119,7 @@ class ApiController extends Controller
 
         JWTAuth::factory()->setTTL(60 * 24 * 30 * 12);
         $token = auth('api')->attempt([
-            'email' => $u->email,
+            'username' => $u->username,
             'password' => $r->password,
         ]);
 
