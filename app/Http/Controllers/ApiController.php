@@ -110,7 +110,7 @@ class ApiController extends Controller
         if ($r->password == null) {
             return Utils::apiError('Password is required.');
         }
-        $u = User::where('username', $r->email)
+        $u = User::where('username', $r->username)
             ->first();
         if ($u == null) {
             return Utils::apiError('User account not found.');
