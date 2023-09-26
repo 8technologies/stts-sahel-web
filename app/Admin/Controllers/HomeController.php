@@ -82,7 +82,7 @@ class HomeController extends Controller
                })
 
              ->row(function (Row $row)  use($user){
-                if($user->inRoles(['commissioner', 'developer','basic-user','inspector','agro-dealer','cooperative','lab_technician','labosem'])){
+                if($user->inRoles(['commissioner', 'developer','basic-user','agro-dealer','cooperative','lab_technician','labosem'])){
                 $row->column(6, function (Column $column) {
                     $column->append(Dashboard::getProcessedAndUnprocessedSeedsPerCrop());
                 });
