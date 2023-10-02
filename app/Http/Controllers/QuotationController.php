@@ -25,7 +25,7 @@ class QuotationController extends Controller
 
     public function show($id)
     {
-        $quotation = Quotation::findOrFail($id);
+        $quotation = Quotation::where('quotation_by', $id)->orWhere('quotation_to', $id)->get();
 
         return response()->json($quotation);
     }

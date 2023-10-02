@@ -25,7 +25,7 @@ class OrderController extends Controller
 
     public function show($id)
     {
-        $order = Order::findOrFail($id);
+        $order = Order::where('order_by', $id)->orWhere('supplier', $id)->get();
 
         return response()->json($order);
     }

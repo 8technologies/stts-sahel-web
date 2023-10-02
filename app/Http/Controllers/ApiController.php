@@ -48,7 +48,7 @@ class ApiController extends Controller
     {
         die('test');
     }
-    public function me()
+    public function profile()
     {
         $u = auth('api')->user();
         if ($u == null) {

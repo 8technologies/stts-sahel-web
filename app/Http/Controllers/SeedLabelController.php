@@ -50,7 +50,7 @@ class SeedLabelController extends Controller
 
     public function show($id)
     {
-        $seedLabel = SeedLabel::with('labelPackages')->findOrFail($id);
+        $seedLabel = SeedLabel::with('labelPackages')->where('user_id', $id)->get();
 
         return response()->json($seedLabel);
     }

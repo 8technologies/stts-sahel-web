@@ -25,7 +25,7 @@ class MarketableSeedController extends Controller
 
     public function show($id)
     {
-        $marketableSeed = MarketableSeed::findOrFail($id);
+        $marketableSeed = MarketableSeed::where('user_id', $id)->get();
 
         return response()->json($marketableSeed);
     }

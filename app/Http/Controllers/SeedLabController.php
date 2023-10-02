@@ -25,7 +25,7 @@ class SeedLabController extends Controller
 
     public function show($id)
     {
-        $seedLab = SeedLab::findOrFail($id);
+        $seedLab = SeedLab::where('user_id', '=', $id)->where('status', '=', 'lab test assigned')->get();
 
         return response()->json($seedLab);
     }

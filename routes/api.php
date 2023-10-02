@@ -37,6 +37,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('test', [ApiController::class, 'index']);
 Route::post('register', [ApiController::class, 'register']);
+Route::get('profile', [ApiController::class, 'profile']);
 Route::post('login', [ApiController::class, 'login']);
 Route::get('crops', [CropController::class, 'crops']);
 Route::get('crop-varieties', [CropController::class, 'crop_varieties']);

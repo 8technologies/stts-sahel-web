@@ -25,7 +25,7 @@ class LoadStockController extends Controller
 
     public function show($id)
     {
-        $loadStock = LoadStock::findOrFail($id);
+        $loadStock = LoadStock::where('user_id', $id)->get();
 
         return response()->json($loadStock);
     }
