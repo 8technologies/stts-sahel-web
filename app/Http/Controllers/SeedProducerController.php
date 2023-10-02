@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\SeedProducer;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use App\Models\Utils;
+use Illuminate\Support\Facades\Storage;
 
 class SeedProducerController extends Controller
 {
@@ -20,10 +21,26 @@ class SeedProducerController extends Controller
         $user = auth('api')->user();
         $data = $request->all();
         
-        if ($request->hasFile('receipt')) {
-            $imagePath = $request->file('receipt')->store('images', 'public');
-            $data['receipt'] = $imagePath;
+        // if ($request->hasFile('receipt')) 
+        // {
+        //     $imagePath = $request->file('receipt')->store('images', 'public');
+        //     $data['receipt'] = $imagePath;
+        // }
+
+       // Store the uploaded photo
+       if ($request->has('receipt')) 
+       {
+            $photoData = $request->input('receipt');
+            list($type, $photoData) = explode(';', $photoData);
+            list(, $photoData) = explode(',', $photoData);
+            $photoData = base64_decode($photoData);
+        
+            $photoPath = 'images/' . uniqid() . '.jpg'; 
+            Storage::disk('admin')->put($photoPath, $photoData);
+            
+            $data['receipt'] = $photoPath;
         }
+
     
         $seedProducer = SeedProducer::create($data);
         return Utils::apiSuccess($seedProducer, 'Seed Producer form submitted successfully.');
@@ -42,6 +59,20 @@ class SeedProducerController extends Controller
         $seedProducer = SeedProducer::where('user_id', $id)->firstOrFail();
 
         $data = $request->all();
+
+        if ($request->has('receipt')) 
+        {
+             $photoData = $request->input('receipt');
+             list($type, $photoData) = explode(';', $photoData);
+             list(, $photoData) = explode(',', $photoData);
+             $photoData = base64_decode($photoData);
+         
+             $photoPath = 'images/' . uniqid() . '.jpg'; 
+             Storage::disk('admin')->put($photoPath, $photoData);
+             
+             $data['receipt'] = $photoPath;
+         }
+ 
         $seedProducer->update($data);
         return Utils::apiSuccess($seedProducer, 'Seed Producer form edited successfully.');
     }
