@@ -26,14 +26,14 @@ class CropDeclarationController extends Controller
 
     public function show($id)
     {
-        $cropDeclaration = CropDeclaration::where('applicant_id', $id);
+        $cropDeclaration = CropDeclaration::where('user_id', $id)->get();
 
         return response()->json($cropDeclaration);
     }
 
     public function update(Request $request, $id)
     {
-        $cropDeclaration = CropDeclaration::where('applicant_id', $id)->firstOrFail();
+        $cropDeclaration = CropDeclaration::find($id);
 
         $data = $request->all();
         $cropDeclaration->update($data);
@@ -42,7 +42,7 @@ class CropDeclarationController extends Controller
 
     public function destroy($id)
     {
-        $cropDeclaration = CropDeclaration::where('applicant_id', $id);
+        $cropDeclaration = CropDeclaration::where('user_id', $id);
         $cropDeclaration->delete();
         return Utils::apiSuccess($cropDeclaration, 'Crop Declaration form deleted successfully.');
     }
