@@ -82,23 +82,60 @@ class AgroDealerController extends Controller
 
     public function show($id)
     {
-        $agroDealer = AgroDealers::findOrFail($id);
+        $agroDealer = AgroDealers::where('user_id', $id)->firstOrFail();
 
         return response()->json($agroDealer);
     }
 
     public function update(Request $request, $id)
     {
-        $agroDealer = AgroDealers::findOrFail($id);
-
+        $agroDealer = AgroDealers::where('user_id', $id)->firstOrFail();
         $data = $request->all();
+    
+        if ($request->has('proof_of_payment')) {
+            $photoData = $request->input('proof_of_payment');
+            [$type, $photoData] = explode(';', $photoData);
+            [, $photoData] = explode(',', $photoData);
+            $photoData = base64_decode($photoData);
+            $photoPath = 'images/' . uniqid() . '.jpg';
+            Storage::disk('admin')->put($photoPath, $photoData);
+            $data['proof_of_payment'] = $photoPath;
+        }
+    
+        $fileDataObject = $request->input('attachments_certificate');
+    
+        if (isset($fileDataObject['data'])) {
+            $fileData = $fileDataObject['data'];
+            [, $fileData] = explode(',', $fileData);
+            $fileData = base64_decode($fileData);
+            $mime = $fileDataObject['mime_type'];
+    
+            $allowedExtensions = [
+                'pdf' => 'application/pdf',
+                'docx' => 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                // Add more allowed file types here
+            ];
+    
+            $fileExtension = array_search($mime, $allowedExtensions);
+    
+            if ($fileExtension === false) {
+                return response()->json(['error' => 'Unsupported file type.'], 400);
+            }
+    
+            $newFileName = uniqid() . '.' . $fileExtension;
+            $filePath = 'files/' . $newFileName;
+    
+            Storage::disk('admin')->put($filePath, $fileData);
+            $data['attachments_certificate'] = $filePath;
+        }
+    
         $agroDealer->update($data);
         return Utils::apiSuccess($agroDealer, 'Agro Dealer edited successfully.');
     }
-
+    
     public function destroy($id)
     {
-        $agroDealer = AgroDealers::findOrFail($id);
+        $agroDealer = AgroDealers::where('user_id', $id)->firstOrFail();
         $agroDealer->delete();
         return Utils::apiSuccess($agroDealer, 'Agro Dealer deleted successfully.');
     }

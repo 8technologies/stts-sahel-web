@@ -25,15 +25,14 @@ class CooperativeController extends Controller
 
     public function show($id)
     {
-        $cooperative = Cooperative::findOrFail($id);
+        $cooperative = Cooperative::where('user_id', $id)->firstOrFail();
 
         return response()->json($cooperative);
     }
 
     public function update(Request $request, $id)
     {
-        $cooperative = Cooperative::findOrFail($id);
-
+        $cooperative = Cooperative::where('user_id', $id)->firstOrFail();
         $data = $request->all();
         $cooperative->update($data);
         return Utils::apiSuccess($cooperative, 'Cooperative edited successfully.');
@@ -41,7 +40,7 @@ class CooperativeController extends Controller
 
     public function destroy($id)
     {
-        $cooperative = Cooperative::findOrFail($id);
+        $cooperative = Cooperative::where('user_id', $id)->firstOrFail();
         $cooperative->delete();
         return Utils::apiSuccess($cooperative, 'Cooperative deleted successfully.');
     }

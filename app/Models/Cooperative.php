@@ -47,6 +47,7 @@ class Cooperative extends Model
 
         self::updating(function ($model) {
             $user = auth('api')->user();
+            error_log($user);
             if ($user || Admin::user()->isRole('basic-user')) {
                 $model->status = 'pending';
                 $model->inspector_id = null;
