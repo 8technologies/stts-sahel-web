@@ -25,7 +25,7 @@ class  FieldInspectionController extends Controller
 
     public function show($id)
     {
-        $fieldInspection = FieldInspection::where('applicant_id', $id);
+        $fieldInspection = FieldInspection::where('user_id', $id)->get();
 
         return response()->json($fieldInspection);
     }
