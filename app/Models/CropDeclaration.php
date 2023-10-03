@@ -12,6 +12,7 @@ use Carbon\Carbon;
 use Encore\Admin\Facades\Admin;
 use App\Models\SeedProducer;
 use App\Models\Utils;
+use Encore\Admin\Auth\Database\Administrator;
 
 class CropDeclaration extends Model
 {
@@ -75,9 +76,9 @@ class CropDeclaration extends Model
 
         self::creating(function ($model) 
         {
-            $user = auth('api')->user();
+            $user = $model->user_id;
           if($user != null){
-            $seed_producer = SeedProducer::where('user_id', $user->id)->first();
+            $seed_producer = SeedProducer::where('user_id', $user)->first();
             if ($seed_producer == null) {
                 return Utils::apiError('You need a valid Seed Producer Certiificate inorder to apply for crop declaration.');
             }
@@ -97,14 +98,13 @@ class CropDeclaration extends Model
         });
 
         self::updating(function ($model){
-            $user = auth('api')->user();
-            
-            if($user || Admin::user()->inRoles(['basic-user','grower']))
-            {
-                $model->status = 'pending';
-                $model->inspector_id = null;
-                return $model;
-            } 
+              //get the user id from the model and check if the user is a basic user or not
+              $user = Administrator::find($model->user_id);
+              if ($user->inRoles(['basic-user','grower'])) {
+                  $model->status = 'pending';
+                  $model->inspector_id = null;
+                  return $model;
+              }
         });
 
 
