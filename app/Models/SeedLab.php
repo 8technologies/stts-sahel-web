@@ -66,8 +66,9 @@ class SeedLab extends Model
         
 
         self::updating(function ($model) {
-            $user = auth('api')->user();
-            if ($user || Admin::user()->isRole('basic-user')) {
+            //get the user id from the model and check if the user is a basic user or not
+            $user = User::find($model->user_id);
+            if ($user->role_id == 2) {
                 $model->status = 'pending';
                 $model->inspector_id = null;
                 return $model;
