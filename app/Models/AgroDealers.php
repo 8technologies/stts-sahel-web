@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Encore\Admin\Facades\Admin;
+use Encore\Admin\Auth\Database\Administrator;
 
 class AgroDealers extends Model
 {
@@ -50,12 +51,13 @@ class AgroDealers extends Model
 
 
         self::updating(function ($model) {
-            $user = auth('api')->user();
-            if ($user || Admin::user()->isRole('basic-user')) {
-                $model->status = 'pending';
-                $model->inspector_id = null;
-                return $model;
-            }
+             //get the user id from the model and check if the user is a basic user or not
+             $user = Administrator::find($model->user_id);
+             if ($user->isRole('basic-user')) {
+                 $model->status = 'pending';
+                 $model->inspector_id = null;
+                 return $model;
+             }
         });
 
         self::updated(function ($model) {
