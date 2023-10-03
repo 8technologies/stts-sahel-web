@@ -40,8 +40,6 @@ class Quotation extends Model
             Notification::update_notification($model, 'Quotation', request()->segment(count(request()->segments())-1));
 
             //check if the person editing the quotation is not the person who made it
-            if ($model->quotation_by !== Admin::user()->id || $model->quotation_by !== auth('api')->user()->id
-            ) {
                 if ($model->status == 'accepted') {
                     $order = new Order();
                     $order->preorder_id = $model->preorder_id;
@@ -59,7 +57,7 @@ class Quotation extends Model
                     $order->order_date = date('Y-m-d');
                     $order->save();
                 }
-            }
+           
         });
     }
 }
