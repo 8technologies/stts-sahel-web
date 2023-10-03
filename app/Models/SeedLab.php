@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Encore\Admin\Auth\Database\Administrator;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Encore\Admin\Facades\Admin;
@@ -67,7 +68,7 @@ class SeedLab extends Model
 
         self::updating(function ($model) {
             //get the user id from the model and check if the user is a basic user or not
-            $user = User::find($model->user_id);
+            $user = Administrator::find($model->user_id);
             if ($user->isRole('basic-user')) {
                 $model->status = 'pending';
                 $model->inspector_id = null;
