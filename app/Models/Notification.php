@@ -72,12 +72,8 @@ public static function get_notifications($user)
 //function to send notifications after creation
     public static function send_notification($model, $model_name, $entity)
     {
-        $name = '';
-        if (Admin::user() != null) {
-            $name = Admin::user()->name;
-        }else{
-            $name = auth('api')->user()->name;
-        }
+        $name = User::find($model->user_id)->name;
+
         //check if $entity is a string
         if(is_string($entity))
         {
