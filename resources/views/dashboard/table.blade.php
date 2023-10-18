@@ -119,13 +119,13 @@ use App\Models\Utils;
                 <tbody>
                     @foreach ($crops as $crop)
                     @php
-                    $name = App\Models\User::find($crop->user_id)->name;
+                    $user = App\Models\User::find($crop->user_id);
                     $crop_variety = App\Models\CropVariety::find($crop->crop_variety_id)->crop_variety_name;
                     @endphp
                     <tr>
                     <td>
     <div class="table-cell-content">
-        <a href="#" style="color: black; font-weight: 600;">{{ $name }}</a>
+        <a href="#" style="color: black; font-weight: 600;">{{ $user ? $user->name : 'User' }}</a>
         <br>
         <span class="text-muted">{{ $crop->field_name }}</span>
         <br>
