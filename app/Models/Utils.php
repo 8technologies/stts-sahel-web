@@ -40,6 +40,8 @@ class Utils extends Model
             return '<span class="label label-warning">Pending</span>';
         if ($status == 'pending')
             return '<span class="label label-warning">Pending</span>';
+        if ($status == 'recommended')
+           return '<span style="background-color: purple; color: white;" class="label">Recommended</span>';
         if ($status == 'inspection assigned')
             return '<span class="label label-warning">Inspection assigned</span>';
         if ($status == 'halted')

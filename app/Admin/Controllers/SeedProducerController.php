@@ -218,11 +218,12 @@ class SeedProducerController extends AdminController
             $form->display('gardening_history_description', __('admin.form.Garden history of the proposed seed production field for the last three season or years'));
             $form->display('storage_facilities_description', __('admin.form.Describe your storage facilities to handle the resultant seed'));
             $form->radio('have_adequate_isolation', __('admin.form.Do you have adequate isolation?n'))
-                ->options([
-                    '1' => 'Yes',
-                    '0' => 'No',
-                ])->readonly();
-            $form->textarea('labor_details', __('admin.form.Detail the labor you have at the farm in terms of numbers and competencies'));
+            ->options([
+                '1' => 'Yes',
+                '0' => 'No',
+            ])->disable();
+
+            $form->display('labor_details', __('admin.form.Detail the labor you have at the farm in terms of numbers and competencies'));
 
             $form->file('receipt', __('admin.form.Proof of payment of application fees'))->readonly();
 
@@ -230,7 +231,7 @@ class SeedProducerController extends AdminController
             if ($user->isRole('commissioner')) 
             {
                 $form->divider('Administartor decision');
-                $form->radioButton('status', __('admin.form.Status'))
+                $form->radio('status', __('admin.form.Status'))
                 ->options([
                     'accepted'=> __('admin.form.Accepted'),
                     'halted' => __('admin.form.Halted'),
@@ -264,26 +265,15 @@ class SeedProducerController extends AdminController
             {
              
                 $form->divider('Inspectors decision');
-                $form->radioButton('status', __('admin.form.Status'))
+                $form->radio('status', __('admin.form.Status'))
                     ->options([
-                        'accepted'=> __('admin.form.Accepted'),
-                        'halted' => __('admin.form.Halted'),
+                        'recommended'=> __('admin.form.Recommend'),
                         'rejected' => __('admin.form.Rejected'),
                     ])
-                    ->when('in', ['rejected', 'halted'], function (Form $form) {
+                    ->when('in', ['recommended','rejected'], function (Form $form) {
                         $form->textarea('status_comment', __('admin.form.Status comment'))->rules('required');
-                    })
+                    });
 
-                    ->when('accepted', function (Form $form) {
-                        $form->text('producer_registration_number', __('admin.form.Seed producer registration number'))->default('Labosem/' . date('Y/M/') . rand(1000, 100000))->required();
-                        $form->datetime('valid_from', __('admin.form.Seed producer approval date'))->default(date('Y-m-d H:i:s'))->required();
-                        $nextYear = Carbon::now()->addYear(); // Get the date one year from now
-                        $defaultDateTime = $nextYear->format('Y-m-d H:i:s'); // Format the date for default value
-                        
-                        $form->datetime('valid_until', __('admin.form.Valid until'))
-                            ->default($defaultDateTime)
-                            ->required();
-                    })->required();
             }
         }
 
@@ -331,9 +321,11 @@ class SeedProducerController extends AdminController
             }
 
             $form->file('receipt', __('admin.form.Proof of payment of application fees'))
-            ->rules(['mimes:jpeg,pdf,jpg', 'max:1048']) // Assuming a maximum file size of 2MB 
+            ->rules(['mimes:jpeg,pdf,jpg', 'max:1048']) // Assuming a maximum file size of 1MB 
             ->help('Attach a copy of your proof of payment, and should be in pdf, jpg or jpeg format')
             ->required();
+            $form->hidden('status')->default('pending');
+            $form->hidden('inspector_id')->default(null);
         }
 
         //disable delete and view button

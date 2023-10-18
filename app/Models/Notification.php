@@ -139,6 +139,12 @@ class Notification extends Model
                 'receiver_id' => $model->user_id,
                 'form_link' => admin_url("{$entity}/{$model->id}"),
             ],
+            'recommended' => [
+                'message' => "{$name} 's form has been recommended by the inspector.",
+                'role_id' => 2,
+                'receiver_id' => null,
+                'form_link' => admin_url("{$entity}/{$model->id}"),
+            ],
         ];
 
         foreach ($notifications as $notification) 
@@ -166,11 +172,17 @@ class Notification extends Model
                 // self::sendMail($notification_inspector);
                 }
 
-                $receiver = Administrator::find($data['receiver_id']);
-                $message = str_replace('{name}', $receiver->name, $data['message']);
+                if($data['receiver_id'] != null){
+                    $receiver = Administrator::find($data['receiver_id']);
+                    $message = str_replace('{name}', $receiver->name, $data['message']);
+                    } else {
+                        $receiver = null;
+                        $message = $data['message'];
+                    }
 
                 $notification_user = new Notification();
-                $notification_user->receiver_id = $receiver->id;
+                $notification_user->receiver_id = $receiver->id ?? null;
+                $notification_user->role_id = $data['role_id'] ?? null;
                 $notification_user->message = $message;
                 $notification_user->link = admin_url("auth/login");
                 $notification_user->form_link = $data['form_link'];

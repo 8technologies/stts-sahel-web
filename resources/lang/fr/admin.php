@@ -121,6 +121,9 @@ return [
         'Valid until' => 'Valide jusqu\'au',
         'Inspector' => 'Inspecteur',
         'Status comment' => 'Commentaire sur le statut',
+        'Seed producer category' => 'Catégorie de producteur de semences',
+        'Years of experience as a seed producer' => 'Années d\'expérience en tant que producteur de semences',
+        'Do you have adequate isolation?n' => 'Avez-vous une isolation adéquate?',
         'Status' => 'Statut',
         'Proof of payment of application fees' => 'Preuve du paiement des frais de demande',
         'Detail the labor you have at the farm in terms of numbers and competencies' => 'Détaillez la main-d\'œuvre que vous avez à la ferme en termes de nombres et de compétences',
@@ -143,6 +146,7 @@ return [
         'Certificate' => 'Certificat',
         'Applicant' => 'Demandeur',
         'Date' => 'Date',
+        'Recommend' => 'Recommander',
         'Search by name of applicant' => 'Recherche par nom du demandeur',
         //crop declaration form
         'Crop Variety' => 'Variété de culture',

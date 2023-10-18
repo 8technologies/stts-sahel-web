@@ -148,6 +148,7 @@ return [
         'Certificate' => 'Certificate',
         'Applicant' => 'Applicant',
         'Date' => 'Date',
+        'Recommend' => 'Recommend',
         'Search by name of applicant' => 'Search by name applicant',
         //crop declaration form
         'Crop Variety' => 'Crop Variety',
