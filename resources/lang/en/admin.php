@@ -3,6 +3,8 @@
 return [
     'online'                => 'Online',
     'Member since '         => 'Member since ',
+    'first_name'            => 'First Name',
+    'last_name'             => 'Last Name',
     'email'                 => 'Email',
     'login'                 => 'Login',
     'logout'                => 'Logout',

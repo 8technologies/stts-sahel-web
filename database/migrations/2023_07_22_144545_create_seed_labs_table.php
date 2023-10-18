@@ -14,18 +14,20 @@ return new class extends Migration
         Schema::create('seed_labs', function (Blueprint $table) {
             $table->id();
             $table->string('sample_request_number')->nullable();
-            $table->unsignedBigInteger('user_id')->nullable();
+            $table->unsignedInteger('user_id')->nullable();
             $table->unsignedBigInteger('load_stock_id')->nullable();
+            $table->unsignedBigInteger('crop_variety_id')->nullable();
+            $table->integer('quantity')->nullable();
             $table->date('sample_request_date')->nullable();
             $table->string('proof_of_payment')->nullable();
             $table->text('applicant_remarks')->nullable();
             $table->text('priority')->nullable();
             $table->text('additional_instructions')->nullable();
-            $table->unsignedBigInteger('lab_receptionist_id')->nullable();
-            $table->unsignedBigInteger('inspector_id')->nullable();
-            $table->unsignedBigInteger('lab_officer_id')->nullable();
+            $table->unsignedInteger('lab_receptionist_id')->nullable();
+            $table->unsignedInteger('inspector_id')->nullable();
+            $table->unsignedInteger('lab_officer_id')->nullable();
             $table->dateTime('reporting_date')->nullable();
-            $table->integer('quantity')->nullable();
+    
 
 
             $table->string('seed_lab_test_report_number')->nullable();
@@ -40,9 +42,16 @@ return new class extends Migration
             $table->text('reporting_and_signature')->nullable();
             $table->text('mother_lot')->nullable();
             $table->text('lot_number')->nullable();
+            $table->string('status')->nullable();
+            $table->text('status_comment')->nullable();
             $table->timestamps();
 
             $table->foreign('load_stock_id')->references('id')->on('load_stocks')->onDelete('cascade');
+            $table->foreign('user_id')->references('id')->on('admin_users')->onDelete('cascade');
+            $table->foreign('lab_receptionist_id')->references('id')->on('admin_users');
+            $table->foreign('inspector_id')->references('id')->on('admin_users');
+            $table->foreign('lab_officer_id')->references('id')->on('admin_users');
+            $table->foreign('crop_variety_id')->references('id')->on('crop_varieties')->onDelete('cascade');
         
         });
     }

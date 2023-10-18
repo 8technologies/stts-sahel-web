@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('agro_dealers', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('user_id');
+            $table->unsignedInteger('user_id');
             $table->string('agro_dealer_reg_number')->nullable();
             $table->string('first_name')->nullable();
             $table->string('last_name')->nullable();
@@ -41,9 +41,12 @@ return new class extends Migration
             $table->string('status_comment')->nullable();
             $table->string('valid_from')->nullable();
             $table->string('valid_until')->nullable();
-            $table->unsignedBigInteger('inspector_id')->nullable();
+            $table->unsignedInteger('inspector_id')->nullable();
 
             $table->timestamps();
+
+            $table->foreign('user_id')->references('id')->on('admin_users')->onDelete('cascade');
+            $table->foreign('inspector_id')->references('id')->on('admin_users');
         });
     }
 

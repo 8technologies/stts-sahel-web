@@ -13,7 +13,8 @@ return new class extends Migration
     {
         Schema::create('crop_declarations', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('user_id');
+            $table->unsignedInteger('user_id');
+            $table->unsignedBigInteger('seed_producer_id');
             $table->string('phone_number');
             $table->decimal('garden_size', 8, 2);
             $table->decimal('gps_coordinates_1', 10, 6);
@@ -35,11 +36,15 @@ return new class extends Migration
             $table->decimal('garden_location_latitude', 10, 6);
             $table->decimal('garden_location_longitude', 10, 6);
             $table->string('status')->default(1);
-            $table->unsignedBigInteger('inspector_id')->nullable();
+            $table->unsignedInteger('inspector_id')->nullable();
             $table->string('lot_number')->nullable();
             $table->string('remarks')->nullable();
+            $table->string('details')->nullable();
             
             $table->timestamps();
+
+            $table->foreign('seed_producer_id')->references('id')->on('seed_producers')->onDelete('cascade');
+            $table->foreign('user_id')->references('id')->on('admin_users')->onDelete('cascade');
 
          
         

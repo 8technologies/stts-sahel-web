@@ -13,8 +13,10 @@ return new class extends Migration
     {
         Schema::create('load_stocks', function (Blueprint $table) {
             $table->id();
+            $table->unsignedInteger('user_id')->nullable();
             $table->string('load_stock_number')->nullable();
-            $table->unsignedBigInteger('crop_declarattion_id')->nullable();
+            $table->unsignedBigInteger('crop_declaration_id')->nullable();
+            $table->unsignedBigInteger('crop_variety_id')->nullable();
             $table->string('name_of_applicant')->nullable();
             $table->string('registration_number')->nullable();
             $table->string('seed_class')->nullable();
@@ -25,7 +27,9 @@ return new class extends Migration
             $table->text('last_field_inspection_remarks')->nullable();
             $table->timestamps();
 
-            $table->foreign('crop_declarattion_id')->references('id')->on('crop_declarations')->onDelete('cascade');
+            $table->foreign('crop_declaration_id')->references('id')->on('crop_declarations')->onDelete('cascade');
+            $table->foreign('crop_variety_id')->references('id')->on('crop_varieties')->onDelete('cascade');
+            $table->foreign('user_id')->references('id')->on('admin_users')->onDelete('cascade');
         });
     }
 

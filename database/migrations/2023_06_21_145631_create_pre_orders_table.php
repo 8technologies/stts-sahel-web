@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('pre_orders', function (Blueprint $table) {
             $table->id();
+            $table->unsignedInteger('user_id')->nullable();
             $table->unsignedBigInteger('crop_variety_id');
             $table->string('seed_class');
             $table->float('quantity');
@@ -29,6 +30,7 @@ return new class extends Migration
             $table->timestamps();
 
             $table->foreign('crop_variety_id')->references('id')->on('crop_varieties')->onDelete('cascade');
+            $table->foreign('user_id')->references('id')->on('admin_users')->onDelete('cascade');
         });
     }
 

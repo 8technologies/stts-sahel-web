@@ -3,6 +3,9 @@
 return [
     'action'                => 'Action',
     'online'                => 'En ligne',
+    'first_name'            => 'Prénom',
+    'last_name'             => 'Nom de famille',
+    'email'                 => 'Email',
     'Member since '          => 'Membre depuis',
     'login'                 => 'Connexion',
     'logout'                => 'Déconnexion',

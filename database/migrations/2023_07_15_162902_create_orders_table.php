@@ -18,7 +18,8 @@ return new class extends Migration
             $table->string('quantity')->nullable();
             $table->string('price')->nullable();
             $table->string('supply_date')->nullable();
-            $table->integer('order_by')->nullable();
+            $table->unsignedInteger('order_by')->nullable();
+            $table->unsignedInteger('supplier')->nullable();
             $table->string('details')->nullable();
             $table->string('status')->nullable();
             $table->string('status_comment')->nullable();
@@ -28,6 +29,8 @@ return new class extends Migration
 
             $table->foreign('preorder_id')->references('id')->on('pre_orders')->onDelete('cascade');
             $table->foreign('quotation_id')->references('id')->on('quotations')->onDelete('cascade');
+            $table->foreign('order_by')->references('id')->on('admin_users')->onDelete('cascade');
+            $table->foreign('supplier')->references('id')->on('admin_users')->onDelete('cascade');
         
             $table->timestamps();
         });

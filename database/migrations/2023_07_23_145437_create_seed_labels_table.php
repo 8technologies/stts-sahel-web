@@ -14,15 +14,19 @@ return new class extends Migration
         Schema::create('seed_labels', function (Blueprint $table) {
             $table->id();
             $table->string('seed_label_request_number');
-            $table->string('user_id');
+            $table->unsignedInteger('user_id');
             $table->string('registration_number');
-            $table->string('seed_lab_id');
+            $table->unsignedBigInteger('seed_lab_id');
             $table->string('label_packages');
             $table->unsignedFloat('quantity_of_seed');
             $table->string('proof_of_payment');
             $table->date('request_date');
             $table->text('applicant_remarks')->nullable();
+            $table->string('status')->default('pending');
             $table->timestamps();
+
+            $table->foreign('seed_lab_id')->references('id')->on('seed_labs')->onDelete('cascade');
+            $table->foreign('user_id')->references('id')->on('admin_users')->onDelete('cascade');
         });
     }
 

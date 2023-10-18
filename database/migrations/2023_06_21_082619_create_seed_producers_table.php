@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('seed_producers', function (Blueprint $table) {
             $table->id();
-            $table->foreignId(Administrator::class);
+            $table->unsignedInteger('user_id')->nullable();
             $table->string('producer_registration_number')->nullable();
             $table->string('producer_category');
             $table->string('name_of_applicant');
@@ -29,12 +29,15 @@ return new class extends Migration
             $table->string('receipt');
             $table->string('status')->default('pending');
             $table->text('status_comment')->nullable();
-            $table->string('inspector_id')->nullable();
+            $table->unsignedInteger('inspector_id')->nullable();
             $table->string('grower_number')->nullable();
             $table->timestamp('valid_from')->nullable();
             $table->timestamp('valid_until')->nullable();
    
             $table->timestamps();
+
+            $table->foreign('user_id')->references('id')->on('admin_users')->onDelete('cascade');
+            $table->foreign('inspector_id')->references('id')->on('admin_users');
         });
     }
 

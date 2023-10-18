@@ -14,14 +14,17 @@ return new class extends Migration
         Schema::create('notifications', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->bigInteger('receiver_id')->nullable(); 
-            $table->bigInteger('role_id')->nullable(); 
+            $table->unsignedInteger('receiver_id')->nullable(); 
+            $table->unsignedInteger('role_id')->nullable(); 
             $table->text('message')->nullable();
             $table->text('form_link')->nullable();
             $table->text('link')->nullable();
             $table->string('status')->nullable(); 
             $table->string('model')->nullable(); 
             $table->string('model_id')->nullable(); 
+
+            $table->foreign('receiver_id')->references('id')->on('admin_users')->onDelete('cascade');
+            $table->foreign('role_id')->references('id')->on('admin_roles')->onDelete('cascade');
 
         });
     }

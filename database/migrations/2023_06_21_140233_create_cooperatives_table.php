@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('cooperatives', function (Blueprint $table) {
             $table->id();
+            $table->unsignedInteger('user_id')->nullable();
             $table->string('cooperative_number');
             $table->string('cooperative_name');
             $table->string('registration_number')->nullable();
@@ -23,7 +24,15 @@ return new class extends Migration
             $table->string('membership_type');
             $table->string('services_to_members');
             $table->string('objectives_or_goals');
+            $table->string('status')->nullable()->default('pending');
+            $table->text('status_comment')->nullable();
+            $table->unsignedInteger('inspector_id')->nullable();
+            $table->string('valid_from')->nullable();
+            $table->string('valid_until')->nullable();
             $table->timestamps();
+
+            $table->foreign('user_id')->references('id')->on('admin_users')->onDelete('cascade');
+            $table->foreign('inspector_id')->references('id')->on('admin_users');
         
         });
     }
