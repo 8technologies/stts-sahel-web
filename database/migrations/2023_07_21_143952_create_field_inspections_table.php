@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('field_inspections', function (Blueprint $table) {
             $table->id();
-            $table->string('field_inspection_form_number');
+            $table->string('field_inspection_form_number')->nullable();
             $table->unsignedBigInteger('crop_declaration_id')->nullable();
             $table->unsignedBigInteger('crop_variety_id')->nullable();;
             $table->unsignedBigInteger('inspection_type_id')->nullable();;

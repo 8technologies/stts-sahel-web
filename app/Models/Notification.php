@@ -112,7 +112,8 @@ class Notification extends Model
                 'message' => "Dear {$name}, your {$entity} is now assigned to an inspector.",
                 'receiver_inspector_id' => $model->inspector_id,
                 'receiver_id' => $model->user_id,
-                'form_link' => admin_url("{$entity}/{$model->id}/edit"),
+                'form_link' => admin_url("{$entity}/{$model->id}"),
+                'inspector_form_link' => admin_url("{$entity}/{$model->id}/edit"),
             ],
             'pending' => [
                 'message' => "Dear {$name}, your {$entity} is now pending.",
@@ -163,7 +164,7 @@ class Notification extends Model
                     $notification_inspector->receiver_id = $receiver_inspector->id;
                     $notification_inspector->message = $message_inspector;
                     $notification_inspector->link = admin_url("auth/login");
-                    $notification_inspector->form_link = $data['form_link'];
+                    $notification_inspector->form_link = $data['inspector_form_link'];
                     $notification_inspector->status = 'Unread';
                     $notification_inspector->model = $model_name;
                     $notification_inspector->model_id = $model->id;

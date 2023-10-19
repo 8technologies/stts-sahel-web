@@ -98,13 +98,7 @@ class CropDeclaration extends Model
         });
 
         self::updating(function ($model){
-              //get the user id from the model and check if the user is a basic user or not
-              $user = Administrator::find($model->user_id);
-              if ($user->inRoles(['basic-user','grower'])) {
-                  $model->status = 'pending';
-                  $model->inspector_id = null;
-                  return $model;
-              }
+        
         });
 
 

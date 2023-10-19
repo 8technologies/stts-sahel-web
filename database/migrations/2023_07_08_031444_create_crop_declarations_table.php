@@ -14,7 +14,8 @@ return new class extends Migration
         Schema::create('crop_declarations', function (Blueprint $table) {
             $table->id();
             $table->unsignedInteger('user_id');
-            $table->unsignedBigInteger('seed_producer_id');
+            $table->unsignedBigInteger('seed_producer_id')->nullable();
+            $table->unsignedBigInteger('crop_variety_id');
             $table->string('phone_number');
             $table->decimal('garden_size', 8, 2);
             $table->decimal('gps_coordinates_1', 10, 6);
@@ -35,7 +36,7 @@ return new class extends Migration
             $table->string('origin_of_variety');
             $table->decimal('garden_location_latitude', 10, 6);
             $table->decimal('garden_location_longitude', 10, 6);
-            $table->string('status')->default(1);
+            $table->string('status');
             $table->unsignedInteger('inspector_id')->nullable();
             $table->string('lot_number')->nullable();
             $table->string('remarks')->nullable();
@@ -45,6 +46,7 @@ return new class extends Migration
 
             $table->foreign('seed_producer_id')->references('id')->on('seed_producers')->onDelete('cascade');
             $table->foreign('user_id')->references('id')->on('admin_users')->onDelete('cascade');
+            $table->foreign('crop_variety_id')->references('id')->on('crop_varieties')->onDelete('cascade');
 
          
         

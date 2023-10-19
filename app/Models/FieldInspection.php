@@ -52,7 +52,7 @@ class FieldInspection extends Model
 
         //call back to send a notification to the user
         self::created(function ($model) {
-            Notification::update_notification($model, 'CropDeclaration', request()->segment(count(request()->segments())));
+            Notification::update_notification($model, 'FieldInspection', 'field-inspections');
 
         });
 

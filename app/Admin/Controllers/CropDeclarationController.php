@@ -211,14 +211,14 @@ class CropDeclarationController extends AdminController
                 'between' => 'Coordinates must be between -9999.999999 and 9999.999999.',
             ])
             ->required();
-            $form->text('field_name', __('admin.form.Field name'));
+            $form->text('field_name', __('admin.form.Field name'))->required();
             $form->text('district_region', __('admin.form.District/Region'))->required();
             $form->text('circle', __('admin.form.Circle'))->required();
             $form->text('township', __('admin.form.Township'))->required();
             $form->text('village', __('admin.form.Village'))->required();
             $form->date('planting_date', __('admin.form.Planting date'))->default(date('Y-m-d'))->required();
-            $form->number('quantity_of_seed_planted', __('admin.form.Quantity of seed planted'))->required();
-            $form->number('expected_yield', __('admin.form.Expected yield'))->required();
+            $form->number('quantity_of_seed_planted', __('admin.form.Quantity of seed planted(kgs)'))->required();
+            $form->number('expected_yield', __('admin.form.Expected yield(kgs)'))->required();
             $form->text('seed_supplier_name', __('admin.form.Seed supplier name'))->required();
             $form->text('seed_supplier_registration_number', __('admin.form.Seed supplier registration number'))->required();
             $form->text('source_lot_number', __('admin.form.Source lot number'))->required();
@@ -232,6 +232,9 @@ class CropDeclarationController extends AdminController
                 'between' => 'Coordinates must be between -9999.999999 and 9999.999999.',
             ]);
             $form->textarea('details', __('admin.form.Provide more details about the garden'));
+            $form->hidden('status')->default('pending');
+            $form->hidden('inspector_id')->default(null);
+
         }
 
         if ($user->inRoles(['commissioner','developer'])) 
@@ -249,13 +252,13 @@ class CropDeclarationController extends AdminController
             $form->display('gps_coordinates_3', __('admin.form.Gps coordinates 3'));
             $form->display('gps_coordinates_4', __('admin.form.Gps coordinates 4'));
             $form->display('field_name', __('admin.form.Field name'));
-            $form->display('district_region', __('admin.form.District region'));
+            $form->display('district_region', __('admin.form.District/Region'));
             $form->display('circle', __('admin.form.Circle'));
             $form->display('township', __('admin.form.Township'));
             $form->display('village', __('admin.form.Village'));
             $form->display('planting_date', __('admin.form.Planting date'))->default(date('Y-m-d'));
-            $form->display('quantity_of_seed_planted', __('admin.form.Quantity of seed planted'));
-            $form->display('expected_yield', __('admin.form.Expected yield'));
+            $form->display('quantity_of_seed_planted', __('admin.form.Quantity of seed planted(kgs)'));
+            $form->display('expected_yield', __('admin.form.Expected yield(kgs)'));
             $form->display('seed_supplier_name', __('admin.form.Seed supplier name'));
             $form->display('seed_supplier_registration_number', __('admin.form.Seed supplier registration number'));
             $form->display('source_lot_number', __('admin.form.Source lot number'));
@@ -272,7 +275,7 @@ class CropDeclarationController extends AdminController
                 'between' => 'Coordinates must be between -9999.999999 and 9999.999999.',
             ])
             ->required();
-            $form->textarea('details', __('admin.form.Provide more details about the garden'));
+            $form->display('details', __('admin.form.Provide more details about the garden'));
 
             $form->divider(__('admin.form.Administrator decision'));
             $form->radioButton('status', __('admin.form.Status'))
