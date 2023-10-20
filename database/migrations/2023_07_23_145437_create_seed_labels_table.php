@@ -15,10 +15,10 @@ return new class extends Migration
             $table->id();
             $table->string('seed_label_request_number');
             $table->unsignedInteger('user_id');
-            $table->string('registration_number');
+            $table->string('registration_number')->nullable();
             $table->unsignedBigInteger('seed_lab_id');
             $table->string('label_packages');
-            $table->unsignedFloat('quantity_of_seed');
+            $table->unsignedFloat('quantity_of_seed')->nullable();
             $table->string('proof_of_payment');
             $table->date('request_date');
             $table->text('applicant_remarks')->nullable();

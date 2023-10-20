@@ -32,7 +32,7 @@ class SeedProducerController extends AdminController
     protected function grid()
     {
         $grid = new Grid(new SeedProducer());
-        $seed_producers = SeedProducer::where('user_id', auth('admin')->user()->id)->get();
+
         $user = Admin::user();
 
         //function to show the loggedin user only what belongs to them
@@ -82,11 +82,9 @@ class SeedProducerController extends AdminController
         });
 
         //check user role then show a certificate button
-        if(!auth('admin')->user()->inRoles(['inspector','commissioner']))
-        {
 
-            $grid->column('id', __('admin.form.Certificate'))->display(function ($id) use ( $seed_producers) {
-                $seed_producer =  $seed_producers->firstWhere('id', $id);
+            $grid->column('id', __('admin.form.Certificate'))->display(function ($id) {
+                $seed_producer =  SeedProducer::find($id);
             
                 if ($seed_producer&& $seed_producer->status == 'accepted') {
                     $link = url('certificate?id=' . $id);
@@ -96,7 +94,7 @@ class SeedProducerController extends AdminController
                     return '<b>Aucun certificat disponible</b>';
                 }
             });
-        }
+        
 
 
         return $grid;

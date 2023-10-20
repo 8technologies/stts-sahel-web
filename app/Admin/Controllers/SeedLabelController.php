@@ -273,7 +273,15 @@ class SeedLabelController extends AdminController
         $user = Admin::user();
         if ($form->isCreating()) {
             $form->hidden('user_id')->default($user->id);
+
+            $form->saving(function (Form $form) {
+                //check if the has many field is empty
+                if (empty($form->packages)) {
+                    return back()->withInput()->withErrors(['seed_lab_id' => 'Please add the packages you are requesting for.']);
+                }
+            });
         }
+
 
          //onsaved return to the list page
          $form->saved(function (Form $form) 
@@ -297,7 +305,7 @@ class SeedLabelController extends AdminController
             $form->date('request_date', __('admin.form.Request date'))->default(date('Y-m-d'));
             $form->textarea('applicant_remarks', __('admin.form.Applicant remarks'));
 
-            $form->text('label_packages', __('admin.form.Label package Type'));
+            $form->text('label_packages', __('admin.form.Label package Type'))->required();
             $form->hasMany('packages', __('admin.form.Packages'), function (Form\NestedForm $form) {
                 //drop down of the price and quantity from the label package table
                 $label_package = LabelPackage::all();
@@ -307,7 +315,7 @@ class SeedLabelController extends AdminController
                 }
 
                 $form->select('package_id', __('admin.form.Label package'))->options($label_package_array)->required();
-                $form->number('quantity', __('admin.form.Quantity'))->required();
+                $form->number('quantity', __('admin.form.Quantity(kgs)'))->required();
             });
         }
 
@@ -354,7 +362,7 @@ class SeedLabelController extends AdminController
                     $form->select('package_id', __('admin.form.Label package'))->options($label_package_array)->readonly();
 
                     
-                    $form->display('quantity', __('admin.form.Quantity'))->readonly();
+                    $form->display('quantity', __('admin.form.Quantity(kgs)'))->readonly();
                 })->readonly();
             }
 

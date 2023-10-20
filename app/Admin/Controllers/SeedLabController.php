@@ -45,6 +45,15 @@ class SeedLabController extends AdminController
             $grid->model()->where('status', '=', 'lab test assigned');
          }
 
+           //filter by name
+        $grid->filter(function ($filter) 
+        {
+            // Remove the default id filter
+            $filter->disableIdFilter();
+            $filter->like('user_id', 'Applicant')->select(\App\Models\User::pluck('name', 'id'));
+            
+        });
+
         //disable create button
         $grid->disableCreateButton();
 
@@ -71,10 +80,10 @@ class SeedLabController extends AdminController
             return $seed_lab_test_report_number ?? 'Not yet assigned';
         });
         $grid->column('germination_test_results', __('admin.form.Germination test results'))->display(function ($germination_test_results) {
-            return $germination_test_results ?? 'Not yet assigned';
+            return $germination_test_results.' % ' ?? 'Not yet assigned';
         });
         $grid->column('purity_test_results', __('admin.form.Purity test results'))->display(function ($purity_test_results) {
-            return $purity_test_results ?? 'Not yet assigned';
+            return $purity_test_results.' % ' ?? 'Not yet assigned';
         });
         $grid->column('test_decision', __('admin.form.Test decision'))->display(function ($test_decision) {
 
@@ -139,9 +148,15 @@ class SeedLabController extends AdminController
         $show->field('sample_request_number', __('admin.form.Seed sample request number'));
         $show->field('seed_sample_size', __('admin.form.Seed sample size'));
         $show->field('testing_methods', __('admin.form.Testing method'));
-        $show->field('germination_test_results', __('admin.form.Germination test results'));
-        $show->field('purity_test_results', __('admin.form.Purity test results'));
-        $show->field('moisture_content_test_results', __('admin.form.Moisture content test results'));
+        $show->field('germination_test_results', __('admin.form.Germination test results'))->as(function ($germination_test_results) {
+            return $germination_test_results . ' % ';
+        })->unescape();
+        $show->field('purity_test_results', __('admin.form.Purity test results'))->as(function ($purity_test_results) {
+            return $purity_test_results . ' % ';
+        })->unescape();
+        $show->field('moisture_content_test_results', __('admin.form.Moisture content test results'))->as(function ($moisture_content_test_results) {
+            return $moisture_content_test_results . ' % ';
+        })->unescape();
         $show->field('additional_tests_results', __('admin.form.Additional tests results'));
         $show->field('test_decision', __('admin.form.Test decision'))->as(function ($test_decision) {
             return \App\Models\Utils::tell_status($test_decision)?? 'Not yet assigned';
@@ -173,6 +188,8 @@ class SeedLabController extends AdminController
             $form->hidden('user_id')->default($user->id);
         }
 
+        
+
         $crop_stock = LoadStock::where('user_id', $user->id);
 
 
@@ -201,7 +218,7 @@ class SeedLabController extends AdminController
             $form->display('', __('admin.form.Crop'))->default($crop->crop_name);
             $form->display('', __('admin.form.Variety'))->default($crop_variety->crop_variety_name);
             $form->display('', __('Generation'))->default($seed_class);
-            $form->number('quantity', __('admin.form.Quantity'))->readonly();
+            $form->display('quantity', __('admin.form.Quantity(kgs)'));
             $form->hidden('crop_variety_id', __('admin.form.Crop Variety'))->default($crop_variety->id);
             $form->text('mother_lot',__('admin.form.Mother lot number'))->default($mother_lot)->readonly();
             $form->text('seed_lab_test_report_number', __('admin.form.Seed lab test report number'))->default('labtest' . "/" . mt_rand(10000000, 99999999))->readonly();

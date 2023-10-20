@@ -61,7 +61,9 @@ class SeedSampleController extends AdminController
         ->display(function ($user_id) {
             return \App\Models\User::find($user_id)->name??'-';
         });
-        $grid->column('load_stock_id', __('admin.form.Crop stock number'));
+        $grid->column('load_stock_id', __('admin.form.Crop stock number'))->display(function ($load_stock_id) {
+            return \App\Models\LoadStock::find($load_stock_id)->load_stock_number??'-';
+        });
         $grid->column('sample_request_date', __('admin.form.Sample request date'));
         $grid->column('status', __('admin.form.Status'))->display(function ($status) {
             return \App\Models\Utils::tell_status($status) ?? '-';
@@ -99,7 +101,9 @@ class SeedSampleController extends AdminController
         $show->field('user_id', __('admin.form.Applicant id'))->as(function ($user_id) {
             return \App\Models\User::find($user_id)->name;
         });
-        $show->field('load_stock_id', __('admin.form.Load stock number'));
+        $show->field('load_stock_id', __('admin.form.Load stock number'))->as(function ($load_stock_id) {
+            return \App\Models\LoadStock::find($load_stock_id)->load_stock_number;
+        });
         $show->field('sample_request_date', __('admin.form.Sample request date'));
         $show->field('proof_of_payment', __('admin.form.Proof of payment'))->file();
         $show->field('applicant_remarks', __('admin.form.Applicant remarks'));
@@ -132,7 +136,7 @@ class SeedSampleController extends AdminController
         {
             $form->hidden('user_id')->default($user->id);
 
-            //if form is saving get the crop variety id from the crop declaration
+            //compare the quantity requested and the quantity available
             $form->saving(function (Form $form) {
                $load_stock_quantity = LoadStock::where('id', $form->load_stock_id)->value('yield_quantity');
                 if($form->quantity > $load_stock_quantity)
@@ -166,10 +170,12 @@ class SeedSampleController extends AdminController
         {
             $form->text('sample_request_number', __('admin.form.Sample request number'))->default('SRN' . date('YmdHis'))->readonly();
             $form->select('load_stock_id', __('admin.form.Load stock number'))->options($crop_stock->pluck('load_stock_number', 'id'))->required();
-            $form->number('quantity', __('admin.form.Quantity'))->required();
-            $form->date('sample_request_date', __('admin.form.Sample request date'))->default(date('Y-m-d')); 
+            $form->number('quantity', __('admin.form.Quantity(kgs)'))->rules(
+                
+            );
+            $form->date('sample_request_date', __('admin.form.Sample request date'))->default(date('Y-m-d'))->required(); 
             $form->file('proof_of_payment', __('admin.form.Proof of payment'))
-            ->rules(['mimes:jpeg,pdf,jpg', 'max:2048']) // Assuming a maximum file size of 2MB 
+            ->rules(['mimes:jpeg,pdf,jpg', 'max:1048']) // Assuming a maximum file size of 1MB 
             ->help('Attach a copy of your proof of payment, and should be in pdf, jpg or jpeg format')
             ->required();
             $form->textarea('applicant_remarks', __('admin.form.Applicant remarks'));
@@ -192,6 +198,7 @@ class SeedSampleController extends AdminController
                 $crop_variety = CropVariety::where('id', $crop_variety_id)->first();
                 //get crop name from crop variety
                 $crop_name = Crop::where('id', $crop_variety->crop_id)->value('crop_name');
+                $load_stock_number = LoadStock::where('id', $seed_lab->load_stock_id)->value('load_stock_number');
 
                 $applicant_name = Administrator::where('id', $seed_lab->user_id)->value('name');
                 $seed_class = LoadStock::where('id', $seed_lab->load_stock_id)->where('user_id', $seed_lab->user_id)->value('seed_class');
@@ -200,7 +207,7 @@ class SeedSampleController extends AdminController
                 if (auth('admin')->user()->inRoles(['inspector', 'commissioner','developer'])) 
                 {
                     $form->display('', __('admin.form.Applicant name'))->default($applicant_name);
-                    $form->display('load_stock_id', __('admin.form.Load stock number'))->readonly();
+                    $form->display('', __('admin.form.Loadd stock number'))->default($load_stock_number);
                     $form->display('', __('admin.form.Crop'))->default($crop_name);
                     $form->display('', __('admin.form.Variety'))->default($crop_variety->crop_variety_name);
                     $form->display('', __('admin.form.Generation'))->default($seed_class_name);

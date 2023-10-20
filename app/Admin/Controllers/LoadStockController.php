@@ -42,7 +42,9 @@ class LoadStockController extends AdminController
         $grid->column('user_id', __('admin.form.Applicant name'))->display(function ($user_id) {
             return \App\Models\User::find($user_id)->name;
         });
-        $grid->column('yield_quantity', __('admin.form.Yield quantity'));
+        $grid->column('yield_quantity', __('admin.form.Yield quantity(kgs)'))->display(function ($yield_quantity) {
+            return number_format($yield_quantity).' kgs';
+        });
         $grid->column('last_field_inspection_date', __('admin.form.Last field inspection date'));
      
         
@@ -81,8 +83,8 @@ class LoadStockController extends AdminController
         $show->field('seed_class', __('admin.form.Seed class'))->as(function ($value) {
             return \App\Models\SeedClass::find($value)->class_name ?? '-';
         });
-        $show->field('field_size', __('admin.form.Field size'));
-        $show->field('yield_quantity', __('admin.form.Yield quantity'));
+        $show->field('field_size', __('admin.form.Field size(Acres)'));
+        $show->field('yield_quantity', __('admin.form.Yield quantity(kgs)'));
         $show->field('last_field_inspection_date', __('admin.form.Last field inspection date'));
         $show->field('load_stock_date', __('admin.form.Crop stock date'));
         $show->field('last_field_inspection_remarks', __('admin.form.Last field inspection remarks'));
@@ -131,18 +133,19 @@ class LoadStockController extends AdminController
 
          //check if the form is being edited
          if ($form->isEditing()) 
-         {
-             //get request id
-             $id = request()->route()->parameters()['load_stock'];
-             //check if its valid to edit the form
-             Validation::checkFormEditable($form, $id, 'LoadStock');
-         }
+        {
+            //get request id
+            $id = request()->route()->parameters()['load_stock'];
+            //check if its valid to edit the form
+            Validation::checkFormEditable($form, $id, 'LoadStock');
+        }
 
         $form->saved(function (Form $form) 
         {
             admin_toastr(__('admin.form.Crop stock saved successfully'), 'success');
             return redirect('/admin/load-stocks');
         });
+
         $form->text('load_stock_number', __('admin.form.Crop stock number'))->default('LS'.rand(1000, 100000))->readonly();
 
         //get all crop varieties
@@ -167,10 +170,10 @@ class LoadStockController extends AdminController
         
         
         $form->select('seed_class', __('admin.form.Seed class'))->options($seed_classes->pluck('class_name', 'id'))->required();
-        $form->decimal('field_size', __('admin.form.Field size'));
-        $form->decimal('yield_quantity', __('admin.form.Yield quantity'));
+        $form->decimal('field_size', __('admin.form.Field size(Acres)'))->required();
+        $form->decimal('yield_quantity', __('admin.form.Yield quantity(kgs)'))->required();
        
-        $form->date('load_stock_date', __('admin.form.Crop stock date'))->default(date('Y-m-d'));
+        $form->date('load_stock_date', __('admin.form.Crop stock date'))->default(date('Y-m-d'))->required();
         $form->textarea('last_field_inspection_remarks', __('admin.form.Last field inspection remarks'));
      
 

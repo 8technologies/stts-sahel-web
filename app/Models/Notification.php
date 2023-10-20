@@ -135,6 +135,11 @@ class Notification extends Model
                 'receiver_id' => $receiver_id,
                 'form_link' => admin_url("{$entity}/{$model->id}"),
             ],
+            'printed' => [
+                'message' => "Dear {$name}, your {$entity} have been printed by the inspector.",
+                'receiver_id' => $receiver_id,
+                'form_link' => admin_url("{$entity}/{$model->id}"),
+            ],
             'lab test assigned' => [
                 'message' => "Dear {$name}, your {$entity} has been assigned to the lab technician.",
                 'receiver_id' => $model->user_id,

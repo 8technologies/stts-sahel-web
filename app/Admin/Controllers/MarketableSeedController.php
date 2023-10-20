@@ -48,7 +48,9 @@ class MarketableSeedController extends AdminController
         $grid->column('crop_variety_id', __('admin.form.Crop Variety'))->display(function($crop_variety_id){
             return \App\Models\CropVariety::find($crop_variety_id)->crop_variety_name;
         });
-        $grid->column('quantity', __('admin.form.Quantity'));
+        $grid->column('quantity', __('admin.form.Quantity(kgs)'))->display(function($quantity){
+            return $quantity.' kgs';
+        });
         $grid->column('created_at', __('admin.form.Created at'));
        
 
@@ -78,7 +80,9 @@ class MarketableSeedController extends AdminController
         $show->field('crop_variety_id', __('admin.form.Crop Variety'))->as(function($crop_variety_id){
             return \App\Models\CropVariety::find($crop_variety_id)->crop_variety_name;
         });
-        $show->field('quantity', __('admin.form.Quantity'));
+        $show->field('quantity', __('admin.form.Quantity(kgs)'))->as(function($quantity){
+            return $quantity.' kgs';
+        });
         $show->field('created_at', __('admin.form.Created at'));
        
 
