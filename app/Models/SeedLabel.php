@@ -49,6 +49,13 @@ class SeedLabel extends Model
           {
               Notification::send_notification($model, 'SeedLabel', request()->segment(count(request()->segments())));
           });
+
+          //call back to send a notification to the user
+            self::updated(function ($model) 
+            {
+                //call back to send a notification to the user after form is updated
+                Notification::update_notification($model, 'SeedLabel', request()->segment(count(request()->segments())-1));
+            });
   
     }
 

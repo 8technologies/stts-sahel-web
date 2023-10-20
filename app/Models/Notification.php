@@ -136,9 +136,9 @@ class Notification extends Model
                 'form_link' => admin_url("{$entity}/{$model->id}"),
             ],
             'printed' => [
-                'message' => "Dear {$name}, your {$entity} have been printed by the inspector.",
+                'message' => "Dear {$name}, your seed-labels have been printed by the inspector.",
                 'receiver_id' => $receiver_id,
-                'form_link' => admin_url("{$entity}/{$model->id}"),
+                'form_link' => admin_url("seed-labels/{$model->id}"),
             ],
             'lab test assigned' => [
                 'message' => "Dear {$name}, your {$entity} has been assigned to the lab technician.",

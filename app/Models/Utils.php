@@ -153,22 +153,29 @@ class Utils extends Model
     //delete notification after the form has been viewed
     public static function delete_notification($model_name, $id)
     {
+       
         $model = "App\\Models\\" .ucfirst($model_name);
         $user =auth('admin')->user();
         $form = $model::findOrFail($id);
         //delete the notification from the database once a user views the form
         if(!$user->inRoles(['developer','commissioner','inspector']) )
         {
+            
             if($form->status == 'pending'|| $form->status =='halted' || $form->status == 'rejected' || 
                $form->status == 'accepted' || $form->status == 'inspector assigned' || 
                $form->status == 'lab test assigned' || $form->status == 'printed' || 
                $form->status == 'marketable' || $form->status == 'not marketable' || $form->status == 'processing'
                || $form->status == 'shipping' || $form->status == 'delivered' || $form->status == 'cancelled')
             {
+                
                 \App\Models\Notification::where(['receiver_id' => $user->id, 'model_id' => $id, 'model' => $model_name])->delete();
         
             }
 
+        }
+
+        if($model_name == 'Order'){
+            \App\Models\Notification::where(['receiver_id' => $user->id, 'model_id' => $id, 'model' => $model_name])->delete();
         }
     }
 }
