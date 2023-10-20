@@ -41,8 +41,12 @@ class PreOrderController extends AdminController
         $grid->column('crop_variety_id', __('admin.form.Crop Variety'))->display(function ($crop_variety_id) {
             return \App\Models\CropVariety::find($crop_variety_id)->crop_variety_name;
         });
-        $grid->column('seed_class', __('admin.form.Seed class'));
-        $grid->column('quantity', __('admin.form.Quantity'));
+        $grid->column('seed_class', __('admin.form.Seed class'))->display(function ($seed_class) {
+            return \App\Models\SeedClass::find($seed_class)->class_name;
+        });
+        $grid->column('quantity', __('admin.form.Quantity(kgs)'))->display(function ($quantity) {
+            return $quantity . ' kgs';
+        });
         $grid->column('preferred_delivery_date', __('admin.form.Preferred delivery date'));
         $grid->column('client_name', __('admin.form.Client name'));
 
@@ -65,8 +69,12 @@ class PreOrderController extends AdminController
         $show->field('crop_variety_id', __('admin.form.Crop Variety'))->as(function ($crop_variety_id) {
             return \App\Models\CropVariety::find($crop_variety_id)->crop_variety_name;
         });
-        $show->field('seed_class', __('admin.form.Seed class'));
-        $show->field('quantity', __('admin.form.Quantity'));
+        $show->field('seed_class', __('admin.form.Seed class'))->as(function ($seed_class) {
+            return \App\Models\SeedClass::find($seed_class)->class_name;
+        });
+        $show->field('quantity', __('admin.form.Quantity(kgs)'))->as(function ($quantity) {
+            return $quantity . ' kgs';
+        });
         $show->field('preferred_delivery_date', __('admin.form.Preferred delivery date'));
         $show->field('order_date', __('admin.form.Order date'));
         $show->field('client_name', __('admin.form.Client name'));
@@ -113,7 +121,7 @@ class PreOrderController extends AdminController
         }
         $form->select('crop_variety_id', __('admin.form.Crop Variety'))->options(\App\Models\CropVariety::all()->pluck('crop_variety_name', 'id'));
         $form->select('seed_class', __('admin.form.Seed generation'))->options(\App\Models\SeedClass::all()->pluck('class_name', 'id'));
-        $form->decimal('quantity', __('admin.form.Quantity'));
+        $form->decimal('quantity', __('admin.form.Quantity(kgs)'));
         $form->date('preferred_delivery_date', __('admin.form.Preferred delivery date'))->default(date('Y-m-d'));
         $form->date('order_date', __('admin.form.Order date'))->default(date('Y-m-d'));
         $form->text('client_name', __('admin.form.Client name'));

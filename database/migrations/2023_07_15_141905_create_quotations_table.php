@@ -20,7 +20,7 @@ return new class extends Migration
             $table->unsignedInteger('quotation_by');
             $table->unsignedInteger('quotation_to');
             $table->string('details');
-            $table->string('status');
+            $table->string('status')->default('pending');
             $table->string('payment_method')->nullable();
             $table->string('status_comment')->nullable();
             $table->timestamps();

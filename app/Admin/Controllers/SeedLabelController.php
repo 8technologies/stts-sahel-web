@@ -144,6 +144,8 @@ class SeedLabelController extends AdminController
     protected function detail($id)
     {
         $show = new Show(SeedLabel::findOrFail($id));
+          //delete notification after viewing the form
+          Utils::delete_notification('SeedLabel', $id);
 
         $seed_label = SeedLabel::find($id);
         //get the users successfully registered seed labs

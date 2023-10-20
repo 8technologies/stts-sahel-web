@@ -58,7 +58,10 @@ class OrderController extends AdminController
             $crop_variety_id = PreOrder::find($preorder_id)->crop_variety_id;
             return \App\Models\CropVariety::find($crop_variety_id)->crop_variety_name;
         });
-        $grid->column('quantity', __('admin.form.Quantity'));
+        $grid->column('quantity', __('admin.form.Quantity'))->display(function ($quantity) 
+        {
+            return $quantity.' Kgs';
+        });
         $grid->column('price', __('admin.form.Price'));
         $grid->column('order_date', __('admin.form.Order date'));
         $grid->column('supply_date', __('admin.form.Supply date'));
@@ -106,7 +109,10 @@ class OrderController extends AdminController
             return \App\Models\SeedClass::find($preOrder->seed_class)->class_name;
         });
     
-        $show->field('quantity', __('admin.form.Quantity to be supplied'));
+        $show->field('quantity', __('admin.form.Quantity to be supplied'))->as(function ($quantity) 
+        {
+            return $quantity.' Kgs';
+        });
         $show->field('price', __('admin.form.Price'));
         $show->field('supply_date', __('admin.form.Supply date'));
         $show->field('order_by', __('admin.form.Order by'))->as(function ($order_by) 
@@ -147,7 +153,7 @@ class OrderController extends AdminController
             return \App\Models\CropVariety::find($crop_variety_id)->crop_variety_name;
         });
         
-        $form->display('quantity', __('admin.form.Quantity'));
+        $form->display('quantity', __('admin.form.Quantity(kgs)'));
         $form->display('price', __('admin.form.Price'));
         $form->display('order_date', __('admin.form.Order date'));
         $form->display('details', __('admin.form.Details'));

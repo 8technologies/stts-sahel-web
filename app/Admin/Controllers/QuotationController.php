@@ -58,7 +58,9 @@ class QuotationController extends AdminController
             $crop_variety_id = \App\Models\PreOrder::find($preorder_id)->crop_variety_id;
             return \App\Models\CropVariety::find($crop_variety_id)->crop_variety_name;
         });
-        $grid->column('quantity', __('admin.form.Quantity'));
+        $grid->column('quantity', __('admin.form.Quantity(kgs)'))->display(function ($quantity) {
+            return $quantity . ' kgs';
+        });
         $grid->column('price', __('admin.form.Price'));
         $grid->column('supply_date', __('admin.form.Supply date'));
         $grid->column('quotation_by', __('admin.form.Quotation by'))->display(function ($quotation_by) {
@@ -97,9 +99,11 @@ class QuotationController extends AdminController
             return \App\Models\SeedClass::find($preOrder->seed_class)->class_name;
         });
         $show->field('quantityy', __('admin.form.Requested Quantity'))->as(function () use ($preOrder) {
-            return $preOrder->quantity;
+            return $preOrder->quantity.' Kgs';
         });
-        $show->field('quantity', __('admin.form.Quantity to be supplied'));
+        $show->field('quantity', __('admin.form.Quantity to be supplied'))->as(function ($quantity) {
+            return $quantity . ' Kgs';
+        });
         $show->field('price', __('admin.form.Price'));
         $show->field('preferred_delivery_date', __('admin.form.Preferred delivery date'))->as(function () use ($preOrder) {
             return $preOrder->preferred_delivery_date;
@@ -162,10 +166,11 @@ class QuotationController extends AdminController
             $form->display('crop_variety_id', __('admin.form.Crop Variety'))->with(function () use ($preOrder) {
                 return \App\Models\CropVariety::find($preOrder->crop_variety_id)->crop_variety_name;
             });
-            $form->display('seed_class', __('admin.form.Seed class'))->default($preOrder->seed_class);
-            $form->display('quantity', __('admin.form.Requested Quantity'))->default($preOrder->quantity);
-            $form->text('quantity', __('admin.form.Quantity'));
-            $form->text('price', __('admin.form.Price per unit'));
+            $form->display('seed_class', __('admin.form.Seed class'))->default(
+                  \App\Models\SeedClass::find($preOrder->seed_class)->class_name);
+            $form->display('', __('admin.form.Requested Quantity'))->default($preOrder->quantity.' kgs');
+            $form->text('quantity', __('admin.form.Quantity(kgs)'))->attribute(['type' => 'number', 'min' => 1, 'max' => $preOrder->quantity])->required();
+            $form->text('price', __('admin.form.Price per unit'))->attribute(['type' => 'number', 'min' => 1])->required();
             $form->display('preferred_delivery_date', __('admin.form.Preferred delivery date'))->default($preOrder->preferred_delivery_date);
             $form->date('supply_date', __('admin.form.Supply date'));
             $form->hidden('quotation_by', __('admin.form.Quotation by'))->readonly()->value(Admin::user()->id);
@@ -190,9 +195,10 @@ class QuotationController extends AdminController
                 $form->display('crop_variety_id', __('admin.form.Crop variety'))->with(function () use ($preOrder) {
                     return \App\Models\CropVariety::find($preOrder->crop_variety_id)->crop_variety_name;
                 });
-                $form->display('seed_class', __('admin.form.Seed class'))->default($preOrder->seed_class);
-                $form->display('quantity', __('admin.form.Requested Quantity'))->default($preOrder->quantity);
-                $form->display('quantity', __('admin.form.Quantity'));
+                $form->display('seed_class', __('admin.form.Seed class'))->default(
+                    \App\Models\SeedClass::find($preOrder->seed_class)->class_name);
+                $form->display('', __('admin.form.Requested Quantity'))->default($preOrder->quantity.' kgs');
+                $form->display('', __('admin.form.Quantity(kgs)'))->default($quotation->quantity.' kgs');
                 $form->display('price', __('admin.form.Price'));
                 $form->display('preferred_delivery_date', __('admin.form.Preferred delivery date'))->default($preOrder->preferred_delivery_date);
                 $form->display('supply_date', __('admin.form.Supply date'));
