@@ -378,7 +378,9 @@ return [
         'Cooperative approval date' => 'Cooperative approval date',
         //seed lab
         'Mother lot number' => 'Mother lot number',
+        'A Summary of Pre-Orders over the months'=>'A Summary of Pre-orders over the months',
         'Seed lab number' => 'Seed lab number',
+        'Pre-Orders'=>'Pre-orders',
         'Seed sample size' => 'Seed sample size',
         'Testing method' => 'Testing method',
         'Germination test results' => 'Germination test results(%)',

@@ -91,7 +91,9 @@
         }
 
         // Function to update the chart with the selected crops and year
-        function preorderUpdateChart(cropsToShow, selectedYear) {
+        function preorderUpdateChart(cropsToShow, selectedYear)
+        {
+            console.log("now the year is", selectedYear);
             // Get all unique months for the selected year
             const preorderCurrentYearIndex = preorderYears.indexOf(preorderCurrentYear);
             const preorderSelectedYearIndex = preorderYears.indexOf(parseInt(selectedYear));
@@ -104,7 +106,7 @@
                 }
                 const date = new Date(selectedYear, month - 1, 1);
                 preorderAllMonths.push(new Intl.DateTimeFormat(currentLocale, { year: 'numeric', month: 'long' }).format(date));
-                console.log(new Intl.DateTimeFormat(currentLocale, { year: 'numeric', month: 'long' }).format(date));
+            
             }
 
             const filteredData = filterDataForCrops(cropsToShow, selectedYear);
@@ -163,6 +165,7 @@
             const selectedYear = preorderYearSelect.value;
             const selectedCrop = preorderCropSelect.value;
             if (selectedCrop === 'all') {
+                console.log('all', selectedYear);
                 preorderUpdateChart(preorderAllCrops, selectedYear);
             } else {
                 preorderUpdateChart([selectedCrop], selectedYear);
