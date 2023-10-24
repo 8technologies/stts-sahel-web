@@ -89,7 +89,7 @@ class CooperativeMemberController extends AdminController
         $user = Admin::user()->id;
         $cooperative_id = \App\Models\Cooperative::where('user_id', $user)->first()->id;
         $form->hidden('cooperative_id', __('admin.form.Cooperative id'))->default($cooperative_id)->readonly();
-        $form->text('member_number', __('admin.form.Member number'))->default('member/' . date('Y/M/') . rand(1000, 100000))->required();
+        $form->text('member_number', __('admin.form.Member number'))->default('member/' . date('Y/M/') . rand(1000, 100000))->readonly();
         $form->text('farmer_first_name', __('admin.form.Farmer first name'))->required();
         $form->text('farmer_last_name', __('admin.form.Farmer last name'))->required();
         $form->select('gender', __('admin.form.Gender'))->options(

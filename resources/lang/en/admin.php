@@ -380,6 +380,8 @@ return [
         'Mother lot number' => 'Mother lot number',
         'A Summary of Pre-Orders over the months'=>'A Summary of Pre-orders over the months',
         'Seed lab number' => 'Seed lab number',
+        'Quantity of seed planted(kgs)'=>'Quantity of seed planted(kgs)',
+        'Expected yield(kgs)'=>'Expected yield(kgs)',
         'Pre-Orders'=>'Pre-orders',
         'Seed sample size' => 'Seed sample size',
         'Testing method' => 'Testing method',

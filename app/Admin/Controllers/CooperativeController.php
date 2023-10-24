@@ -224,24 +224,12 @@ class CooperativeController extends AdminController
                 $form->divider('Inspector decision');
                 $form->radioButton('status', __('admin.form.Status'))
                     ->options([
-                        'accepted'=> __('admin.form.Accepted'),
-                        'halted' => __('admin.form.Halted'),
+                        'recommended'=> __('admin.form.Recommend'),
                         'rejected' => __('admin.form.Rejected'),
-                   
                     ])
-                    ->when('in', ['rejected', 'halted'], function (Form $form) {
+                    ->when('in', ['recommended','rejected'], function (Form $form) {
                         $form->textarea('status_comment', __('admin.form.Status comment'))->rules('required');
-                    })
-                    ->when('accepted', function (Form $form) {
-                        $form->text('registration_number', __('Registration number'))->default('cooperative'.'/'.rand(1000, 100000))->readonly();
-                        $form->datetime('valid_from', __('admin.form.Cooperative approval date'))->default(date('Y-m-d H:i:s'))->required();
-                        $nextYear = Carbon::now()->addYear(); // Get the date one year from now
-                        $defaultDateTime = $nextYear->format('Y-m-d H:i:s'); // Format the date for default value
-                        
-                        $form->datetime('valid_until', __('admin.form.Valid until'))
-                            ->default($defaultDateTime)
-                            ->required();
-                    })->required();
+                    });
             }
         } 
 
@@ -256,6 +244,8 @@ class CooperativeController extends AdminController
             $form->text('membership_type', __('admin.form.Membership type'))->required();
             $form->text('services_to_members', __('admin.form.Services to members'))->required();
             $form->text('objectives_or_goals', __('admin.form.Objectives or goals'))->required();
+            $form->hidden('status')->default('pending');
+            $form->hidden('inspector_id')->default(null);
         }
 
          //disable the edit and delete action buttons
