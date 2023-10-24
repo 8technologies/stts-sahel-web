@@ -12,6 +12,8 @@
     @if(!is_null($favicon = Admin::favicon()))
     <link rel="shortcut icon" href="{{$favicon}}">
     @endif
+    <link rel="icon" type="image/x-icon" href="{{ asset('storage/assets/favicon-32x32.png') }}">
+
 
     {!! Admin::css() !!}
 
