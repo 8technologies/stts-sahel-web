@@ -274,7 +274,7 @@ class SeedProducerController extends AdminController
                         $form->textarea('status_comment', __('admin.form.Status comment'))->rules('required');
                     })
                     ->when('recommended', function(Form $form){
-                       $form->textarea('inspector_comment', __('Recommendation'));
+                       $form->textarea('recommendation', __('Recommendation'));
                     });
 
             }
