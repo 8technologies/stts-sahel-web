@@ -229,6 +229,8 @@ class AgroDealersController extends AdminController
             ->rules(['mimes:jpeg,pdf,jpg', 'max:2048']) // Assuming a maximum file size of 2MB 
             ->help('Attach a copy of your proof of payment, and should be in pdf, jpg or jpeg format')
             ->required();
+            $form->hidden('status')->default('pending');
+            $form->hidden('inspector_id')->default(null);
             
         }
 
