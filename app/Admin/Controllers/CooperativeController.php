@@ -219,18 +219,24 @@ class CooperativeController extends AdminController
                     })->required();
             }
             //inspector decision
-            if ($user->isRole('inspector')) 
-            {
-                $form->divider('Inspector decision');
-                $form->radioButton('status', __('admin.form.Status'))
-                    ->options([
-                        'recommended'=> __('admin.form.Recommend'),
-                        'rejected' => __('admin.form.Rejected'),
-                    ])
-                    ->when('in', ['recommended','rejected'], function (Form $form) {
-                        $form->textarea('status_comment', __('admin.form.Status comment'))->rules('required');
-                    });
-            }
+             //inspectors decision
+             if ($user->isRole('inspector')) 
+             {
+              
+                 $form->divider('Inspectors decision');
+                 $form->radio('status', __('admin.form.Status'))
+                     ->options([
+                         'recommended'=> __('admin.form.Recommend'),
+                         'rejected' => __('admin.form.Rejected'),
+                     ])
+                     ->when('rejected', function (Form $form) {
+                         $form->textarea('status_comment', __('admin.form.Status comment'))->rules('required');
+                     })
+                     ->when('recommendation', function(Form $form){
+                        $form->textarea('inspector_comment', __('Recommendation'));
+                     });
+ 
+             }
         } 
 
         else 
