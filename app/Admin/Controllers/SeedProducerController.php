@@ -259,6 +259,8 @@ class SeedProducerController extends AdminController
             }
 
             //inspectors decision
+            //inspectors decision
+            //inspectors decision
             if ($user->isRole('inspector')) 
             {
              
@@ -271,7 +273,7 @@ class SeedProducerController extends AdminController
                     ->when('rejected', function (Form $form) {
                         $form->textarea('status_comment', __('admin.form.Status comment'))->rules('required');
                     })
-                    ->when('recommendation', function(Form $form){
+                    ->when('recommended', function(Form $form){
                        $form->textarea('inspector_comment', __('Recommendation'));
                     });
 

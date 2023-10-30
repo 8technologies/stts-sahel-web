@@ -296,23 +296,24 @@ class AgroDealersController extends AdminController
             }
 
                  //inspectors decision
-                 if ($user->isRole('inspector')) 
-                 {
-                  
-                     $form->divider('Inspectors decision');
-                     $form->radio('status', __('admin.form.Status'))
-                         ->options([
-                             'recommended'=> __('admin.form.Recommend'),
-                             'rejected' => __('admin.form.Rejected'),
-                         ])
-                         ->when('recommendation', function(Form $form){
+                    //inspectors decision
+                if ($user->isRole('inspector')) 
+                {
+                
+                    $form->divider('Inspectors decision');
+                    $form->radio('status', __('admin.form.Status'))
+                        ->options([
+                            'recommended'=> __('admin.form.Recommend'),
+                            'rejected' => __('admin.form.Rejected'),
+                        ])
+                        ->when('rejected', function (Form $form) {
+                            $form->textarea('status_comment', __('admin.form.Status comment'))->rules('required');
+                        })
+                        ->when('recommended', function(Form $form){
                             $form->textarea('inspector_comment', __('Recommendation'));
-                         })
-                         ->when('rejected', function (Form $form) {
-                             $form->textarea('status_comment', __('admin.form.Status comment'))->rules('required');
-                         });
-     
-                 }
+                        });
+    
+                }
         }
 
         //disable the edit and delete action buttons
