@@ -60,7 +60,7 @@ class CropDeclarationController extends AdminController
         $grid->column('crop_variety_id', __('admin.form.Crop Variety'))->display(function ($crop_variety_id) {
             return CropVariety::find($crop_variety_id)->crop_variety_name;
         });
-        $grid->column('garden_size', __('admin.form.Garden size'));
+        $grid->column('garden_size', __('admin.form.Garden size(Acres)'));
         $grid->column('field_name', __('admin.form.Field name'));
         $grid->column('planting_date', __('admin.form.Planting date'))->display(function ($planting_date) {
             return date('d-m-Y', strtotime($planting_date));
@@ -104,7 +104,7 @@ class CropDeclarationController extends AdminController
             return CropVariety::find($crop_variety_id)->crop_variety_name;
         });
         $show->field('phone_number', __('admin.form.Phone number'));
-        $show->field('garden_size', __('admin.form.Garden size'));
+        $show->field('garden_size', __('admin.form.Garden size(Acres)'));
         $show->field('gps_coordinates_1', __('admin.form.GPS coordinates 1'));
         $show->field('gps_coordinates_2', __('admin.form.GPS coordinates 2'));
         $show->field('gps_coordinates_3', __('admin.form.GPS coordinates 3'));
@@ -189,7 +189,7 @@ class CropDeclarationController extends AdminController
                 ->required();
 
             $form->text('phone_number', __('admin.form.Phone number'))->required();
-            $form->decimal('garden_size', __('admin.form.Garden size'))->required();
+            $form->decimal('garden_size', __('admin.form.Garden size(Acres)'))->required();
             $form->decimal('gps_coordinates_1', __('admin.form.GPS coordinates 1'))
                 ->rules('required|numeric|between:-9999.999999,9999.999999', [
                     'numeric' => 'Coordinates must be a numeric value.',
@@ -246,7 +246,7 @@ class CropDeclarationController extends AdminController
                 ->required();
 
             $form->display('phone_number', __('admin.form.Phone number'));
-            $form->display('garden_size', __('admin.form.Garden size'));
+            $form->display('garden_size', __('admin.form.Garden size(Acres)'));
             $form->display('gps_coordinates_1', __('admin.form.Gps coordinates 1'));
             $form->display('gps_coordinates_2', __('admin.form.Gps coordinates 2'));
             $form->display('gps_coordinates_3', __('admin.form.Gps coordinates 3'));

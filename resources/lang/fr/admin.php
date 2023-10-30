@@ -375,6 +375,7 @@ return [
         'Cooperative approval date' => 'Date d\'approbation de la coopérative',
         //seed lab
         'Mother lot number' => 'Numéro de lot mère',
+        'Garden size(Acres)' => 'Taille du jardin (acres)',
         'Quantity of seed planted(kgs)' => 'Quantité de semences plantées (kgs)',
         'Expected yield(kgs)' => 'Rendement attendu (kgs)',
         'Seed lab test report number' => 'Numéro de rapport de test de laboratoire de semences',

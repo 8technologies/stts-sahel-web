@@ -378,6 +378,7 @@ return [
         'Cooperative approval date' => 'Cooperative approval date',
         //seed lab
         'Mother lot number' => 'Mother lot number',
+        'Garden size(Acres)' => 'Garden size(Acres)',
         'A Summary of Pre-Orders over the months'=>'A Summary of Pre-orders over the months',
         'Seed lab number' => 'Seed lab number',
         'Quantity of seed planted(kgs)'=>'Quantity of seed planted(kgs)',

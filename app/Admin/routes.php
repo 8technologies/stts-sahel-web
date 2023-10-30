@@ -33,4 +33,5 @@ Route::group([
     $router->resource('marketable-seeds', MarketableSeedController::class);
     $router->resource('seed-classes', SeedClassController::class);
     $router->resource('cooperative-members', CooperativeMemberController::class);
+    $router->resource('out-growers', OuGrowerController::class);
 });
