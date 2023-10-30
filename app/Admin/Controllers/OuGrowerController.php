@@ -26,22 +26,13 @@ class OuGrowerController extends AdminController
     {
         $grid = new Grid(new OutGrower());
 
-      
-        $grid->column('contract_number', __('Contract number'));
-        $grid->column('seed_company_name', __('Seed company name'));
         $grid->column('seed_company_registration_number', __('Seed company registration number'));
         $grid->column('first_name', __('First name'));
         $grid->column('last_name', __('Last name'));
         $grid->column('phone_number', __('Phone number'));
         $grid->column('gender', __('Gender'));
         $grid->column('email_address', __('Email address'));
-        $grid->column('district', __('District'));
-        $grid->column('sub_county', __('Sub county'));
-        $grid->column('town_street', __('Town street'));
-        $grid->column('plot_number', __('Plot number'));
-        $grid->column('valid_from', __('Valid from'));
-        $grid->column('valid_to', __('Valid to'));
-        $grid->column('signature', __('Signature'));
+    
        
         return $grid;
     }
