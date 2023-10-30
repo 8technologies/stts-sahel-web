@@ -26,8 +26,7 @@ class OuGrowerController extends AdminController
     {
         $grid = new Grid(new OutGrower());
 
-        $grid->column('id', __('Id'));
-        $grid->column('seed_company_id', __('Seed company id'));
+      
         $grid->column('contract_number', __('Contract number'));
         $grid->column('seed_company_name', __('Seed company name'));
         $grid->column('seed_company_registration_number', __('Seed company registration number'));
@@ -43,9 +42,7 @@ class OuGrowerController extends AdminController
         $grid->column('valid_from', __('Valid from'));
         $grid->column('valid_to', __('Valid to'));
         $grid->column('signature', __('Signature'));
-        $grid->column('created_at', __('Created at'));
-        $grid->column('updated_at', __('Updated at'));
-
+       
         return $grid;
     }
 
@@ -59,8 +56,6 @@ class OuGrowerController extends AdminController
     {
         $show = new Show(OutGrower::findOrFail($id));
 
-        $show->field('id', __('Id'));
-        $show->field('seed_company_id', __('Seed company id'));
         $show->field('contract_number', __('Contract number'));
         $show->field('seed_company_name', __('Seed company name'));
         $show->field('seed_company_registration_number', __('Seed company registration number'));
@@ -76,8 +71,7 @@ class OuGrowerController extends AdminController
         $show->field('valid_from', __('Valid from'));
         $show->field('valid_to', __('Valid to'));
         $show->field('signature', __('Signature'));
-        $show->field('created_at', __('Created at'));
-        $show->field('updated_at', __('Updated at'));
+       
 
         return $show;
     }
@@ -90,11 +84,16 @@ class OuGrowerController extends AdminController
     protected function form()
     {
         $form = new Form(new OutGrower());
+        //find the aunthenticated user id
+        $user_id = auth()->user()->id;
+        //find the seed company id of the authenticated user
+        $seed_company= \App\Models\SeedProducer::where('user_id', $user_id)->first();
+        
+        $form->hidden('seed_company_id')->value($seed_company->id);
 
-        $form->number('seed_company_id', __('Seed company id'));
         $form->text('contract_number', __('Contract number'));
-        $form->text('seed_company_name', __('Seed company name'));
-        $form->text('seed_company_registration_number', __('Seed company registration number'));
+        $form->text('seed_company_name', __('Seed company name'))->value($seed_company->name_of_applicant);
+        $form->text('seed_company_registration_number', __('Seed company registration number'))->value($seed_company->producer_registration_number);
         $form->text('first_name', __('First name'));
         $form->text('last_name', __('Last name'));
         $form->text('phone_number', __('Phone number'));
