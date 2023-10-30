@@ -6,6 +6,8 @@ use App\Models\OutGrower;
 use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
+use App\Models\Utils;
+use Encore\Admin\Facades\Admin;
 use Encore\Admin\Show;
 
 class OuGrowerController extends AdminController
@@ -33,6 +35,10 @@ class OuGrowerController extends AdminController
         $grid->column('gender', __('Gender'));
         $grid->column('email_address', __('Email address'));
     
+        //disable the create button if the user is not a seed producer
+        if(Admin::user()->isRole('grower')){
+            $grid->disableCreateButton();
+        }
        
         return $grid;
     }
