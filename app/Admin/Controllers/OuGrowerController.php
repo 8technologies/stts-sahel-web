@@ -36,7 +36,7 @@ class OuGrowerController extends AdminController
         $grid->column('email_address', __('Email address'));
     
         //disable the create button if the user is not a seed producer
-        if(Admin::user()->isRole('grower')){
+        if(!Admin::user()->isRole('grower')){
             $grid->disableCreateButton();
         }
        
