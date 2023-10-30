@@ -129,6 +129,7 @@ class Utils extends Model
                 if($actions->row->status == 'rejected' || 
                  $actions->row->status == 'accepted' || 
                  $actions->row->status == 'inspector assigned' ||
+                 $actions->row->status == 'recommended'||
                  $actions->row->status == 'lab test assigned' || 
                  $actions->row->status == 'printed' || 
                  $actions->row->status == 'marketable' || 
