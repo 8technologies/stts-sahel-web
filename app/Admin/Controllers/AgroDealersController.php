@@ -305,11 +305,11 @@ class AgroDealersController extends AdminController
                              'recommended'=> __('admin.form.Recommend'),
                              'rejected' => __('admin.form.Rejected'),
                          ])
-                         ->when('rejected', function (Form $form) {
-                             $form->textarea('status_comment', __('admin.form.Status comment'))->rules('required');
-                         })
                          ->when('recommendation', function(Form $form){
                             $form->textarea('inspector_comment', __('Recommendation'));
+                         })
+                         ->when('rejected', function (Form $form) {
+                             $form->textarea('status_comment', __('admin.form.Status comment'))->rules('required');
                          });
      
                  }
