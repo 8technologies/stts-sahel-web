@@ -185,6 +185,7 @@ class CooperativeController extends AdminController
             $form->display('membership_type', __('admin.form.Membership type'));
             $form->display('services_to_members', __('admin.form.Services to members'));
             $form->display('objectives_or_goals', __('admin.form.Objectives or goals'));
+            $form->display('recommedation', __('admin.form.Recommendation'));
             //admin decision
             if ($user->inRoles(['commissioner','developer'])) 
             {

@@ -215,6 +215,7 @@ class SeedProducerController extends AdminController
             $form->display('years_of_experience', __('admin.form.Years of experience as a seed producer'));
             $form->display('gardening_history_description', __('admin.form.Garden history of the proposed seed production field for the last three season or years'));
             $form->display('storage_facilities_description', __('admin.form.Describe your storage facilities to handle the resultant seed'));
+            $form->display('recommedation', __('admin.form.Recommendation'));
             $form->radio('have_adequate_isolation', __('admin.form.Do you have adequate isolation?n'))
             ->options([
                 '1' => 'Yes',

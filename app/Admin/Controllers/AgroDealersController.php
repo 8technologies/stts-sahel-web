@@ -255,6 +255,7 @@ class AgroDealersController extends AdminController
             $form->display('trading_license_number', __('admin.form.Trading license number'));
             $form->display('trading_license_period', __('admin.form.Trading license period'));
             $form->display('insuring_authority', __('admin.form.Insuring authority'));
+            $form->display('recommedation', __('admin.form.Recommendation'));
             $form->file('attachments_certificate', __('admin.form.Attachments certificate'));
             $form->file('proof_of_payment', __('admin.form.Proof of payment'));
             //admin decision
