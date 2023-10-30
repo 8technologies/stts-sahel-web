@@ -293,35 +293,21 @@ class AgroDealersController extends AdminController
                     })->required();
             }
 
-            //inspectors decision
-            if ($user->isRole('inspector')) 
-            {
-                $form->divider(__('admin.form.Inspectors decision'));
-                $form->radioButton('status', __('admin.form.Status'))
-                    ->options([
-                        'accepted' =>__('admin.form.Accepted'),
-                        'rejected' => __('admin.form.Rejected'),
-                        'halted' => __('admin.form.Halted'),
-                        
-                    ])
-                    ->when('in', ['rejected', 'halted'], function (Form $form) {
-                        $form->textarea('status_comment', __('admin.form.Status comment'))->rules('required');
-                    })
-
-                    ->when('accepted', function (Form $form) {
-                        $form->text('agro_dealer_reg_number', __('admin.form.Agro-dealer registration number'))->default('agrodealer'.'/'.rand(1000, 100000))->readonly();
-                        $form->datetime('valid_from', __('admin.form.Agro-dealer approval date'))->default(date('Y-m-d H:i:s'))->required();
-                        $nextYear = Carbon::now()->addYear(); // Get the date one year from now
-                        $defaultDateTime = $nextYear->format('Y-m-d H:i:s'); // Format the date for default value
-                        
-                        $form->datetime('valid_until', __('admin.form.Valid until'))
-                            ->default($defaultDateTime)
-                            ->required();
-                        $form->textarea('cancellation_clauses', __('admin.form.Cancellation clauses and conditions'))->rules('required');
-                        $form->textarea('confidentiality_obligations', __('admin.form.Confidentiality obligations'))->rules('required');
-                        $form->textarea('non_disclosure_agreement', __('admin.form.Non-disclosure agreement'))->rules('required');
-                    })->required();
-            }
+                 //inspectors decision
+                 if ($user->isRole('inspector')) 
+                 {
+                  
+                     $form->divider('Inspectors decision');
+                     $form->radio('status', __('admin.form.Status'))
+                         ->options([
+                             'recommended'=> __('admin.form.Recommend'),
+                             'rejected' => __('admin.form.Rejected'),
+                         ])
+                         ->when('in', ['recommended','rejected'], function (Form $form) {
+                             $form->textarea('status_comment', __('admin.form.Status comment'))->rules('required');
+                         });
+     
+                 }
         }
 
         //disable the edit and delete action buttons
