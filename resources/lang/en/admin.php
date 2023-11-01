@@ -348,6 +348,7 @@ return [
         'Cancelled' => 'Cancelled', 
         //crops
         'Crop name' => 'Crop name',
+        'Crop' => 'Crop',
         'Crop code' => 'Crop code',
         'Number of days before submission of planting return' => 'Number of days before submission of planting return',
         'Seed viability period (in days)' => 'Seed viability period (in days)',
@@ -356,7 +357,7 @@ return [
         'Crop Variety Code' => 'Crop Variety Code',
         'Crop Variety Generation' => 'Crop Variety Generation',
         'Inspection types' => 'Inspection types',
-        'Inspection type name' => 'Inspection type name',
+        'Inspection type name' => 'Inspection Period',
         'Order' => 'Order',
         'Days after planting' => 'Days after planting',
         //seed class
@@ -374,6 +375,7 @@ return [
         'Attachments (certificate)' => 'Attachments (certificate)',
         'Administartor decision' => 'Administartor decision',
         'Inspectors decision' => 'Inspector decision',
+        'Number of inspections' => 'Number of inspections',
         'Name of cooperative president' => 'Name of cooperative president',
         'Cooperative approval date' => 'Cooperative approval date',
         //seed lab

@@ -6,6 +6,7 @@ use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Show;
+
 use \App\Models\Crop;
 
 class CropController extends AdminController
@@ -15,7 +16,11 @@ class CropController extends AdminController
      *
      * @var string
      */
-    protected $title = 'Crop';
+ 
+    
+    public function __construct() {
+        $this->title = __('admin.form.Crop');
+    }
 
     /**
      * Make a grid builder.
@@ -40,8 +45,9 @@ class CropController extends AdminController
         $grid->column('number_of_inspections', __('admin.form.Number of inspections'))->display(function () {
             return $this->inspection_types()->count();
         })->sortable();
-        $grid->column('number_of_days_before_submission', __('admin.form.Number of days before submission of planting return'));
-        $grid->column('seed_viability_period', __('admin.form.Seed viability period (in days)'));
+        
+        $grid->column('number_of_days_before_submission', __('admin.form.Number of days before submission of crop declaration'));
+      
 
 
         return $grid;
@@ -59,8 +65,10 @@ class CropController extends AdminController
 
         $show->field('crop_name', __('admin.form.Crop name'));
         $show->field('crop_code', __('admin.form.Crop code'));
-        $show->field('number_of_days_before_submission', __('admin.form.Number of days before submission of planting return'));
-        $show->field('seed_viability_period', __('admin.form.Seed viability period (in days)'));
+        $show->field('number_of_days_before_submission', __('admin.form.Number of days before submission of crop declaration'));
+        $show->field('seed_viability_period', __('admin.form.Seed viability period (in days)'))->as(function ($seed_viability_period) {
+            return $seed_viability_period ?? 'N/A';
+        });
 
         $show->crop_varieties(__('admin.form.Crop varieties'), function ($crop_varieties) {
             $crop_varieties->resource('/admin/crop_varieties');
@@ -105,9 +113,9 @@ class CropController extends AdminController
 
         $form->text('crop_name', __('admin.form.Crop name'))->rules('required');
         $form->text('crop_code', __('admin.form.Crop code'))->required();
-        $form->decimal('number_of_days_before_submission', __('admin.form.Number of days before submission of planting return'))->required();
-        $form->decimal('seed_viability_period', __('admin.form.Seed viability period (in days)'))->required(); 
+        $form->decimal('number_of_days_before_submission', __('admin.form.Number of days before submission of crop declaration'))->required();
         $form->divider();
+        $form->decimal('seed_viability_period', __('admin.form.Seed viability period (in days)')); 
         $form->hasMany('crop_varieties', __('admin.form.Crop Varieties'), function (Form\NestedForm $form)  {
             $form->text('crop_variety_name', __('admin.form.Crop Variety Name'))->required();
             $form->text('crop_variety_code', __('admin.form.Crop Variety Code'))->required();  

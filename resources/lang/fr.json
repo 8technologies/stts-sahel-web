@@ -51,7 +51,7 @@
     "Application forms": "Formulaires de candidature",
     "Quality Assurance": "Assurance qualité",
     "Crop Stock": "Stock de récolte",
-    "Market place": "Place de marché",
+    "Market place": "marché",
     "Log out": "Déconnexion",
     "Track and Trace": "Suivi et traçabilité",
     "Seed Producer Registration": "Enregistrement de producteur de semences",
@@ -67,7 +67,7 @@
     "Quotations": "Devis",
     "Orders": "Commandes",
     "Menu": "Menu",
-    "Home": "Maison",
+    "Home": "Accueil",
     "Agro Dealers": "Revendeurs d'agro",
     "Load stock saved successfully": "Chargement du stock enregistré avec succès",
     "System settings": "Paramètres du système",
@@ -78,6 +78,7 @@
     "Crops": "Cultures",
     "Users": "Utilisateurs",
     "Roles": "Rôles",
+    "Functions": "Fonctions",
     "Permission": "Autorisation",
     "Operation log": "Journaux d'opération"
    
