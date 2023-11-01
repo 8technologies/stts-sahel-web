@@ -36,4 +36,16 @@ class InspectionType extends Model
 
         return $this->belongsToMany($relatedModel, $pivotTable, 'inspection_type_id', 'crop_variety_id');
     }
+
+    public static function boot()
+    {
+
+        parent::boot();
+        static::creating(function ($inspection) {
+         
+            $inspection->inspection_type_name = ucfirst(strtolower($inspection->inspection_type_name));
+
+        });
+    }
+
 }

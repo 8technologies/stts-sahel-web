@@ -5,7 +5,6 @@ namespace Encore\Admin\Controllers;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Show;
-use Encore\Admin\Facades\Admin;
 
 class RoleController extends AdminController
 {
@@ -29,7 +28,8 @@ class RoleController extends AdminController
         $grid = new Grid(new $roleModel());
 
         $grid->column('id', 'ID')->sortable();
-        $grid->column('name', trans('admin.functions'));
+
+        $grid->column('name', trans('admin.name'));
 
         $grid->column('permissions', trans('admin.permission'))->pluck('name')->label();
 
@@ -66,7 +66,7 @@ class RoleController extends AdminController
 
         $show->field('id', 'ID');
         $show->field('slug', trans('admin.slug'));
-        $show->field('name', trans('admin.functions'));
+        $show->field('name', trans('admin.name'));
         $show->field('permissions', trans('admin.permissions'))->as(function ($permission) {
             return $permission->pluck('name');
         })->label();
@@ -89,11 +89,9 @@ class RoleController extends AdminController
         $form = new Form(new $roleModel());
 
         $form->display('id', 'ID');
-        
-        if(Admin::user()->isRole('developer')){
+
         $form->text('slug', trans('admin.slug'))->rules('required');
-        }
-        $form->text('name', trans('admin.functions'))->rules('required');
+        $form->text('name', trans('admin.name'))->rules('required');
         $form->listbox('permissions', trans('admin.permissions'))->options($permissionModel::all()->pluck('name', 'id'));
 
         $form->display('created_at', trans('admin.created_at'));

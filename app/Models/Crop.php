@@ -38,4 +38,24 @@ class Crop extends Model
 
         return $this->belongsToMany($relatedModel, $pivotTable, 'crop_id', 'seed_producer_id');
     }
+ 
+    public static function boot()
+    {
+
+        parent::boot();
+        static::creating(function ($crop) {
+            $crop->crop_code = $crop->generateCropCode();
+            $crop->crop_name = ucfirst(strtolower($crop->crop_name));
+
+        });
+    }
+
+    public function generateCropCode()
+    {
+     //get the first 3 letters of the crop name and capitalize them
+        $crop_name = strtoupper(substr($this->crop_name, 0, 3));
+        return $crop_name;
+    }
+
+
 }

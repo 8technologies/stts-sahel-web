@@ -84,11 +84,11 @@ class CropController extends AdminController
            
         });
 
-        $show->inspection_types(('admin.form.Inspection types'), function ($inspection_types) {
+        $show->inspection_types(__('admin.form.Inspection types'), function ($inspection_types) {
             $inspection_types->resource('/admin/inspection_types');
-            $inspection_types->inspection_type_name();
-            $inspection_types->order();
-            $inspection_types->period_after_planting();
+            $inspection_types->inspection_type_name(__('admin.form.Inspection type name'));
+            $inspection_types->order(__('admin.form.Order'));
+            $inspection_types->period_after_planting(__('admin.form.Days after planting'));
             //disable the filter
             $inspection_types->disableFilter();
             //disable the export button
@@ -112,7 +112,7 @@ class CropController extends AdminController
         $form = new Form(new Crop());
 
         $form->text('crop_name', __('admin.form.Crop name'))->rules('required');
-        $form->text('crop_code', __('admin.form.Crop code'))->required();
+        // $form->text('crop_code', __('admin.form.Crop code'))->required();
         $form->decimal('number_of_days_before_submission', __('admin.form.Number of days before submission of crop declaration'))->required();
         $form->divider();
         $form->decimal('seed_viability_period', __('admin.form.Seed viability period (in days)')); 

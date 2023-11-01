@@ -61,4 +61,22 @@ class CropVariety extends Model
 
         return $this->belongsToMany($relatedModel, $pivotTable,  'crop_variety_id', 'crop_declaration_id');
     }
+
+    public static function boot()
+    {
+
+        parent::boot();
+        static::creating(function ($variety) {
+            $variety->crop_variety_code = $variety->generateCropCode();
+            $variety->crop_variety_name = ucfirst(strtolower($variety->crop_variety_name));
+
+        });
+    }
+
+    public function generateCropCode()
+    {
+     //get the first 3 letters of the crop name and capitalize them
+        $crop_variety_name = strtoupper(substr($this->crop_variety_name, 0, 3));
+        return $crop_variety_name;
+    }
 }
