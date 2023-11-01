@@ -78,9 +78,9 @@ class UserController extends AdminController
         $show->field('roles', trans('admin.roles'))->as(function ($roles) {
             return $roles->pluck('name');
         })->label();
-        $show->field('permissions', trans('admin.permissions'))->as(function ($permission) {
-            return $permission->pluck('name');
-        })->label();
+        // $show->field('permissions', trans('admin.permissions'))->as(function ($permission) {
+        //     return $permission->pluck('name');
+        // })->label();
         $show->field('created_at', trans('admin.created_at'));
         $show->field('updated_at', trans('admin.updated_at'));
 
@@ -111,7 +111,10 @@ class UserController extends AdminController
             ->updateRules(['required', "unique:{$connection}.{$userTable},username,{{id}}"]);
         $form->email('email', trans('admin.email'));
         $form->text('name', trans('admin.name'))->rules('required');
-        $form->image('avatar', trans('admin.avatar'));
+        $form->image('avatar', trans('admin.avatar'))
+            ->rules(['mimes:jpeg,pdf,jpg', 'max:2048'])
+            ->help('Please upload a valid image file. Size of image should not be more than 2MB.');
+        
         $form->password('password', trans('admin.password'))->rules('required|confirmed');
         $form->password('password_confirmation', trans('admin.password_confirmation'))->rules('required')
             ->default(function ($form) {

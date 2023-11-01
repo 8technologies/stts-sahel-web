@@ -378,6 +378,8 @@ return [
         'Cooperative approval date' => 'Cooperative approval date',
         //seed lab
         'Mother lot number' => 'Mother lot number',
+        'registration_success' => 'Registration successful! Please check your email for the confirmation.',
+        'registration_failure' => 'Registration failed. Please check your internet and try again.',
         'Garden size(Acres)' => 'Garden size(Acres)',
         'A Summary of Pre-Orders over the months'=>'A Summary of Pre-orders over the months',
         'Seed lab number' => 'Seed lab number',

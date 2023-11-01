@@ -375,6 +375,8 @@ return [
         'Cooperative approval date' => 'Date d\'approbation de la coopérative',
         //seed lab
         'Mother lot number' => 'Numéro de lot mère',
+        'registration_success' => 'Inscription réussie! Veuillez vérifier votre e-mail pour la confirmation.',
+        'registration_failure' => 'L\'inscription a échoué. Veuillez vérifier votre connexion Internet et réessayer.',
         'Garden size(Acres)' => 'Taille du jardin (acres)',
         'Quantity of seed planted(kgs)' => 'Quantité de semences plantées (kgs)',
         'Expected yield(kgs)' => 'Rendement attendu (kgs)',

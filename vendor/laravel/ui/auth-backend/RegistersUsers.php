@@ -40,7 +40,7 @@ trait RegistersUsers
     
         if ($userData === null) {
             // Handle the case where email sending failed in the create method
-            Session::flash('error', 'Registration failed. Please check your internet and try again.');
+            Session::flash('error',__('admin.form.registration_failure'));
     
             // Redirect back to the registration page with the error flash message
             return redirect(url('/register'));
@@ -54,7 +54,7 @@ trait RegistersUsers
         $this->guard()->login($user);
     
         // Set success flash message
-        Session::flash('success', 'Registration successful! Please check your email for the confirmation.');
+        Session::flash('success', __('admin.form.registration_success'));
     
         // Redirect back to the registration page with the success flash message
         return redirect(url('/register'));
