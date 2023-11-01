@@ -118,7 +118,7 @@ class CropController extends AdminController
         $form->decimal('seed_viability_period', __('admin.form.Seed viability period (in days)')); 
         $form->hasMany('crop_varieties', __('admin.form.Crop Varieties'), function (Form\NestedForm $form)  {
             $form->text('crop_variety_name', __('admin.form.Crop Variety Name'))->required();
-            $form->text('crop_variety_code', __('admin.form.Crop Variety Code'))->required();  
+           
         });
 
       
