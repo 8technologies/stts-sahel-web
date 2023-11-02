@@ -358,6 +358,7 @@ return [
         'Crop Variety Generation' => 'Crop Variety Generation',
         'Inspection types' => 'Inspection types',
         'Label Packages' => 'Label Packages',
+        'Cooperative Registration' => 'Cooperative Registration',
         'Inspection type name' => 'Inspection Period',
         'Seed Category' => 'Seed Category',
         'Category' => 'Category',

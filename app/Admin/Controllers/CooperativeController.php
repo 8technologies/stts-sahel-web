@@ -19,7 +19,11 @@ class CooperativeController extends AdminController
      *
      * @var string
      */
-    protected $title = 'Cooperative Registration';
+   
+    public function __construct() {
+        $this->title = __('admin.form.Cooperative Registration');
+    }
+
 
     /**
      * Make a grid builder.
