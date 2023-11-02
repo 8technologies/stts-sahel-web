@@ -16,7 +16,10 @@ class LabelPackageController extends AdminController
      *
      * @var string
      */
-    protected $title = 'Label Packages';
+  
+    public function __construct() {
+        $this->title = __('admin.form.Label Packages');
+    }
 
     /**
      * Make a grid builder.
@@ -36,7 +39,7 @@ class LabelPackageController extends AdminController
             return SeedClass::find($value)->class_name ?? '-';
         });
         $grid->column('price', __('admin.form.Price'));
-        $grid->column('quantity', __('admin.form.Quantity'));
+        $grid->column('quantity', __('admin.form.Quantity(kgs)'));
        
 
         return $grid;
@@ -57,7 +60,7 @@ class LabelPackageController extends AdminController
             return SeedClass::find($value)->class_name ?? '-';
         });
         $show->field('price', __('admin.form.Price'));
-        $show->field('quantity', __('admin.form.Quantity'));
+        $show->field('quantity', __('admin.form.Quantity(kgs)'));
       
 
         return $show;
@@ -74,7 +77,7 @@ class LabelPackageController extends AdminController
 
         $form->text('package_type', __('admin.form.Package Type'))->required();
         $form->select('seed_generation', __('Seed Generation'))->options(\App\Models\SeedClass::all()->pluck('class_name', 'id'))->required();
-        $form->text('quantity', __('admin.form.Quantity'))->attribute( 
+        $form->text('quantity', __('admin.form.Quantity(kgs)'))->attribute( 
             [
                 'type' => 'number',
                 'step' => 'any'
