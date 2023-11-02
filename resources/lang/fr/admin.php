@@ -360,6 +360,7 @@ return [
         'Seed Category' => 'Catégorie de semences',
         'Category' => 'Catégorie',
         'Category code' => 'Code de catégorie',
+        'Label Packages' => 'Paquets d\'étiquettes',
         'Crop' => 'Culture',
         'Days after planting' => 'Jours après le semis',
         //seed class
