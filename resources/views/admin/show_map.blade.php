@@ -14,8 +14,8 @@
 
     <script>
         function initMap() {
-            var latitude = {!! json_encode($latitude) !!};
-            var longitude = {!! json_encode($longitude) !!};
+            var latitude = <?php echo json_encode($latitude); ?>;
+            var longitude = <?php echo json_encode($longitude); ?>;
 
             if (latitude !== null && longitude !== null) {
                 var map = new google.maps.Map(document.getElementById('map'), {
@@ -38,6 +38,7 @@
                 console.error('Latitude or Longitude is null.');
             }
         }
+
     </script>
     <!-- Load the Google Maps API -->
     <script async defer src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=initMap"></script>

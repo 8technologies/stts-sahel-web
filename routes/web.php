@@ -25,7 +25,9 @@ use SimpleSoftwareIO\QrCode\Facades\QrCode;
 Route::get('/', function () {
     return redirect(admin_url('/auth/login'));
 });
-
+Route::get('/map', function () {
+    return view('admin.show_map');
+});
 
 Route::get('/gen', function () {
     die(Gen::find($_GET['id'])->do_get());

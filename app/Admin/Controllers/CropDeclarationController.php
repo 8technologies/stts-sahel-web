@@ -121,19 +121,13 @@ class CropDeclarationController extends AdminController
         $show->field('seed_supplier_registration_number', __('admin.form.Seed supplier registration number'));
         $show->field('source_lot_number', __('admin.form.Source lot number'));
         $show->field('origin_of_variety', __('admin.form.Origin of variety'));
+        $show->field('garden_location_latitude', __('admin.form.Garden location latitude'));
+        $show->field('garden_location_longitude', __('admin.form.Garden location longitude'));
 
-        //show a map of the garden location
-        $show->field('garden_location_latitude', __('admin.form.Garden location'))->unescape()->as(function ($garden_location) {
-            return '<iframe src="https://maps.google.com/maps?q=' . $garden_location . '&hl=es;z=14&amp;output=embed" width="100%" height="450" frameborder="0" style="border:0" allowfullscreen></iframe>';
-        });
-
-        $show->field('garden_location_latitude', __('admin.form.Garden location latitude'))->as(function ($latitude) {
-            return view('admin.show_map', ['latitude' => $latitude, 'longitude' => $this->garden_location_longitude]);
-        });
-        $show->field('garden_location_longitude', __('admin.form.Garden location longitude'))->as(function ($longitude) {
-            return view('admin.show_map', ['latitude' => $this->garden_location_latitude, 'longitude' => $longitude]);
-        });
-        
+        // $show->field('garden_location_latitude', __('admin.form.Garden location'))->as(function ($latitude) {
+        //     return view('admin.show_map', ['latitude' => $latitude, 'longitude' => $this->garden_location_longitude]);
+        // })->unescape();
+       
         $show->field('status', __('admin.form.Status'))->as(function ($status) {
             return Utils::tell_status($status);
         })->unescape();
