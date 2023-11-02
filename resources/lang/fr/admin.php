@@ -451,6 +451,7 @@ return [
         'Show All Crops' => 'Afficher toutes les cultures',
         'Select Crop' => 'Sélectionnez une culture',
         'View all' => 'Voir tout',
+        'Date of creation' => 'Date de création',
         'pending applications' => 'demandes en attente',
         'marketable seeds' => 'semences commercialisables',
         'Dashboard' => 'Tableau de bord',

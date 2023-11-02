@@ -202,7 +202,10 @@ class CooperativeController extends AdminController
                         $form->textarea('status_comment', __('admin.form.Status comment'))->rules('required');;
                     })
                     ->when('accepted', function (Form $form) {
-                        $form->text('registration_number', __('admin.form.Registration number'))->default('cooperative'.'/'.rand(1000, 100000))->required();
+                        //get the current year
+                        $year = date('y');
+
+                        $form->text('registration_number', __('admin.form.Registration number'))->default('coop'.'/'.rand(1000, 10000).'/'. $year )->required();
                         $form->datetime('valid_from', __('admin.form.Cooperative approval date'))->default(date('Y-m-d H:i:s'))->required();
                         $nextYear = Carbon::now()->addYear(); // Get the date one year from now
                         $defaultDateTime = $nextYear->format('Y-m-d H:i:s'); // Format the date for default value

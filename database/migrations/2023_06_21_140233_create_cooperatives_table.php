@@ -23,6 +23,7 @@ return new class extends Migration
             $table->string('contact_phone_number');
             $table->string('contact_email')->nullable();
             $table->string('status')->nullable()->default('pending');
+            $table->string('recommendation')->nullable();
             $table->text('status_comment')->nullable();
             $table->unsignedInteger('inspector_id')->nullable();
             $table->string('valid_from')->nullable();

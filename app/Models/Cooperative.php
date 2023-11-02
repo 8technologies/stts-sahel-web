@@ -23,6 +23,7 @@ class Cooperative extends Model
         'contact_phone_number',
         'contact_email',
         'status',
+        'recommendation',
         'inspector_id',
         'status_comment',
         'valid_from',

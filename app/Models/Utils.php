@@ -151,6 +151,17 @@ class Utils extends Model
     
     }
 
+    //function to get a list of all crop varieties with their respective crop names
+    public static function get_varieties()
+    {
+        $varieties = \App\Models\CropVariety::all();
+        $varieties_list = [];
+        foreach ($varieties as $variety) {
+            $varieties_list[$variety->id] = $variety->crop->crop_name . ' - ' . $variety->crop_variety_name;
+        }
+        return $varieties_list;
+    }
+
     //delete notification after the form has been viewed
     public static function delete_notification($model_name, $id)
     {

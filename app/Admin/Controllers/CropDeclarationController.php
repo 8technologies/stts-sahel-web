@@ -105,10 +105,10 @@ class CropDeclarationController extends AdminController
         });
         $show->field('phone_number', __('admin.form.Phone number'));
         $show->field('garden_size', __('admin.form.Garden size(Acres)'));
-        $show->field('gps_coordinates_1', __('admin.form.GPS coordinates 1'));
-        $show->field('gps_coordinates_2', __('admin.form.GPS coordinates 2'));
-        $show->field('gps_coordinates_3', __('admin.form.GPS coordinates 3'));
-        $show->field('gps_coordinates_4', __('admin.form.GPS coordinates 4'));
+        $show->field('gps_coordinates_1', __('admin.form.Gps coordinates 1'));
+        $show->field('gps_coordinates_2', __('admin.form.Gps coordinates 2'));
+        $show->field('gps_coordinates_3', __('admin.form.Gps coordinates 3'));
+        $show->field('gps_coordinates_4', __('admin.form.Gps coordinates 4'));
         $show->field('field_name', __('admin.form.Field name'));
         $show->field('district_region', __('admin.form.District/Region'));
         $show->field('circle', __('admin.form.Circle'));
@@ -185,7 +185,7 @@ class CropDeclarationController extends AdminController
         if ($user->inRoles(['basic-user', 'grower','agro-dealer'])) 
         {
             $form->select('crop_variety_id', __('admin.form.Crop Variety'))
-                ->options(CropVariety::all()->pluck('crop_variety_name', 'id'))
+                ->options(Utils::get_varieties())
                 ->required();
 
             $form->text('phone_number', __('admin.form.Phone number'))->required();

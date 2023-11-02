@@ -356,6 +356,7 @@ return [
         'Crop Variety Name' => 'Crop Variety Name',
         'Crop Variety Code' => 'Crop Variety Code',
         'Crop Variety Generation' => 'Crop Variety Generation',
+        'Date of creation' => 'Date of creation',
         'Inspection types' => 'Inspection types',
         'Recommendation' => 'Recommendation',
         'Seed Producer' => 'Seed Producer',
