@@ -15,15 +15,13 @@ return new class extends Migration
             $table->id();
             $table->unsignedInteger('user_id')->nullable();
             $table->string('cooperative_number');
+            $table->string('date_of_creation');
             $table->string('cooperative_name');
             $table->string('registration_number')->nullable();
             $table->string('cooperative_physical_address');
             $table->string('contact_person_name');
             $table->string('contact_phone_number');
             $table->string('contact_email')->nullable();
-            $table->string('membership_type');
-            $table->string('services_to_members');
-            $table->string('objectives_or_goals');
             $table->string('status')->nullable()->default('pending');
             $table->text('status_comment')->nullable();
             $table->unsignedInteger('inspector_id')->nullable();

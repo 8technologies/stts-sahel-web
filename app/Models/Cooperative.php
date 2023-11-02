@@ -14,6 +14,7 @@ class Cooperative extends Model
 
     protected $fillable = [
         'cooperative_number',
+        'date_of_creation',
         'user_id',
         'cooperative_name',
         'registration_number',
@@ -21,9 +22,6 @@ class Cooperative extends Model
         'contact_person_name',
         'contact_phone_number',
         'contact_email',
-        'membership_type',
-        'services_to_members',
-        'objectives_or_goals',
         'status',
         'inspector_id',
         'status_comment',

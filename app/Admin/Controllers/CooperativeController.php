@@ -60,21 +60,21 @@ class CooperativeController extends AdminController
         Utils::disable_buttons('cooperative', $grid);
       
         $grid->column('cooperative_number', __('admin.form.Cooperative number'));
+        $grid->column('date_of_creation', __('admin.form.Date of creation'))->display(function ($date) {
+            return date('d-m-Y', strtotime($date));
+        })->sortable();
         $grid->column('cooperative_name', __('admin.form.Cooperative name'));
         $grid->column('registration_number', __('admin.form.Registration number'))->display(function ($value) {
             return $value ?? '-';
         })->sortable();
-        $grid->column('membership_type', __('admin.form.Membership type'));
+      
         $grid->column('status', __('admin.form.Status'))->display(function ($status) {
             return \App\Models\Utils::tell_status($status)??'-';
         })->sortable();
 
-         //check user role then show a certificate button
-         if(!auth('admin')->user()->inRoles(['inspector','commissioner']))
-        {
- 
-             $grid->column('id', __('admin.form.Certificate'))->display(function ($id) use ( $cooperatives) {
-                 $cooperative =  $cooperatives->firstWhere('id', $id);
+      
+             $grid->column('id', __('admin.form.Certificate'))->display(function ($id) {
+                 $cooperative =  Cooperative::find($id);
              
                  if ($cooperative && $cooperative->status == 'accepted') {
                      $link = url('cooperative?id=' . $id);
@@ -84,7 +84,7 @@ class CooperativeController extends AdminController
                      return '<b>Aucun certificat disponible</b>';
                  }
              });
-        }
+       
  
 
 
@@ -111,6 +111,7 @@ class CooperativeController extends AdminController
          }
        
         $show->field('cooperative_number', __('admin.form.Cooperative number'));
+        $show->field('date_of_creation', __('admin.form.Date of creation'));
         $show->field('cooperative_name', __('admin.form.Cooperative name'));
         $show->field('registration_number', __('admin.form.Registration number'))->as(function ($value) {
             return $value ?? '-';
@@ -119,9 +120,6 @@ class CooperativeController extends AdminController
         $show->field('contact_person_name', __('admin.form.Contact person name'));
         $show->field('contact_phone_number', __('admin.form.Contact phone number'));
         $show->field('contact_email', __('admin.form.Contact email'));
-        $show->field('membership_type', __('admin.form.Membership type'));
-        $show->field('services_to_members', __('admin.form.Services to members'));
-        $show->field('objectives_or_goals', __('admin.form.Objectives or goals'));
         $show->field('status', __('admin.form.Status'))->as(function ($status) {
             return \App\Models\Utils::tell_status($status) ?? '-';
         })->unescape();
@@ -181,15 +179,13 @@ class CooperativeController extends AdminController
         if ($user->inRoles(['commissioner', 'inspector', 'developer'])) 
         {
             $form->display('cooperative_number', __('admin.form.Cooperative number'));
+            $form->display('date_of_creation', __('admin.form.Date of creation'));
             $form->display('cooperative_name', __('admin.form.Cooperative name'));
             $form->display('cooperative_physical_address', __('admin.form.Cooperative physical address'));
             $form->display('contact_person_name', __('admin.form.Name of cooperative president'));
             $form->display('contact_phone_number', __('admin.form.Phone number'));
             $form->display('contact_email', __('admin.form.Email address'));
-            $form->display('membership_type', __('admin.form.Membership type'));
-            $form->display('services_to_members', __('admin.form.Services to members'));
-            $form->display('objectives_or_goals', __('admin.form.Objectives or goals'));
-            $form->display('recommedation', __('admin.form.Recommendation'));
+            $form->display('recommendation', __('admin.form.Recommendation'));
             //admin decision
             if ($user->inRoles(['commissioner','developer'])) 
             {
@@ -247,14 +243,12 @@ class CooperativeController extends AdminController
         else 
         {
             $form->text('cooperative_number', __('admin.form.Cooperative number'));
+            $form->date('date_of_creation', __('admin.form.Date of creation'));
             $form->text('cooperative_name', __('admin.form.Cooperative name'))->required();
             $form->text('cooperative_physical_address', __('admin.form.Cooperative physical address'))->required();
             $form->text('contact_person_name', __('admin.form.Name of cooperative president'))->required();
             $form->text('contact_phone_number', __('admin.form.Phone number'))->required();
             $form->text('contact_email', __('admin.form.Email address'))->required();
-            $form->text('membership_type', __('admin.form.Membership type'))->required();
-            $form->text('services_to_members', __('admin.form.Services to members'))->required();
-            $form->text('objectives_or_goals', __('admin.form.Objectives or goals'))->required();
             $form->hidden('status')->default('pending');
             $form->hidden('inspector_id')->default(null);
         }

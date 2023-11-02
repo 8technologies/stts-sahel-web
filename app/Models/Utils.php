@@ -123,7 +123,7 @@ class Utils extends Model
                  
             $grid->actions(function ($actions) 
             {
-                if ($actions->row->status == 'halted' || $actions->row->status == 'pending') {
+                if ($actions->row->status == 'halted') {
                     $actions->disableDelete();
                 }
                 if($actions->row->status == 'rejected' || 

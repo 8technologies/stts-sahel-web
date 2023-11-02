@@ -38,7 +38,7 @@ class Validation extends Model
     {
         $model = "App\\Models\\" .ucfirst($model);
         $form = $model::find($id);
-        if (!auth()->user()->inRoles(['developer','inspector', 'cooperative'])) 
+        if (!auth()->user()->inRoles(['developer','inspector', 'commissioner'])) 
         {
           
             if($form->user_id != null)
@@ -57,7 +57,9 @@ class Validation extends Model
                     return true;
                 }
             }
-        }else{
+        }
+        else
+        {
             return true;
         }
 
@@ -97,7 +99,8 @@ class Validation extends Model
     public static function checkFormEditable($form, $id, $model)
     {
             $user = auth()->user();
-            if($user->inRoles(['basic-user', 'cooperative'])){
+            if($user->inRoles(['basic-user', 'cooperative']))
+            {
                 //check if the user is the owner of the form
                 $editable = Validation::checkUser($model, $id);
                 if(!$editable){
@@ -127,7 +130,8 @@ class Validation extends Model
                     });
                     }
             }
-            elseif($user->isRole('inspector')){
+            elseif($user->isRole('inspector'))
+            {
                 $editable = Validation::checkFormStatus($model, $id);
                 
                 if(!$editable){
@@ -143,9 +147,9 @@ class Validation extends Model
                         // disable submit btn
                         $footer->disableSubmit();
                 });
-            }
+               }
         
-        }
+            }
     }
 
     //show the logged in user, only the forms that belong to him

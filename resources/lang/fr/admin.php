@@ -152,7 +152,7 @@ return [
         'Field size(Acres)' => 'Taille du champ (acres)',
         'Quantity(kgs)' => 'Quantité (kgs)',
         'Additional tests results' => 'Résultats des test supplémentaires',
-        'Assign inspector' => 'Assigner un inspecteur',
+        'Assign inspector' => 'Assigné un inspecteur',
         'Search by name of applicant' => 'Recherche par nom du demandeur',
         //crop declaration form
         'Crop Variety' => 'Variété de culture',
@@ -465,24 +465,6 @@ return [
         'My Total Sales' => 'Mes ventes totales',
         'My Total Inspections' => 'Mes inspections totales',
         'View Stock' => 'Voir le stock',
-
-
-
-
-       
-
-
-
-
-
-        
-
-        
-
-
-        
-
-
 
 
     ]
