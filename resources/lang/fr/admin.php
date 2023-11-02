@@ -357,6 +357,9 @@ return [
         'Inspection types' => 'Types d\'inspection',
         'Inspection type name' => 'Période d\'inspection',
         'Order' => 'Ordre',
+        'Seed Category' => 'Catégorie de semences',
+        'Category' => 'Catégorie',
+        'Category code' => 'Code de catégorie',
         'Crop' => 'Culture',
         'Days after planting' => 'Jours après le semis',
         //seed class

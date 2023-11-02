@@ -358,6 +358,9 @@ return [
         'Crop Variety Generation' => 'Crop Variety Generation',
         'Inspection types' => 'Inspection types',
         'Inspection type name' => 'Inspection Period',
+        'Seed Category' => 'Seed Category',
+        'Category' => 'Category',
+        'Category code' => 'Category code',
         'Order' => 'Order',
         'Days after planting' => 'Days after planting',
         //seed class

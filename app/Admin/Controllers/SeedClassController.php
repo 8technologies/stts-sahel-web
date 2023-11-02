@@ -15,7 +15,9 @@ class SeedClassController extends AdminController
      *
      * @var string
      */
-    protected $title = 'SeedClass';
+    public function __construct() {
+        $this->title = __('admin.form.Seed Category');
+    }
 
     /**
      * Make a grid builder.
@@ -27,8 +29,8 @@ class SeedClassController extends AdminController
         $grid = new Grid(new SeedClass());
 
         $grid->column('id', __('Id'));
-        $grid->column('class_name', __('admin.form.Class name'));
-        $grid->column('class_code', __('admin.form.Class code'));
+        $grid->column('class_name', __('admin.form.Category'));
+        $grid->column('class_code', __('admin.form.Category code'));
         //display created at in human readable format
         $grid->column('created_at', __('admin.form.Created at'))->display(function ($created_at) {
             return date('d-m-Y H:i:s', strtotime($created_at));
@@ -51,8 +53,8 @@ class SeedClassController extends AdminController
         $show = new Show(SeedClass::findOrFail($id));
 
         $show->field('id', __('Id'));
-        $show->field('class_name', __('admin.form.Class name'));
-        $show->field('class_code', __('admin.form.Class code'));
+        $show->field('class_name', __('admin.form.Category'));
+        $show->field('class_code', __('admin.form.Category code'));
         $show->field('created_at', __('admin.form.Created at'))->display(function ($created_at) {
             return date('d-m-Y H:i:s', strtotime($created_at));
         });
@@ -72,8 +74,8 @@ class SeedClassController extends AdminController
     {
         $form = new Form(new SeedClass());
 
-        $form->text('class_name', __('admin.form.Class name'))->required();
-        $form->text('class_code', __('admin.form.Class code'))->required();
+        $form->text('class_name', __('admin.form.Category'))->required();
+        $form->text('class_code', __('admin.form.Category code'))->required();
 
         return $form;
     }
