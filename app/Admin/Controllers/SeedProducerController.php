@@ -22,7 +22,11 @@ class SeedProducerController extends AdminController
      *
      * @var string
      */
-    protected $title = 'Seed Producer';
+
+    public function __construct() {
+        $this->title = __('admin.form.Seed Producer');
+    }
+
  
     /**
      * Make a grid builder.

@@ -356,6 +356,7 @@ return [
         'Crop Variety Generation' => 'Génération de variété de culture',
         'Inspection types' => 'Types d\'inspection',
         'Recommendation' => 'Recommandation',
+        'Seed Producer' => 'Producteur de semences',
         'Inspection type name' => 'Période d\'inspection',
         'Order' => 'Ordre',
         'Seed Category' => 'Catégorie de semences',
