@@ -40,7 +40,6 @@ class CropController extends AdminController
         });
 
         $grid->disableBatchActions();
-        $grid->column('id', __('Id'))->sortable();
         $grid->column('crop_name', __('admin.form.Crop name'));
         $grid->column('number_of_inspections', __('admin.form.Number of inspections'))->display(function () {
             return $this->inspection_types()->count();
