@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedInteger('user_id')->nullable();
             $table->string('cooperative_number');
+            $table->string('seed_generation');
             $table->string('date_of_creation');
             $table->string('cooperative_name');
             $table->string('registration_number')->nullable();

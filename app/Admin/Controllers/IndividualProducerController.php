@@ -73,7 +73,7 @@ class IndividualProducerController extends AdminController
         $grid->column('producer_registration_number', __('admin.form.Seed producer registration number'))->display(function ($value) {
             return $value ?? '-';
         })->sortable();
-        $grid->column('seed_generation', __('admin.form.Seed category'))->sortable();
+        $grid->column('seed_generation', __('admin.form.Seed Category'))->sortable();
       
         $grid->column('status', __('admin.form.Status'))->display(function ($status) {
             return \App\Models\Utils::tell_status($status)??'-';

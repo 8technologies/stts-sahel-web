@@ -491,6 +491,7 @@ return [
         'Signature' => 'Signature',
         'Date of creation' => 'Date de création',
         'Cooperative Member' => 'Membre de la coopérative',
+        'Individual Seed Producer' => 'Producteur de semences individuel',
 
 
 

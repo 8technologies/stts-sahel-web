@@ -273,8 +273,8 @@ class ResearchController extends AdminController
         {
             $form->select('seed_generation', __('admin.form.Seed generation'))->options(
                 [
-                    'Semence Certifiée Première Reproduction' => 'Semence Certifiée Premiere Reproduction(R1)',
-                    'Semence Certifiée Deuxième Reproduction' => 'Semence Certifiée Deuxième Reproduction(R2)',
+                    'Prébase' => 'Prébase',
+                    'Base' => 'Base',
                 ]
             );
             $form->text('applicant_phone_number', __('admin.form.Applicant phone number'))->required();

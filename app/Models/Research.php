@@ -61,7 +61,7 @@ class Research extends Model
                ])->delete();
                $new_role = new AdminRoleUser();
                $new_role->user_id = $model->user_id;
-               $new_role->role_id = 9;
+               $new_role->role_id = 10;
                $new_role->save();
            }
        });

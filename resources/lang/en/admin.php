@@ -487,6 +487,7 @@ return [
         'Valid to' => 'Valid to',
         'Signature' => 'Signature',
         'Cooperative Member' => 'Cooperative Member',
+        'Individual Seed Producer' => 'Individual Seed Producer',
 
 
 

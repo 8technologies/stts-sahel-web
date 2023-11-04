@@ -14,6 +14,7 @@ class Cooperative extends Model
 
     protected $fillable = [
         'cooperative_number',
+        'seed_generation',
         'date_of_creation',
         'user_id',
         'cooperative_name',

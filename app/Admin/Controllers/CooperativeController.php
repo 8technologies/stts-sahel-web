@@ -247,6 +247,12 @@ class CooperativeController extends AdminController
 
         else 
         {
+            $form->select('seed_generation', __('admin.form.Seed generation'))->options(
+                [
+                    'Semence Certifiée Première Reproduction' => 'Semence Certifiée Premiere Reproduction(R1)',
+                    'Semence Certifiée Deuxième Reproduction' => 'Semence Certifiée Deuxième Reproduction(R2)',
+                ]
+            );
             $form->text('cooperative_number', __('admin.form.Cooperative number'));
             $form->date('date_of_creation', __('admin.form.Date of creation'));
             $form->text('cooperative_name', __('admin.form.Cooperative name'))->required();
