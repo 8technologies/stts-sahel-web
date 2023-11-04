@@ -134,7 +134,7 @@ class ResearchController extends AdminController
         $show->field('years_of_experience', __('admin.form.If seed company, years of experience as a seed producer'));
         $show->field('gardening_history_description', __('admin.form.Garden history of the proposed seed production field for the last three season or years'));
         $show->field('storage_facilities_description', __('admin.form.Describe your storage facilities to handle the resultant seed'));
-        $show->field('receipt', __('admin.form.Proof of payment of application fees')) ;
+        // $show->field('receipt', __('admin.form.Proof of payment of application fees')) ;
         $show->field('status', __('admin.form.Status'))->as(function ($status) {
             return \App\Models\Utils::tell_status($status) ?? '-';
         })->unescape();

@@ -90,6 +90,12 @@ Route::get('cooperative', function () {
     return $pdf->stream();
 });
 
+Route::get('individual', function () {
+    $pdf = App::make('dompdf.wrapper');
+    $pdf->loadHTML(view('reports/individual_producer'));
+    return $pdf->stream();
+});
+
 Route::put('/admin/seed-labels/{id}/confirm',  [SeedLabelController::class, 'confirm'])->name('print.confirm');
 
 Route::get('/feedback/{lotId}', [FeedBackController::class, 'feedbackDetails']);

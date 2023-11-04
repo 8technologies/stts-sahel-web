@@ -91,7 +91,7 @@ class IndividualProducerController extends AdminController
                 $seed_producer =  IndividualProducer::find($id);
             
                 if ($seed_producer&& $seed_producer->status == 'accepted') {
-                    $link = url('certificate?id=' . $id);
+                    $link = url('individual?id=' . $id);
                     return '<b><a target="_blank" href="' . $link . '">Imprimer le certificat</a></b>';
                 } else {
                    
@@ -134,10 +134,9 @@ class IndividualProducerController extends AdminController
         $show->field('applicant_email', __('admin.form.Applicant email'));
         $show->field('premises_location', __('admin.form.Applicant physical address'));
         $show->field('proposed_farm_location', __('admin.form.Proposed farm location'));
-        $show->field('years_of_experience', __('admin.form.If seed company, years of experience as a seed producer'));
+        $show->field('years_of_experience', __('admin.form.years of experience'));
         $show->field('gardening_history_description', __('admin.form.Garden history of the proposed seed production field for the last three season or years'));
         $show->field('storage_facilities_description', __('admin.form.Describe your storage facilities to handle the resultant seed'));
-        $show->field('receipt', __('admin.form.Proof of payment of application fees'))->file();
         $show->field('status', __('admin.form.Status'))->as(function ($status) {
             return \App\Models\Utils::tell_status($status) ?? '-';
         })->unescape();
@@ -185,7 +184,7 @@ class IndividualProducerController extends AdminController
         if ($form->isEditing()) 
         {
             //get request id
-            $id = request()->route()->parameters()['seed_producer'];
+            $id = request()->route()->parameters()['individual_producer'];
             //check if its valid to edit the form
             Validation::checkFormEditable($form, $id, 'IndividualProducer');
         }
@@ -194,7 +193,7 @@ class IndividualProducerController extends AdminController
          $form->saved(function (Form $form) 
         {
             admin_toastr(__('admin.form.Form submitted successfully'), 'success');
-            return redirect('/admin/seed-producers');
+            return redirect('/admin/individual-producers');
         });
        
       
@@ -202,23 +201,17 @@ class IndividualProducerController extends AdminController
         if ($user->inRoles(['commissioner','developer', 'inspector'])) 
         {
 
-            $form->display('producer_category', __('admin.form.Seed producer category'));
+            $form->display('seed_generation', __('admin.form.Seed generation'));
             
             $form->display('applicant_phone_number', __('admin.form.Applicant phone number'));
             $form->display('applicant_email', __('admin.form.Applicant email'));
             $form->display('premises_location', __('admin.form.Applicant physical address'));
             $form->display('proposed_farm_location', __('admin.form.Proposed farm location'));
-            $form->display('years_of_experience', __('admin.form.Years of experience as a seed producer'));
+            $form->display('years_of_experience', __('admin.form.years of experience'));
             $form->display('gardening_history_description', __('admin.form.Garden history of the proposed seed production field for the last three season or years'));
             $form->display('storage_facilities_description', __('admin.form.Describe your storage facilities to handle the resultant seed'));
             $form->display('recommendation', __('admin.form.Recommendation'));
-            $form->radio('have_adequate_isolation', __('admin.form.Do you have adequate isolation?n'))
-            ->options([
-                '1' => 'Yes',
-                '0' => 'No',
-            ])->disable();
-
-            $form->display('labor_details', __('admin.form.Detail the labor you have at the farm in terms of numbers and competencies'));
+           
 
             $form->file('receipt', __('admin.form.Proof of payment of application fees'))->readonly();
 
@@ -290,7 +283,7 @@ class IndividualProducerController extends AdminController
             $form->text('applicant_email', __('admin.form.Applicant email'))->required();
             $form->text('premises_location', __('admin.form.Applicant physical address'))->required();
             $form->text('proposed_farm_location', __('admin.form.Proposed farm location'))->required();
-            $form->text('years_of_experience', __('admin.form.If seed company, years of experience as a seed producer'))->required();
+            $form->text('years_of_experience', __('admin.form.years of experience'))->required();
             $form->textarea('gardening_history_description', __('admin.form.Garden history of the proposed seed production field for the last three season or years'))->required();
             $form->textarea('storage_facilities_description', __('admin.form.Describe your storage facilities to handle the resultant seed'))->required();
 
@@ -304,8 +297,8 @@ class IndividualProducerController extends AdminController
 
             $form->file('receipt', __('admin.form.Proof of payment of application fees'))
             ->rules(['mimes:jpeg,pdf,jpg', 'max:1048']) // Assuming a maximum file size of 1MB 
-            ->help('Attach a copy of your proof of payment, and should be in pdf, jpg or jpeg format')
-            ->required();
+            ->help(__('admin.form.Attach a copy of your proof of payment, and should be in pdf, jpg or jpeg format'))
+            ;
             $form->hidden('status')->default('pending');
             $form->hidden('inspector_id')->default(null);
         }

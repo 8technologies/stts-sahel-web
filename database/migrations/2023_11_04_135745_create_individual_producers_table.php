@@ -27,6 +27,7 @@ return new class extends Migration
             $table->string('receipt')->nullable();
             $table->string('status')->default('pending');
             $table->text('status_comment')->nullable();
+            $table->text('recommendation')->nullable();
             $table->unsignedInteger('inspector_id')->nullable();
             $table->string('grower_number')->nullable();
             $table->timestamp('valid_from')->nullable();

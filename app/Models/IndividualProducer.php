@@ -23,6 +23,7 @@ class IndividualProducer extends Model
        'storage_facilities_description',  
        'receipt',
        'status',
+       'recommendation',
        'status_comment',
        'inspector_id',
        'grower_number',
