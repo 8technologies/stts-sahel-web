@@ -5,6 +5,7 @@ namespace Encore\Admin\Controllers;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Show;
+use Encore\Admin\Facades\Admin;
 
 class RoleController extends AdminController
 {
@@ -87,15 +88,33 @@ class RoleController extends AdminController
         $roleModel = config('admin.database.roles_model');
 
         $form = new Form(new $roleModel());
+        
+         //check if the form is being edited
+         if ($form->isEditing()) 
+         {
+         
+            $form->display('id', 'ID');
+            $form->hidden('slug', trans('admin.slug'))->rules('required');
+            $form->text('name', trans('admin.name'))->rules('required');
+            $form->listbox('permissions', trans('admin.permissions'))->options($permissionModel::all()->pluck('name', 'id'));
+    
+            $form->display('created_at', trans('admin.created_at'));
+            $form->display('updated_at', trans('admin.updated_at'));
 
-        $form->display('id', 'ID');
 
-        $form->text('slug', trans('admin.slug'))->rules('required');
-        $form->text('name', trans('admin.name'))->rules('required');
-        $form->listbox('permissions', trans('admin.permissions'))->options($permissionModel::all()->pluck('name', 'id'));
+         }else{
+        
+                $form->display('id', 'ID');
+        
+                if(Admin::user()->isRole('developer')){
+                $form->text('slug', trans('admin.slug'))->rules('required');
+                }
+                $form->text('name', trans('admin.name'))->rules('required');
+                $form->listbox('permissions', trans('admin.permissions'))->options($permissionModel::all()->pluck('name', 'id'));
 
-        $form->display('created_at', trans('admin.created_at'));
-        $form->display('updated_at', trans('admin.updated_at'));
+                $form->display('created_at', trans('admin.created_at'));
+                $form->display('updated_at', trans('admin.updated_at'));
+        }
 
         return $form;
     }

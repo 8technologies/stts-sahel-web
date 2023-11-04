@@ -40,7 +40,8 @@ class UserController extends AdminController
         $grid->column('name', trans('admin.name'));
         $grid->column('roles', trans('admin.roles'))->pluck('name')->label();
         $grid->column('created_at', trans('admin.created_at'));
-        $grid->column('updated_at', trans('admin.updated_at'));
+         
+
 
         $grid->actions(function (Grid\Displayers\Actions $actions) {
             if ($actions->getKey() == 1) {
@@ -106,11 +107,11 @@ class UserController extends AdminController
         $form->display('id', 'ID');
         $form->text('first_name', trans('admin.first_name'));
         $form->text('last_name', trans('admin.last_name'));
+        $form->hidden('name', trans('admin.name'));
         $form->text('username', trans('admin.username'))
             ->creationRules(['required', "unique:{$connection}.{$userTable}"])
             ->updateRules(['required', "unique:{$connection}.{$userTable},username,{{id}}"]);
         $form->email('email', trans('admin.email'));
-        $form->text('name', trans('admin.name'))->rules('required');
         $form->image('avatar', trans('admin.avatar'))
             ->rules(['mimes:jpeg,pdf,jpg', 'max:2048'])
             ->help('Please upload a valid image file. Size of image should not be more than 2MB.');
@@ -133,6 +134,7 @@ class UserController extends AdminController
             if ($form->password && $form->model()->password != $form->password) {
                 $form->password = Hash::make($form->password);
             }
+            $form->name = $form->first_name.' '.$form->last_name;
         });
 
         return $form;

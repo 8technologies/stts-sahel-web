@@ -15,9 +15,11 @@ class SeedClassController extends AdminController
      *
      * @var string
      */
-    public function __construct() {
-        $this->title = __('admin.form.Seed Category');
+    protected function title()
+    {
+        return trans('admin.form.Seed Category');
     }
+
 
     /**
      * Make a grid builder.
@@ -35,10 +37,7 @@ class SeedClassController extends AdminController
         $grid->column('created_at', __('admin.form.Created at'))->display(function ($created_at) {
             return date('d-m-Y H:i:s', strtotime($created_at));
         });
-        $grid->column('updated_at', __('admin.form.Updated at'))->display(function ($updated_at) {
-            return date('d-m-Y H:i:s', strtotime($updated_at));
-        });
-
+        
         return $grid;
     }
 

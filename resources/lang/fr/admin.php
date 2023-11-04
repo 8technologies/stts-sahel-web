@@ -72,7 +72,7 @@ return [
     'roles'                 => 'Rôles',
     'permissions'           => 'Droits',
     'slug'                  => 'Slug',
-    'created_at'            => 'Créé à',
+    'created_at'            => 'Date de création',
 
 
     'updated_at'            => 'Mis à jour à',
@@ -299,7 +299,7 @@ return [
         'Load stock number'=> 'Numéro de chargement du stock',
         'Quantity'=> 'Quantité',
         'Seed Lab Number'=> 'Numéro de laboratoire de semences',
-        'Created at'=> 'Créé à',
+        'Created at'=> 'Date de création',
         //seed label form
         'Seed label request number' => 'Numéro de demande d\'étiquette de semences',
         'Request date' => 'Date de demande',

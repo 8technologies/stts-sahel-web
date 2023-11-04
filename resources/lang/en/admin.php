@@ -73,7 +73,7 @@ return [
     'roles'                 => 'Roles',
     'permissions'           => 'Permissions',
     'slug'                  => 'Slug',
-    'created_at'            => 'Created At',
+    'created_at'            => 'Date of creation',
     'updated_at'            => 'Updated At',
     'alert'                 => 'Alert',
     'parent_id'             => 'Parent',
@@ -301,7 +301,7 @@ return [
         'Load stock number' => 'Load stock number',
         'Quantity' => 'Quantity',
         'Seed lab number' => 'Seed lab number',
-        'Created at' => 'Created at',
+        'Created at' => 'Date of creation',
         //seed label form
         'Seed label request number' => 'Seed label request number',
         'Request date' => 'Request date',
