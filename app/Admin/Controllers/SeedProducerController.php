@@ -9,7 +9,6 @@ use Encore\Admin\Show;
 use \App\Models\SeedProducer;
 use Encore\Admin\Facades\Admin;
 use Illuminate\Support\Carbon;
-use \App\Models\Cooperative;
 use \App\Models\Validation;
 use \App\Models\Utils;
 
@@ -23,7 +22,7 @@ class SeedProducerController extends AdminController
      */
 
     public function __construct() {
-        $this->title = __('admin.form.Seed Producer');
+        $this->title = __('admin.form.Seed Company');
     }
 
  
@@ -72,7 +71,7 @@ class SeedProducerController extends AdminController
         $grid->column('producer_registration_number', __('admin.form.Seed producer registration number'))->display(function ($value) {
             return $value ?? '-';
         })->sortable();
-        $grid->column('producer_category', __('admin.form.Seed producer category'))->sortable();
+        $grid->column('seed_generation', __('admin.form.Seed generation'))->sortable();
       
         $grid->column('status', __('admin.form.Status'))->display(function ($status) {
             return \App\Models\Utils::tell_status($status)??'-';
@@ -128,7 +127,6 @@ class SeedProducerController extends AdminController
         $show->field('producer_registration_number', __('admin.form.Seed producer registration number'))->as(function ($value) {
             return $value ?? '-';
         });
-        $show->field('producer_category', __('admin.form.Producer category'));
         $show->field('applicant_phone_number', __('admin.form.Applicant phone number'));
         $show->field('applicant_email', __('admin.form.Applicant email'));
         $show->field('premises_location', __('admin.form.Applicant physical address'));
@@ -136,15 +134,7 @@ class SeedProducerController extends AdminController
         $show->field('years_of_experience', __('admin.form.If seed company, years of experience as a seed producer'));
         $show->field('gardening_history_description', __('admin.form.Garden history of the proposed seed production field for the last three season or years'));
         $show->field('storage_facilities_description', __('admin.form.Describe your storage facilities to handle the resultant seed'));
-        $show->field('have_adequate_isolation', __('admin.form.Do you have adequate isolation?'))->as(function ($value) {
-            if ($value == 0) {
-                return 'No';
-            } else {
-                return 'Yes';
-            }
-        });
-        $show->field('labor_details', __('admin.form.Detail the labor you have at the farm in terms of numbers and competencies'));
-        $show->field('receipt', __('admin.form.Proof of payment of application fees'))->file();
+        $show->field('receipt', __('admin.form.Proof of payment of application fees'));
         $show->field('status', __('admin.form.Status'))->as(function ($status) {
             return \App\Models\Utils::tell_status($status) ?? '-';
         })->unescape();
@@ -209,23 +199,17 @@ class SeedProducerController extends AdminController
         if ($user->inRoles(['commissioner','developer', 'inspector'])) 
         {
 
-            $form->display('producer_category', __('admin.form.Seed producer category'));
+            $form->display('seed_generation', __('admin.form.Seed generation'));
             
             $form->display('applicant_phone_number', __('admin.form.Applicant phone number'));
             $form->display('applicant_email', __('admin.form.Applicant email'));
             $form->display('premises_location', __('admin.form.Applicant physical address'));
             $form->display('proposed_farm_location', __('admin.form.Proposed farm location'));
-            $form->display('years_of_experience', __('admin.form.Years of experience as a seed producer'));
+            $form->display('years_of_experience', __('admin.form.years of experience'));
             $form->display('gardening_history_description', __('admin.form.Garden history of the proposed seed production field for the last three season or years'));
             $form->display('storage_facilities_description', __('admin.form.Describe your storage facilities to handle the resultant seed'));
             $form->display('recommendation', __('admin.form.Recommendation'));
-            $form->radio('have_adequate_isolation', __('admin.form.Do you have adequate isolation?n'))
-            ->options([
-                '1' => 'Yes',
-                '0' => 'No',
-            ])->disable();
-
-            $form->display('labor_details', __('admin.form.Detail the labor you have at the farm in terms of numbers and competencies'));
+    
 
             $form->file('receipt', __('admin.form.Proof of payment of application fees'))->readonly();
 
@@ -288,38 +272,21 @@ class SeedProducerController extends AdminController
         else 
         {
 
-            $form->radioCard('producer_category', __('admin.form.Seed producer category'))->options([
-                'Individual-grower' => __('admin.form.Individual-grower'),
-                'Seed-breeder' => __('admin.form.Seed-breeder'),
-                'Seed-Company' =>  __('admin.form.Seed-company'),
-                'Cooperative' => __('admin.form.Cooperative'),
-            ])
-            ->when('Cooperative', function (Form $form) {
-                
-                $cooperative = Cooperative::where('user_id',  Admin::user()->id)->where('status', 'accepted')->first();
-
-                if (!$cooperative) {
-                    $form->html(' <p style="color: red; background: none; border: none; padding: 0; margin: 0;">
-                    You are not a registered Cooperative. <a href="/admin/cooperatives/create" style="color: green; text-decoration: underline;"> Register Now </a>
-                    </p>
-                ');
-                } 
-            });
-
+            $form->select('seed_generation', __('admin.form.Seed generation'))->options(
+                [
+                    'Base' => 'Base(B)',
+                    'Semence Certifiée Première Reproduction' => 'Semence Certifiée Premiere Reproduction(R1)',
+                    'Semence Certifiée Deuxième Reproduction' => 'Semence Certifiée Deuxième Reproduction(R2)',
+                ]
+            );
             $form->text('applicant_phone_number', __('admin.form.Applicant phone number'))->required();
             $form->text('applicant_email', __('admin.form.Applicant email'))->required();
             $form->text('premises_location', __('admin.form.Applicant physical address'))->required();
             $form->text('proposed_farm_location', __('admin.form.Proposed farm location'))->required();
-            $form->text('years_of_experience', __('admin.form.If seed company, years of experience as a seed producer'))->required();
+            $form->text('years_of_experience', __('admin.form.years of experience'));
             $form->textarea('gardening_history_description', __('admin.form.Garden history of the proposed seed production field for the last three season or years'))->required();
             $form->textarea('storage_facilities_description', __('admin.form.Describe your storage facilities to handle the resultant seed'))->required();
-            $form->radio('have_adequate_isolation', __('admin.form.Do you have adequate isolation?'))
-                ->options([
-                    '1' => 'Yes',
-                    '0' => 'No',
-                ])->required();
-            $form->textarea('labor_details', __('admin.form.Detail the labor you have at the farm in terms of numbers and competencies'))->required();
-
+           
             if ($form->isEditing()) {
                 $form->saving(function ($form) {
                     $form->status = 'pending';
@@ -329,8 +296,7 @@ class SeedProducerController extends AdminController
 
             $form->file('receipt', __('admin.form.Proof of payment of application fees'))
             ->rules(['mimes:jpeg,pdf,jpg', 'max:1048']) // Assuming a maximum file size of 1MB 
-            ->help('Attach a copy of your proof of payment, and should be in pdf, jpg or jpeg format')
-            ->required();
+            ->help('Attach a copy of your proof of payment, and should be in pdf, jpg or jpeg format');
             $form->hidden('status')->default('pending');
             $form->hidden('inspector_id')->default(null);
         }

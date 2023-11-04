@@ -32,8 +32,7 @@ class CropDeclarationController extends AdminController
     protected function grid()
     {
         $grid = new Grid(new CropDeclaration());
-        $crop_declaration = CropDeclaration::where('user_id', auth('admin')->user()->id)->value('status');
-        $user = auth()->user();
+    
            
         //function to show the loggedin user only what belongs to them
         Validation::showUserForms($grid);
@@ -187,7 +186,69 @@ class CropDeclarationController extends AdminController
             Validation::checkFormEditable($form, $id, 'CropDeclaration');
         }
 
-        if ($user->inRoles(['basic-user', 'grower','agro-dealer'])) 
+        if ($user->inRoles(['commissioner','developer'])) 
+        {
+            $form->display('crop_variety_id', __('admin.form.Crop variety'))
+                ->with(function ($crop_variety_id) {
+                    return CropVariety::find($crop_variety_id)->crop_variety_name;
+                })
+                ->required();
+
+            $form->display('phone_number', __('admin.form.Phone number'));
+            $form->display('garden_size', __('admin.form.Garden size(Acres)'));
+            $form->display('gps_coordinates_1', __('admin.form.Gps coordinates 1'));
+            $form->display('gps_coordinates_2', __('admin.form.Gps coordinates 2'));
+            $form->display('gps_coordinates_3', __('admin.form.Gps coordinates 3'));
+            $form->display('gps_coordinates_4', __('admin.form.Gps coordinates 4'));
+            $form->display('field_name', __('admin.form.Field name'));
+            $form->display('district_region', __('admin.form.District/Region'));
+            $form->display('circle', __('admin.form.Circle'));
+            $form->display('township', __('admin.form.Township'));
+            $form->display('village', __('admin.form.Village'));
+            $form->display('planting_date', __('admin.form.Planting date'))->default(date('Y-m-d'));
+            $form->display('quantity_of_seed_planted', __('admin.form.Quantity of seed planted(kgs)'));
+            $form->display('expected_yield', __('admin.form.Expected yield(kgs)'));
+            $form->display('seed_supplier_name', __('admin.form.Seed supplier name'));
+            $form->display('seed_supplier_registration_number', __('admin.form.Seed supplier registration number'));
+            $form->display('source_lot_number', __('admin.form.Source lot number'));
+            $form->display('origin_of_variety', __('admin.form.Origin of variety'));
+            $form->display('garden_location_latitude', __('admin.form.Garden location latitude'))->rules('required|numeric|digits:10|between:-9999.999999,9999.999999', [
+                'numeric' => 'Coordinates must be a numeric value.',
+                'digits'  => 'Coordinates must have exactly 10 digits in total.',
+                'between' => 'Coordinates must be between -9999.999999 and 9999.999999.',
+            ])
+            ->required();
+            $form->display('garden_location_longitude', __('admin.form.Garden location longitude'))->rules('required|numeric|digits:10|between:-9999.999999,9999.999999', [
+                'numeric' => 'Coordinates must be a numeric value.',
+                'digits'  => 'Coordinates must have exactly 10 digits in total.',
+                'between' => 'Coordinates must be between -9999.999999 and 9999.999999.',
+            ])
+            ->required();
+            $form->display('details', __('admin.form.Provide more details about the garden'));
+
+            $form->divider(__('admin.form.Administrator decision'));
+            $form->radioButton('status', __('admin.form.Status'))
+            ->options([
+                'rejected' => 'Rejected',
+                'halted' => 'Halted',
+                'inspector assigned' => 'Assign Inspector',
+
+            ])
+            ->when('in', ['rejected', 'halted'], function (Form $form) {
+                $form->textarea('status_comment', __('admin.form.Status comment'));
+            })
+            ->when('inspector assigned', function (Form $form) {
+
+                //get all inspectors
+                $inspectors = \App\Models\Utils::get_inspectors();
+                $form->select('inspector_id', __('admin.form.Inspector'))
+                    ->options($inspectors);
+            })->required();
+
+            
+        }
+        
+        else
         {
             $form->select('crop_variety_id', __('admin.form.Crop Variety'))
                 ->options(Utils::get_varieties())
@@ -255,68 +316,6 @@ class CropDeclarationController extends AdminController
             $form->hidden('status')->default('pending');
             $form->hidden('inspector_id')->default(null);
 
-        }
-
-        if ($user->inRoles(['commissioner','developer'])) 
-        {
-            $form->display('crop_variety_id', __('admin.form.Crop variety'))
-                ->with(function ($crop_variety_id) {
-                    return CropVariety::find($crop_variety_id)->crop_variety_name;
-                })
-                ->required();
-
-            $form->display('phone_number', __('admin.form.Phone number'));
-            $form->display('garden_size', __('admin.form.Garden size(Acres)'));
-            $form->display('gps_coordinates_1', __('admin.form.Gps coordinates 1'));
-            $form->display('gps_coordinates_2', __('admin.form.Gps coordinates 2'));
-            $form->display('gps_coordinates_3', __('admin.form.Gps coordinates 3'));
-            $form->display('gps_coordinates_4', __('admin.form.Gps coordinates 4'));
-            $form->display('field_name', __('admin.form.Field name'));
-            $form->display('district_region', __('admin.form.District/Region'));
-            $form->display('circle', __('admin.form.Circle'));
-            $form->display('township', __('admin.form.Township'));
-            $form->display('village', __('admin.form.Village'));
-            $form->display('planting_date', __('admin.form.Planting date'))->default(date('Y-m-d'));
-            $form->display('quantity_of_seed_planted', __('admin.form.Quantity of seed planted(kgs)'));
-            $form->display('expected_yield', __('admin.form.Expected yield(kgs)'));
-            $form->display('seed_supplier_name', __('admin.form.Seed supplier name'));
-            $form->display('seed_supplier_registration_number', __('admin.form.Seed supplier registration number'));
-            $form->display('source_lot_number', __('admin.form.Source lot number'));
-            $form->display('origin_of_variety', __('admin.form.Origin of variety'));
-            $form->display('garden_location_latitude', __('admin.form.Garden location latitude'))->rules('required|numeric|digits:10|between:-9999.999999,9999.999999', [
-                'numeric' => 'Coordinates must be a numeric value.',
-                'digits'  => 'Coordinates must have exactly 10 digits in total.',
-                'between' => 'Coordinates must be between -9999.999999 and 9999.999999.',
-            ])
-            ->required();
-            $form->display('garden_location_longitude', __('admin.form.Garden location longitude'))->rules('required|numeric|digits:10|between:-9999.999999,9999.999999', [
-                'numeric' => 'Coordinates must be a numeric value.',
-                'digits'  => 'Coordinates must have exactly 10 digits in total.',
-                'between' => 'Coordinates must be between -9999.999999 and 9999.999999.',
-            ])
-            ->required();
-            $form->display('details', __('admin.form.Provide more details about the garden'));
-
-            $form->divider(__('admin.form.Administrator decision'));
-            $form->radioButton('status', __('admin.form.Status'))
-            ->options([
-                'rejected' => 'Rejected',
-                'halted' => 'Halted',
-                'inspector assigned' => 'Assign Inspector',
-
-            ])
-            ->when('in', ['rejected', 'halted'], function (Form $form) {
-                $form->textarea('status_comment', __('admin.form.Status comment'));
-            })
-            ->when('inspector assigned', function (Form $form) {
-
-                //get all inspectors
-                $inspectors = \App\Models\Utils::get_inspectors();
-                $form->select('inspector_id', __('admin.form.Inspector'))
-                    ->options($inspectors);
-            })->required();
-
-            
         }
 
         //disable delete and view button

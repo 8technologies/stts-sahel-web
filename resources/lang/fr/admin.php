@@ -134,6 +134,8 @@ return [
         'Garden history of the proposed seed production field for the last three season or years' => 'Précédent culture',
         'If seed company, years of experience as a seed producer' => 'S’il s’agit d\'une entreprise de semences, années d\'expérience en tant que producteur de semences',
         'Proposed farm location' => 'Localite de parcelle',
+        'Seed Company' => 'Société de semences',
+        'Seed company registration number' => 'Numéro d\'enregistrement de la société de semences',
         'Applicant physical address' => 'Adresse physique du demandeur',
         'Research registration number' => 'Numéro d\'enregistrement de la recherche',
         'Research approval date' => 'Date d\'approbation de la recherche',

@@ -48,23 +48,25 @@ $aujourdHui = date("j F Y");
   <div class="card">
     <h2>CARTE D'ENREGISTREMENT DU PRODUCTEUR DE SEMENCES</h2>
 
-    <label for="from">DE : (LABOSEM, SOCQC/OPA)</label><br>
-    <label for="category">CATÉGORIE DU PRODUCTEUR : {{$form->producer_category}}</label><br>
+    <label for="category">CATÉGORIE DU PRODUCTEUR :Société de semences </label><br>
     <label for="date">DATE : {{$aujourdHui}}</label><br>
     <label for="date">VALIDITÉ : de {{$form->valid_from}} à {{$form->valid_until}} </label><br>
 
     <label for="application-number">NUMÉRO DE LA DEMANDE : {{$form->producer_registration_number}}</label><br>
     <p></p>
 
-    <p>Votre numéro de demande {{$form->producer_registration_number}}, demandant l'approbation en tant qu'opérateur de semences, a été approuvé.</p>
+    <p>Votre  demande numéro {{$form->producer_registration_number}}, demandant l'approbation en tant qu'opérateur de semences, a été approuvé.</p>
     <p>Vous trouverez ci-joint le rapport d'évaluation.</p>
     <p>Vous pouvez contester cette décision conformément à la réglementation en vigueur.</p>
 
+
     <br>
 
-    <p>______________________________</p>
     <p>SIGNATURE DU DIRECTEUR DE LABOSEM</p>
-    <p>SOCQC/OPA</p>
+    <p>Dr Diouncouda CAMARA</p>
+    <div>
+      <img src="{{ public_path('storage/assets/signature.png') }}" alt="logo" width="200" height="100">
+    </div>
   </div>
 </div>
 </body>

@@ -311,7 +311,9 @@ return [
         'Label package Type' => 'Label package type',
         'Packages' => 'Packages',
         'Label package' => 'Label package',
-        'Applicant name' => 'Applicant name',
+        'Applicant Name' => 'Applicant name',
+        'Seed Company' => 'Seed company',
+        'Seed company registration number' => 'Seed company registration number',
         'print' => 'Print',
         //quotation form
         'Preorder id' => 'Preorder id',
