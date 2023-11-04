@@ -489,7 +489,9 @@ return [
         'Valid from' => 'Valide à partir de',
         'Valid to' => 'Valide jusqu\'au',
         'Signature' => 'Signature',
-        
+        'Date of creation' => 'Date de création',
+        'Cooperative Member' => 'Membre de la coopérative',
+
 
 
 

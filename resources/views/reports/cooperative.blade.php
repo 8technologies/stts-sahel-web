@@ -53,15 +53,16 @@ $aujourdHui = date("j F Y");
   <p>DATE : {{$form->updated_at}}</p>
   <p>NUMÉRO DE DEMANDE : {{$form->registration_number}} </p>
   <br>
-  <p>Votre numéro de demande {{$form->registration_number}}, demandant l'approbation de l'opérateur de semences, a été approuvé. Ci-joint se trouve le rapport d'évaluation.
+  <p>Votre demande numéro {{$form->registration_number}}, demandant l'approbation de l'opérateur de semences, a été approuvé. Ci-joint se trouve le rapport d'évaluation.
      Vous pouvez contester cette décision conformément à la réglementation en vigueur.</p>
 </div>
 
 <div class="signature">
-  <div class="signature-label">SIGNATURE DU DIRECTEUR DE LABOSEM :</div>
-  <p>[Signature du directeur de Labosem]</p>
-  <div class="signature-label">SOCQC/OPA :</div>
-  <p>[Signature de SOCQC/OPA]</p>
+<p>SIGNATURE DU DIRECTEUR DE LABOSEM</p>
+    <p>Dr Diouncouda CAMARA</p>
+    <div>
+      <img src="{{ public_path('storage/assets/signature.png') }}" alt="logo" width="200" height="100">
+    </div>
 </div>
   </div>
 </div>

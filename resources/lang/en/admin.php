@@ -486,6 +486,7 @@ return [
         'Valid from' => 'Valid from',
         'Valid to' => 'Valid to',
         'Signature' => 'Signature',
+        'Cooperative Member' => 'Cooperative Member',
 
 
 

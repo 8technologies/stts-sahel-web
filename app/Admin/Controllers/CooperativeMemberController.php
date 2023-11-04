@@ -17,7 +17,11 @@ class CooperativeMemberController extends AdminController
      *
      * @var string
      */
-    protected $title = 'CooperativeMember';
+
+    protected function title()
+    {
+        return trans('admin.form.Cooperative Member');
+    }
 
     /**
      * Make a grid builder.

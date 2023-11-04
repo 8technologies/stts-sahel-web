@@ -55,7 +55,7 @@ $aujourdHui = date("j F Y");
     <label for="application-number">NUMÉRO DE LA DEMANDE : {{$form->producer_registration_number}}</label><br>
     <p></p>
 
-    <p>Votre  demande numéro {{$form->producer_registration_number}}, demandant l'approbation en tant qu'opérateur de semences, a été approuvé.</p>
+    <p>Votre demande numéro {{$form->producer_registration_number}}, demandant l'approbation en tant qu'opérateur de semences, a été approuvé.</p>
     <p>Vous trouverez ci-joint le rapport d'évaluation.</p>
     <p>Vous pouvez contester cette décision conformément à la réglementation en vigueur.</p>
 

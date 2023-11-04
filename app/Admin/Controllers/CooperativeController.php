@@ -20,8 +20,10 @@ class CooperativeController extends AdminController
      * @var string
      */
    
-    public function __construct() {
-        $this->title = __('admin.form.Cooperative Registration');
+  
+    protected function title()
+    {
+        return trans('admin.form.Cooperative Registration');
     }
 
 
@@ -127,7 +129,7 @@ class CooperativeController extends AdminController
             return $value ?? '-';
         });
       
-        $show->field('valid_from', __('admin.form.Seed producer approval date'))->as(function ($value) {
+        $show->field('valid_from', __('admin.form.Cooperative approval date'))->as(function ($value) {
             return $value ?? '-';
         });
         $show->field('valid_until', __('admin.form.Valid until'))->as(function ($value) {
