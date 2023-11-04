@@ -476,6 +476,16 @@ return [
         'My Stock' => 'My Stock',
         'My Total Stock' => 'My Total Stock',
         'View Stock' => 'View Stock',
+        //outgrower
+        'Out-grower' => 'Out-grower',
+        'Contract number' => 'Contract number',
+        'Seed company name' => 'Seed company name',
+        'Sub county' => 'Sub-county',
+        'Town street' => 'Town street',
+        'Plot number' => 'Plot number',
+        'Valid from' => 'Valid from',
+        'Valid to' => 'Valid to',
+        'Signature' => 'Signature',
 
 
 

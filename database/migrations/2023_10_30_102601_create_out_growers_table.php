@@ -14,21 +14,20 @@ return new class extends Migration
         Schema::create('out_growers', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('seed_company_id');
-            $table->string('contract_number');
-            $table->string('seed_company_name');
-            $table->string('seed_company_registration_number');
-            $table->string('first_name');
-            $table->string('last_name');
-            $table->string('phone_number');
-            $table->string('gender');
-            $table->string('email_address');
-            $table->string('district');
-            $table->string('sub_county');
-            $table->string('town_street');
-            $table->string('plot_number');
-            $table->date('valid_from');
-            $table->date('valid_to');
-            $table->string('signature');
+            $table->string('contract_number')->unique();
+            $table->string('seed_company_registration_number')->nullable();
+            $table->string('first_name')->nullable();
+            $table->string('last_name')->nullable();
+            $table->string('phone_number')->unique();
+            $table->string('gender')->nullable();
+            $table->string('email_address')->nullable();
+            $table->string('district')->nullable();
+            $table->string('sub_county')->nullable();
+            $table->string('town_street')->nullable();
+            $table->string('plot_number')->nullable();
+            $table->date('valid_from')->nullable();
+            $table->date('valid_to')->nullable();
+       
 
             $table->foreign('seed_company_id')->references('id')->on('seed_producers')->onDelete('cascade');
 

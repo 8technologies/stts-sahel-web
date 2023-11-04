@@ -150,6 +150,12 @@ class Utils extends Model
     
     
     }
+    //get all outgrowers of a seed producer
+    public static function get_out_growers($seed_company)
+    {
+        $outgrowers = \App\Models\OutGrower::where('seed_company_id', $seed_company)->pluck('first_name', 'id');
+        return $outgrowers;
+    }
 
     //function to get a list of all crop varieties with their respective crop names
     public static function get_varieties()

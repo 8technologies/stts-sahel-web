@@ -477,7 +477,22 @@ return [
         'rejected'=>'refusé(e)',
         'Seed generation'=>'Génération de la semence',
         'Attach a copy of your proof of payment, and should be in pdf, jpg or jpeg format' => 'Attacher une copie de la preuve de paiement, et en format pdf, jpg ou  jpeg ',
-        'Inspector assigned' => 'Inspecteur Assigné'
+        'Inspector assigned' => 'Inspecteur Assigné',
+        //outgrower
+        'Out-grower' => 'Producteur',
+        'Contract number' => 'Numéro de contrat',
+        'Seed company name' => 'Nom de la société de semences',
+        'Seed company registration number' => 'Numéro d\'enregistrement de la société de semences',
+        'Sub county' => 'Sous-comté',
+        'Town street' => 'Rue de la ville',
+        'Plot number' => 'Numéro de parcelle',
+        'Valid from' => 'Valide à partir de',
+        'Valid to' => 'Valide jusqu\'au',
+        'Signature' => 'Signature',
+        
+
+
+
 
 
 
