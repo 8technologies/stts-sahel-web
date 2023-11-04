@@ -11,10 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('research', function (Blueprint $table) {
+        Schema::create('individual_producers', function (Blueprint $table) {
             $table->id();
-            $table->unsignedInteger('user_id');
-            $table->string('researcher_registration_number')->nullable();
+            $table->unsignedInteger('user_id')->nullable();
+            $table->string('producer_registration_number')->nullable();
             $table->string('seed_generation')->nullable();
             $table->string('name_of_applicant')->nullable();
             $table->string('applicant_phone_number')->nullable();
@@ -22,16 +22,16 @@ return new class extends Migration
             $table->string('premises_location')->nullable();
             $table->string('proposed_farm_location')->nullable();
             $table->string('years_of_experience')->nullable();
-            $table->string('gardening_history_description')->nullable();
-            $table->string('storage_facilities_description')->nullable();
+            $table->text('gardening_history_description')->nullable();
+            $table->text('storage_facilities_description')->nullable();
             $table->string('receipt')->nullable();
-            $table->string('status')->nullable();
-            $table->string('status_comment')->nullable();
-            $table->string('recommendation')->nullable();
+            $table->string('status')->default('pending');
+            $table->text('status_comment')->nullable();
             $table->unsignedInteger('inspector_id')->nullable();
-            $table->string('researcher_number')->nullable();
-            $table->string('valid_from')->nullable();
-            $table->string('valid_until')->nullable();
+            $table->string('grower_number')->nullable();
+            $table->timestamp('valid_from')->nullable();
+            $table->timestamp('valid_until')->nullable();
+   
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('admin_users')->onDelete('cascade');
@@ -44,6 +44,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('research');
+        Schema::dropIfExists('individual_producers');
     }
 };

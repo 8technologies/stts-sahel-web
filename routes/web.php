@@ -60,9 +60,15 @@ Route::get('label', function () {
     return $pdf->stream();
 });
 
-Route::get('inspection', function () {
+Route::get('certificate', function () {
     $pdf = App::make('dompdf.wrapper');
-    $pdf->loadHTML(view('reports/inspection_report'));
+    $pdf->loadHTML(view('reports/seed_producer'));
+    return $pdf->stream();
+});
+
+Route::get('research', function () {
+    $pdf = App::make('dompdf.wrapper');
+    $pdf->loadHTML(view('reports/research_report'));
     return $pdf->stream();
 });
 

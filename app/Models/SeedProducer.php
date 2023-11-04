@@ -18,7 +18,7 @@ class SeedProducer extends Model
      protected $fillable = [
         'user_id',
         'producer_registration_number',
-        'producer_category',
+        'seed_generation',
         'name_of_applicant',
         'applicant_phone_number',
         'applicant_email',

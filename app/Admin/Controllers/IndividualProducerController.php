@@ -2,29 +2,30 @@
 
 namespace App\Admin\Controllers;
 
+use App\Models\IndividualProducer;
 use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Show;
-use \App\Models\SeedProducer;
 use Encore\Admin\Facades\Admin;
 use Illuminate\Support\Carbon;
-use \App\Models\Cooperative;
 use \App\Models\Validation;
 use \App\Models\Utils;
 
 
-class SeedProducerController extends AdminController
+class IndividualProducerController extends AdminController
 {
     /**
      * Title for current resource.
      *
      * @var string
      */
-
-    public function __construct() {
-        $this->title = __('admin.form.Seed Producer');
-    }
+    
+     protected function title()
+     {
+         return trans('admin.form.Individual Seed Producer');
+     }
+ 
 
  
     /**
@@ -34,7 +35,7 @@ class SeedProducerController extends AdminController
      */
     protected function grid()
     {
-        $grid = new Grid(new SeedProducer());
+        $grid = new Grid(new IndividualProducer());
 
         $user = Admin::user();
 
@@ -45,7 +46,7 @@ class SeedProducerController extends AdminController
         $grid->model()->orderBy('id', 'desc');
 
         //disable action buttons appropriately
-        Utils::disable_buttons('SeedProducer', $grid);
+        Utils::disable_buttons('IndividualProducer', $grid);
 
         //disable create button 
         if ($user->inRoles(['grower'])) 
@@ -72,7 +73,7 @@ class SeedProducerController extends AdminController
         $grid->column('producer_registration_number', __('admin.form.Seed producer registration number'))->display(function ($value) {
             return $value ?? '-';
         })->sortable();
-        $grid->column('producer_category', __('admin.form.Seed producer category'))->sortable();
+        $grid->column('seed_generation', __('admin.form.Seed category'))->sortable();
       
         $grid->column('status', __('admin.form.Status'))->display(function ($status) {
             return \App\Models\Utils::tell_status($status)??'-';
@@ -87,7 +88,7 @@ class SeedProducerController extends AdminController
         //check user role then show a certificate button
 
             $grid->column('id', __('admin.form.Certificate'))->display(function ($id) {
-                $seed_producer =  SeedProducer::find($id);
+                $seed_producer =  IndividualProducer::find($id);
             
                 if ($seed_producer&& $seed_producer->status == 'accepted') {
                     $link = url('certificate?id=' . $id);
@@ -111,12 +112,12 @@ class SeedProducerController extends AdminController
      */
     protected function detail($id)
     {
-        $show = new Show(SeedProducer::findOrFail($id));
+        $show = new Show(IndividualProducer::findOrFail($id));
         //delete notification after viewing the form
-        Utils::delete_notification('SeedProducer', $id);
+        Utils::delete_notification('IndividualProducer', $id);
 
         //check if the user is the owner of the form
-        $showable = Validation::checkUser('SeedProducer', $id);
+        $showable = Validation::checkUser('IndividualProducer', $id);
         if (!$showable) 
         {
             return(' <p class="alert alert-danger">You do not have rights to view this form. <a href="/admin/seed-producers"> Go Back </a></p> ');
@@ -128,7 +129,7 @@ class SeedProducerController extends AdminController
         $show->field('producer_registration_number', __('admin.form.Seed producer registration number'))->as(function ($value) {
             return $value ?? '-';
         });
-        $show->field('producer_category', __('admin.form.Producer category'));
+        $show->field('seed_generation', __('admin.form.Seed category'));
         $show->field('applicant_phone_number', __('admin.form.Applicant phone number'));
         $show->field('applicant_email', __('admin.form.Applicant email'));
         $show->field('premises_location', __('admin.form.Applicant physical address'));
@@ -136,14 +137,6 @@ class SeedProducerController extends AdminController
         $show->field('years_of_experience', __('admin.form.If seed company, years of experience as a seed producer'));
         $show->field('gardening_history_description', __('admin.form.Garden history of the proposed seed production field for the last three season or years'));
         $show->field('storage_facilities_description', __('admin.form.Describe your storage facilities to handle the resultant seed'));
-        $show->field('have_adequate_isolation', __('admin.form.Do you have adequate isolation?'))->as(function ($value) {
-            if ($value == 0) {
-                return 'No';
-            } else {
-                return 'Yes';
-            }
-        });
-        $show->field('labor_details', __('admin.form.Detail the labor you have at the farm in terms of numbers and competencies'));
         $show->field('receipt', __('admin.form.Proof of payment of application fees'))->file();
         $show->field('status', __('admin.form.Status'))->as(function ($status) {
             return \App\Models\Utils::tell_status($status) ?? '-';
@@ -177,7 +170,7 @@ class SeedProducerController extends AdminController
      */
     protected function form()
     {
-        $form = new Form(new SeedProducer());
+        $form = new Form(new IndividualProducer());
 
         $user = auth()->user();
 
@@ -194,7 +187,7 @@ class SeedProducerController extends AdminController
             //get request id
             $id = request()->route()->parameters()['seed_producer'];
             //check if its valid to edit the form
-            Validation::checkFormEditable($form, $id, 'SeedProducer');
+            Validation::checkFormEditable($form, $id, 'IndividualProducer');
         }
        
         //onsaved return to the list page
@@ -287,25 +280,12 @@ class SeedProducerController extends AdminController
         //basic user
         else 
         {
-
-            $form->radioCard('producer_category', __('admin.form.Seed producer category'))->options([
-                'Individual-grower' => __('admin.form.Individual-grower'),
-                'Seed-breeder' => __('admin.form.Seed-breeder'),
-                'Seed-Company' =>  __('admin.form.Seed-company'),
-                'Cooperative' => __('admin.form.Cooperative'),
-            ])
-            ->when('Cooperative', function (Form $form) {
-                
-                $cooperative = Cooperative::where('user_id',  Admin::user()->id)->where('status', 'accepted')->first();
-
-                if (!$cooperative) {
-                    $form->html(' <p style="color: red; background: none; border: none; padding: 0; margin: 0;">
-                    You are not a registered Cooperative. <a href="/admin/cooperatives/create" style="color: green; text-decoration: underline;"> Register Now </a>
-                    </p>
-                ');
-                } 
-            });
-
+            $form->select('seed_generation', __('admin.form.Seed generation'))->options(
+                [
+                    'Semence Certifiée Première Reproduction' => 'Semence Certifiée Premiere Reproduction(R1)',
+                    'Semence Certifiée Deuxième Reproduction' => 'Semence Certifiée Deuxième Reproduction(R2)',
+                ]
+            );
             $form->text('applicant_phone_number', __('admin.form.Applicant phone number'))->required();
             $form->text('applicant_email', __('admin.form.Applicant email'))->required();
             $form->text('premises_location', __('admin.form.Applicant physical address'))->required();
@@ -313,12 +293,7 @@ class SeedProducerController extends AdminController
             $form->text('years_of_experience', __('admin.form.If seed company, years of experience as a seed producer'))->required();
             $form->textarea('gardening_history_description', __('admin.form.Garden history of the proposed seed production field for the last three season or years'))->required();
             $form->textarea('storage_facilities_description', __('admin.form.Describe your storage facilities to handle the resultant seed'))->required();
-            $form->radio('have_adequate_isolation', __('admin.form.Do you have adequate isolation?'))
-                ->options([
-                    '1' => 'Yes',
-                    '0' => 'No',
-                ])->required();
-            $form->textarea('labor_details', __('admin.form.Detail the labor you have at the farm in terms of numbers and competencies'))->required();
+
 
             if ($form->isEditing()) {
                 $form->saving(function ($form) {
@@ -349,4 +324,6 @@ class SeedProducerController extends AdminController
 
         return $form;
     }
+   
+   
 }

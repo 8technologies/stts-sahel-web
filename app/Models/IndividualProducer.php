@@ -5,9 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Research extends Model
+class IndividualProducer extends Model
 {
-
     use HasFactory;
 
     protected $fillable = [
@@ -20,7 +19,6 @@ class Research extends Model
        'premises_location',
        'proposed_farm_location',
        'years_of_experience',
-       'recommendation',
        'gardening_history_description',
        'storage_facilities_description',  
        'receipt',
@@ -41,7 +39,7 @@ class Research extends Model
        //call back to send a notification to the user
        self::created(function ($model) 
        {
-           Notification::send_notification($model, 'Research', request()->segment(count(request()->segments())));
+           Notification::send_notification($model, 'IndividualProducer', request()->segment(count(request()->segments())));
        });
 
 
@@ -52,7 +50,7 @@ class Research extends Model
        self::updated(function ($model) 
        {
        //call back to send a notification to the user after form is updated
-          Notification::update_notification($model, 'Research', request()->segment(count(request()->segments())-1));
+          Notification::update_notification($model, 'IndividualProducer', request()->segment(count(request()->segments())-1));
            
           //change the role of the basic user to that of the seed producer if approved
           if($model->status == 'accepted'){
@@ -61,7 +59,7 @@ class Research extends Model
                ])->delete();
                $new_role = new AdminRoleUser();
                $new_role->user_id = $model->user_id;
-               $new_role->role_id = 9;
+               $new_role->role_id = 5;
                $new_role->save();
            }
        });

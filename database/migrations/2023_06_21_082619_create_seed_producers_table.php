@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedInteger('user_id')->nullable();
             $table->string('producer_registration_number')->nullable();
-            $table->string('producer_category');
+            $table->string('seed_generation');
             $table->string('name_of_applicant');
             $table->string('applicant_phone_number');
             $table->string('applicant_email');
@@ -24,8 +24,6 @@ return new class extends Migration
             $table->string('years_of_experience');
             $table->text('gardening_history_description');
             $table->text('storage_facilities_description');
-            $table->tinyInteger('have_adequate_isolation');
-            $table->text('labor_details');
             $table->string('receipt');
             $table->string('status')->default('pending');
             $table->text('status_comment')->nullable();
