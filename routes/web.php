@@ -103,8 +103,18 @@ Route::get('inspection', function () {
     return $pdf->stream();
 });
 
+Route::get('/admin/mobile', function () {
+    $file = public_path('storage/assets/mobile.apk');
+    $headers = [
+        'Content-Type' => 'application/vnd.android.package-archive',
+    ];
+
+    return response()->download($file, 'mobile.apk', $headers);
+});
+
 Route::put('/admin/seed-labels/{id}/confirm',  [SeedLabelController::class, 'confirm'])->name('print.confirm');
 Route::put('/admin/orders/{id}/confirm',  [OrderController::class, 'confirm'])->name('delivery.confirm');
+
 
 Route::get('/feedback/{lotId}', [FeedBackController::class, 'feedbackDetails']);
 //Route::get('/contract/{id}', [ContractController::show])->name('contract.show');
