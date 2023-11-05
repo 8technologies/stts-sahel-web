@@ -47,7 +47,7 @@ class Utils extends Model
         if ($status == 'halted')
             return '<span class="label label-warning">' . trans('admin.form.Halted') . '</span>';
         if ($status == 'rejected')
-            return '<span class="label label-danger">' . trans('admin.form.Rejecetd') . '</span>';
+            return '<span class="label label-danger">' . trans('admin.form.Rejected') . '</span>';
         if ($status == 'accepted')
             return '<span class="label label-success">' . trans('admin.form.Accepted') . '</span>';
         if ($status == 'lab test assigned')

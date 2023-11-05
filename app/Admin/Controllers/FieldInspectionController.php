@@ -17,7 +17,12 @@ class FieldInspectionController extends AdminController
      *
      * @var string
      */
-    protected $title = 'Field Inspections';
+
+    protected function title()
+    {
+        return trans('admin.form.Field Inspections');
+    }
+
 
     /**
      * Make a grid builder.
@@ -106,10 +111,10 @@ class FieldInspectionController extends AdminController
         $grid->column('order_number', __('admin.form.Order number'));
 
         //check user role
-        if(!auth('admin')->user()->isRole('inspector')){
+     
 
-        $grid->column('id', __('admin.form.Inspection Report'))->display(function ($id) use ($inspections) {
-            $inspection = $inspections->firstWhere('id', $id);
+        $grid->column('id', __('admin.form.Inspection Report'))->display(function ($id){
+            $inspection = FieldInspection::find($id);
         
         if ($inspection && $inspection->is_done == 1) 
         {
@@ -120,7 +125,7 @@ class FieldInspectionController extends AdminController
                     return '<b>Inscription en attente</b>';
                 }
             });
-        } 
+   
             return $grid;
     }
 
@@ -213,11 +218,29 @@ class FieldInspectionController extends AdminController
                $id = request()->route()->parameters()['field_inspection'];
                //check if its valid to edit the form
                Validation::checkFormEditable($form, $id, 'FieldInspection');
+
+               //check if the user is not the assigned inspector or commissioner and disable the form
+                if (!$user->inRoles(['inspector', 'commissioner'])) 
+                {
+                    $form->html('<p class="alert alert-danger">' . __('admin.form.no_rights_to_edit_form') . '</p>');
+
+                    $form->footer(function ($footer) 
+                    {
+
+                        // disable reset btn
+                        $footer->disableReset();
+
+                        // disable submit btn
+                        $footer->disableSubmit();
+                    });
+                    
+                }
            }
            //onsaved return to the list page
-            $form->saved(function (Form $form) {
-            admin_toastr(__('admin.form.Field Inspection saved successfully'), 'success');
-            return redirect('/admin/field-inspections');
+            $form->saved(function (Form $form) 
+            {
+                admin_toastr(__('admin.form.Field Inspection saved successfully'), 'success');
+                return redirect('/admin/field-inspections');
             });
           
 
@@ -238,23 +261,43 @@ class FieldInspectionController extends AdminController
 
         $form->text('field_inspection_form_number', __('admin.form.Field inspection form number'))->default('FieldInspection/' . date('Y/') . rand(1000, 9999))->readonly();
         $form->decimal('field_size', __('admin.form.Field size'))->required();
-        $form->text('type_of_inspection', __('admin.form.Type of inspection'))->required();
-        $form->text('seed_generation', __('admin.form.Seed generation'))->required();
+        $form->select('seed_generation', __('admin.form.Seed generation'))->options(
+            \App\Models\SeedClass::all()->pluck('class_name', 'id')->all() 
+        )->required();
+        
         $form->text('crop_condition', __('admin.form.Crop condition'))->required();
-        $form->text('field_spacing', __('admin.form.Field spacing'))->required();
+        $form->select('plant_density', __('admin.form.Plant density'))->options([
+            'low' =>__('admin.form.Low'),
+            'optimal' => __('admin.form.Optimal'),
+            'high' => __('admin.form.High')
+        ])->required();
+        $form->radio('seed_category', __('admin.form.Seed Category'))->options([
+           'opv' => 'OPV',
+            'hybrid' => 'Hybrid'
+
+        ])
+        ->when('hybrid', function (Form $form) {
+            $form->select('planting_ratio', __('admin.form.Planting ratio'))->options(
+                [
+                    '2:1' => '2:1',
+                    '3:1' => '3:1',
+                ]
+            );
+        })->required();
+     
         $form->decimal('estimated_yield', __('admin.form.Estimated yield'))->required();
-        $form->text('signature', __('admin.form.Signature'));
+        $form->file('signature', __('admin.form.Signature'))->required();
 
         $form->divider();
 
         $form->select('status', __('admin.form.Field decision'))
             ->options([
-                'accepted' => 'Approved',
-                'rejected' => 'Rejected'
+                'accepted' => __('admin.form.Approved'),
+                'rejected' => __('admin.form.Rejected'),
             ])
             ->rules('required');
 
-        $form->textarea('remarks', __('admin.form.Remarks'));
+        $form->textarea('remarks', __('admin.form.Recommendation'));
 
         //disable delete and view button
         $form->tools(function (Form\Tools $tools) {

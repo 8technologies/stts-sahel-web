@@ -134,7 +134,7 @@ class CropDeclarationController extends AdminController
             return Utils::tell_status($status);
         })->unescape();
         $show->field('remarks', __('admin.form.Remarks'))->as(function ($remarks) {
-            return $remarks == null ? 'No remarks yet' : $remarks;
+            return $remarks == null ? __('admin.form.No remarks yet') : $remarks;
         });
 
         //if the user is a commissioner, show the inspector
@@ -143,7 +143,8 @@ class CropDeclarationController extends AdminController
             //check if inspector_id is not null
             if ($crop_declaration->inspector_id == null) {
                 $show->field('inspector_id', __('admin.form.Inspector'))->as(function ($inspector_id) {
-                    return 'No inspector assigned yet';
+                    return __('admin.form.No inspector assigned yet');
+
                 });
             } else {
                 $show->field('inspector_id', __('admin.form.Inspector'))->as(function ($inspector_id) {
@@ -229,9 +230,9 @@ class CropDeclarationController extends AdminController
             $form->divider(__('admin.form.Administrator decision'));
             $form->radioButton('status', __('admin.form.Status'))
             ->options([
-                'rejected' => 'Rejected',
-                'halted' => 'Halted',
-                'inspector assigned' => 'Assign Inspector',
+                'rejected' => __('admin.form.Rejected'),
+                'halted' => __('admin.form.Halted'),
+                'inspector assigned' => __('admin.form.Assign Inspector'),
 
             ])
             ->when('in', ['rejected', 'halted'], function (Form $form) {

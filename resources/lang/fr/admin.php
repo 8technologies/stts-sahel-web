@@ -493,6 +493,20 @@ return [
         'Cooperative Member' => 'Membre de la coopérative',
         'Individual Seed Producer' => 'Producteur de semences individuel',
         'Land architecture' => 'Architecture des terres',
+        'Inspector Assigned' => 'Inspecteur Assigné',
+        'No inspector assigned yet' => 'Aucun inspecteur n\'a encore été assigné',
+        'No remarks yet' => 'Pas encore de remarques',
+        'no rights to edit' => 'Vous n\'avez pas le droit de modifier ce formulaire.',
+        'decision already made' => 'Vous ne pouvez plus modifier ce formulaire car une décision a déjà été prise.',
+        'no rights to edit again' => 'Vous n\'avez pas le droit de modifier ce formulaire à nouveau.',
+        'Plant density' => 'Densité de plantation',
+        'Planting ratio' => 'Ratio de plantation',
+        'Low' => 'Faible',
+        'Medium' => 'Moyen',
+        'High' => 'Haut',
+        'Approved' => 'Approuvé',
+        
+        
 
 
 

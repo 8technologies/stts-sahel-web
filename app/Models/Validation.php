@@ -9,8 +9,9 @@ class Validation extends Model
 {
     use HasFactory;
 
-//check the form status before an inspector can edit
-    public static function checkFormStatus($model, $id){
+    //check the form status before an inspector can edit
+    public static function checkFormStatus($model, $id)
+    {
         $model = "App\\Models\\" .ucfirst($model);
         error_log($id);
         $form = $model::find($id);
@@ -21,7 +22,7 @@ class Validation extends Model
         }
     }
 
-//check the form status before an inspector can edit
+    //check the form status before an inspector can edit
     public static function checkFormUserStatus($model, $id)
     {
         $model = "App\\Models\\" .ucfirst($model);
@@ -33,7 +34,7 @@ class Validation extends Model
         }
     }
 
- //check the user before givig him roghts to access the form
+    //check the user before givig him roghts to access the form
     public static function checkUser($model, $id)
     {
         $model = "App\\Models\\" .ucfirst($model);
@@ -104,7 +105,7 @@ class Validation extends Model
                 //check if the user is the owner of the form
                 $editable = Validation::checkUser($model, $id);
                 if(!$editable){
-                    $form->html(' <p class="alert alert-warning">You do not have rights to edit this form. <a href="/admin/cooperatives"> Go Back </a></p> ');
+                    $form->html('<p class="alert alert-danger">' . __('admin.form.no rights to edit') . '</p>');
                     $form->footer(function ($footer) 
                     {
 
@@ -118,7 +119,7 @@ class Validation extends Model
                 //check if the form has been accepted
                 $editable_status = Validation::checkFormUserStatus($model, $id);
                     if(!$editable_status){
-                    $form->html(' <p class="alert alert-warning">You can nolonger edit this form because a decision has already been made. <a href="/admin/cooperatives"> Go Back </a></p> ');
+                        $form->html('<p class="alert alert-danger">' . __('admin.form.decision already made') . '</p>');
                     $form->footer(function ($footer) 
                     {
 
@@ -137,7 +138,7 @@ class Validation extends Model
                 if(!$editable){
 
                 
-                    $form->html(' <p class="alert alert-warning">You do not have rights to edit this form again. <a href="/admin/cooperatives"> Go Back </a></p> ');
+                    $form->html('<p class="alert alert-danger">' . __('admin.form.no rights to edit again') . '</p>');
                     $form->footer(function ($footer) 
                     {
 

@@ -34,7 +34,7 @@ class LoadStockController extends AdminController
             $grid->model()->where('user_id', auth('admin')->user()->id);
         }
 
-        if (!$user->inRoles(['basic-user','grower','agro-dealer'])){
+        if ($user->inRoles(['developer','commissioner','inspector',])){
             $grid->disableCreateButton();
         }
         
@@ -87,7 +87,7 @@ class LoadStockController extends AdminController
         $show->field('yield_quantity', __('admin.form.Yield quantity(kgs)'));
         $show->field('last_field_inspection_date', __('admin.form.Last field inspection date'));
         $show->field('load_stock_date', __('admin.form.Crop stock date'));
-        $show->field('last_field_inspection_remarks', __('admin.form.Last field inspection remarks'));
+        
        
         //disable edit button and delete button
         $show->panel()->tools(function ($tools) {
@@ -174,7 +174,7 @@ class LoadStockController extends AdminController
         $form->decimal('yield_quantity', __('admin.form.Yield quantity(kgs)'))->required();
        
         $form->date('load_stock_date', __('admin.form.Crop stock date'))->default(date('Y-m-d'))->required();
-        $form->textarea('last_field_inspection_remarks', __('admin.form.Last field inspection remarks'));
+      
      
 
         //disable edit button and delete button

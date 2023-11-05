@@ -50,7 +50,7 @@ class SeedSampleController extends AdminController
        //function to show the loggedin user only what belongs to them
        Validation::showUserForms($grid);
 
-        if (!$user->inRoles(['grower','agro-dealer'])) {
+        if ($user->inRoles(['commissioner','inspector','developer'])) {
             $grid->disableCreateButton();
         }
 
@@ -141,7 +141,7 @@ class SeedSampleController extends AdminController
                $load_stock_quantity = LoadStock::where('id', $form->load_stock_id)->value('yield_quantity');
                 if($form->quantity > $load_stock_quantity)
                 {
-                    return back()->withInput()->withErrors(['quantity' => 'The quantity requested is more than the available quantity in the crop stock']);
+                    return back()->withInput()->withErrors(['quantity' => 'The quantity requested is more than the available quantity(' . $load_stock_quantity.') in the crop stock']);
                 }
                 
             });
@@ -166,18 +166,15 @@ class SeedSampleController extends AdminController
         $crop_stock = LoadStock::where('user_id', $user->id);
 
         //forms for user and seed producer
-        if (auth('admin')->user()->inRoles(['grower','agro-dealer'])) 
+        if (!auth('admin')->user()->inRoles(['commissioner','developer','inspector','basic-user'])) 
         {
             $form->text('sample_request_number', __('admin.form.Sample request number'))->default('SRN' . date('YmdHis'))->readonly();
             $form->select('load_stock_id', __('admin.form.Load stock number'))->options($crop_stock->pluck('load_stock_number', 'id'))->required();
-            $form->number('quantity', __('admin.form.Quantity(kgs)'))->rules(
-                
-            );
+            $form->number('quantity', __('admin.form.Quantity(kgs)'));
             $form->date('sample_request_date', __('admin.form.Sample request date'))->default(date('Y-m-d'))->required(); 
             $form->file('proof_of_payment', __('admin.form.Proof of payment'))
             ->rules(['mimes:jpeg,pdf,jpg', 'max:1048']) // Assuming a maximum file size of 1MB 
-            ->help('Attach a copy of your proof of payment, and should be in pdf, jpg or jpeg format')
-            ->required();
+            ->help('Attach a copy of your proof of payment, and should be in pdf, jpg or jpeg format');
             $form->textarea('applicant_remarks', __('admin.form.Applicant remarks'));
         }
 

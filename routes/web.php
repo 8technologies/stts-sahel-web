@@ -96,6 +96,12 @@ Route::get('individual', function () {
     return $pdf->stream();
 });
 
+Route::get('inspection', function () {
+    $pdf = App::make('dompdf.wrapper');
+    $pdf->loadHTML(view('reports/inspection_report'));
+    return $pdf->stream();
+});
+
 Route::put('/admin/seed-labels/{id}/confirm',  [SeedLabelController::class, 'confirm'])->name('print.confirm');
 
 Route::get('/feedback/{lotId}', [FeedBackController::class, 'feedbackDetails']);

@@ -503,10 +503,23 @@ return [
         'Shipping' => 'Shipping',
         'Delivered' => 'Delivered',
         'Cancelled' => 'Cancelled',
-        'Inspector assigned' => 'Inspector assigned',
+        'Inspector Assigned' => 'Inspector assigned',
         'Recommended' => 'Recommended',
         'Under Review' => 'Under Review',
-        
+        'Crop Declaration' => 'Crop Declaration',
+        'No inspector assigned yet' => 'No inspector assigned yet',
+        'No remarks yet' => 'No remarks yet',
+        'no rights to edit' => 'You have no rights to edit this form.',
+        'decision already made' => 'You can no longer edit this form because a decision has already been made.',
+        'no rights to edit again' => 'You have no rights to edit this form again.',
+        'Plant density' => 'Plant density',
+        'Planting ratio' => 'Planting ratio',
+        'Low' => 'Low',
+        'Medium' => 'Medium',
+        'High' => 'High',
+        'Approved' => 'Approved',
+        'Optimal' => 'Optimal',
+       
 
 
 
