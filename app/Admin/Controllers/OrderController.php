@@ -20,8 +20,12 @@ class OrderController extends AdminController
      *
      * @var string
      */
-    protected $title = 'Order';
 
+     
+     protected function title()
+     {
+         return trans('admin.form.Order');
+     }
     /**
      * Make a grid builder.
      *

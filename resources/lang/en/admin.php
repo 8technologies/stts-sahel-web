@@ -391,6 +391,9 @@ return [
         'Number of inspections' => 'Number of inspections',
         'Name of cooperative president' => 'Name of cooperative president',
         'Cooperative approval date' => 'Cooperative approval date',
+        'Order' => 'Order',
+        'Marketable seed' => 'Marketable seed',
+        'Individual Producers' => 'Individual Producers',
         //seed lab
         'Mother lot number' => 'Mother lot number',
         'registration_success' => 'Registration successful! Please check your email for the confirmation.',

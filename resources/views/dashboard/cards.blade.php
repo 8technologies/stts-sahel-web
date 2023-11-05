@@ -41,11 +41,11 @@
     <div class="col-lg-3 col-md-6 col-sm-6">
         <div class="card panel-success">
             <div class="card-header">
-                <h3 class="card-title">{{__('admin.form.Agro-Dealers')}}</h3>
+                <h3 class="card-title">{{__('admin.form.Individual Producers')}}</h3>
             </div>
             <div class="card-body">
                 <h4 class="mb-2"> {{ $data['total_agro_dealers'] }}</h4>
-                <p class="text-muted mb-0"><span class="text-danger fw-bold font-size-12 me-2"><i class="glyphicon glyphicon-hourglass me-1 align-middle"></i>{{ $data['pending_agro_dealers'] }}</span><a href="{{ admin_url('/agro-dealers')}}">{{__('admin.form.pending applications')}}</a></p>
+                <p class="text-muted mb-0"><span class="text-danger fw-bold font-size-12 me-2"><i class="glyphicon glyphicon-hourglass me-1 align-middle"></i>{{ $data['pending_producers'] }}</span><a href="{{ admin_url('/individual-producers')}}">{{__('admin.form.pending applications')}}</a></p>
             </div>
         </div>
     </div>

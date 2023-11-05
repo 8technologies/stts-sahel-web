@@ -13,7 +13,7 @@ use App\Models\MarketableSeed;
 use App\Models\CropVariety;
 use App\Models\PreOrder;
 use App\Models\SeedProducer;
-use App\Models\AgroDealers;
+use App\Models\IndividualProducer;
 use App\Models\Cooperative;
 use App\Models\FieldInspection;
 use App\Models\LoadStock;
@@ -37,8 +37,8 @@ class Dashboard
             'pending_producers' => SeedProducer::where('status', 'pending')->orWhere('status', null)->count(),
             'total_cooperatives' => Cooperative::count(),
             'pending_cooperatives' => Cooperative::where('status', 'pending')->orWhere('status', null)->count(),
-            'total_agro_dealers' => AgroDealers::count(),
-            'pending_agro_dealers' => AgroDealers::where('status', 'pending')->orWhere('status', null)->count(),
+            'total_agro_dealers' => IndividualProducer::count(),
+            'pending_agro_dealers' => IndividualProducer::where('status', 'pending')->orWhere('status', null)->count(),
             'total_marketable_seeds' => MarketableSeed::count(),
         ];
 

@@ -16,7 +16,11 @@ class MarketableSeedController extends AdminController
      *
      * @var string
      */
-    protected $title = 'MarketableSeed';
+    protected function title()
+    {
+        return trans('admin.form.Marketable seed');
+    }
+
 
     /**
      * Make a grid builder.

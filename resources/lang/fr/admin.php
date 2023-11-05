@@ -519,6 +519,9 @@ return [
         'Printed' => 'Imprimé',
         'Confirmed' => 'Confirmé',
         'Processing' => 'En traitement',
+        'Individual Producers' => 'Producteurs individuels',
+        'Order' => 'Commande',
+        'Marketable seed' => 'Semences commercialisables',
         'Confirm delivery' => 'Confirmer la livraison',
         'Once you accept this quotation, the decision cannot be reversed' => 'Une fois que vous acceptez ce devis, la décision ne peut pas être inversée.',
         
