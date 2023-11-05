@@ -30,6 +30,12 @@ class SeedClassController extends AdminController
     {
         $grid = new Grid(new SeedClass());
 
+        //filter by category name
+        $grid->filter(function ($filter) {
+            $filter->disableIdFilter();
+            $filter->like('class_name', __('admin.form.Category'));
+        });
+
         $grid->column('id', __('Id'));
         $grid->column('class_name', __('admin.form.Category'));
         $grid->column('class_code', __('admin.form.Category code'));
