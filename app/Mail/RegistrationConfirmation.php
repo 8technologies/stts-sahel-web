@@ -22,7 +22,7 @@ class RegistrationConfirmation extends Mailable
 
     public function build()
     {
-        return $this->subject('Welcome to the National Seed Tracing and Tracking System! ')
+        return $this->subject('Bienvenue dans le Système National de Traçabilité et de Suivi des Semences ! ')
             ->view('emails.registration_confirmation');
     }
 }

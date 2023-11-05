@@ -108,50 +108,51 @@ class Notification extends Model
         $notificationData = 
         [
             'inspector assigned' => [
-                'message_inspector' => "You have been assigned to inspect {$entity}.",
-                'message' => "Dear {$name}, your {$entity} is now assigned to an inspector.",
+                'message_inspector' => "Vous avez été désigné pour inspecter {$entity}.",
+                'message' => "Cher {$name}, votre {$entity} est désormais attribué à un inspecteur.",
                 'receiver_inspector_id' => $model->inspector_id,
                 'receiver_id' => $model->user_id,
                 'form_link' => admin_url("{$entity}/{$model->id}"),
                 'inspector_form_link' => admin_url("{$entity}/{$model->id}/edit"),
             ],
             'pending' => [
-                'message' => "Dear {$name}, your {$entity} is now pending.",
+                'message' => "Cher {$name}, votre {$entity} est désormais en attente.",
                 'receiver_id' => $receiver_id,
                 'form_link' => admin_url("{$entity}/{$model->id}"),
             ],
             'halted' => [
-                'message' => "Dear {$name}, your {$entity} has been halted by the inspector.",
+                'message' => "Cher {$name}, votre {$entity} a été suspendu par l'inspecteur.",
                 'receiver_id' => $receiver_id,
                 'form_link' => admin_url("{$entity}/{$model->id}"),
             ],
             'rejected' => [
-                'message' => "Dear {$name}, your {$entity} has been rejected by the inspector.",
+                'message' => "Cher {$name}, votre {$entity} a été rejeté par l'inspecteur.",
                 'receiver_id' => $receiver_id,
                 'form_link' => admin_url("{$entity}/{$model->id}"),
             ],
             'accepted' => [
-                'message' => "Dear {$name}, your {$entity} has been accepted by the inspector.",
+                'message' => "Cher {$name}, votre {$entity} a été accepté par l'inspecteur.",
                 'receiver_id' => $receiver_id,
                 'form_link' => admin_url("{$entity}/{$model->id}"),
             ],
             'printed' => [
-                'message' => "Dear {$name}, your seed-labels have been printed by the inspector.",
+                'message' => "Cher {$name}, vos étiquettes de semences ont été imprimées par l'inspecteur.",
                 'receiver_id' => $receiver_id,
                 'form_link' => admin_url("seed-labels/{$model->id}"),
             ],
             'lab test assigned' => [
-                'message' => "Dear {$name}, your {$entity} has been assigned to the lab technician.",
+                'message' => "Cher {$name}, votre {$entity} a été assigné au technicien de laboratoire.",
                 'receiver_id' => $model->user_id,
                 'form_link' => admin_url("{$entity}/{$model->id}"),
             ],
             'recommended' => [
-                'message' => "{$name} 's form has been recommended by the inspector.",
+                'message' => "Le formulaire de {$name} a été recommandé par l'inspecteur.",
                 'role_id' => 2,
                 'receiver_id' => null,
                 'form_link' => admin_url("{$entity}/{$model->id}"),
             ],
         ];
+        
 
         foreach ($notifications as $notification) 
         {
@@ -216,26 +217,27 @@ class Notification extends Model
         $notificationData = 
         [
             'processing' => [
-                'message' => "Dear {$name}, your {$entity} is being processed.",
-                'receiver_id' => $receiver_id ,
+                'message' => "Cher {$name}, votre {$entity} est en cours de traitement.",
+                'receiver_id' => $receiver_id,
                 'form_link' => admin_url("{$entity}/{$model->id}"),
             ],
             'shipping' => [
-                'message' => "Dear {$name}, your {$entity} is being shipped.",
-                'receiver_id' => $receiver_id ,
+                'message' => "Cher {$name}, votre {$entity} est en cours d'expédition.",
+                'receiver_id' => $receiver_id,
                 'form_link' => admin_url("{$entity}/{$model->id}"),
             ],
             'delivered' => [
-                'message' => "Dear {$name}, your {$entity} has been delivered.",
+                'message' => "Cher {$name}, votre {$entity} a été livré.",
                 'receiver_id' => $receiver_id,
                 'form_link' => admin_url("{$entity}/{$model->id}"),
             ],
             'cancelled' => [
-                'message' => "Dear {$name}, your {$entity} has been cancelled.",
+                'message' => "Cher {$name}, votre {$entity} a été annulé.",
                 'receiver_id' => $receiver_id,
                 'form_link' => admin_url("{$entity}/{$model->id}"),
             ],
         ];
+        
 
         foreach ($notifications as $notification) {
             $notification->delete();

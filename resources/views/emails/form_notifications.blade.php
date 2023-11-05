@@ -1,12 +1,12 @@
 @component('mail::message')
-# Hello
+# Bonjour
 
-<p> {{$message}}</p>
+<p>{{$message}}</p>
 
 @component('mail::button', ['url' => $link, 'color' => 'green', ])
-View Form
+Voir le formulaire
 @endcomponent
 
-Thanks,<br>
+Merci,<br>
 {{ config('app.name') }}
 @endcomponent
