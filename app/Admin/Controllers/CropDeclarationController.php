@@ -22,7 +22,11 @@ class CropDeclarationController extends AdminController
      *
      * @var string
      */
-    protected $title = 'Crop Declaration Forms';
+    protected function title()
+    {
+        return trans('admin.form.Crop Declaration');
+    }
+
 
     /**
      * Make a grid builder.
@@ -104,10 +108,9 @@ class CropDeclarationController extends AdminController
         });
         $show->field('phone_number', __('admin.form.Phone number'));
         $show->field('garden_size', __('admin.form.Garden size(Acres)'));
-        $show->field('gps_coordinates_1', __('admin.form.Gps coordinates 1'));
-        $show->field('gps_coordinates_2', __('admin.form.Gps coordinates 2'));
-        $show->field('gps_coordinates_3', __('admin.form.Gps coordinates 3'));
-        $show->field('gps_coordinates_4', __('admin.form.Gps coordinates 4'));
+        $show->field('land_architecture', __('admin.form.Land architecture'))->as(function ($land_architecture) {
+            return $land_architecture == null ? 'No file uploaded' : '<a href="/storage/' . $land_architecture . '" target="_blank">View land architecture</a>';
+        })->unescape();
         $show->field('field_name', __('admin.form.Field name'));
         $show->field('district_region', __('admin.form.District/Region'));
         $show->field('circle', __('admin.form.Circle'));
@@ -196,10 +199,7 @@ class CropDeclarationController extends AdminController
 
             $form->display('phone_number', __('admin.form.Phone number'));
             $form->display('garden_size', __('admin.form.Garden size(Acres)'));
-            $form->display('gps_coordinates_1', __('admin.form.Gps coordinates 1'));
-            $form->display('gps_coordinates_2', __('admin.form.Gps coordinates 2'));
-            $form->display('gps_coordinates_3', __('admin.form.Gps coordinates 3'));
-            $form->display('gps_coordinates_4', __('admin.form.Gps coordinates 4'));
+            $form->display('land_architecture', __('admin.form.Land architecture'));
             $form->display('field_name', __('admin.form.Field name'));
             $form->display('district_region', __('admin.form.District/Region'));
             $form->display('circle', __('admin.form.Circle'));
@@ -266,35 +266,26 @@ class CropDeclarationController extends AdminController
 
             $form->text('phone_number', __('admin.form.Phone number'))->required();
             $form->decimal('garden_size', __('admin.form.Garden size(Acres)'))->required();
-            $form->decimal('gps_coordinates_1', __('admin.form.GPS coordinates 1'))
-                ->rules('required|numeric|between:-9999.999999,9999.999999', [
-                    'numeric' => 'Coordinates must be a numeric value.',
-                    'between' => 'Coordinates must be between -9999.999999 and 9999.999999.',
-                ])
-                ->required();
-            $form->decimal('gps_coordinates_2', __('admin.form.GPS coordinates 2'))->rules('required|numeric|between:-9999.999999,9999.999999', [
-                'numeric' => 'Coordinates must be a numeric value.',
-                'between' => 'Coordinates must be between -9999.999999 and 9999.999999.',
-            ])
-            ->required();
-            $form->decimal('gps_coordinates_3', __('admin.form.GPS coordinates 3'))->rules('required|numeric|between:-9999.999999,9999.999999', [
-                'numeric' => 'Coordinates must be a numeric value.',
-                'between' => 'Coordinates must be between -9999.999999 and 9999.999999.',
-            ])
-            ->required();
-            $form->decimal('gps_coordinates_4', __('admin.form.GPS coordinates 4'))->rules('required|numeric|between:-9999.999999,9999.999999', [
-                'numeric' => 'Coordinates must be a numeric value.',
-                'between' => 'Coordinates must be between -9999.999999 and 9999.999999.',
-            ])
-            ->required();
+            $form->file('land_architecture', __('admin.form.Land architecture'));
             $form->text('field_name', __('admin.form.Field name'))->required();
             $form->text('district_region', __('admin.form.District/Region'))->required();
             $form->text('circle', __('admin.form.Circle'))->required();
             $form->text('township', __('admin.form.Township'))->required();
             $form->text('village', __('admin.form.Village'))->required();
             $form->date('planting_date', __('admin.form.Planting date'))->default(date('Y-m-d'))->required();
-            $form->number('quantity_of_seed_planted', __('admin.form.Quantity of seed planted(kgs)'))->required();
-            $form->number('expected_yield', __('admin.form.Expected yield(kgs)'))->required();
+            $form->text('quantity_of_seed_planted', __('admin.form.Quantity of seed planted(kgs)'))->attribute(
+                [
+                    'type' => 'number',
+                    'min' => 0,
+                    'step' => 'any', // 'any' allows any decimal input
+                ]
+            )->required();
+            $form->text('expected_yield', __('admin.form.Expected yield(kgs)'))->attribute([
+                'type' => 'number',
+                'min' => 0,
+                'step' => 'any', // 'any' allows any decimal input
+            ])->required();
+            
             $form->text('seed_supplier_name', __('admin.form.Seed supplier name'))->required();
             $form->text('seed_supplier_registration_number', __('admin.form.Seed supplier registration number'))->required();
             $form->text('source_lot_number', __('admin.form.Source lot number'))->required();

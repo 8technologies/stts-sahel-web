@@ -488,6 +488,25 @@ return [
         'Signature' => 'Signature',
         'Cooperative Member' => 'Cooperative Member',
         'Individual Seed Producer' => 'Individual Seed Producer',
+        'Land architecture' => 'Land architecture',
+        //statuses
+        'Pending' => 'Pending',
+        'Accepted' => 'Accepted',
+        'Rejected' => 'Rejected',
+        'Halted' => 'Halted',
+        'Inspection assigned' => 'Inspection assigned',
+        'Lab test assigned' => 'Lab test assigned',
+        'Printed' => 'Printed',
+        'Marketable' => 'Marketable',
+        'Not Marketable' => 'Not Marketable',
+        'Processing' => 'Processing',
+        'Shipping' => 'Shipping',
+        'Delivered' => 'Delivered',
+        'Cancelled' => 'Cancelled',
+        'Inspector assigned' => 'Inspector assigned',
+        'Recommended' => 'Recommended',
+        'Under Review' => 'Under Review',
+        
 
 
 

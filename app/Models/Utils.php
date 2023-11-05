@@ -39,37 +39,35 @@ class Utils extends Model
         if (!$status)
             return '<span class="label label-warning">Pending</span>';
         if ($status == 'pending')
-            return '<span class="label label-warning">Pending</span>';
-    
+           return '<span class="label label-warning">' . trans('admin.form.pending') . '</span>';
         if ($status == 'recommended')
-           return '<span style="background-color: purple; color: white;" class="label">Under review</span>';
+           return '<span style="background-color: purple; color: white;" class="label">' . trans('admin.form.Under Review') . '</span>';
         if ($status == 'inspection assigned')
-            return '<span class="label label-warning">Inspection assigned</span>';
+            return '<span class="label label-warning">' . trans('admin.form.Inspector Assigned') . '</span>';
         if ($status == 'halted')
-            return '<span class="label label-warning">Halted</span>';
+            return '<span class="label label-warning">' . trans('admin.form.Halted') . '</span>';
         if ($status == 'rejected')
-            return '<span class="label label-danger">Rejected</span>';
+            return '<span class="label label-danger">' . trans('admin.form.Rejecetd') . '</span>';
         if ($status == 'accepted')
-            return '<span class="label label-success">Accepted</span>';
+            return '<span class="label label-success">' . trans('admin.form.Accepted') . '</span>';
         if ($status == 'lab test assigned')
-            return '<span class="label label-success">Lab Test Assigned</span>';
+            return '<span class="label label-success">' . trans('admin.form.Lab Test Assigned') . '</span>';
         if ($status == 'printed')
-            return '<span class="label label-success">Printed</span>';
+            return '<span class="label label-success">' . trans('admin.form.Printed') . '</span>';
         if ($status == 'marketable')
-            return '<span class="label label-success">Marketable</span>';
+            return '<span class="label label-success">' . trans('admin.form.Marketable') . '</span>';
         if ($status == 'not marketable')
-            return '<span class="label label-danger">Not Marketable</span>';
+            return '<span class="label label-danger">' . trans('admin.form.Not Marketable') . '</span>';
         if ($status == 'processing')
-            return '<span class="label label-warning">Processing</span>';
+            return '<span class="label label-warning">' . trans('admin.form.Processing') . '</span>';
         if ($status == 'shipping')
-            return '<span class="label label-warning">Shipping</span>';
+            return '<span class="label label-warning">' . trans('admin.form.Shipping') . '</span>';
         if ($status == 'delivered')
-            return '<span class="label label-success">Delivered</span>';
+            return '<span class="label label-success">' . trans('admin.form.Delivered') . '</span>';
         if ($status == 'cancelled')
-            return '<span class="label label-danger">Cancelled</span>';
+            return '<span class="label label-danger">' . trans('admin.form.Cancelled') . '</span>';
         if ($status == 'inspector assigned')
-            return '<span class="label" style="background-color: yellow; color: black;">Inspection Assigned</span>';
-
+            return '<span class="label" style="background-color: yellow; color: black;">' . trans('admin.form.Inspector Assigned') . '</span>';
 
 
 

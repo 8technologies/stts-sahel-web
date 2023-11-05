@@ -22,10 +22,7 @@ class CropDeclaration extends Model
         'user_id',
         'phone_number',
         'garden_size',
-        'gps_coordinates_1',
-        'gps_coordinates_2',
-        'gps_coordinates_3',
-        'gps_coordinates_4',
+        'land_architecture',
         'field_name',
         'district_region',
         'circle',
@@ -51,12 +48,8 @@ class CropDeclaration extends Model
     protected $casts = [
         'phone_number' => 'integer',
         'garden_size' => 'decimal:2',
-        'gps_coordinates_1' => 'decimal:6',
-        'gps_coordinates_2' => 'decimal:6',
-        'gps_coordinates_3' => 'decimal:6',
-        'gps_coordinates_4' => 'decimal:6',
-        'quantity_of_seed_planted' => 'integer',
-        'expected_yield' => 'integer',
+        'quantity_of_seed_planted' => 'decimal:2',
+        'expected_yield' => 'decimal:2',
         'garden_location_latitude' => 'decimal:6',
         'garden_location_longitude' => 'decimal:6',
     ];
@@ -76,21 +69,7 @@ class CropDeclaration extends Model
 
         self::creating(function ($model) 
         {
-            $user = $model->user_id;
-          if($user != null){
-            $seed_producer = SeedProducer::where('user_id', $user)->first();
-            if ($seed_producer == null) {
-                return Utils::apiError('You need a valid Seed Producer Certiificate inorder to apply for crop declaration.');
-            }
-            if ($seed_producer->status != 'accepted') {
-                return Utils::apiError('Your Seed Producer Application has not yet been approved.');
-            }
-    
-            $crop_variety = CropVariety::find($model->crop_variety_id);
-            if ($crop_variety == null) {
-                return Utils::apiError('Invalid crop variety.');
-            }
-            }
+         
         });
         //call back to send a notification to the user
         self::created(function ($model) {
