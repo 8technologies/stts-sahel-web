@@ -176,5 +176,15 @@ class Validation extends Model
             $grid->model()->where('user_id', auth('admin')->user()->id);
 
         }
+
+        //show the research institute only his records
+        if (auth('admin')->user()->isRole('research')) {
+            $grid->model()->where('user_id', auth('admin')->user()->id);
+        }
+
+        //show the individual seed producer only his records
+        if (auth('admin')->user()->isRole('individual-producer')) {
+            $grid->model()->where('user_id', auth('admin')->user()->id);
+        }
     }
 }

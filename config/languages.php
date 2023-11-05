@@ -7,7 +7,7 @@ return [
     ],
     'fr' => [
         'display' => 'Français',
-        'flag-icon' => 'fr'
+        'flag-icon' => 'ml'
     ],
    
     

@@ -20,7 +20,7 @@ class LoadStock extends Model
         'yield_quantity',
         'last_field_inspection_date',
         'load_stock_date',
-        'last_field_inspection_remarks',
+        'status',
     ];
 
     public function crop_declaration()

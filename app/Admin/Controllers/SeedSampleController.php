@@ -24,7 +24,11 @@ class SeedSampleController extends AdminController
      *
      * @var string
      */
-    protected $title = 'Seed Sample Request';
+    protected function title()
+    {
+        return trans('admin.form.Seed sample request');
+    }
+
 
     /**
      * Make a grid builder.
@@ -138,12 +142,12 @@ class SeedSampleController extends AdminController
 
             //compare the quantity requested and the quantity available
             $form->saving(function (Form $form) {
-               $load_stock_quantity = LoadStock::where('id', $form->load_stock_id)->value('yield_quantity');
-                if($form->quantity > $load_stock_quantity)
+               $load_stock_quantity = LoadStock::where('id', $form->load_stock_id)->first();
+                if($form->quantity > $load_stock_quantity->yield_quantity)
                 {
                     return back()->withInput()->withErrors(['quantity' => 'The quantity requested is more than the available quantity(' . $load_stock_quantity.') in the crop stock']);
                 }
-                
+                $form->crop_variety_id = $load_stock_quantity->crop_variety_id;
             });
         }
 
@@ -176,6 +180,7 @@ class SeedSampleController extends AdminController
             ->rules(['mimes:jpeg,pdf,jpg', 'max:1048']) // Assuming a maximum file size of 1MB 
             ->help('Attach a copy of your proof of payment, and should be in pdf, jpg or jpeg format');
             $form->textarea('applicant_remarks', __('admin.form.Applicant remarks'));
+            $form->hidden('crop_variety_id');
         }
 
         if ($form->isEditing()) 

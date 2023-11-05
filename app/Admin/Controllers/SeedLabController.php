@@ -25,7 +25,11 @@ class SeedLabController extends AdminController
      *
      * @var string
      */
-    protected $title = 'Seed Lab Tests';
+    protected function title()
+    {
+        return trans('admin.form.Seed Lab Test');
+    }
+
 
     /**
      * Make a grid builder.
@@ -39,7 +43,7 @@ class SeedLabController extends AdminController
         $lab_results = SeedLab::where('user_id', auth('admin')->user()->id)->get();
         //check the status of the form before displaying it
        
-        if($user->inRoles(['grower', 'agro-dealer'])){
+        if($user->inRoles(['grower','cooperative','individual-producers','research'])){
           $grid->model()->where('user_id', '=', $user->id)->where('status', '=', 'lab test assigned');
          }else{
             $grid->model()->where('status', '=', 'lab test assigned');
@@ -70,24 +74,24 @@ class SeedLabController extends AdminController
         }
 
         $grid->column('lot_number', __('admin.form.Lot Number'))->display(function ($lot_number) {
-            return $lot_number ?? 'Not yet assigned';
+            return $lot_number ?? __('admin.form.Not yet assigned');
         });
         $grid->column('user_id', __('admin.form.Applicant'))->display(function ($user_id) {
             return \App\Models\User::find($user_id)->name;
         });
 
         $grid->column('seed_lab_test_report_number', __('admin.form.Seed lab test report number'))->display(function ($seed_lab_test_report_number) {
-            return $seed_lab_test_report_number ?? 'Not yet assigned';
+            return $seed_lab_test_report_number ??__('admin.form.Not yet assigned');
         });
         $grid->column('germination_test_results', __('admin.form.Germination test results'))->display(function ($germination_test_results) {
-            return $germination_test_results.' % ' ?? 'Not yet assigned';
+            return $germination_test_results ?? __('admin.form.Not yet assigned');
         });
         $grid->column('purity_test_results', __('admin.form.Purity test results'))->display(function ($purity_test_results) {
-            return $purity_test_results.' % ' ?? 'Not yet assigned';
+            return $purity_test_results ?? __('admin.form.Not yet assigned');
         });
         $grid->column('test_decision', __('admin.form.Test decision'))->display(function ($test_decision) {
 
-            return \App\Models\Utils::tell_status($test_decision) ?? 'Not yet assigned';
+            return \App\Models\Utils::tell_status($test_decision) ?? __('admin.form.Not yet assigned');
         });
        
         //check user role then show a certificate button
@@ -122,8 +126,8 @@ class SeedLabController extends AdminController
         $show = new Show(SeedLab::findOrFail($id));
         //delete notification after viewing the form
         Utils::delete_notification('SeedLab', $id);
-        $crop_variety_id = SeedLab::where('id', $id)->value('crop_variety_id');
-        $load_stock_id = SeedLab::where('id', $id)->value('load_stock_id');
+        $crop_variety_id = SeedLab::find($id)->value('crop_variety_id');
+        $load_stock_id = SeedLab::find($id)->value('load_stock_id');
 
         $show->field('user_id', __('admin.form.Applicant'))->as(function ($user_id) {
             return \App\Models\User::find($user_id)->name;
@@ -147,15 +151,24 @@ class SeedLabController extends AdminController
         $show->field('seed_lab_test_report_number', __('admin.form.Seed lab test report number'));
         $show->field('sample_request_number', __('admin.form.Seed sample request number'));
         $show->field('seed_sample_size', __('admin.form.Seed sample size'));
-        $show->field('testing_methods', __('admin.form.Testing method'));
-        $show->field('germination_test_results', __('admin.form.Germination test results'))->as(function ($germination_test_results) {
-            return $germination_test_results . ' % ';
+
+       
+        $show->field('testing_methods', __('admin.form.Testing method'))->as(function ($testingMethods) {
+            // Return the formatted methods as a list without the square brackets and quotes
+            $methods = str_replace(['[', ']', '"'], '', $testingMethods);
+            return $methods;
+        });
+
+        
+        
+        $show->field('germination_test_results', __('admin.form.Germination test results(%)'))->as(function ($germination_test_results) {
+            return $germination_test_results ??__('admin.form.Not yet assigned');
         })->unescape();
-        $show->field('purity_test_results', __('admin.form.Purity test results'))->as(function ($purity_test_results) {
-            return $purity_test_results . ' % ';
+        $show->field('purity_test_results', __('admin.form.Purity test results(%)'))->as(function ($purity_test_results) {
+            return $purity_test_results ?? __('admin.form.Not yet assigned');
         })->unescape();
-        $show->field('moisture_content_test_results', __('admin.form.Moisture content test results'))->as(function ($moisture_content_test_results) {
-            return $moisture_content_test_results . ' % ';
+        $show->field('moisture_content_test_results', __('admin.form.Moisture content test results(%)'))->as(function ($moisture_content_test_results) {
+            return $moisture_content_test_results ?? __('admin.form.Not yet assigned');
         })->unescape();
         $show->field('additional_tests_results', __('admin.form.Additional tests results'));
         $show->field('test_decision', __('admin.form.Test decision'))->as(function ($test_decision) {
@@ -223,7 +236,14 @@ class SeedLabController extends AdminController
             $form->text('mother_lot',__('admin.form.Mother lot number'))->default($mother_lot)->readonly();
             $form->text('seed_lab_test_report_number', __('admin.form.Seed lab test report number'))->default('labtest' . "/" . mt_rand(10000000, 99999999))->readonly();
             $form->decimal('seed_sample_size', __('admin.form.Seed sample size'))->required();
-            $form->text('testing_methods', __('admin.form.Testing method'))->required();
+            $form->multipleSelect('testing_methods', __('admin.form.Testing method'))->options(
+                [
+                    'Germination test' => 'Germination test',
+                    'Purity test' => 'Purity test',
+                    'Moisture content test' => 'Moisture content test',
+                    'Additional tests' => 'Additional tests',
+                ])->required();
+                
             $form->decimal('germination_test_results', __('admin.form.Germination test results'))->required();
             $form->decimal('purity_test_results', __('admin.form.Purity test results'))->required();
             $form->decimal('moisture_content_test_results', __('admin.form.Moisture content test results'))->required();

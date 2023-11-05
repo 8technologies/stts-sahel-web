@@ -49,19 +49,13 @@ class SeedLab extends Model
             Notification::update_notification($model, 'SeedLab', request()->segment(count(request()->segments())-1));
         
             // Check if the test_decision is 'marketable' and if a duplicate entry exists in MarketableSeed
-            if ($model->test_decision == 'marketable' && !MarketableSeed::where('seed_lab_id', $model->id)->exists()) {
-                $marketable_seed = new MarketableSeed();
-                $marketable_seed->user_id = $model->user_id;
-                $marketable_seed->seed_lab_id = $model->id;
-                $marketable_seed->load_stock_id = $model->load_stock_id;
-                $marketable_seed->crop_variety_id = $model->crop_variety_id;
-                $marketable_seed->quantity = $model->quantity;
-                $marketable_seed->save();
-        
-                // Update the quantity in the load stock table
-                $load_stock = LoadStock::find($model->load_stock_id);
-                $load_stock->yield_quantity = $load_stock->yield_quantity - $model->quantity;
-                $load_stock->save();
+            if ($model->test_decision == 'marketable') {
+                  // Update the quantity in the load stock table
+                  $load_stock = LoadStock::find($model->load_stock_id);
+                  $load_stock->yield_quantity = $load_stock->yield_quantity - $model->quantity;
+                  $load_stock->status = 'tested';
+                  $load_stock->save();
+ 
             }
         });
         

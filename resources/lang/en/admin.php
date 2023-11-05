@@ -519,6 +519,15 @@ return [
         'High' => 'High',
         'Approved' => 'Approved',
         'Optimal' => 'Optimal',
+        'Crop Stock' => 'Crop Stock',
+        'Seed sample request' => 'Seed sample request',
+        'Lab Test Assigned' => 'Lab Test Assigned',
+        'Seed Lab Test' => 'Seed Lab Test',
+        'Not yet assigned' => 'Not yet assigned',
+        'tested' => 'tested',
+        'Germination test results(%)' => 'Germination test results(%)',
+        'Purity test results(%)' => 'Purity test results(%)',
+        'Moisture content test results(%)' => 'Moisture content test results(%)',
        
 
 

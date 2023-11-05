@@ -9,6 +9,7 @@ use Encore\Admin\Show;
 use \App\Models\LoadStock;
 use \Encore\Admin\Facades\Admin;
 use \App\Models\Validation;
+use \App\Models\Utils;
 
 use \App\Models\CropDeclaration;
 
@@ -19,7 +20,11 @@ class LoadStockController extends AdminController
      *
      * @var string
      */
-    protected $title = ' Crop Stock';
+    protected function title()
+    {
+        return trans('admin.form.Crop stock');
+    }
+
 
     /**
      * Make a grid builder.
@@ -44,6 +49,9 @@ class LoadStockController extends AdminController
         });
         $grid->column('yield_quantity', __('admin.form.Yield quantity(kgs)'))->display(function ($yield_quantity) {
             return number_format($yield_quantity).' kgs';
+        });
+        $grid->column('status', __('admin.form.Status'))->display(function ($status){
+            return Utils::tell_status($status);
         });
         $grid->column('last_field_inspection_date', __('admin.form.Last field inspection date'));
      

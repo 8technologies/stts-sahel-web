@@ -37,7 +37,7 @@ class Utils extends Model
     {
 
         if (!$status)
-            return '<span class="label label-warning">Pending</span>';
+            return '<span class="label label-warning">' . trans('admin.form.pending') . '</span>';
         if ($status == 'pending')
            return '<span class="label label-warning">' . trans('admin.form.pending') . '</span>';
         if ($status == 'recommended')
@@ -56,6 +56,8 @@ class Utils extends Model
             return '<span class="label label-success">' . trans('admin.form.Printed') . '</span>';
         if ($status == 'marketable')
             return '<span class="label label-success">' . trans('admin.form.Marketable') . '</span>';
+        if ($status == 'tested')
+            return '<span class="label label-success">' . trans('admin.form.tested') . '</span>';
         if ($status == 'not marketable')
             return '<span class="label label-danger">' . trans('admin.form.Not Marketable') . '</span>';
         if ($status == 'processing')
