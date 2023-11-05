@@ -104,7 +104,7 @@ Route::get('inspection', function () {
 });
 
 Route::get('/admin/mobile', function () {
-    $file = public_path('storage/assets/mobile.apk');
+    $file = public_path('storage/assets/mobile.zip');
     $headers = [
         'Content-Type' => 'application/vnd.android.package-archive',
     ];
