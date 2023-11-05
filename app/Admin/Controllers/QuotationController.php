@@ -211,7 +211,7 @@ class QuotationController extends AdminController
                         'accepted' => 'Accept',
                         'rejected' => 'Declined',
                     ])
-                    ->help("NOTE: Once you accept this quotation, the decision cannot be reversed.")
+                    ->help(__('admin.form.Once you accept this quotation, the decision cannot be reversed'))
                     ->when('rejected', function (Form $form) {
                         $form->textarea('status_comment', __('admin.form.Reason why declined'))
                             ->help("Optional");

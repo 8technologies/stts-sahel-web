@@ -81,8 +81,8 @@ class PreOrderController extends AdminController
         $show->field('client_physical_address', __('admin.form.Client physical address'));
         $show->field('client_contact_number', __('admin.form.Client contact number'));
         $show->field('client_email_address', __('admin.form.Client email address'));
-        $show->field('preferred_payment_method', __('admin.form.Preferred payment method'));
-        $show->field('seed_delivery_preferences', __('admin.form.Seed delivery preference'));
+        $show->radio('preferred_payment_method', __('admin.form.Preferred payment method'))->options(['cash' => 'Cash', 'bank' => 'Bank']);
+        $show->radio('seed_delivery_preferences', __('admin.form.Seed delivery preference'))->options(['pick_up' => 'Pick up', 'delivery' => 'Delivery']);
         $show->field('other_information', __('admin.form.Other information'));
         $show->field('created_at', __('admin.form.Created at'));
 
