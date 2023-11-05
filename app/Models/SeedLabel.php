@@ -56,24 +56,34 @@ class SeedLabel extends Model
                 //call back to send a notification to the user after form is updated
                 Notification::update_notification($model, 'SeedLabel', request()->segment(count(request()->segments())-1));
 
-                // Check if the test_decision is 'marketable' and if a duplicate entry exists in MarketableSeed
-               // Check if the test_decision is 'marketable' and if a duplicate entry exists in MarketableSeed
-               if ($model->test_decision == 'marketable' && !MarketableSeed::where('seed_lab_id', $model->id)->exists()) {
-                // Update the quantity in the load stock table
-                $load_stock = LoadStock::find($model->load_stock_id);
-                $load_stock->yield_quantity = $load_stock->yield_quantity - $model->quantity;
-                $load_stock->save();
 
-              $marketable_seed = new MarketableSeed();
-              $marketable_seed->user_id = $model->user_id;
-              $marketable_seed->seed_lab_id = $model->id;
-              $marketable_seed->load_stock_id = $model->load_stock_id;
-              $marketable_seed->crop_variety_id = $model->crop_variety_id;
-              $marketable_seed->quantity = $load_stock->yield_quantity - $model->quantity;
-              $marketable_seed->save();
+                if($model->status == 'printed')
+                {
+                    error_log($model);
+                    //get the total quantity of the packages
+                 
+                    $total_quantity = 0;
+                    foreach ($model->packages as $package) {
+                        $total_quantity += $package['quantity'];
+                    }
+    
+                    error_log($total_quantity);
+                    // Update the quantity in the load stock table
+                    $load_stock_id = SeedLab::find($model->seed_lab_id)->first()->load_stock_id;
+                    $load_stock = LoadStock::find($load_stock_id);
+                    $load_stock->yield_quantity = $load_stock->yield_quantity - $total_quantity;
+                    $load_stock->save();
+
+                    $marketable_seed = new MarketableSeed();
+                    $marketable_seed->user_id = $model->user_id;
+                    $marketable_seed->seed_lab_id = $model->seed_lab_id;
+                    $marketable_seed->load_stock_id = $load_stock->id;
+                    $marketable_seed->crop_variety_id = $load_stock->crop_variety_id;
+                    $marketable_seed->quantity = $total_quantity;
+                    $marketable_seed->save();
       
-            
-          }
+                }
+         
             });
   
     }

@@ -29,7 +29,11 @@ class SeedLabelController extends AdminController
      *
      * @var string
      */
-    protected $title = 'SeedLabel';
+    protected function title()
+    {
+        return trans('admin.form.Seed label request');
+    }
+
 
     /**
      * Make a grid builder.
@@ -281,6 +285,21 @@ class SeedLabelController extends AdminController
                 if (empty($form->packages)) {
                     return back()->withInput()->withErrors(['seed_lab_id' => 'Please add the packages you are requesting for.']);
                 }
+
+                //get the total quantity of the packages
+                $total_quantity = 0;
+                foreach ($form->packages as $package) {
+                    $total_quantity += $package['quantity'];
+                }
+
+                error_log($total_quantity);
+                //check if the total quantity is equal to the quantity of seed in the load stock
+                $seed_lab = SeedLab::where('id', $form->seed_lab_id)->first();
+                $load_stock = LoadStock::where('id', $seed_lab->load_stock_id)->first();
+                if ($total_quantity > $load_stock->yield_quantity) {
+                    error_log('here now');
+                    return back()->withInput()->withErrors(['label_packages' => 'The total quantity of the packages should not be greater than the quantity of seed( '. $load_stock->yield_quantity. ' )in the load stock.']);
+                }
             });
         }
 
@@ -295,19 +314,19 @@ class SeedLabelController extends AdminController
         //get the users successfully registered seed labs
         $seed_lab_id = SeedLab::where('user_id', Auth::user()->id)->where('test_decision', 'marketable')->get();
 
-        if ($user->inRoles(['basic-user', 'grower','agro-dealer','cooperative'])) 
+        if ($user->inRoles(['research', 'grower','individual-producer','cooperative'])) 
         {
 
             $form->select('seed_lab_id', __('admin.form.Lot number'))->options($seed_lab_id->pluck('lot_number', 'id'))->required();
             $form->text('seed_label_request_number', __('admin.form.Seed label request number'))->default('SLR' . date('YmdHis') . rand(1000, 9999))->readonly();
             $form->file('proof_of_payment', __('admin.form.Proof of payment'))
             ->rules(['mimes:jpeg,pdf,jpg', 'max:2048']) // Assuming a maximum file size of 2MB 
-            ->help('Attach a copy of your proof of payment, and should be in pdf, jpg or jpeg format')
+            ->help(__('admin.form.Attach a copy of your proof of payment, and should be in pdf, jpg or jpeg format'))
             ->required();
             $form->date('request_date', __('admin.form.Request date'))->default(date('Y-m-d'));
             $form->textarea('applicant_remarks', __('admin.form.Applicant remarks'));
 
-            $form->text('label_packages', __('admin.form.Label package Type'))->required();
+            $form->select('label_packages', __('admin.form.Label package Type'))->options(LabelPackage::all()->pluck('package_type', 'id'))->required();
             $form->hasMany('packages', __('admin.form.Packages'), function (Form\NestedForm $form) {
                 //drop down of the price and quantity from the label package table
                 $label_package = LabelPackage::all();
@@ -353,25 +372,29 @@ class SeedLabelController extends AdminController
                 $form->display('request_date', __('admin.form.Request date'))->default(date('Y-m-d'));
                 $form->display('applicant_remarks', __('admin.form.Applicant remarks'));
               
-                $form->hasMany('packages', __('admin.form.Packages'), function (Form\NestedForm $form) use ($seed_label){
+                $form->hasMany('packages', __('admin.form.Packages'), function (Form\NestedForm $form) use ($seed_label) {
                     //get the label package id for this seed label from the pivot table seed_label_packages
                     $label_package_id = $seed_label->labelPackages()->pluck('package_id');
                     $label_package = LabelPackage::whereIn('id', $label_package_id)->get();
                     $label_package_array = [];
+                    
                     foreach ($label_package as $label) {
                         $label_package_array[$label->id] = $label->quantity . 'kgs' . ' @ ' . $label->price;
                     }
-                    $form->select('package_id', __('admin.form.Label package'))->options($label_package_array)->readonly();
-
                     
+                    $form->select('package_id', __('admin.form.Label package'))->options($label_package_array)->readonly();
                     $form->display('quantity', __('admin.form.Quantity(kgs)'))->readonly();
-                })->readonly();
+                })->disable();
+                
             }
 
             if ($user->isRole('commissioner')) 
             {
                 $form->divider('Administrator descision');
-                $form->select('status', __('admin.form.Status'))->options(['accepted' => 'Approved', 'rejected' => 'Rejected'])->default('pending');
+                $form->select('status', __('admin.form.Status'))->
+                options(
+                    ['accepted' => __('admin.form.Approved'), 
+                    'rejected' => __('admin.form.Rejected')])->default('pending');
             }
 
             if ($user->isRole('labosem')) 

@@ -528,6 +528,9 @@ return [
         'Germination test results(%)' => 'Germination test results(%)',
         'Purity test results(%)' => 'Purity test results(%)',
         'Moisture content test results(%)' => 'Moisture content test results(%)',
+        'Seed label request' => 'Seed label request',
+        'Label packages' => 'Label packages',
+        'Printed' => 'Printed',
        
 
 

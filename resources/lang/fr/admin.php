@@ -505,7 +505,7 @@ return [
         'Medium' => 'Moyen',
         'High' => 'Haut',
         'Approved' => 'Approuvé',
-        'Crop Stock' => 'Stock de cultures',
+        'Crop stock' => 'Stock de cultures',
         'Seed sample request' => 'Demande d\'échantillon de semences',
         'Lab Test Assigned' => 'Test de laboratoire assigné',
         'Seed Lab Test' => 'Test de laboratoire de semences',
@@ -514,7 +514,9 @@ return [
         'Germination test results(%)' => 'Résultats du test de germination(%)',
         'Purity test results(%)' => 'Résultats du test de pureté(%)',
         'Moisture content test results(%)' => 'Résultats du test de teneur en humidité(%)',
-        
+        'Seed label request' => 'Demande d\'étiquette de semences',
+        'Label packages' => 'Paquets d\'étiquettes',
+        'Printed' => 'Imprimé',
         
 
 
