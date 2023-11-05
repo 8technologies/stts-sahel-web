@@ -6,6 +6,7 @@ use App\Http\Controllers\QrCodeController;
 use App\Http\Controllers\SeedDetailsController;
 use App\Admin\Controllers\FeedBackController;
 use App\Admin\Controllers\SeedLabelController;
+use App\Admin\Controllers\OrderController;
 use App\Http\Controllers\ContractController;
 use App\Models\Gen;
 use Illuminate\Support\Facades\App;
@@ -103,6 +104,7 @@ Route::get('inspection', function () {
 });
 
 Route::put('/admin/seed-labels/{id}/confirm',  [SeedLabelController::class, 'confirm'])->name('print.confirm');
+Route::put('/admin/orders/{id}/confirm',  [OrderController::class, 'confirm'])->name('delivery.confirm');
 
 Route::get('/feedback/{lotId}', [FeedBackController::class, 'feedbackDetails']);
 //Route::get('/contract/{id}', [ContractController::show])->name('contract.show');

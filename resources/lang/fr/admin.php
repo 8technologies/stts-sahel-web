@@ -517,6 +517,9 @@ return [
         'Seed label request' => 'Demande d\'étiquette de semences',
         'Label packages' => 'Paquets d\'étiquettes',
         'Printed' => 'Imprimé',
+        'Confirmed' => 'Confirmé',
+        'Processing' => 'En traitement',
+        'Confirm delivery' => 'Confirmer la livraison',
         'Once you accept this quotation, the decision cannot be reversed' => 'Une fois que vous acceptez ce devis, la décision ne peut pas être inversée.',
         
 

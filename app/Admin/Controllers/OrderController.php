@@ -73,11 +73,73 @@ class OrderController extends AdminController
         {
             return Utils::tell_status($status)?? '-';
         })->sortable();
+
+        
+            //confirm order button
+            $grid->column('id', __('Confirm Delivery'))->display(function ($id) 
+            {
+                $order = Order::findOrFail($id);
+                $confirmedClass =  $order->status == 'confimed' ? 'btn-success' : 'btn-primary';
+                $confirmedText =  $order->status == 'confirmed' ? __('admin.form.Confirmed') : __('admin.form.Confirm delivery');
+                if( $order->status == 'confirmed') 
+                {
+                    return "<a  class='btn btn-success' data-id='{$id} ' disabled>$confirmedText</a>";
+                }
+                if($order->status == 'delivered')
+                {
+                   if($order->order_by == Admin::user()->id)
+                   {
+                     return "<a id='confirm-print-{$id}' href='" . route('delivery.confirm', ['id' => $id]) . "' class='btn btn-xs $confirmedClass confirm-print' data-id='{$id}'>$confirmedText</a>";
+                    }
+                }  
+            })->sortable();
+        
+            // css styling the button to blue initially
+            Admin::style('.btn-blue {color: #fff; background-color: #0000FF; border-color: #0000FF;}');
+            
+            //Script to edit the form status field to 2 on click of the confirm order button
+            Admin::script
+            ('
+                $(".confirm-print").click(function(e) 
+                {
+                    e.preventDefault();
+                    var id = $(this).data("id");
+                    var url = "' . route('delivery.confirm', ['id' => ':id']) . '";
+                    url = url.replace(":id", id);
+                    var button = $("#confirm-print-" + id);
+                    $.ajax(
+                        {
+                            url: url,
+                            type: "PUT",
+                            data: 
+                            {
+                                _method: "PUT",
+                                _token: LA.token,
+                                status: "confirmed",
+                            },
+                            success: function (data) 
+                            {
+                                $.pjax.reload("#pjax-container");
+                                toastr.success("Printing confirmed successfully");
+                
+                            }
+                        });
+                });
+            ');
+         
       
       
       
 
         return $grid;
+    }
+
+    public function confirm($id)
+    {
+        $print = Order::findOrFail($id);
+        $print->status = 'confirmed'; 
+        $print->save();
+        return response()->json(['status' => 'success']);
     }
 
     /**

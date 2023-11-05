@@ -94,7 +94,7 @@ class SeedLabelController extends AdminController
           {
               $seed_label = SeedLabel::findOrFail($id);
               $confirmedClass =  $seed_label->status == 'printed' ? 'btn-success' : 'btn-primary';
-              $confirmedText =  $seed_label->status == 'printed' ? 'Printed' : 'Processing';
+              $confirmedText =  $seed_label->status == 'printed' ? __('admin.form.Printed') :  __('admin.form.Processing');
               if( $seed_label->status == 'printed') 
               {
                   return "<a  class='btn btn-success' data-id='{$id} ' disabled>$confirmedText</a>";

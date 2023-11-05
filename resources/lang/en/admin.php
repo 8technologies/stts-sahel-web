@@ -530,6 +530,9 @@ return [
         'Moisture content test results(%)' => 'Moisture content test results(%)',
         'Seed label request' => 'Seed label request',
         'Label packages' => 'Label packages',
+        'Confirmed' => 'Confirmed',
+        'Confirm delivery' => 'Confirm delivery',
+        'Processing' => 'Processing',
         'Printed' => 'Printed',
         'Once you accept this quotation, the decision cannot be reversed' => 'Once you accept this quotation, the decision cannot be reversed.',
        
