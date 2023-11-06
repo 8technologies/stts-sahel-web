@@ -155,6 +155,19 @@ class AuthController extends Controller
             return redirect(admin_url('auth/setting'));
         });
 
+        //disable check boxes
+        $form->tools(function (Form\Tools $tools) {
+            $tools->disableList();
+            $tools->disableDelete();
+            $tools->disableView();
+        });
+
+        //disable view check boxes 
+        $form->disableEditingCheck();
+        $form->disableViewCheck();
+        $form->disableCreatingCheck();
+        
+
         return $form;
     }
 
