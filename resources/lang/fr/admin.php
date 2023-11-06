@@ -251,6 +251,7 @@ return [
         'Order number' => 'Numéro de commande',
         'Inspection type' => 'Type d\'inspection',
         'Applicant' => 'Demandeur',
+        'Optimal' => 'Optimal',
         'Crop Variety' => 'Variété',
         'Inspection Report' => 'Rapport d\'inspection',
         'Load stock saved successfully' => 'Chargement du stock enregistré avec succès',
@@ -527,13 +528,6 @@ return [
         'Marketable seed' => 'Semences commercialisables',
         'Confirm delivery' => 'Confirmer la livraison',
         'Once you accept this quotation, the decision cannot be reversed' => 'Une fois que vous acceptez ce devis, la décision ne peut pas être inversée.',
-        
-
-
-
-
-
-
 
 ]
 ];
