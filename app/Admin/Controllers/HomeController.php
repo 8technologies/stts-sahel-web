@@ -69,7 +69,7 @@ class HomeController extends Controller
             })
         
             ->row(function (Row $row) use($user) {
-                if($user->inRoles(['commissioner', 'developer','basic-user','agro-dealer','cooperative','lab_technician','labosem','grower','research','individual-producers'])){
+                if($user->inRoles(['commissioner', 'developer','basic-user','agro-dealer','cooperative','lab_technician','labosem','research','individual-producers'])){
               
                 $row->column(6, function (Column $column) {
                     $column->append(Dashboard::getPreOrders());
@@ -82,7 +82,7 @@ class HomeController extends Controller
                })
 
              ->row(function (Row $row)  use($user){
-                if($user->inRoles(['commissioner', 'developer','basic-user','inspector','agro-dealer','cooperative','lab_technician','labosem','grower','research','individual-producers'])){
+                if($user->inRoles(['commissioner', 'developer','basic-user','inspector','agro-dealer','cooperative','lab_technician','labosem','research','individual-producers'])){
                 $row->column(6, function (Column $column) {
                     $column->append(Dashboard::getProcessedAndUnprocessedSeedsPerCrop());
                 });
@@ -92,7 +92,7 @@ class HomeController extends Controller
             }
             })
             ->row(function (Row $row) use($user){
-                if($user->inRoles(['cooperative', 'grower','agrodealers','research','individual-producers'])){
+                if($user->inRoles(['cooperative', 'grower','agrodealers'])){
                 $row->column(12, function (Column $column) {
                     $column->append(Dashboard::userCards());
                 });
@@ -102,7 +102,7 @@ class HomeController extends Controller
            
 
             ->row(function (Row $row) use($user){
-                if($user->inRoles(['cooperative', 'grower','agrodealers','research','individual-producers'])){
+                if($user->inRoles(['cooperative', 'grower','agrodealers'])){
                 $row->column(6, function (Column $column) {
                     $column->append(Dashboard::getMySales());
                 });
@@ -112,7 +112,7 @@ class HomeController extends Controller
             }   
             })
             ->row(function (Row $row) use($user){
-                if($user->inRoles(['cooperative', 'grower','agrodealers','research','individual-producers'])){
+                if($user->inRoles(['cooperative', 'grower','agrodealers'])){
                 $row->column(6, function (Column $column) {
                     $column->append(Dashboard::getMyInspections());
                 });
