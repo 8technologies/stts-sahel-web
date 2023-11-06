@@ -102,7 +102,7 @@ class Utils extends Model
     public static function get_inspectors()
     {
         $users = Administrator::whereHas('roles', function ($query) {
-            $query->where('name', 'inspector');
+            $query->where('id', 4);
         })->pluck('name', 'id');
         return $users;
     }
