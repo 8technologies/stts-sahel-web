@@ -445,6 +445,7 @@ return [
         'Batch details' => 'Batch details',
         'Close' => 'Close',
         'Seed Companies' => 'Seed Companies',
+        'Under Review' => 'Under Review',
         'Child Lot Number' => 'Child Lot Number',
         'Mother Lot Number:' => 'Mother Lot Number:',
         'Seed sample request number' => 'Seed sample request number',
