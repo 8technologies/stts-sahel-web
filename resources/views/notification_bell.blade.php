@@ -6,7 +6,7 @@
   @endif
 </a>
 <ul class="dropdown-menu">
-  <li class="header">You have {{ count($notifications) }} pending tasks.</li>
+  <li class="header">Vous avez {{ count($notifications) }} tâches en attente</li>
   <li>
     <!-- inner menu: contains the actual data -->
     <ul class="menu">
