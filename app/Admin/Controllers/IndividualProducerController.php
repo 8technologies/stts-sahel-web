@@ -49,7 +49,7 @@ class IndividualProducerController extends AdminController
         Utils::disable_buttons('IndividualProducer', $grid);
 
         //disable create button 
-        if ($user->inRoles(['individual-producer'])) 
+        if ($user->inRoles(['individual-producers'])) 
         {
             $grid->disableCreateButton();
         }
