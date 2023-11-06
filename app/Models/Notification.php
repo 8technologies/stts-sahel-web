@@ -82,15 +82,15 @@ class Notification extends Model
         {
             $notification = new Notification();
             $notification->role_id = 1;
-            $notification->message =  "New {$entity} has been submitted by ". $name .' ';
-            $notification->link = admin_url("auth/login"); 
+            $notification->message = "Nouveau {$entity} a été soumis par " . $name .' ';
+            $notification->link = admin_url("auth/login");
             $notification->form_link = admin_url("{$entity}/{$model->id}/edit");
-            $notification->status = 'Unread'; 
+            $notification->status = 'Non lu';
             $notification->model = $model_name;
-            $notification->model_id = $model->id; 
+            $notification->model_id = $model->id;
             $notification->save();
-
-            //self::sendMail($notification); 
+        
+            //self::sendMail($notification);
         }
 
     }
