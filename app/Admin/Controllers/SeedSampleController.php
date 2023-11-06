@@ -145,7 +145,7 @@ class SeedSampleController extends AdminController
                $load_stock_quantity = LoadStock::where('id', $form->load_stock_id)->first();
                 if($form->quantity > $load_stock_quantity->yield_quantity)
                 {
-                    return back()->withInput()->withErrors(['quantity' => 'The quantity requested is more than the available quantity(' . $load_stock_quantity.') in the crop stock']);
+                    return back()->withInput()->withErrors(['quantity' => 'The quantity requested is more than the available quantity(' . $load_stock_quantity->yield_quantity.') in the crop stock']);
                 }
                 $form->crop_variety_id = $load_stock_quantity->crop_variety_id;
             });
