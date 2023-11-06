@@ -59,7 +59,7 @@ class SeedSampleController extends AdminController
         }
 
 
-        $grid->column('id', __('Id'));
+        
         $grid->column('sample_request_number', __('admin.form.Sample request number'));
          $grid->column('user_id', __('admin.form.Applicant'))
         ->display(function ($user_id) {
