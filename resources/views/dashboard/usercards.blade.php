@@ -33,7 +33,7 @@
             </div>
             <div class="card-body">
                 <h4 class="mb-2"> {{ $data['total_inspections'] }}</h4>
-                <p class="text-muted mb-0"><span class="text-danger fw-bold font-size-12 me-2"><i class="glyphicon glyphicon-hourglass me-1 align-middle"></i>{{ $data['pending_inspections'] }}</span><a href="{{ admin_url('/field-inspections')}}">{{ __('admin.form.pending inspections')}}</a></p>
+                <p class="text-muted mb-0"><span class="text-danger fw-bold font-size-12 me-2"><i class="glyphicon glyphicon-hourglass me-1 align-middle"></i>{{ $data['pending_inspections'] }}</span><a href="{{ admin_url('/field-inspections')}}">{{__('admin.form.pending applications')}}</a></p>
             </div>
         </div>
     </div>

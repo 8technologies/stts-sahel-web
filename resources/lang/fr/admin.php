@@ -153,6 +153,7 @@ return [
         'Applicant' => 'Demandeur',
         'Seed Companies' => 'Sociétés de semences',
         'Under Review' => 'En cours de révision',
+        'pending orders' => 'commandes en attente',
         'Date' => 'Date',
         'Recommend' => 'Recommander',
         'Yield quantity(kgs)' => 'Quantité de rendement (kgs)',
