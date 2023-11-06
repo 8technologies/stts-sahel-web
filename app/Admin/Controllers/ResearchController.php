@@ -46,7 +46,7 @@ class ResearchController extends AdminController
         Utils::disable_buttons('Research', $grid);
 
         //disable create button 
-        if ($user->inRoles(['grower'])) 
+        if ($user->inRoles(['research'])) 
         {
             $grid->disableCreateButton();
         }
