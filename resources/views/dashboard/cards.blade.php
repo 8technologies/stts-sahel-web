@@ -16,7 +16,7 @@
     <div class="col-lg-3 col-md-6 col-sm-6">
         <div class="card ">
             <div class="card-header">
-                <h3 class="card-title">{{__('admin.form.Seed Producers')}}</h3>
+                <h3 class="card-title">{{__('admin.form.Seed Companies')}}</h3>
             </div>
             <div class="card-body">
                 <h4 class="mb-2">{{ $data['total_producers'] }}</h4>

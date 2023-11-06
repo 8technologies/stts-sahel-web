@@ -151,6 +151,7 @@ return [
         'Registration Number' => 'Numéro d\'enregistrement',
         'Certificate' => 'Certificat',
         'Applicant' => 'Demandeur',
+        'Seed Companies' => 'Sociétés de semences',
         'Date' => 'Date',
         'Recommend' => 'Recommander',
         'Yield quantity(kgs)' => 'Quantité de rendement (kgs)',
