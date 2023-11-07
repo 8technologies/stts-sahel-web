@@ -252,14 +252,13 @@ class CropDeclarationController extends AdminController
         else
         {
             //check if the user has a seed producer account
-            // $seed_producer = SeedProducer::where('user_id', $user->id)->first();
-            // if ($seed_producer != null) 
-            // {
-            //     $form->select('out_grower', __('admin.form.Out-grower'))
-            //     ->options(Utils::get_out_growers($seed_producer->id))
-            //     ->required();
+            $seed_producer = SeedProducer::where('user_id', $user->id)->first();
+            if ($seed_producer != null) 
+            {
+                $form->select('out_grower', __('admin.form.Out-grower'))
+                ->options(Utils::get_out_growers($seed_producer->id));
             
-            // }
+            }
 
             $form->select('crop_variety_id', __('admin.form.Crop Variety'))
                 ->options(Utils::get_varieties())
