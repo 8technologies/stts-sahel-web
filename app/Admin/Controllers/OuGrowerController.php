@@ -105,7 +105,7 @@ class OuGrowerController extends AdminController
             'female' => 'Female',
             'male' => 'Male',
             'other' => 'Other',
-        ]);
+        ])->required();
         
         $form->text('email_address', __('admin.form.Email address'))->required();
         $form->text('district', __('admin.form.District'))->required();
