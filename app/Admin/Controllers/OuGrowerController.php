@@ -31,10 +31,13 @@ class OuGrowerController extends AdminController
     protected function grid()
     {
         $grid = new Grid(new OutGrower());
-        $seed_company_id = SeedProducer::where('user_id', auth()->user()->id)->first()->id;
+        $seed_company = SeedProducer::where('user_id', auth()->user()->id)->first();
 
         //show only the outgrowers of the authenticated user
-        $grid->model()->where('seed_company_id', $seed_company_id );
+        if($seed_company != null ){
+            $seed_company_id = $seed_company->id;
+            $grid->model()->where('seed_company_id', $seed_company_id );
+        }
 
         $grid->column('seed_company_registration_number', __('admin.form.Seed company registration number'));
         $grid->column('first_name', __('admin.form.First name'));
@@ -93,8 +96,21 @@ class OuGrowerController extends AdminController
         //find the seed company id of the authenticated user
         $seed_company= \App\Models\SeedProducer::where('user_id', $user_id)->first();
         
-        $form->hidden('seed_company_id')->value($seed_company->id);
+        if ($seed_company == null) {
+            return $form->html('<p style="text-align: center; font-size: larger; ">
+                <span style="font-size: 2em;">❌</span><br> 
+                <span style="font-size: 1.5em; font-weight: bold; line-height: 2.5;">Accès refusé</span><br> 
+                Vous n\'avez pas la permission d\'ajouter un producteur délégué.<br>
+                Veuillez vérifier vos informations d\'identification et réessayer.<br>
+                Code d\'erreur : 403
+            </p>');
 
+
+        }else{
+            $form->hidden('seed_company_id')->value($seed_company->id);
+
+        }
+       
         
         $form->text('seed_company_registration_number', __('admin.form.Seed company registration number'))->value($seed_company->producer_registration_number);
         $form->text('contract_number', __('admin.form.Contract number'))->required();

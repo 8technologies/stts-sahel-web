@@ -373,7 +373,7 @@ return [
         'Category' => 'Catégorie',
         'Category code' => 'Code de catégorie',
         'Label Packages' => 'Paquets d\'étiquettes',
-        'Cooperative Registration' => 'Enregistrement coopératif',
+        'Cooperative Registration' => 'Enregistrement Coopérative',
         'Crop' => 'Culture',
         'Days after planting' => 'Jours après le semis',
         //seed class
