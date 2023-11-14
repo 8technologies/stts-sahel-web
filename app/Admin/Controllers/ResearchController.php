@@ -35,6 +35,14 @@ class ResearchController extends AdminController
         $grid = new Grid(new Research());
 
         $user = Admin::user();
+         
+        //hide details from other farmer roles
+        if(!$user->inRoles(['research','developer','inspector','commissioner']))
+        {
+            return Validation::allowVerifiedUserToView($grid);
+        }
+
+
 
         //function to show the loggedin user only what belongs to them
          Validation::showUserForms($grid);
@@ -178,7 +186,10 @@ class ResearchController extends AdminController
         if ($form->isCreating()) 
         {
             $form->hidden('user_id')->default($user->id);
-
+            //check if the user is allowed to create the form
+            if(!$user->isRole('basic-user')){
+             return Validation:: allowBasicUserToCreate($form);
+            }
         }
 
         //check if the form is being edited

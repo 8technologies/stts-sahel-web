@@ -187,4 +187,31 @@ class Validation extends Model
             $grid->model()->where('user_id', auth('admin')->user()->id);
         }
     }
+
+    //allow only basic users to create forms
+    public static function allowBasicUserToCreate($form)
+    {
+     
+            return $form->html('<p style="text-align: center; font-size: larger; ">
+            <span style="font-size: 2em;">❌</span><br> 
+            <span style="font-size: 1.5em; font-weight: bold; line-height: 2.5;">Accès refusé</span><br> 
+            Vous n\'avez pas la permission de postuler pour ce rôle.<br>
+            Veuillez vérifier vos informations d\'identification et réessayer.<br>
+            Code d\'erreur : 403
+        </p>');
+       
+    }
+
+    //allow only verified users to view a table
+    public static function allowVerifiedUserToView()
+    {
+            return('<p style="text-align: center; font-size: larger; ">
+            <span style="font-size: 2em;">❌</span><br>
+            <span style="font-size: 1.5em; font-weight: bold; line-height: 2.5;">Accès refusé</span><br>
+            Veuillez vérifier vos informations d\'identification et réessayer.<br>
+            Code d\'erreur : 403
+        </p>');
+
+    }
+
 }

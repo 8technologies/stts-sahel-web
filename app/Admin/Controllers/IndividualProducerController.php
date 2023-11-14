@@ -38,6 +38,13 @@ class IndividualProducerController extends AdminController
         $grid = new Grid(new IndividualProducer());
 
         $user = Admin::user();
+        
+        //hide details from other farmer roles
+        if(!$user->inRoles(['individual-producer','developer','inspector','commissioner']))
+        {
+             return Validation::allowVerifiedUserToView($grid);
+        }
+
 
         //function to show the loggedin user only what belongs to them
         Validation::showUserForms($grid);
@@ -176,13 +183,18 @@ class IndividualProducerController extends AdminController
 
         $user = auth()->user();
 
+          
         //When form is creating, assign user id
         if ($form->isCreating()) 
         {
             $form->hidden('user_id')->default($user->id);
-
+            //check if the user is allowed to create the form
+            if(!$user->isRole('basic-user')){
+            return Validation:: allowBasicUserToCreate($form);
+            }
         }
-
+        
+       
         //check if the form is being edited
         if ($form->isEditing()) 
         {
@@ -251,8 +263,7 @@ class IndividualProducerController extends AdminController
                     })->required();
             }
 
-            //inspectors decision
-            //inspectors decision
+          
             //inspectors decision
             if ($user->isRole('inspector')) 
             {
