@@ -267,7 +267,7 @@ class CropDeclarationController extends AdminController
             $form->text('phone_number', __('admin.form.Phone number'))->required();
             $form->decimal('garden_size', __('admin.form.Garden size(Acres)'))->required();
             $form->file('land_architecture', __('admin.form.Land architecture'));
-            $form->text('field_name', __('admin.form.Field name'))->required();
+            $form->text('field_name', __('admin.form.Field name'));
             $form->text('district_region', __('admin.form.District/Region'))->required();
             $form->text('circle', __('admin.form.Circle'))->required();
             $form->text('township', __('admin.form.Township'))->required();
@@ -291,7 +291,7 @@ class CropDeclarationController extends AdminController
             $form->text('source_lot_number', __('admin.form.Source lot number'))->required();
             $form->text('origin_of_variety', __('admin.form.Origin of variety'))->required();
             //add a get gps coordinate button
-            $form->html('<button type="button" id="getLocationButton">Get GPS Coordinates</button>');
+            $form->html('<button type="button" id="getLocationButton">Obtenir les coordonnées GPS</button>');
             $form->decimal('garden_location_latitude', __('admin.form.Garden location latitude'))->attribute([
                 'id' => 'latitude',   
             ])->required();

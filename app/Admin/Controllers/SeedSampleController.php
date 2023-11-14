@@ -76,6 +76,15 @@ class SeedSampleController extends AdminController
 
         //disable delete button
         $grid->actions(function ($actions) {
+            //check status of the form
+            if (!Admin::user()->inRoles(['commissioner','inspector','developer'])) 
+            {
+                
+                if (!$actions->row->status == 'pending') {
+                    $actions->disableDelete();
+                    $actions->disableEdit();
+                }
+            }
             $actions->disableDelete();
         });
         return $grid;
@@ -102,14 +111,16 @@ class SeedSampleController extends AdminController
 
 
         $show->field('sample_request_number', __('admin.form.Sample request number'));
-        $show->field('user_id', __('admin.form.Applicant id'))->as(function ($user_id) {
+        $show->field('user_id', __('admin.form.Applicant'))->as(function ($user_id) {
             return \App\Models\User::find($user_id)->name;
         });
         $show->field('load_stock_id', __('admin.form.Load stock number'))->as(function ($load_stock_id) {
             return \App\Models\LoadStock::find($load_stock_id)->load_stock_number;
         });
         $show->field('sample_request_date', __('admin.form.Sample request date'));
-        $show->field('proof_of_payment', __('admin.form.Proof of payment'))->file();
+        $show->field('proof_of_payment', __('admin.form.Proof of payment'))->as(function ($receipt) {
+            return $receipt == null ? 'No file uploaded' : '<a href="/storage/' . $receipt . '" target="_blank">View receipt</a>';
+        })->unescape();
         $show->field('applicant_remarks', __('admin.form.Applicant remarks'));
         $show->field('status', __('admin.form.Status'))->as(function ($status) {
             return Utils::tell_status($status)??"-";

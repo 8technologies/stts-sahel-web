@@ -149,7 +149,8 @@
                             response.forEach(function(item) {
                                 tableHTML += "<tr>";
                                 tableHTML += "<td>"+ lot_number + "</td>";
-                                tableHTML += "<td><a href='http://127.0.0.1:8000/admin/seed-lab-tests/" + item.id + "' onclick='closeModalAndRedirect(this)' data-dismiss='modal'>" + item.lot_number + "</a></td>";
+                                tableHTML += "<td><a href='" + admin_url('/seed-lab-tests/') + item.id + "' onclick='closeModalAndRedirect(this)' data-dismiss='modal'>" + item.lot_number + "</a></td>";
+
 
                                 tableHTML += "</tr>";
                             });
