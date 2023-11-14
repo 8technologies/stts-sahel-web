@@ -18,6 +18,7 @@ use \App\Models\Validation;
 use \App\Models\Utils;
 
 
+
 class SeedLabController extends AdminController
 {
     /**
@@ -207,10 +208,9 @@ class SeedLabController extends AdminController
 
 
         if ($form->isEditing()) {
-
-            //check if the user is a lab technician
+               //check if the user is a lab technician
             if (!$user->isRole('lab_technician')) {
-                $form->html('<p class="alert alert-danger">' . __('admin.form.no rights to edit') . '</p>');
+                  $form->html('<p class="alert alert-danger">' . __('admin.form.no rights to edit') . '</p>');
                     $form->footer(function ($footer) 
                     {
 
@@ -221,6 +221,7 @@ class SeedLabController extends AdminController
                         $footer->disableSubmit();
                     });
             }
+
 
             $form_id = request()->route()->parameters()['seed_lab_test'];
             $seed_lab = SeedLab::find($form_id);
@@ -252,9 +253,10 @@ class SeedLabController extends AdminController
             $form->decimal('seed_sample_size', __('admin.form.Seed sample size'))->required();
             $form->multipleSelect('testing_methods', __('admin.form.Testing method'))->options(
                 [
-                    'Test de germination' => 'Test de germination',
-                     'Test de pureté' => 'Test de pureté',
-                     'Test de teneur en humidité' => 'Test de teneur en humidité',
+                   'Test de germination' => 'Test de germination',
+                    'Test de pureté' => 'Test de pureté',
+                    'Test de teneur en humidité' => 'Test de teneur en humidité',
+                
                 ])->required();
                 
             $form->decimal('germination_test_results', __('admin.form.Germination test results'))->required();

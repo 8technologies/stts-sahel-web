@@ -76,15 +76,6 @@ class SeedSampleController extends AdminController
 
         //disable delete button
         $grid->actions(function ($actions) {
-            //check status of the form
-            if (!Admin::user()->inRoles(['commissioner','inspector','developer'])) 
-            {
-                
-                if (!$actions->row->status == 'pending') {
-                    $actions->disableDelete();
-                    $actions->disableEdit();
-                }
-            }
             $actions->disableDelete();
         });
         return $grid;
