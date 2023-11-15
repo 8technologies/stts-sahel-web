@@ -16,6 +16,8 @@ return new class extends Migration
             $table->unsignedInteger('user_id');
             $table->unsignedBigInteger('seed_producer_id')->nullable();
             $table->unsignedBigInteger('crop_variety_id')->nullable();
+            $table->unsignedBigInteger('seed_class_id')->nullable();
+            $table->unsignedBigInteger('out_grower_id')->nullable();
             $table->string('phone_number')->nullable();
             $table->decimal('garden_size', 8, 2)->nullable();
             $table->string('land_architecture')->nullable();

@@ -106,6 +106,15 @@ class CropDeclarationController extends AdminController
         $show->field('crop_variety_id', __('admin.form.Crop Variety'))->as(function ($crop_variety_id) {
             return CropVariety::find($crop_variety_id)->crop_variety_name;
         });
+
+        $show->field('seed_class_id', __('admin.form.Seed generation'))->as(function ($seed_class) {
+            return \App\Models\SeedClass::find($seed_class)->class_name;
+        });
+
+        $show->field('out_grower_id', __('admin.form.Out-grower'))->as(function ($out_grower_id) {
+            return \App\Models\OutGrower::find($out_grower_id)->name ?? 'No out-grower selected';
+        });
+
         $show->field('phone_number', __('admin.form.Phone number'));
         $show->field('garden_size', __('admin.form.Garden size(Acres)'));
         $show->field('land_architecture', __('admin.form.Land architecture'))->as(function ($land_architecture) {
@@ -117,8 +126,8 @@ class CropDeclarationController extends AdminController
         $show->field('township', __('admin.form.Township'));
         $show->field('village', __('admin.form.Village'));
         $show->field('planting_date', __('admin.form.Planting date'));
-        $show->field('quantity_of_seed_planted', __('admin.form.Quantity of seed planted'));
-        $show->field('expected_yield', __('admin.form.Expected yield'));
+        $show->field('quantity_of_seed_planted', __('admin.form.Quantity of seed planted(kgs)'));
+        $show->field('expected_yield', __('admin.form.Expected yield(tons)'));
         $show->field('seed_supplier_name', __('admin.form.Seed supplier name'));
         $show->field('seed_supplier_registration_number', __('admin.form.Seed supplier registration number'));
         $show->field('source_lot_number', __('admin.form.Source lot number'));
@@ -198,6 +207,12 @@ class CropDeclarationController extends AdminController
                 })
                 ->required();
 
+            $form->display('seed_class_id', __('admin.form.Seed generation'))
+                ->with(function ($seed_class) {
+                    return \App\Models\SeedClass::find($seed_class)->class_name;
+                })
+                ->required();
+
             $form->display('phone_number', __('admin.form.Phone number'));
             $form->display('garden_size', __('admin.form.Garden size(Acres)'));
             $form->display('land_architecture', __('admin.form.Land architecture'));
@@ -208,7 +223,7 @@ class CropDeclarationController extends AdminController
             $form->display('village', __('admin.form.Village'));
             $form->display('planting_date', __('admin.form.Planting date'))->default(date('Y-m-d'));
             $form->display('quantity_of_seed_planted', __('admin.form.Quantity of seed planted(kgs)'));
-            $form->display('expected_yield', __('admin.form.Expected yield(kgs)'));
+            $form->display('expected_yield', __('admin.form.Expected yield(tons)'));
             $form->display('seed_supplier_name', __('admin.form.Seed supplier name'));
             $form->display('seed_supplier_registration_number', __('admin.form.Seed supplier registration number'));
             $form->display('source_lot_number', __('admin.form.Source lot number'));
@@ -255,13 +270,17 @@ class CropDeclarationController extends AdminController
             $seed_producer = SeedProducer::where('user_id', $user->id)->first();
             if ($seed_producer != null) 
             {
-                $form->select('out_grower', __('admin.form.Out-grower'))
+                $form->select('out_grower_id', __('admin.form.Out-grower'))
                 ->options(Utils::get_out_growers($seed_producer->id));
             
             }
 
             $form->select('crop_variety_id', __('admin.form.Crop Variety'))
                 ->options(Utils::get_varieties())
+                ->required();
+
+            $form->select('seed_class_id', __('admin.form.Seed generation'))
+                ->options(\App\Models\SeedClass::pluck('class_name', 'id'))
                 ->required();
 
             $form->text('phone_number', __('admin.form.Phone number'))->required();
@@ -280,18 +299,19 @@ class CropDeclarationController extends AdminController
                     'step' => 'any', // 'any' allows any decimal input
                 ]
             )->required();
-            $form->text('expected_yield', __('admin.form.Expected yield(kgs)'))->attribute([
+            $form->text('expected_yield', __('admin.form.Expected yield(tons)'))->attribute([
                 'type' => 'number',
                 'min' => 0,
                 'step' => 'any', // 'any' allows any decimal input
             ])->required();
             
-            $form->text('seed_supplier_name', __('admin.form.Seed supplier name'))->required();
-            $form->text('seed_supplier_registration_number', __('admin.form.Seed supplier registration number'))->required();
+            $form->text('seed_supplier_name', __('admin.form.Seed supplier name'));
+            $form->text('seed_supplier_registration_number', __('admin.form.Seed supplier registration number'));
             $form->text('source_lot_number', __('admin.form.Source lot number'))->required();
             $form->text('origin_of_variety', __('admin.form.Origin of variety'))->required();
             //add a get gps coordinate button
-            $form->html('<button type="button" id="getLocationButton">Get GPS Coordinates</button>');
+            $form->html('<button type="button" id="getLocationButton">' . __('admin.form.Get GPS Coordinates') . '</button>');
+
             $form->decimal('garden_location_latitude', __('admin.form.Garden location latitude'))->attribute([
                 'id' => 'latitude',   
             ])->required();

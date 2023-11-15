@@ -132,6 +132,12 @@ class OuGrowerController extends AdminController
         $form->text('plot_number', __('admin.form.Plot number'))->required();
         $form->date('valid_from', __('admin.form.Valid from'))->default(date('Y-m-d'))->required();
         $form->date('valid_to', __('admin.form.Valid to'))->default(date('Y-m-d'))->required();
+
+        //disable check boxes
+        $form->disableViewCheck();
+        $form->disableEditingCheck();
+        $form->disableCreatingCheck();
+        
         
 
         return $form;

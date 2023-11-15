@@ -39,7 +39,9 @@ class CropDeclaration extends Model
         'garden_location_longitude',
         'status',
         'inspector_id',
+        'seed_class_id',
         'crop_variety_id',
+        'out_grower_id',
         'lot_number',
         'remarks',
 

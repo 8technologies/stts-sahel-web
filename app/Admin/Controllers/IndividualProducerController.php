@@ -40,7 +40,7 @@ class IndividualProducerController extends AdminController
         $user = Admin::user();
         
         //hide details from other farmer roles
-        if(!$user->inRoles(['individual-producer','developer','inspector','commissioner']))
+        if(!$user->inRoles(['individual-producer','developer','inspector','commissioner','basic-user']))
         {
              return Validation::allowVerifiedUserToView($grid);
         }
@@ -142,7 +142,6 @@ class IndividualProducerController extends AdminController
         $show->field('premises_location', __('admin.form.Applicant physical address'));
         $show->field('proposed_farm_location', __('admin.form.Proposed farm location'));
         $show->field('years_of_experience', __('admin.form.years of experience'));
-        $show->field('gardening_history_description', __('admin.form.Garden history of the proposed seed production field for the last three season or years'));
         $show->field('storage_facilities_description', __('admin.form.Describe your storage facilities to handle the resultant seed'));
         $show->field('receipt', __('admin.form.Proof of payment of application fees'))->as(function ($receipt) {
             return $receipt == null ? 'No file uploaded' : '<a href="/storage/' . $receipt . '" target="_blank">View receipt</a>';
@@ -223,7 +222,6 @@ class IndividualProducerController extends AdminController
             $form->display('premises_location', __('admin.form.Applicant physical address'));
             $form->display('proposed_farm_location', __('admin.form.Proposed farm location'));
             $form->display('years_of_experience', __('admin.form.years of experience'));
-            $form->display('gardening_history_description', __('admin.form.Garden history of the proposed seed production field for the last three season or years'));
             $form->display('storage_facilities_description', __('admin.form.Describe your storage facilities to handle the resultant seed'));
             $form->display('recommendation', __('admin.form.Recommendation'));
            
@@ -296,7 +294,6 @@ class IndividualProducerController extends AdminController
             $form->text('premises_location', __('admin.form.Applicant physical address'))->required();
             $form->text('proposed_farm_location', __('admin.form.Proposed farm location'))->required();
             $form->text('years_of_experience', __('admin.form.years of experience'))->required();
-            $form->textarea('gardening_history_description', __('admin.form.Garden history of the proposed seed production field for the last three season or years'))->required();
             $form->textarea('storage_facilities_description', __('admin.form.Describe your storage facilities to handle the resultant seed'))->required();
 
 
