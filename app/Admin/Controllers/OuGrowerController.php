@@ -71,9 +71,10 @@ class OuGrowerController extends AdminController
         $show->field('phone_number', __('admin.form.Phone number'));
         $show->field('gender', __('admin.form.Gender'));
         $show->field('email_address', __('admin.form.Email address'));
-        $show->field('district', __('admin.form.District'));
-        $show->field('sub_county', __('admin.form.Sub county'));
-        $show->field('town_street', __('admin.form.Town street'));
+        $show->field('district', __('admin.form.Region'));
+        $show->field('sub_county', __('admin.form.Circle'));
+        $show->field('town_street', __('admin.form.physical address'));
+        $show->field('community', __('admin.form.Community'));
         $show->field('plot_number', __('admin.form.Plot number'));
         $show->field('valid_from', __('admin.form.Valid from'));
         $show->field('valid_to', __('admin.form.Valid to'));
@@ -123,10 +124,11 @@ class OuGrowerController extends AdminController
             'other' => 'Other',
         ])->required();
         
-        $form->text('email_address', __('admin.form.Email address'))->required();
-        $form->text('district', __('admin.form.District'))->required();
-        $form->text('sub_county', __('admin.form.Sub county'))->required();
-        $form->text('town_street', __('admin.form.Town street'))->required();
+        $form->text('email_address', __('admin.form.Email address'));
+        $form->text('town_street', __('admin.form.physical address'));
+        $form->text('community', __('admin.form.Community'))->required();
+        $form->text('district', __('admin.form.Region'))->required();
+        $form->text('sub_county', __('admin.form.Circle'))->required();
         $form->text('plot_number', __('admin.form.Plot number'))->required();
         $form->date('valid_from', __('admin.form.Valid from'))->default(date('Y-m-d'))->required();
         $form->date('valid_to', __('admin.form.Valid to'))->default(date('Y-m-d'))->required();

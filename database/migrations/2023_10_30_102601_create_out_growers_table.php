@@ -25,6 +25,7 @@ return new class extends Migration
             $table->string('sub_county')->nullable();
             $table->string('town_street')->nullable();
             $table->string('plot_number')->nullable();
+            $table->string('community')->nullable();
             $table->date('valid_from')->nullable();
             $table->date('valid_to')->nullable();
        

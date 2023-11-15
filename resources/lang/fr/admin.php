@@ -174,6 +174,7 @@ return [
         'Field name' => 'Nom du champ', 
         'District/Region' => 'District/Région', 
         'Circle' => 'Cercle', 
+        'Region' => 'Région',
         'Township' => 'Commune', 
         'Village' => 'Village', 
         'Planting date' => 'Date de semis', 
@@ -376,6 +377,7 @@ return [
         'Cooperative Registration' => 'Enregistrement Coopérative',
         'Crop' => 'Culture',
         'Days after planting' => 'Jours après le semis',
+        'physical address' => 'Adresse physique',
         //seed class
         'Class name' => 'Nom de la classe',
         'Class code' => 'Code de la classe',

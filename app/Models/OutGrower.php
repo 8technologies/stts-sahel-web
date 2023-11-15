@@ -22,6 +22,7 @@ class OutGrower extends Model
         'sub_county',
         'town_street',
         'plot_number',
+        'community',
         'valid_from',
         'valid_to',
         'signature'

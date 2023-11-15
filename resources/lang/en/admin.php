@@ -523,6 +523,8 @@ return [
         'Low' => 'Low',
         'Medium' => 'Medium',
         'High' => 'High',
+        'physical address' => 'Physical address',
+        'Region' => 'Region',
         'Approved' => 'Approved',
         'Optimal' => 'Optimal',
         'Crop Stock' => 'Crop Stock',
