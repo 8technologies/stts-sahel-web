@@ -2,7 +2,7 @@
 
 namespace App\Admin\Controllers;
 
-use App\Models\SeedProducer;
+use App\Models\Research;
 use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
@@ -32,7 +32,7 @@ class ResearchController extends AdminController
      */
     protected function grid()
     {
-        $grid = new Grid(new SeedProducer());
+        $grid = new Grid(new Research());
 
         $user = Admin::user();
          
@@ -93,7 +93,7 @@ class ResearchController extends AdminController
         //check user role then show a certificate button
 
             $grid->column('id', __('admin.form.Certificate'))->display(function ($id) {
-                $seed_producer =  SeedProducer::find($id);
+                $seed_producer =  Research::find($id);
             
                 if ($seed_producer&& $seed_producer->status == 'accepted') {
                     $link = url('research_report?id=' . $id);
