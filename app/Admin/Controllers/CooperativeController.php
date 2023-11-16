@@ -40,7 +40,7 @@ class CooperativeController extends AdminController
 
          
         //hide details from other farmer roles
-        if(!$user->inRoles(['cooperative','developer','inspector','commissioner']))
+        if(!$user->inRoles(['cooperative','developer','inspector','commissioner','basic-user']))
         {
             return Validation::allowVerifiedUserToView($grid);
         }

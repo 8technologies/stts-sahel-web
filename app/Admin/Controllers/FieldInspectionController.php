@@ -175,15 +175,13 @@ class FieldInspectionController extends AdminController
         $show->field('field_spacing', __('admin.form.Field spacing'))->as(function ($value) {
             return $value ?? '-';
         });
-        $show->field('estimated_yield', __('admin.form.Estimated yield'))->as(function ($value) {
+        $show->field('estimated_yield', __('admin.form.Estimated yield(kgs)'))->as(function ($value) {
             return $value ?? '-';
         });
         $show->field('remarks', __('admin.form.Remarks'))->as(function ($value) {
             return $value ?? '-';
         });
-        $show->field('signature', __('admin.form.Signature'))->as(function ($value) {
-            return $value ?? '-';
-        });
+        $show->field('signature', __('admin.form.Signature'))->file();
         $show->field('status', __('admin.form.Status'))->as(function ($status) {
             return Utils::tell_status($status);
         })->unescape();
@@ -285,7 +283,7 @@ class FieldInspectionController extends AdminController
             );
         })->required();
      
-        $form->decimal('estimated_yield', __('admin.form.Estimated yield'))->required();
+        $form->decimal('estimated_yield', __('admin.form.Estimated yield(kgs)'))->required();
         $form->file('signature', __('admin.form.Signature'))->required();
 
         $form->divider();
@@ -306,6 +304,9 @@ class FieldInspectionController extends AdminController
         });
 
         //disbale check boxes
+        $form->disableCreatingCheck()
+            ->disableEditingCheck()
+            ->disableViewCheck();
         return $form;
     }
 }

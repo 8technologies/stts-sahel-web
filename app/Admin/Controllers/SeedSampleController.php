@@ -110,7 +110,7 @@ class SeedSampleController extends AdminController
         });
         $show->field('sample_request_date', __('admin.form.Sample request date'));
         $show->field('proof_of_payment', __('admin.form.Proof of payment'))->as(function ($receipt) {
-            return $receipt == null ? 'No file uploaded' : '<a href="/storage/' . $receipt . '" target="_blank">View receipt</a>';
+            return $receipt == null ? 'Aucun fichier téléchargé.' : '<a href="/storage/' . $receipt . '" target="_blank">View receipt</a>';
         })->unescape();
         $show->field('applicant_remarks', __('admin.form.Applicant remarks'));
         $show->field('status', __('admin.form.Status'))->as(function ($status) {
@@ -253,7 +253,6 @@ class SeedSampleController extends AdminController
                 $form->textarea('additional_instructions', __('admin.form.Additional instructions'));
                 $form->radioButton('status', __('admin.form.Decision'))
                 ->options([
-                    'accepted'=> __('admin.form.Accepted'),
                     'halted' => __('admin.form.Halted'),
                     'rejected' => __('admin.form.Rejected'),
                     'inspector assigned' => __('admin.form.Assign Inspector'),

@@ -236,11 +236,11 @@ return [
         //field inspection form
         'Inspection type'=>'Inspection type',
         'Field inspection form number'=>'Field inspection form number',
-        'Field size'=>'Field size',
+        'Field size'=>'Field size(Acres)',
         'Inspection date'=>'Inspection date',
         'Crop condition'=>'Crop condition',
         'Field spacing'=>'Field spacing',
-        'Estimated yield'=>'Estimated yield',
+        'Estimated yield(kgs)'=>'Estimated yield(kgs)',
         'Remarks'=>'Remarks',
         'Signature'=>'Signature',
         'Field decision'=>'Field decision',
