@@ -53,7 +53,7 @@
     <!-- Scripts -->
   
 </head>
-<body class="hold-transition login-page" style="background: url({{ asset('storage/assets/seeds.webp') }}) no-repeat;background-size: cover;">
+<body class="hold-transition login-page" style="background: url({{ asset('storage/assets/sahel.jpg') }}) no-repeat;background-size: cover;">
 <nav class="navbar navbar-default" role="navigation" style="border: 3px solid green; ">
     <div class="container">
        <div class="navbar-header">
