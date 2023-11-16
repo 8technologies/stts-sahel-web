@@ -74,7 +74,7 @@ class LoadStockController extends AdminController
           $showable = Validation::checkUser('LoadStock', $id);
           if (!$showable) 
           {
-              return(' <p class="alert alert-danger">You do not have rights to view this form. <a href="/admin/load-stocks"> Go Back </a></p> ');
+              return(' <p class="alert alert-danger">You do not have rights to view this form. <a href="/load-stocks"> Go Back </a></p> ');
           }
 
         $show->field('load_stock_number', __('admin.form.Load stock number'));
@@ -151,7 +151,7 @@ class LoadStockController extends AdminController
         $form->saved(function (Form $form) 
         {
             admin_toastr(__('admin.form.Crop stock saved successfully'), 'success');
-            return redirect('/admin/load-stocks');
+            return redirect('/load-stocks');
         });
 
         $form->text('load_stock_number', __('admin.form.Crop stock number'))->default('LS'.rand(1000, 100000))->readonly();

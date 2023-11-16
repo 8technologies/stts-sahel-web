@@ -125,7 +125,7 @@ class ResearchController extends AdminController
         $showable = Validation::checkUser('Research', $id);
         if (!$showable) 
         {
-            return(' <p class="alert alert-danger">You do not have rights to view this form. <a href="/admin/seed-producers"> Go Back </a></p> ');
+            return(' <p class="alert alert-danger">You do not have rights to view this form. <a href="/seed-producers"> Go Back </a></p> ');
         }
 
         $show->field('user_id', __('admin.form.Applicant Name'))->as(function ($user_id) {

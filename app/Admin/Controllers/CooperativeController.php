@@ -118,7 +118,7 @@ class CooperativeController extends AdminController
          $showable = Validation::checkUser('Cooperative', $id);
          if (!$showable) 
          {
-             return('<p class="alert alert-danger">You do not have rights to view this form. <a href="/admin/cooperatives"> Go Back </a></p> ');
+             return('<p class="alert alert-danger">You do not have rights to view this form. <a href="/cooperatives"> Go Back </a></p> ');
          }
        
         $show->field('cooperative_number', __('admin.form.Cooperative number'));
@@ -188,7 +188,7 @@ class CooperativeController extends AdminController
          $form->saved(function (Form $form) 
         {
             admin_toastr(__('admin.form.Form submitted successfully'), 'success');
-            return redirect('/admin/cooperatives');
+            return redirect('/cooperatives');
         });
        
 

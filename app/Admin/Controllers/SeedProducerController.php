@@ -126,7 +126,7 @@ class SeedProducerController extends AdminController
         $showable = Validation::checkUser('SeedProducer', $id);
         if (!$showable) 
         {
-            return(' <p class="alert alert-danger">You do not have rights to view this form. <a href="/admin/seed-producers"> Go Back </a></p> ');
+            return(' <p class="alert alert-danger">You do not have rights to view this form. <a href="/seed-producers"> Go Back </a></p> ');
         }
 
         $show->field('user_id', __('admin.form.Applicant Name'))->as(function ($user_id) {
@@ -204,7 +204,7 @@ class SeedProducerController extends AdminController
          $form->saved(function (Form $form) 
         {
             admin_toastr(__('admin.form.Form submitted successfully'), 'success');
-            return redirect('/admin/seed-producers');
+            return redirect('/seed-producers');
         });
        
       

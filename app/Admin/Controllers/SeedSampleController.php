@@ -97,7 +97,7 @@ class SeedSampleController extends AdminController
            $showable = Validation::checkUser('SeedLab', $id);
            if (!$showable) 
            {
-               return(' <p class="alert alert-danger">You do not have rights to view this form. <a href="/admin/seed-sample-requests"> Go Back </a></p> ');
+               return(' <p class="alert alert-danger">You do not have rights to view this form. <a href="/seed-sample-requests"> Go Back </a></p> ');
            }
 
 
@@ -166,7 +166,7 @@ class SeedSampleController extends AdminController
          $form->saved(function (Form $form) 
         {
             admin_toastr(__('admin.form.Form submitted successfully'), 'success');
-            return redirect('/admin/seed-sample-requests');
+            return redirect('/seed-sample-requests');
         });
 
         $crop_stock = LoadStock::where('user_id', $user->id);

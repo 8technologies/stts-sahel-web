@@ -183,7 +183,7 @@ class SeedLabelController extends AdminController
 
         //show the details in the pivot table
         $show->packages(__('admin.form.Label package'), function ($packages) {
-            $packages->resource('/admin/label-packages');
+            $packages->resource('/label-packages');
             $packages->package_id(__('admin.form.Label package'))->display(function ($package_id) {
                 return LabelPackage::find($package_id)->quantity . 'kgs' . ' @ ' . LabelPackage::find($package_id)->price;
             });
@@ -308,7 +308,7 @@ class SeedLabelController extends AdminController
          $form->saved(function (Form $form) 
         {
             admin_toastr(__('admin.form.Form submitted successfully'), 'success');
-            return redirect('/admin/seed-labels');
+            return redirect('/seed-labels');
         });
        
         //get the users successfully registered seed labs

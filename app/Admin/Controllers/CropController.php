@@ -70,7 +70,7 @@ class CropController extends AdminController
         });
 
         $show->crop_varieties(__('admin.form.Crop varieties'), function ($crop_varieties) {
-            $crop_varieties->resource('/admin/crop_varieties');
+            $crop_varieties->resource('/crop_varieties');
             $crop_varieties->crop_variety_name(__('admin.form.Crop variety name'));
             $crop_varieties->crop_variety_code(__('admin.form.Crop variety code'));
             //disable the filter
@@ -84,7 +84,7 @@ class CropController extends AdminController
         });
 
         $show->inspection_types(__('admin.form.Inspection types'), function ($inspection_types) {
-            $inspection_types->resource('/admin/inspection_types');
+            $inspection_types->resource('/inspection_types');
             $inspection_types->inspection_type_name(__('admin.form.Inspection type name'));
             $inspection_types->order(__('admin.form.Order'));
             $inspection_types->period_after_planting(__('admin.form.Days after planting'));
