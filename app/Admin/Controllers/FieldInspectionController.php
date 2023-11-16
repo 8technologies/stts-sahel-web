@@ -305,6 +305,7 @@ class FieldInspectionController extends AdminController
             $tools->disableView();
         });
 
+        //disbale check boxes
         return $form;
     }
 }
