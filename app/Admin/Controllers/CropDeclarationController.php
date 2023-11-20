@@ -14,6 +14,7 @@ use App\Models\Utils;
 use Encore\Admin\Auth\Database\Administrator;
 use Encore\Admin\Facades\Admin;
 use \App\Models\Validation;
+use Illuminate\Support\Str;
 
 class CropDeclarationController extends AdminController
 {
@@ -314,8 +315,9 @@ class CropDeclarationController extends AdminController
 
             $form->text('phone_number', __('admin.form.Phone number'))->required();
             $form->decimal('garden_size', __('admin.form.Garden size(Acres)'))->required();
-            $form->file('land_architecture', __('admin.form.Land architecture'));
-            $form->text('field_name', __('admin.form.Field name'))->required();
+            
+            $randomFieldName = 'FIELD' . mt_rand(100, 999);
+            $form->hidden('field_name', __('admin.form.Field name'))->default( $randomFieldName)->required();
             $form->text('district_region', __('admin.form.District/Region'))->required();
             $form->text('circle', __('admin.form.Circle'))->required();
             $form->text('township', __('admin.form.Township'))->required();
