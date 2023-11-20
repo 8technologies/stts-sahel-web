@@ -53,9 +53,6 @@ class FieldInspectionController extends AdminController
         $grid->model()->orderBy('created_at', 'desc');
 
         //$inspection = FieldInspection::where('user_id', auth('admin')->user()->id)->value('is_done');
-        $inspections = FieldInspection::where('user_id', auth('admin')->user()->id)
-        ->get();
-        //dd($inspections);
 
         //show users their respective forms
         if (!auth('admin')->user()->isRole('commissioner')) 
@@ -74,14 +71,19 @@ class FieldInspectionController extends AdminController
                 $grid->model()->where('inspector_id', auth('admin')->user()->id);
                 $grid->actions(function ($actions) {
                     $actions->disableDelete();
-                    if ($actions->row->is_done == 1) {
-                        $actions->disableEdit();
-                    }
-                    if ($actions->row->is_active != 1) {
+                    if ($actions->row->is_done == 1 || $actions->row->is_active != 1) {
                         $actions->disableEdit();
                     }
                 });
             }
+        }
+        else
+        {
+            //disable delete action
+           $grid->actions(function ($actions) {
+               $actions->disableDelete();
+               $actions->disableEdit();
+           });
         }
 
         $grid->column('created_at', __('admin.form.Date'))->display(function ($created_at) {
@@ -96,11 +98,11 @@ class FieldInspectionController extends AdminController
             return \App\Models\Utils::tell_status($status) ?? '-';
         });
         $grid->column('is_active', __('admin.form.Is active'))->using([
-            0 => 'Not active',
-            1 => 'Active'
+            0 => __('admin.form.Inactive'),
+            1 => __('admin.form.Active')
         ])->filter([
-            0 => 'Not active',
-            1 => 'Active'
+            0 => __('admin.form.Inactive'),
+            1 => __('admin.form.Active')
         ])->dot([
             0 => 'warning',
             1 => 'success'

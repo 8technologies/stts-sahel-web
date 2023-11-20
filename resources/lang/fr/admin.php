@@ -247,6 +247,8 @@ return [
         'Field spacing' => 'Densité de semis',
         'Estimated yield(kgs)' => 'Rendement estimé(kgs)',
         'Remarks' => 'Remarques',
+        'Inactive' => 'Inactif',
+        'Active' => 'Actif',
         'Signature' => 'Signature',
         'Field decision' => 'Décision sur le terrain',
         'Type of inspection' => 'Type d\'inspection',

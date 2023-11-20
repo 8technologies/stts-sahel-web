@@ -242,6 +242,8 @@ return [
         'Field spacing'=>'Field spacing',
         'Estimated yield(kgs)'=>'Estimated yield(kgs)',
         'Remarks'=>'Remarks',
+        'Inactive' => 'Inactive',
+        'Active' => 'Active',
         'Signature'=>'Signature',
         'Field decision'=>'Field decision',
         'Seed generation'=>'Seed generation',

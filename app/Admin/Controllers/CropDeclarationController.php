@@ -279,9 +279,38 @@ class CropDeclarationController extends AdminController
                 ->options(Utils::get_varieties())
                 ->required();
 
+            // Define a configuration array for roles and their corresponding seed class options
+            $roleSeedClassOptions = [
+                'individual-producers' => [
+                    'Semence Certifiée Première Reproduction',
+                    'Semence Certifiée Deuxième Reproduction',
+                ],
+                'research' => [
+                    'Prébase',
+                    'Base',
+                ],
+                'cooperative' => [
+                    'Semence Certifiée Première Reproduction',
+                    'Semence Certifiée Deuxième Reproduction',
+                ],
+                'grower' => [
+                    'Base',
+                    'Semence Certifiée Première Reproduction',
+                    'Semence Certifiée Deuxième Reproduction',
+                ],
+            ];
+            
+            //get the user role
+            $userRole = $user->roles->pluck('slug')->toArray();
+            $userRole = $userRole[0];
+
+
             $form->select('seed_class_id', __('admin.form.Seed generation'))
-                ->options(\App\Models\SeedClass::pluck('class_name', 'id'))
+                ->options(
+                    \App\Models\SeedClass::whereIn('class_name', $roleSeedClassOptions[$userRole])->pluck('class_name', 'id')
+                )
                 ->required();
+
 
             $form->text('phone_number', __('admin.form.Phone number'))->required();
             $form->decimal('garden_size', __('admin.form.Garden size(Acres)'))->required();

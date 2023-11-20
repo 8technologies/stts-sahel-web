@@ -21,6 +21,7 @@ class Utils extends Model
             'data' => $data
         ]));
     }
+    
     public static function apiError($message = 'Error', $data = null)
     {
         header('Content-Type: application/json');
@@ -114,8 +115,14 @@ class Utils extends Model
                 //disable create button and delete
                 $grid->disableCreateButton();
                 $grid->actions(function ($actions) {
+                    
+                if ($actions->row->status == 'accepted') {
+                    $actions->disableDelete();
+                    $actions->disableEdit();
+                }else{
                     $actions->disableView();
                     $actions->disableDelete();
+                }
                 });
         }
 
@@ -151,6 +158,7 @@ class Utils extends Model
     
     
     }
+
     //get all outgrowers of a seed producer
     public static function get_out_growers($seed_company)
     {
