@@ -31,8 +31,6 @@ class Utils extends Model
         ]));
     }
 
-
-
     public static function tell_status($status)
     {
 
@@ -121,7 +119,7 @@ class Utils extends Model
                 });
         }
 
-        if ($user->inRoles(['basic-user', 'cooperative','grower','agro-dealer']))
+        if ($user->inRoles(['basic-user', 'cooperative','grower','research','individual-producers']))
         {
                  
             $grid->actions(function ($actions) 

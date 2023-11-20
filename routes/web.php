@@ -64,7 +64,6 @@ Route::get('certificate', function () {
 });
 
 Route::get('research_report', function () {
-    dd('hi ther');
     $pdf = App::make('dompdf.wrapper');
     $pdf->loadHTML(view('reports/research_report'));
     return $pdf->stream();
