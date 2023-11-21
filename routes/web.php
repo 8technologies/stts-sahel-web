@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\QrCodeController;
 use App\Http\Controllers\SeedDetailsController;
 use App\Admin\Controllers\FeedBackController;
+use App\Admin\Controllers\MarketableSeedController;
 use App\Admin\Controllers\SeedLabelController;
 use App\Admin\Controllers\OrderController;
 use App\Models\Gen;
@@ -108,4 +109,5 @@ Route::get('/admin/mobile', function () {
 Route::put('/admin/seed-labels/{id}/confirm',  [SeedLabelController::class, 'confirm'])->name('print.confirm');
 Route::put('/admin/orders/{id}/confirm',  [OrderController::class, 'confirm'])->name('delivery.confirm');
 Route::get('/package_types/{seedLabId}', [SeedLabelController::class, 'package_types']);
+Route::get('/place_order', [MarketableSeedController::class, 'place_order'])->name('place_order');
 Route::get('/feedback/{lotId}', [FeedBackController::class, 'feedbackDetails']);

@@ -32,19 +32,25 @@ class MarketableSeedController extends AdminController
         $grid = new Grid(new MarketableSeed());
       //order
         $grid->model()->orderBy('id', 'desc');
-
-        //show a user only what belongs to him if he is not an admin
-        if (!Admin::user()->isRole('commissioner')) {
-            $grid->model()->where('user_id', Admin::user()->id);
-        }
+       
 
         //disable creation of new records
         $grid->disableCreateButton();
-        //disable delete and edit buttons only
+       
+        //if the marketable seed is not made by the user,disable the delete and edit button
         $grid->actions(function ($actions) {
-            $actions->disableDelete();
-            $actions->disableEdit();
+            $user = auth()->user()->id;
+            $owner = ((int)(($actions->row['user_id'])));
+            if ($owner != $user) {
+                $actions->disableDelete();
+               
+            }
+            else{
+                $actions->disableDelete();
+            }
         });
+
+     
       
         $grid->column('user_id', __('admin.form.User'))->display(function($user_id){
             return \App\Models\User::find($user_id)->name;
@@ -56,6 +62,20 @@ class MarketableSeedController extends AdminController
             return $quantity.' kgs';
         });
         $grid->column('created_at', __('admin.form.Created at'));
+
+        //place order button
+        $grid->column('id', __('Place Order'))->display(function ($id) 
+        {
+            //check if the authenticated user is the owner of the marketable seed
+            $user = auth()->user()->id;
+            $owner = ((int)(($this->user_id)));
+            if ($owner != $user) {
+                return "<a href='" . admin_url('orders/create?marketable_id=' . $id) . "' class='btn btn-primary'>Place Order</a>";
+            }
+           
+
+        })->sortable();
+          
        
 
         return $grid;
