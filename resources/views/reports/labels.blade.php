@@ -4,7 +4,10 @@ $package = App\Models\SeedLabelPackage::find($_GET['id']);
 $label =App\Models\LabelPackage::find( $package->package_id);
 $seed_label = App\Models\SeedLabel::find($package->seed_label_id);
 $seed_lab = App\Models\SeedLab::find($seed_label->seed_lab_id);
-$crop_declaration = App\Models\LoadStock::where('id', $seed_lab->load_stock_id)->where('user_id', $seed_lab->user_id )->value('crop_declaration_id');
+$load_stock = App\Models\LoadStock::where('id', $seed_lab->load_stock_id)->where('user_id', $seed_lab->user_id )->first();
+$seed_class = App\Models\SeedClass::where('id', $load_stock->seed_class)->value('class_name');
+
+$crop_declaration = $load_stock->crop_declaration_id;
 //get crop variety from crop_declaration id
 $crop_variety_id = App\Models\CropDeclaration::where('id', $crop_declaration)->value('crop_variety_id');
 //get crop variety name from crop_variety id
@@ -79,21 +82,21 @@ $today = date("F j, Y");
 </div>
 
         <div class="form-field-column">
-          <div class="form-field">
-            <label for="analysis-number" class="form-field-label">Lot Number:{{$seed_lab->lot_number}}</label>
-            
-          </div>
-          <div class="form-field">
-            <label for="seed-company" class="form-field-label">Crop:{{$crop_name}}</label>
-           
-          </div>
-          <div class="form-field">
-            <label for="registration-number" class="form-field-label">Variety:{{$crop_variety->crop_variety_name}}</label>
-            
-          </div>
-          <div class="form-field">
-            <label for="seed-category" class="form-field-label">Quantity:{{ $label->quantity . ' kgs' }}</label>
-          </div>
+        <div class="form-field">
+          <label for="analysis-number" class="form-field-label">Numéro de lot : {{$seed_lab->lot_number}}</label>
+        </div>
+        <div class="form-field">
+          <label for="seed-company" class="form-field-label">Culture : {{$crop_name}}</label>
+        </div>
+        <div class="form-field">
+          <label for="registration-number" class="form-field-label">Variété : {{$crop_variety->crop_variety_name}}</label>
+        </div>
+        <div class="form-field">
+          <label for="seed-category" class="form-field-label">Génération de semences : {{ $seed_class}}</label>
+        </div>
+        <div class="form-field">
+          <label for="seed-category" class="form-field-label">Quantité : {{ $label->quantity . ' kgs' }}</label>
+  </div>
         
       <div>
         

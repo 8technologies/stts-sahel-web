@@ -177,7 +177,9 @@ class SeedLabelController extends AdminController
         });
 
         $show->field('label_packages', __('admin.form.Label package'));
-        $show->field('proof_of_payment', __('admin.form.Proof of payment'))->file();
+        $show->field('proof_of_payment', __('admin.form.Proof of payment'))->as(function ($receipt) {
+            return $receipt == null ? 'No file uploaded' : '<a href="/storage/' . $receipt . '" target="_blank">View receipt</a>';
+        })->unescape();
         $show->field('request_date', __('admin.form.Request date'));
         $show->field('applicant_remarks', __('admin.form.Applicant remarks'));
 
@@ -208,51 +210,9 @@ class SeedLabelController extends AdminController
             $packages->disableTools();
             $packages->disableBatchActions();
             $packages->disablePerPageSelector();
-            $packages->disableCreateButton();
-            $packages->disableActions();
-            $packages->disableRowSelector();
-            $packages->disableExport();
-            $packages->disableFilter();
-            $packages->disablePagination();
-            $packages->disableColumnSelector();
-            $packages->disableTools();
-            $packages->disableBatchActions();
-            $packages->disablePerPageSelector();
-            $packages->disableCreateButton();
-            $packages->disableActions();
-            $packages->disableRowSelector();
-            $packages->disableExport();
-            $packages->disableFilter();
-            $packages->disablePagination();
-            $packages->disableColumnSelector();
-            $packages->disableTools();
-            $packages->disableBatchActions();
-            $packages->disablePerPageSelector();
-            $packages->disableCreateButton();
-            $packages->disableActions();
-            $packages->disableRowSelector();
-            $packages->disableExport();
-            $packages->disableFilter();
-            $packages->disablePagination();
-            $packages->disableColumnSelector();
-            $packages->disableTools();
-            $packages->disableBatchActions();
-            $packages->disablePerPageSelector();
-            $packages->disableCreateButton();
-            $packages->disableActions();
-            $packages->disableRowSelector();
-            $packages->disableExport();
-            $packages->disableFilter();
-            $packages->disablePagination();
-            $packages->disableColumnSelector();
-            $packages->disableTools();
-            $packages->disableBatchActions();
-            $packages->disablePerPageSelector();
-            $packages->disableCreateButton();
-            $packages->disableActions();
-            $packages->disableRowSelector();
-            $packages->disableExport();
-            $packages->disableFilter();
+          
+           
+          
         });
 
         //disable the edit button and delete button
@@ -313,31 +273,67 @@ class SeedLabelController extends AdminController
        
         //get the users successfully registered seed labs
         $seed_lab_id = SeedLab::where('user_id', Auth::user()->id)->where('test_decision', 'marketable')->get();
+      
 
         if ($user->inRoles(['research', 'grower','individual-producer','cooperative'])) 
         {
 
-            $form->select('seed_lab_id', __('admin.form.Lot number'))->options($seed_lab_id->pluck('lot_number', 'id'))->required();
+            $form->select('seed_lab_id', __('admin.form.Lot number'))->options($seed_lab_id->pluck('lot_number', 'id'))->attribute('id', 'seed_lab')->required();
             $form->text('seed_label_request_number', __('admin.form.Seed label request number'))->default('SLR' . date('YmdHis') . rand(1000, 9999))->readonly();
             $form->file('proof_of_payment', __('admin.form.Proof of payment'))
             ->rules(['mimes:jpeg,pdf,jpg', 'max:2048']) // Assuming a maximum file size of 2MB 
-            ->help(__('admin.form.Attach a copy of your proof of payment, and should be in pdf, jpg or jpeg format'))
-            ->required();
+            ->help(__('admin.form.Attach a copy of your proof of payment, and should be in pdf, jpg or jpeg format'));
             $form->date('request_date', __('admin.form.Request date'))->default(date('Y-m-d'));
             $form->textarea('applicant_remarks', __('admin.form.Applicant remarks'));
 
-            $form->select('label_packages', __('admin.form.Label package Type'))->options(LabelPackage::all()->pluck('package_type', 'id'))->required();
+            $form->text('label_packages', __('admin.form.Label package Type'))->attribute('id','package_type')->readonly();
             $form->hasMany('packages', __('admin.form.Packages'), function (Form\NestedForm $form) {
-                //drop down of the price and quantity from the label package table
                 $label_package = LabelPackage::all();
-                $label_package_array = [];
-                foreach ($label_package as $label) {
-                    $label_package_array[$label->id] = $label->quantity . 'kgs' . ' @ ' . $label->price;
-                }
+                    $label_package_array = [];
+
+                    // an array to keep track of unique quantities
+                    $uniqueQuantities = [];
+
+                    foreach ($label_package as $label) {
+                        $quantityKey = $label->quantity . 'kgs';
+
+                        // Check if the quantity is unique
+                        if (!in_array($quantityKey, $uniqueQuantities)) {
+                            // If unique, add to the array and the list of unique quantities
+                            $label_package_array[$label->id] = $quantityKey . ' @ ' . $label->price;
+                            $uniqueQuantities[] = $quantityKey;
+                        }
+                    }
 
                 $form->select('package_id', __('admin.form.Label package'))->options($label_package_array)->required();
                 $form->number('quantity', __('admin.form.Quantity(kgs)'))->required();
             });
+
+            Admin::script('
+            $(document).ready(function() {
+                $("#seed_lab").change(function() {
+                    var seedLabId = $(this).val();
+            
+                    $.ajax({
+                        url: "/package_types/" + seedLabId,
+                        method: "GET",
+                        success: function(data) {
+                            var packageType = $("#package_type");
+            
+                            // Set the value of the #package_type element
+                            packageType.val(data);
+            
+                            // If you want to update the displayed text, you can do this:
+                            // packageType.text(data);
+                        },
+                        error: function(xhr, status, error) {
+                            console.error("Error fetching package type:", error);
+                        }
+                    });
+                });
+            });
+            
+            ');
         }
 
         if ($form->isEditing()) 
@@ -430,5 +426,26 @@ class SeedLabelController extends AdminController
         $print->save();
         return response()->json(['status' => 'success']);
     }
+
+    //retrieve the label package type based on the selected seed lab
+
+    public function package_types($seedLabId)
+    {
+        $seed_lab = SeedLab::where('id', $seedLabId)->first();
+        
+        if ($seed_lab) {
+            $seed_generation = LoadStock::where('id', $seed_lab->load_stock_id)->pluck('seed_class');
+            $label_package = LabelPackage::where('seed_generation', $seed_generation)->first();
+            
+            if ($label_package) {
+                return response()->json($label_package->package_type);
+            }
+        }
     
+        // If no result is found,return null
+        return response()->json(null);
+    }
+    
+
+   
 }
