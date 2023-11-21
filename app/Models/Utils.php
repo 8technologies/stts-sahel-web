@@ -21,7 +21,7 @@ class Utils extends Model
             'data' => $data
         ]));
     }
-    
+
     public static function apiError($message = 'Error', $data = null)
     {
         header('Content-Type: application/json');

@@ -48,12 +48,20 @@ class SeedLab extends Model
         self::updated(function ($model) {
             Notification::update_notification($model, 'SeedLab', request()->segment(count(request()->segments())-1));
         
-            // Check if the test_decision is 'marketable' and if a duplicate entry exists in MarketableSeed
             if ($model->test_decision == 'marketable') {
                   // Update the quantity in the load stock table
                   $load_stock = LoadStock::find($model->load_stock_id);
                   $load_stock->yield_quantity = $load_stock->yield_quantity - $model->quantity;
                   $load_stock->status = 'tested';
+                  $load_stock->save();
+ 
+            }
+
+            //if the user is an inspector,update the validated stock
+            if (Admin::user()->isRole('inspector')) {
+                error_log($model->validated_stock);
+                  $load_stock = LoadStock::find($model->load_stock_id);
+                  $load_stock->yield_quantity = $model->validated_stock;
                   $load_stock->save();
  
             }

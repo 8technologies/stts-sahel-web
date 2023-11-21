@@ -246,11 +246,11 @@ class SeedLabController extends AdminController
             $form->display('', __('admin.form.Crop'))->default($crop->crop_name);
             $form->display('', __('admin.form.Variety'))->default($crop_variety->crop_variety_name);
             $form->display('', __('Generation'))->default($seed_class);
-            $form->display('quantity', __('admin.form.Quantity(kgs)'));
+            $form->display('quantity', __('admin.form.Seed Sample size(kgs)'));
             $form->hidden('crop_variety_id', __('admin.form.Crop Variety'))->default($crop_variety->id);
             $form->text('mother_lot',__('admin.form.Mother lot number'))->default($mother_lot)->readonly();
             $form->text('seed_lab_test_report_number', __('admin.form.Seed lab test report number'))->default('labtest' . "/" . mt_rand(10000000, 99999999))->readonly();
-            $form->decimal('seed_sample_size', __('admin.form.Seed sample size'))->required();
+            $form->decimal('seed_sample_size', __('admin.form.Test sample size(g)'))->required();
             $form->multipleSelect('testing_methods', __('admin.form.Testing method'))->options(
                 [
                    'Test de germination' => 'Test de germination',

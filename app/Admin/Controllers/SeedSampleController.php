@@ -57,9 +57,7 @@ class SeedSampleController extends AdminController
         if ($user->inRoles(['commissioner','inspector','developer'])) {
             $grid->disableCreateButton();
         }
-
-
-        
+ 
         $grid->column('sample_request_number', __('admin.form.Sample request number'));
          $grid->column('user_id', __('admin.form.Applicant'))
         ->display(function ($user_id) {
@@ -143,24 +141,18 @@ class SeedSampleController extends AdminController
             $form->hidden('user_id')->default($user->id);
 
             //compare the quantity requested and the quantity available
-            $form->saving(function (Form $form) {
+            $form->saving(function (Form $form) 
+            {
                $load_stock_quantity = LoadStock::where('id', $form->load_stock_id)->first();
                 if($form->quantity > $load_stock_quantity->yield_quantity)
                 {
                     return back()->withInput()->withErrors(['quantity' => 'The quantity requested is more than the available quantity(' . $load_stock_quantity->yield_quantity.'kgs) in the crop stock']);
                 }
                 $form->crop_variety_id = $load_stock_quantity->crop_variety_id;
+
+             
             });
         }
-
-         //check if the form is being edited
-         if ($form->isEditing()) 
-         {
-             //get request id
-             $id = request()->route()->parameters()['seed_sample_request'];
-             //check if its valid to edit the form
-             Validation::checkFormEditable($form, $id, 'SeedLab');
-         }
 
          //onsaved return to the list page
          $form->saved(function (Form $form) 
@@ -172,11 +164,11 @@ class SeedSampleController extends AdminController
         $crop_stock = LoadStock::where('user_id', $user->id);
 
         //forms for user and seed producer
-        if (!auth('admin')->user()->inRoles(['commissioner','developer','inspector','basic-user'])) 
+         if (!auth('admin')->user()->inRoles(['commissioner','developer','inspector','basic-user'])) 
         {
             $form->text('sample_request_number', __('admin.form.Sample request number'))->default('SRN' . date('YmdHis'))->readonly();
             $form->select('load_stock_id', __('admin.form.Load stock number'))->options($crop_stock->pluck('load_stock_number', 'id'))->required();
-            $form->number('quantity', __('admin.form.Quantity(kgs)'));
+            $form->number('quantity', __('admin.form.Sample size(kgs)'));
             $form->date('sample_request_date', __('admin.form.Sample request date'))->default(date('Y-m-d'))->required(); 
             $form->file('proof_of_payment', __('admin.form.Proof of payment'))
             ->rules(['mimes:jpeg,pdf,jpg', 'max:1048']) // Assuming a maximum file size of 1MB 
@@ -192,6 +184,8 @@ class SeedSampleController extends AdminController
              //check if its valid to edit the form
             Validation::checkFormEditable($form, $form_id , 'SeedLab');
             $seed_lab = SeedLab::find($form_id);
+
+          
 
             $crop_declaration = LoadStock::where('id', $seed_lab->load_stock_id)->where('user_id', $seed_lab->user_id)->value('crop_declaration_id');
             if($crop_declaration != null)
@@ -249,7 +243,6 @@ class SeedSampleController extends AdminController
             if (auth('admin')->user()->inRoles(['commissioner','developer'])) 
             {
                 $form->divider(__('admin.form.Administrator decision'));
-                $form->select('priority', __('admin.form.Priority'))->options(['low' => 'Low', 'medium' => 'Medium', 'high' => 'High']);
                 $form->textarea('additional_instructions', __('admin.form.Additional instructions'));
                 $form->radioButton('status', __('admin.form.Decision'))
                 ->options([
@@ -274,15 +267,17 @@ class SeedSampleController extends AdminController
             {
                 $form->divider(__('admin.form.Inspector decision'));
                 $form->text('sample_request_number', __('admin.form.Sample request number'))->readonly();
-                $form->display('priority', __('admin.form.Priority'));
+                $form->decimal('validated_stock', __('admin.form.Validate farmer\'s stock(kgs)'));
                 $form->textarea('additional_instructions', __('admin.form.Analyst Information'));
-                $form->radioButton('status', __('admin.form.Decision'))->options([
+                $form->radioCard('status', __('admin.form.Decision'))->options([
                     'halted' => __('admin.form.Halted'),
                     'rejected' => __('admin.form.Rejected'),
-                    'lab test assigned' => __('admin.form.Assign Lab Test')])
+                    'lab test assigned' => __('admin.form.Assign Lab Test')
+                ])
                     ->when('in', ['rejected', 'halted'], function (Form $form) {
                         $form->textarea('status_comment', __('admin.form.Status comment'))->rules('required');
                     });
+                
                
             }
         }
