@@ -8,10 +8,11 @@ use Encore\Admin\Grid;
 use Encore\Admin\Show;
 use \App\Models\Order;
 use \App\Models\PreOrder;
-use \App\Models\Quotation;
+use \App\Models\MarketableSeed;
 use \App\Models\Utils;
 use \App\Models\User;
 use Encore\Admin\Facades\Admin;
+
 
 class OrderController extends AdminController
 {
@@ -57,16 +58,28 @@ class OrderController extends AdminController
         $grid->model()->where('order_by', '=', Admin::user()->id)->orWhere('supplier', '=', Admin::user()->id);
 
         $grid->column('order_number', __('admin.form.Order number'));
+
+        //check if pre order id is null
         $grid->column('preorder_id', __('admin.form.Crop Variety'))->display(function ($preorder_id) 
         {
-            $crop_variety_id = PreOrder::find($preorder_id)->crop_variety_id;
-            return \App\Models\CropVariety::find($crop_variety_id)->crop_variety_name;
+            if($preorder_id == null)
+            {
+                $marketable_id = $this->marketable_id;
+                $crop_variety_id = MarketableSeed::find($marketable_id)->crop_variety_id;
+                return \App\Models\CropVariety::find($crop_variety_id)->crop_variety_name;
+            }
+            else
+            {
+                $crop_variety_id = PreOrder::find($preorder_id)->crop_variety_id;
+                return \App\Models\CropVariety::find($crop_variety_id)->crop_variety_name;
+            }
         });
+       
         $grid->column('quantity', __('admin.form.Quantity'))->display(function ($quantity) 
         {
             return $quantity.' Kgs';
         });
-        $grid->column('price', __('admin.form.Price'));
+  
         $grid->column('order_date', __('admin.form.Order date'));
         $grid->column('supply_date', __('admin.form.Supply date'));
         $grid->column('order_by', __('admin.form.Order by'))->display(function ($order_by) 
@@ -168,25 +181,59 @@ class OrderController extends AdminController
 
         $show->field('crop_variety_id', __('admin.form.Crop Variety'))->as(function () use ($preOrder)
         {
-            return \App\Models\CropVariety::find($preOrder->crop_variety_id)->crop_variety_name;
+            //check if pre order id is null
+            if($preOrder == null)
+            {
+                $marketable_id = $this->marketable_id;
+                $crop_variety_id = MarketableSeed::find($marketable_id)->crop_variety_id;
+                return \App\Models\CropVariety::find($crop_variety_id)->crop_variety_name;
+            }
+            else
+            {
+                $crop_variety_id = PreOrder::find($preOrder->id)->crop_variety_id;
+                return \App\Models\CropVariety::find($crop_variety_id)->crop_variety_name;
+            }
+    
         });
         $show->field('seed_class', __('admin.form.Seed class'))->as(function () use ($preOrder)
         {
-            return \App\Models\SeedClass::find($preOrder->seed_class)->class_name;
+            //check if pre order id is null use the marketable id to find the seed class
+            if($preOrder == null)
+            {
+                $marketable_id = $this->marketable_id;
+                $load_stock_id = MarketableSeed::find($marketable_id)->load_stock_id;
+                $seed_class_id = \App\Models\LoadStock::find($load_stock_id)->seed_class;
+                return \App\Models\SeedClass::find($seed_class_id)->class_name;
+            }
+            else
+            {
+               
+                return \App\Models\SeedClass::find($preOrder->seed_class)->class_name;
+            }
+
         });
     
         $show->field('quantity', __('admin.form.Quantity to be supplied'))->as(function ($quantity) 
         {
             return $quantity.' Kgs';
         });
-        $show->field('price', __('admin.form.Price'));
-        $show->field('supply_date', __('admin.form.Supply date'));
+        $show->field('price', __('admin.form.Price'))->as(function ($price) 
+        {
+            return $price ?? '-';
+        });
+        $show->field('supply_date', __('admin.form.Supply date'))->as(function ($supply_date) 
+        {
+            return $supply_date ?? '-';
+        });
         $show->field('order_by', __('admin.form.Order by'))->as(function ($order_by) 
         {
             return User::find($order_by)->name;
         });
         $show->field('details', __('admin.form.Details'));
-        $show->field('status', __('admin.form.Status'));
+        $show->field('status', __('admin.form.Status'))->as(function ($status) 
+        {
+            return Utils::tell_status($status)?? '-';
+        })->unescape();
      
       //disable action button
         $show->panel()->tools(function ($tools) {
@@ -205,33 +252,147 @@ class OrderController extends AdminController
     protected function form()
     {
         $form = new Form(new Order());
+   
+        //set the pre_order id to the one that has been passed from the button
+        if ($form->isCreating()) 
+            {
+                if (request()->has('marketable_id') && !session()->has('marketable_id')) {
+                $id = request()->input('marketable_id');
+                session(['marketable_id' => $id]);
+            }
+            
+            if (session()->has('marketable_id')) {
+                $id = session('marketable_id');
+            }
+           
+            if (is_null($id)) {
+                return admin_error('Warning', "Marketable seed id  not found.");
+            }
+            
+            $marketableSeed = MarketableSeed::find($id);
+            if (!$marketableSeed) {
+                return admin_error('Warning', "Marketable seed  not found.". $id);
+            }
 
-        $form->display('order_number', __('admin.form.Order number'));
+            if ($marketableSeed->user_id == Admin::user()->id) {
+                return admin_error('Warning', "You cannot create an order for your own seed.");
+            }
+            //display the crop variety name
+            $form->display('marketable_id', __('admin.form.Crop Variety'))->with(function ($marketable_id) use ($marketableSeed)
+            {
+                return \App\Models\CropVariety::find($marketableSeed->crop_variety_id)->crop_variety_name;
+            });
 
-        $form->display('order_by', __('admin.form.Order by'))->with(function ($order_by) 
+            //display the seed class
+            $form->display('seed_class', __('admin.form.Seed generation'))->with(function () use ($marketableSeed)
+            {
+                $load_stock_id = $marketableSeed->load_stock_id;
+                $seed_class_id = \App\Models\LoadStock::find($load_stock_id)->seed_class;
+                return \App\Models\SeedClass::find($seed_class_id)->class_name;
+            });
+
+            //display the available quantity
+            $form->display('available_quantity', __('admin.form.Available quantity'))->with(function () use ($marketableSeed)
+            {
+                return $marketableSeed->quantity.' Kgs';
+            });
+            
+            $form->text('order_number', __('admin.form.Order number'))->default(rand(100, 999999))->readonly();
+
+            $form->display('order_by', __('admin.form.Order by'))->with(function () use ($marketableSeed)
+            {
+                return User::find($marketableSeed->user_id)->name;
+            });
+          
+        
+            $form->decimal('quantity', __('admin.form.Quantity(kgs)'));
+            $form->date('order_date', __('admin.form.Order date'))->default(date('Y-m-d'));
+            $form->textarea('details', __('admin.form.Details'));
+            $form->radio('payment_method', __('admin.form.Payment method'))->options([
+                'cash' => 'Cash',
+                'bank_transfer' => 'Bank transfer',
+                'mobile_money' => 'Mobile money',
+                'cheque' => 'Cheque',
+
+
+            ]);
+
+            $form->hidden('supplier')->default($marketableSeed->user_id);
+            $form->hidden('marketable_id')->default($marketableSeed->id);
+            $form->hidden('order_by')->default(Admin::user()->id);
+            //if saving the form assign supplier id to the authenticated user
+            $form->saving(function (Form $form) use ($marketableSeed)
+            {
+                // Check if the quantity is available in the marketable seed is less than the quantity ordered
+                if ($form->quantity > $marketableSeed->quantity) {
+                    $form->ignoreSaving();
+                    admin_error('Warning', 'The quantity ordered is more than the available quantity');
+                    return back();
+                }
+              
+            });
+
+
+        }
+
+        $form->saved(function (Form $form) 
         {
-            return User::find($order_by)->name;
-        });
-
-        $form->display('preorder_id', __('admin.form.Crop Variety'))->with(function ($preorder_id) 
-        {
-            $crop_variety_id = PreOrder::find($preorder_id)->crop_variety_id;
-            return \App\Models\CropVariety::find($crop_variety_id)->crop_variety_name;
+            if (session()->has('marketable_id')) {
+                session()->forget('marketable_id');
+            }
+        
+            return redirect(admin_url('orders'));
         });
         
-        $form->display('quantity', __('admin.form.Quantity(kgs)'));
-        $form->display('price', __('admin.form.Price'));
-        $form->display('order_date', __('admin.form.Order date'));
-        $form->display('details', __('admin.form.Details'));
-        $form->radio('status', __('admin.form.Status'))
-        ->options([
-            'processing' => __('admin.form.Processing'), 
-            'shipping' => __('admin.form.Shipping'),
-            'delivered' => __('admin.form.Delivered'),
-            'cancelled' => __('admin.form.Cancelled'),
-           ]);
-        $form->text('status_comment', __('admin.form.Comment'));
-     
+        
+
+        if ($form->isEditing()) 
+        {
+            //find the user who made the order
+            $order_id = request()->route()->parameters()['order'];
+            $order = Order::find($order_id);
+       
+                $form->display('order_number', __('admin.form.Order number'));
+
+                $form->display('order_by', __('admin.form.Order by'))->with(function ($order_by) 
+                {
+                    return User::find($order_by)->name;
+                });
+
+                //check if pre order id is null use the marketable id to find the crop variety
+                $form->display('preorder_id', __('admin.form.Crop Variety'))->with(function ($preorder_id) use ($order)
+                {
+                    if($preorder_id == null)
+                    {
+                        $marketable_id = $order->marketable_id;
+                        $crop_variety_id = MarketableSeed::find($marketable_id)->crop_variety_id;
+                        return \App\Models\CropVariety::find($crop_variety_id)->crop_variety_name;
+                    }
+                    else
+                    {
+                        $crop_variety_id = PreOrder::find($preorder_id)->crop_variety_id;
+                        return \App\Models\CropVariety::find($crop_variety_id)->crop_variety_name;
+                    }
+                });
+            
+                
+                $form->display('quantity', __('admin.form.Quantity(kgs)'));
+                $form->display('price', __('admin.form.Price'));
+                $form->display('order_date', __('admin.form.Order date'));
+                $form->display('details', __('admin.form.Details'));
+                $form->radio('status', __('admin.form.Status'))
+                ->options([
+                    'processing' => __('admin.form.Processing'), 
+                    'shipping' => __('admin.form.Shipping'),
+                    'delivered' => __('admin.form.Delivered'),
+                    'cancelled' => __('admin.form.Cancelled'),
+                ]);
+                $form->text('status_comment', __('admin.form.Comment'));
+        
+            
+      
+
+        }
        
 
         //disable  action button

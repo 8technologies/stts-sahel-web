@@ -137,7 +137,8 @@ class QuotationController extends AdminController
         $form = new Form(new Quotation());
         $id = intval(request()->query('preorder_id'));
         //set the pre_order id to the one that has been passed from the button
-        if ($form->isCreating()) {
+        if ($form->isCreating()) 
+        {
             if (isset($_GET['preorder_id']) && (!isset($_SESSION['preorder_id']))) {
                 if ($id > 0) {
                     $_SESSION['preorder_id'] = $id;
@@ -184,7 +185,9 @@ class QuotationController extends AdminController
                 return redirect(admin_url('quotations'));
             }));
         }
-        if ($form->isEditing()) {
+
+        if ($form->isEditing()) 
+        {
             //if the user is not the one who created the quotation, then show the edit field
             $id = request()->route()->parameters['quotation'];
             $quotation = $form->model()->find($id);

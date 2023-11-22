@@ -238,6 +238,7 @@ return [
         'Field inspection form number'=>'Field inspection form number',
         'Field size'=>'Field size(Acres)',
         'Inspection date'=>'Inspection date',
+        'Available quantity'=>'Available quantity(kgs)',
         'Crop condition'=>'Crop condition',
         'Field spacing'=>'Field spacing',
         'Estimated yield(kgs)'=>'Estimated yield(kgs)',

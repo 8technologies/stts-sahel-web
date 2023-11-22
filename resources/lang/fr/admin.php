@@ -438,6 +438,7 @@ return [
         'Lot Number:' => 'Numéro de lot:',
         'Crop:' => 'Culture:',
         'Crop Variety:' => 'Variété:',
+        'Available quantity' => 'Quantité disponible (kgs):',
         'Seed Generation:' => 'Génération de semences:',
         'Validate farmer\'s stock(kgs)'=>'Valider le stock de l\'agriculteur (kgs)',
         'Lab Test Number:'  => 'Numéro du test de laboratoire:',
