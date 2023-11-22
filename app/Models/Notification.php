@@ -90,7 +90,7 @@ class Notification extends Model
             $notification->model_id = $model->id;
             $notification->save();
         
-            //self::sendMail($notification);
+            self::sendMail($notification);
         }
 
     }
@@ -176,7 +176,7 @@ class Notification extends Model
                     $notification_inspector->model_id = $model->id;
                     $notification_inspector->save();
 
-                // self::sendMail($notification_inspector);
+                   self::sendMail($notification_inspector);
                 }
 
                 if($data['receiver_id'] != null){
@@ -198,7 +198,7 @@ class Notification extends Model
                 $notification_user->model_id = $model->id;
                 $notification_user->save();
 
-            // self::sendMail($notification_user);
+               self::sendMail($notification_user);
             }
         }
     }
@@ -260,7 +260,7 @@ class Notification extends Model
 
                 $notification->save();
 
-            // self::sendMail($notification);
+             self::sendMail($notification);
             }
         }
 
