@@ -22,9 +22,7 @@ class RegistrationConfirmation extends Mailable
 
     public function build()
     {
-        return $this->from('certisemence.org')
-            ->subject('Inscription réussie - Bienvenue dans le Système National de Traçabilité et de Suivi des Semences !')
-            ->view('emails.registration_confirmation')
-            ->text('emails.registration_confirmation_plain_text');
+        return $this->subject('Bienvenue dans le Système National de Traçabilité et de Suivi des Semences ! ')
+            ->view('emails.registration_confirmation');
     }
 }
