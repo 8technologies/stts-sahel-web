@@ -15,7 +15,11 @@ class PreOrderController extends AdminController
      *
      * @var string
      */
-    protected $title = 'Pre-Order';
+  
+    public function __construct() {
+        $this->title = __('admin.form.pre-orders');
+    }
+
 
     /**
      * Make a grid builder.

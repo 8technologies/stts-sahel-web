@@ -19,6 +19,9 @@ class TrackAndTraceController extends AdminController
      * @var string
      */
     protected $title = 'Track and Trace';
+    public function __construct() {
+        $this->title = __('admin.form.Track and Trace');
+    }
 
     /**
      * Make a grid builder.
