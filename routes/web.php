@@ -112,4 +112,5 @@ Route::put('/admin/orders/{id}/confirm',  [OrderController::class, 'confirm'])->
 Route::get('/package_types/{seedLabId}', [SeedLabelController::class, 'package_types']);
 Route::get('/place_order', [MarketableSeedController::class, 'place_order'])->name('place_order');
 Route::get('/feedback/{lotId}', [FeedBackController::class, 'feedbackDetails']);
-Route::get('/getVarieties', [LoadStockController::class, 'getVarieties']);
+Route::get('/getVarieties/{id}', [LoadStockController::class, 'getVarieties']);
+
