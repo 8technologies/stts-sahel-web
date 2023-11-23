@@ -3,6 +3,7 @@
 $form = \App\Models\FieldInspection::find($_GET['id']);
 $image = public_path('storage/' . $form->signature);
 $inspector = \App\Models\User::find($form->inspector_id)->name;
+$status = __('admin.form.' . $form->status);
 $fieldData = [
     'Demandeur' => \App\Models\User::find($form->user_id)->name,
     'Variété de Culture' => \App\Models\CropVariety::find($form->crop_variety_id)->crop_variety_name,
@@ -15,7 +16,7 @@ $fieldData = [
     'État de la culture' => $form->crop_condition,
     'Densité de plantes' => $form->plant_density,
     'Rendement estimé' => $form->estimated_yield . ' kgs',
-    'Décision sur le terrain' => $form->status,
+    'Décision sur le terrain' => $status,
     'Remarques' => $form->remarks,
 ];
 ?>
