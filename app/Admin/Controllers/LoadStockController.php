@@ -35,6 +35,10 @@ class LoadStockController extends AdminController
     {
         $grid = new Grid(new LoadStock());
         $user = Admin::user();
+
+        //disable batch and export actions
+        Utils::disable_batch_actions($grid);
+
         if(!$user->isRole('commissioner')){
             $grid->model()->where('user_id', auth('admin')->user()->id);
         }
@@ -55,8 +59,6 @@ class LoadStockController extends AdminController
         });
         $grid->column('last_field_inspection_date', __('admin.form.Last field inspection date'));
      
-        
-
         return $grid;
     }
 
@@ -70,12 +72,12 @@ class LoadStockController extends AdminController
     {
         $show = new Show(LoadStock::findOrFail($id));
 
-          //check if the user is the owner of the form
-          $showable = Validation::checkUser('LoadStock', $id);
-          if (!$showable) 
-          {
-              return(' <p class="alert alert-danger">You do not have rights to view this form. <a href="/load-stocks"> Go Back </a></p> ');
-          }
+        //check if the user is the owner of the form
+        $showable = Validation::checkUser('LoadStock', $id);
+        if (!$showable) 
+        {
+            return(' <p class="alert alert-danger">You do not have rights to view this form. <a href="/load-stocks"> Go Back </a></p> ');
+        }
 
         $show->field('load_stock_number', __('admin.form.Load stock number'));
         $show->field('crop_declaration_id', __('admin.form.Crop Declaration'))->as(function ($value) {
@@ -119,24 +121,6 @@ class LoadStockController extends AdminController
         if ($form->isCreating()) 
         {
             $form->hidden('user_id')->default($user->id);
-
-            //if form is saving get the crop variety id from the crop declaration
-            $form->saving(function (Form $form) {
-                $crop_declaration = CropDeclaration::find($form->crop_declaration_id);
-                $user = auth()->user();
-                if(!$user->isRole('agro-dealer')){   
-                    $form->crop_variety_id = $crop_declaration->crop_variety_id;
-                    $form->last_field_inspection_date = $crop_declaration->updated_at->format('Y-m-d');
-                    
-                }else{
-                    if($form->crop_declaration_id != null)
-                    {
-                        if($form->crop_variety_id != $crop_declaration->crop_variety_id){
-                            return back()->withInput()->withErrors(['crop_variety_id' => 'The crop variety selected does not match the crop variety in the crop declaration']);
-                        }
-                    }
-                }
-            });
         }
 
          //check if the form is being edited
@@ -156,35 +140,23 @@ class LoadStockController extends AdminController
 
         $form->text('load_stock_number', __('admin.form.Crop stock number'))->default('LS'.rand(1000, 100000))->readonly();
 
-        //get all crop varieties
-        $crop_varieties = \App\Models\CropVariety::all();
         //get all seed classes
         $seed_classes = \App\Models\SeedClass::all();
         $crop_declarations = CropDeclaration::where('user_id', $user->id)
         ->where('status', 'accepted')->get();
-        if(!$user->isRole('agro-dealer')){
-            $form->select('crop_declaration_id', __('admin.form.Crop Declaration'))->options($crop_declarations->pluck('field_name', 'id'))->required();
-            $form->hidden('crop_variety_id', __('Crop Variety'));
-            $form->hidden('last_field_inspection_date', __('Date'));
+        
+        $form->select('crop_declaration_id', __('admin.form.Crop Declaration'))->options($crop_declarations->pluck('field_name', 'id'))
+        ->load('crop_variety_id', '/getVarieties')
+        ->required();
+        $form->text('crop_variety_id', __('Crop Variety'))->readonly();
+        $form->text('seed_class', __('admin.form.Seed class'))->readonly();
 
-            
-        }else{
-            $form->select('crop_declaration_id', __('admin.form.Crop Declaration'))->options($crop_declarations->pluck('field_name', 'id'));
-            $form->select('crop_variety_id', __('admin.form.Crop Variety'))
-            ->options(\App\Models\CropVariety::all()->pluck('crop_variety_name', 'id'))
-            ->required();
-            $form->date('last_field_inspection_date', __('admin.form.Last field inspection date'))->default(date('Y-m-d'));
-        }
-        
-        
-        $form->select('seed_class', __('admin.form.Seed class'))->options($seed_classes->pluck('class_name', 'id'))->required();
+        //script to get the crop variety id and seed class on crop declaration change
+        $form->hidden('last_field_inspection_date', __('Date'));  
         $form->decimal('field_size', __('admin.form.Field size(Acres)'))->required();
         $form->decimal('yield_quantity', __('admin.form.Yield quantity(kgs)'))->required();
-       
         $form->date('load_stock_date', __('admin.form.Crop stock date'))->default(date('Y-m-d'))->required();
       
-     
-
         //disable edit button and delete button
         $form->tools(function (Form\Tools $tools) {
             $tools->disableDelete();
@@ -199,5 +171,10 @@ class LoadStockController extends AdminController
         });
 
         return $form;
+    }
+
+    public function getVarieties($id)
+    {
+        return \App\Models\CropDeclaration::find($id)->crop_variety_id;
     }
 }

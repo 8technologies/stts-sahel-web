@@ -7,6 +7,7 @@ use App\Admin\Controllers\FeedBackController;
 use App\Admin\Controllers\MarketableSeedController;
 use App\Admin\Controllers\SeedLabelController;
 use App\Admin\Controllers\OrderController;
+use App\Admin\Controllers\LoadStockController;
 use App\Models\Gen;
 use Illuminate\Support\Facades\App;
 /*
@@ -111,3 +112,4 @@ Route::put('/admin/orders/{id}/confirm',  [OrderController::class, 'confirm'])->
 Route::get('/package_types/{seedLabId}', [SeedLabelController::class, 'package_types']);
 Route::get('/place_order', [MarketableSeedController::class, 'place_order'])->name('place_order');
 Route::get('/feedback/{lotId}', [FeedBackController::class, 'feedbackDetails']);
+Route::get('/getVarieties', [LoadStockController::class, 'getVarieties']);
