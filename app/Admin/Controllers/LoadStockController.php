@@ -140,26 +140,28 @@ class LoadStockController extends AdminController
 
         $form->text('load_stock_number', __('admin.form.Crop stock number'))->default('LS'.rand(1000, 100000))->readonly();
 
-       
+        //get all seed classes
+        $seed_classes = \App\Models\SeedClass::all();
         $crop_declarations = CropDeclaration::where('user_id', $user->id)
         ->where('status', 'accepted')->get();
         
-        $form->select('crop_declaration_id', __('admin.form.Crop Declaration'))
-        ->options($crop_declarations->pluck('field_name', 'id'))
-        ->load(['crop_variety_id', '/getVarieties'], function ($dependent) {
-            $dependent->depends('crop_declaration_id');
-            $dependent->ajax('/getVarieties', 'crop_variety_id');
-        })
-        ->load(['seed_class_id', '/getSeedClass'], function ($dependent) {
-            $dependent->depends('crop_declaration_id');
-            $dependent->ajax('/getSeedClass', 'seed_class_id');
-        })
+        $form->select('crop_declaration_id', __('admin.form.Crop Declaration'))->options($crop_declarations->pluck('field_name', 'id'))
+        ->attribute('onchange', 'getVarieties(this.value);')
         ->required();
-    
-        $form->text('crop_variety_id', __('Crop Variety'))->readonly();
-        $form->text('seed_class', __('admin.form.Seed class'))->readonly();
+        $form->text('crop_variety_id', __('Crop Variety'))->attribute('id', 'crop_variety_id')->readonly();
+        $form->text('seed_class', __('admin.form.Seed class'))->attribute('id', 'seed_class')->readonly();
 
         //script to get the crop variety id and seed class on crop declaration change
+        $script = <<<SCRIPT
+        function getVarieties(id){
+            $.get("crop-declarations/"+id, function(data, status){
+                $('#crop_variety_id').val(data.crop_variety);
+                $('#seed_class').val(data.seed_class);
+            });
+        }
+SCRIPT;
+        Admin::script($script);
+
         $form->hidden('last_field_inspection_date', __('Date'));  
         $form->decimal('field_size', __('admin.form.Field size(Acres)'))->required();
         $form->decimal('yield_quantity', __('admin.form.Yield quantity(kgs)'))->required();
@@ -181,19 +183,13 @@ class LoadStockController extends AdminController
         return $form;
     }
 
-    public function getVarieties()
+    public function getVarieties($id)
     {
-        $id = request()->get('q');
+        \App\Models\CropDeclaration::find($id)->crop_variety_id;
         $crop_variety_id = \App\Models\CropDeclaration::find($id)->crop_variety_id;
-        $crop_variety = \App\Models\CropVariety::find($crop_variety_id)->crop_variety_name;
-        return ['crop_variety_id' => $crop_variety_id,'crop_variety' => $crop_variety];
-    }
-
-    public function getSeedClass()
-    {
-        $id = request()->get('q');
         $seed_class_id = \App\Models\CropDeclaration::find($id)->seed_class_id;
         $seed_class = \App\Models\SeedClass::find($seed_class_id)->class_name;
-        return ['seed_class_id' => $seed_class_id,'seed_class' => $seed_class];
+        $crop_variety = \App\Models\CropVariety::find($crop_variety_id)->crop_variety_name;
+        return ['crop_variety_id' => $crop_variety_id, 'seed_class' => $seed_class, 'crop_variety' => $crop_variety];
     }
 }
