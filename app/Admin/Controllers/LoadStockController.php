@@ -146,21 +146,35 @@ class LoadStockController extends AdminController
         ->where('status', 'accepted')->get();
         
         $form->select('crop_declaration_id', __('admin.form.Crop Declaration'))->options($crop_declarations->pluck('field_name', 'id'))
-        ->attribute('onchange', 'getVarieties(this.value);')
+        ->attribute('id', 'crop_declaration_id')
         ->required();
         $form->text('crop_variety_id', __('Crop Variety'))->attribute('id', 'crop_variety_id')->readonly();
         $form->text('seed_class', __('admin.form.Seed class'))->attribute('id', 'seed_class')->readonly();
 
         //script to get the crop variety id and seed class on crop declaration change
-        $script = <<<SCRIPT
-        function getVarieties(id){
-            $.get("crop-declarations/"+id, function(data, status){
-                $('#crop_variety_id').val(data.crop_variety);
-                $('#seed_class').val(data.seed_class);
+        Admin::script(
+            <<<EOT
+            $(document).ready(function() {
+                $('#crop_variety_id').change(function () {
+                    var id = $(this).val();
+
+                    $.ajax({
+                        url: '/crop-declarations/' + id,
+                        type: 'GET',
+                        dataType: 'json',
+                        success: function (response) {
+                            $('#crop_variety_id').val(response.crop_variety);
+                            $('#seed_class').val(response.seed_class);
+                        },
+                        error: function (response) {
+                            console.log(response);
+                        }
+                    });
+                });
+               
             });
-        }
-SCRIPT;
-        Admin::script($script);
+            EOT
+    );
 
         $form->hidden('last_field_inspection_date', __('Date'));  
         $form->decimal('field_size', __('admin.form.Field size(Acres)'))->required();

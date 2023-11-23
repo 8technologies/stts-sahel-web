@@ -322,9 +322,6 @@ class SeedLabelController extends AdminController
             
                             // Set the value of the #package_type element
                             packageType.val(data);
-            
-                            // If you want to update the displayed text, you can do this:
-                            // packageType.text(data);
                         },
                         error: function(xhr, status, error) {
                             console.error("Error fetching package type:", error);
