@@ -140,15 +140,22 @@ class LoadStockController extends AdminController
 
         $form->text('load_stock_number', __('admin.form.Crop stock number'))->default('LS'.rand(1000, 100000))->readonly();
 
-        //get all seed classes
-        $seed_classes = \App\Models\SeedClass::all();
+       
         $crop_declarations = CropDeclaration::where('user_id', $user->id)
         ->where('status', 'accepted')->get();
         
-        $form->select('crop_declaration_id', __('admin.form.Crop Declaration'))->options($crop_declarations->pluck('field_name', 'id'))
-        ->load('seed_class', '/getSeedClass')
-        ->load('crop_variety_id', '/getVarieties')
+        $form->select('crop_declaration_id', __('admin.form.Crop Declaration'))
+        ->options($crop_declarations->pluck('field_name', 'id'))
+        ->load(['crop_variety_id', '/getVarieties'], function ($dependent) {
+            $dependent->depends('crop_declaration_id');
+            $dependent->ajax('/getVarieties', 'crop_variety_id');
+        })
+        ->load(['seed_class_id', '/getSeedClass'], function ($dependent) {
+            $dependent->depends('crop_declaration_id');
+            $dependent->ajax('/getSeedClass', 'seed_class_id');
+        })
         ->required();
+    
         $form->text('crop_variety_id', __('Crop Variety'))->readonly();
         $form->text('seed_class', __('admin.form.Seed class'))->readonly();
 
