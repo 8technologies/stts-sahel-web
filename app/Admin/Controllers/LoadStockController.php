@@ -152,26 +152,27 @@ class LoadStockController extends AdminController
         $form->text('seed_class', __('admin.form.Seed class'))->attribute('id', 'seed_class')->readonly();
 
         //script to get the crop variety id and seed class on crop declaration change
-        Admin::script(
-            "$(document).ready(function() {
-                $('#crop_declaration_id').change(function () {
-                    var id = $(this).val();
+        Admin::script('
+        $(document).ready(function() {
+            $("#crop_declaration_id").change(function () {
+                var id = $(this).val();
         
-                    $.ajax({
-                        url: '/crop-declarations/' + id,
-                        type: 'GET',
-                        dataType: 'json',
+                $.ajax({
+                    url: "/crop-declarations/" + id,
+                        type: "GET",
+                        dataType: "json",
                         success: function (response) {
-                            $('#crop_variety_id').val(response);
+                            $("#crop_variety_id").val(response);
                 
                         },
-                        error: function (response) {
-                            console.log(response);
-                        }
-                    });
+                    error: function(xhr, status, error) {
+                        console.error("Error fetching crop variety:", error);
+                    }
                 });
-            });"
-        );
+            });
+        });
+        
+        ');
         
         
         $form->hidden('last_field_inspection_date', __('Date'));  
