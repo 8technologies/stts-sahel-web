@@ -155,9 +155,9 @@ class LoadStockController extends AdminController
         Admin::script(
             <<<EOT
             $(document).ready(function() {
-                $('#crop_variety_id').change(function () {
+                $('#crop_declaration_id').change(function () {
                     var id = $(this).val();
-
+        
                     $.ajax({
                         url: '/crop-declarations/' + id,
                         type: 'GET',
@@ -171,11 +171,10 @@ class LoadStockController extends AdminController
                         }
                     });
                 });
-               
             });
             EOT
-    );
-
+        );
+        
         $form->hidden('last_field_inspection_date', __('Date'));  
         $form->decimal('field_size', __('admin.form.Field size(Acres)'))->required();
         $form->decimal('yield_quantity', __('admin.form.Yield quantity(kgs)'))->required();
