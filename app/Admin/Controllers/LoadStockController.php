@@ -162,6 +162,8 @@ class LoadStockController extends AdminController
                         url: '/crop-declarations/' + id,
                         type: 'GET',
                         dataType: 'json',
+
+                        console.log(response);
                         success: function (response) {
                             $('#crop_variety_id').val(response.crop_variety);
                             $('#seed_class').val(response.seed_class);
@@ -212,8 +214,12 @@ class LoadStockController extends AdminController
     
         $seed_class = \App\Models\SeedClass::find($seed_class_id)->class_name;
         $crop_variety = \App\Models\CropVariety::find($crop_variety_id)->crop_variety_name;
+
     
-        return response()->json(['crop_variety_id' => $crop_variety_id, 'seed_class' => $seed_class, 'crop_variety' => $crop_variety]);
+        return response()
+        ->json(['crop_variety_id' => $crop_variety_id, 'seed_class' => $seed_class, 'crop_variety' => $crop_variety])
+        ->header('Content-Type', 'application/json');
+    
     }
     
 }
