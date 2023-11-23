@@ -9,10 +9,7 @@ use \App\Models\Notification;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use App\Models\FieldInspection;
 use Carbon\Carbon;
-use Encore\Admin\Facades\Admin;
-use App\Models\SeedProducer;
-use App\Models\Utils;
-use Encore\Admin\Auth\Database\Administrator;
+
 
 class CropDeclaration extends Model
 {
@@ -69,32 +66,29 @@ class CropDeclaration extends Model
     {
         parent::boot();
 
-        self::creating(function ($model) 
-        {
-         
-        });
         //call back to send a notification to the user
-        self::created(function ($model) {
+        self::created(function ($model) 
+        {
             Notification::send_notification($model, 'CropDeclaration', request()->segment(count(request()->segments())));
         });
 
-        self::updating(function ($model){
-        
-        });
-
-
-        self::updated(function ($model) {
+       
+        self::updated(function ($model) 
+        {
             //call back to send a notification to the user after form is updated
             
            Notification::update_notification($model, 'CropDeclaration', request()->segment(count(request()->segments())-1));
 
-            if ($model->status == 'inspector assigned') {
+            if ($model->status == 'inspector assigned') 
+            {
                 $crop_variety = CropVariety::find($model->crop_variety_id);
-                if ($crop_variety == null) {
+
+                if (!$crop_variety) {
                     return;
                 }
                 $crop = Crop::find($crop_variety->crop_id);
-                if ($crop == null) {
+
+                if (!$crop) {
                     return;
                 }
 
@@ -106,9 +100,11 @@ class CropDeclaration extends Model
                         'crop_declaration_id' => $model->id,
                         'inspection_type_id' => $type->id,
                     ])->first();
-                    if ($inspection != null) {
+
+                    if (!$inspection) {
                         continue;
                     }
+
                     $inspection = new FieldInspection();
                     $inspection->crop_variety_id = $crop_variety->id;
                     $inspection->inspection_type_id = $type->id;
@@ -120,11 +116,13 @@ class CropDeclaration extends Model
                     $inspection->order_number = $type->order;
                     $inspection->status = 'inspector assigned';
                     $inspection->is_done = 0;
+
                     try {
                         $pd = Carbon::parse($model->planting_date);
                         $inspection->inspection_date = $pd->addDays((int)($type->period_after_planting))->format('Y-m-d');
                     } catch (\Exception $e) {
                     }
+
                     if ($isFirst) {
                         $inspection->is_active = 1;
                         $isFirst = false;
@@ -134,6 +132,8 @@ class CropDeclaration extends Model
                     $inspection->save();
                 }
             }
+
+            
         });
     }
 }

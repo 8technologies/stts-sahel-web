@@ -2,7 +2,6 @@
 
 namespace App\Admin\Controllers;
 
-use App\Models\Crop;
 use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
@@ -11,10 +10,9 @@ use \App\Models\CropDeclaration;
 use App\Models\CropVariety;
 use App\Models\SeedProducer;
 use App\Models\Utils;
-use Encore\Admin\Auth\Database\Administrator;
 use Encore\Admin\Facades\Admin;
 use \App\Models\Validation;
-use Illuminate\Support\Str;
+
 
 class CropDeclarationController extends AdminController
 {
@@ -37,8 +35,7 @@ class CropDeclarationController extends AdminController
     protected function grid()
     {
         $grid = new Grid(new CropDeclaration());
-    
-           
+       
         //function to show the loggedin user only what belongs to them
         Validation::showUserForms($grid);
 
@@ -51,16 +48,15 @@ class CropDeclarationController extends AdminController
         //filter by name
         $grid->filter(function ($filter) 
         {
-        // Remove the default id filter
-        $filter->disableIdFilter();
-        $filter->like('user_id', 'Applicant')->select(\App\Models\User::pluck('name', 'id'));
+            // Remove the default id filter
+            $filter->disableIdFilter();
+            $filter->like('user_id', 'Applicant')->select(\App\Models\User::pluck('name', 'id'));
         
         });
     
         $grid->column('user_id', __('admin.form.Applicant'))->display(function ($user_id) {
             return \App\Models\User::find($user_id)->name;
-        });
-        
+        }); 
         $grid->column('crop_variety_id', __('admin.form.Crop Variety'))->display(function ($crop_variety_id) {
             return CropVariety::find($crop_variety_id)->crop_variety_name;
         });
@@ -73,7 +69,6 @@ class CropDeclarationController extends AdminController
             ->display(function ($status) {
                 return Utils::tell_status($status);
             })->sortable();
-
 
         return $grid;
     }
@@ -103,7 +98,7 @@ class CropDeclarationController extends AdminController
         $show->field('user_id', __('admin.form.Applicant Name'))->as(function ($user_id) {
             return \App\Models\User::find($user_id)->name;
         });
-        //crop varietie
+       
         $show->field('crop_variety_id', __('admin.form.Crop Variety'))->as(function ($crop_variety_id) {
             return CropVariety::find($crop_variety_id)->crop_variety_name;
         });
@@ -150,18 +145,11 @@ class CropDeclarationController extends AdminController
         //if the user is a commissioner, show the inspector
         if ($user->isRole('commissioner')) 
         {
-            //check if inspector_id is not null
-            if ($crop_declaration->inspector_id == null) {
-                $show->field('inspector_id', __('admin.form.Inspector'))->as(function ($inspector_id) {
-                    return __('admin.form.No inspector assigned yet');
-
-                });
-            } else {
-                $show->field('inspector_id', __('admin.form.Inspector'))->as(function ($inspector_id) {
-                    return \App\Models\User::find($inspector_id)->name;
-                });
-            }
+            $show->field('inspector_id', __('admin.form.Inspector'))->as(function ($inspectorId) {
+                return $inspectorId ? \App\Models\User::find($inspectorId)->name : __('admin.form.No inspector assigned yet');
+            });
         }
+        
 
         //disable delete and edit button
         $show->panel()->tools(function ($tools) {
@@ -179,13 +167,12 @@ class CropDeclarationController extends AdminController
      */
     protected function form()
     {
-        // $m = CropDeclaration::find(9);
-        // $m->remarks .= 'test';
-        // $m->save();
-        // die("romina");
+       
         $form = new Form(new CropDeclaration());
 
         $user = auth()->user();
+
+        //When form is creating, assign user id
         if ($form->isCreating()) 
         {
             $form->hidden('user_id')->default($user->id);
@@ -200,6 +187,14 @@ class CropDeclarationController extends AdminController
             Validation::checkFormEditable($form, $id, 'CropDeclaration');
         }
 
+        //onsaved return to the list page
+        $form->saved(function (Form $form) 
+        {
+            admin_toastr(__('admin.form.Form submitted successfully'), 'success');
+            return redirect('/crop-declarations');
+        });
+       
+        //admin, inspector and developer
         if ($user->inRoles(['commissioner','developer'])) 
         {
             $form->display('crop_variety_id', __('admin.form.Crop variety'))
@@ -265,7 +260,8 @@ class CropDeclarationController extends AdminController
             
         }
         
-        else
+        //basic user
+        else 
         {
             //check if the user has a seed producer account
             $seed_producer = SeedProducer::where('user_id', $user->id)->first();
