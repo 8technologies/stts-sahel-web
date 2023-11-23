@@ -45,6 +45,9 @@ class CropDeclarationController extends AdminController
         //disable action buttons appropriately
         Utils::disable_buttons('CropDeclaration', $grid);
 
+         //disable batch and export actions
+         Utils::disable_batch_actions($grid);
+
         //filter by name
         $grid->filter(function ($filter) 
         {

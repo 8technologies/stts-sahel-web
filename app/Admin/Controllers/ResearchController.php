@@ -50,11 +50,8 @@ class ResearchController extends AdminController
         //disable action buttons appropriately
         Utils::disable_buttons('Research', $grid);
 
-        //disable batch actions
-        $grid->disableBatchActions();
-
-        //disable export button
-        $grid->disableExport();
+        //disable batch and export actions
+        Utils::disable_batch_actions($grid);
 
         //disable create button 
         if ($user->inRoles(['research'])) 

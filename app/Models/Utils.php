@@ -159,6 +159,18 @@ class Utils extends Model
     
     }
 
+    //disbale batch actions
+    public static function disable_batch_actions($grid)
+    {
+       
+        //disable export button
+        $grid->disableExport();
+
+        //disable batch actions
+        $grid->disableBatchActions();
+    
+    }
+
     //get all outgrowers of a seed producer
     public static function get_out_growers($seed_company)
     {

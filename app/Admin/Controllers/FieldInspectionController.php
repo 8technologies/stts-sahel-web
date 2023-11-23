@@ -45,11 +45,8 @@ class FieldInspectionController extends AdminController
            
         });
        
-        //disable export button
-        $grid->disableExport();
-
-        //disable batch actions
-        $grid->disableBatchActions();
+        //disable batch and export actions
+        Utils::disable_batch_actions($grid);
 
         //order the table according to the time
         $grid->model()->orderBy('created_at', 'desc');
