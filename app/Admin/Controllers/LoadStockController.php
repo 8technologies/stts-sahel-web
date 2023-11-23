@@ -173,9 +173,9 @@ class LoadStockController extends AdminController
         return $form;
     }
 
-    public function getVarieties($id)
+    public function getVarieties()
     {
-       
+        $id = request()->get('q');
         $crop_variety_id = \App\Models\CropDeclaration::find($id)->crop_variety_id;
         $seed_class_id = \App\Models\CropDeclaration::find($id)->seed_class_id;
         $seed_class = \App\Models\SeedClass::find($seed_class_id)->class_name;
