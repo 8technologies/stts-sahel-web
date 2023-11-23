@@ -146,8 +146,8 @@ class LoadStockController extends AdminController
         ->where('status', 'accepted')->get();
         
         $form->select('crop_declaration_id', __('admin.form.Crop Declaration'))->options($crop_declarations->pluck('field_name', 'id'))
-        ->load('crop_variety_id', '/getVarieties')
         ->load('seed_class', '/getSeedClass')
+        ->load('crop_variety_id', '/getVarieties')
         ->required();
         $form->text('crop_variety_id', __('Crop Variety'))->readonly();
         $form->text('seed_class', __('admin.form.Seed class'))->readonly();
