@@ -162,8 +162,8 @@ class LoadStockController extends AdminController
                         type: 'GET',
                         dataType: 'json',
                         success: function (response) {
-                            $('#crop_variety_id').val(response.crop_variety);
-                            $('#seed_class').val(response.seed_class);
+                            $('#crop_variety_id').val(response);
+                
                         },
                         error: function (response) {
                             console.log(response);
@@ -203,19 +203,11 @@ class LoadStockController extends AdminController
         }
     
         $crop_variety_id = $cropDeclaration->crop_variety_id;
-        $seed_class_id = $cropDeclaration->seed_class_id;
-    
-        if (!$crop_variety_id || !$seed_class_id) {
-            return response()->json(['error' => 'Crop variety or seed class not found'], 500);
-        }
-    
-        $seed_class = \App\Models\SeedClass::find($seed_class_id)->class_name;
         $crop_variety = \App\Models\CropVariety::find($crop_variety_id)->crop_variety_name;
 
     
-        return response()
-        ->json(['crop_variety_id' => $crop_variety_id, 'seed_class' => $seed_class, 'crop_variety' => $crop_variety])
-        ->header('Content-Type', 'application/json');
+        return response()->json($crop_variety);
+        
     
     }
     
