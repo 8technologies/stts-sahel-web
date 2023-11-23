@@ -199,11 +199,22 @@ class LoadStockController extends AdminController
 
     public function getVarieties($id)
     {
-        \App\Models\CropDeclaration::find($id)->crop_variety_id;
-        $crop_variety_id = \App\Models\CropDeclaration::find($id)->crop_variety_id;
-        $seed_class_id = \App\Models\CropDeclaration::find($id)->seed_class_id;
+        $cropDeclaration = \App\Models\CropDeclaration::find($id);
+        if (!$cropDeclaration) {
+            return response()->json(['error' => 'Crop declaration not found'], 404);
+        }
+    
+        $crop_variety_id = $cropDeclaration->crop_variety_id;
+        $seed_class_id = $cropDeclaration->seed_class_id;
+    
+        if (!$crop_variety_id || !$seed_class_id) {
+            return response()->json(['error' => 'Crop variety or seed class not found'], 500);
+        }
+    
         $seed_class = \App\Models\SeedClass::find($seed_class_id)->class_name;
         $crop_variety = \App\Models\CropVariety::find($crop_variety_id)->crop_variety_name;
-        return ['crop_variety_id' => $crop_variety_id, 'seed_class' => $seed_class, 'crop_variety' => $crop_variety];
+    
+        return response()->json(['crop_variety_id' => $crop_variety_id, 'seed_class' => $seed_class, 'crop_variety' => $crop_variety]);
     }
+    
 }
