@@ -268,7 +268,7 @@ class ResearchController extends AdminController
                     ->options([
                         'recommended'=> __('admin.form.Recommend'),
                        
-                    ])
+                    ])->required()
                     ->when('recommended', function(Form $form){
                        $form->textarea('recommendation', __('Recommendation'))->rules('required');
                     });
