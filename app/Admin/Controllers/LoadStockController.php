@@ -162,7 +162,8 @@ class LoadStockController extends AdminController
                         type: "GET",
                         dataType: "json",
                         success: function (response) {
-                            $("#crop_variety_id").val(response);
+                            $("#crop_variety_id").val(response.crop_variety_name);
+
                 
                         },
                     error: function(xhr, status, error) {
@@ -207,7 +208,8 @@ class LoadStockController extends AdminController
         $crop_variety = \App\Models\CropVariety::find($crop_variety_id)->crop_variety_name;
 
     
-        return response()->json($crop_variety);
+        return response()->json(['crop_variety_name' => $crop_variety]);
+
         
     
     }
