@@ -162,9 +162,8 @@ class LoadStockController extends AdminController
                         url: '/crop-declarations/' + id,
                         type: 'GET',
                         dataType: 'json',
-
-                        console.log(response);
                         success: function (response) {
+                            console.log(response);
                             $('#crop_variety_id').val(response.crop_variety);
                             $('#seed_class').val(response.seed_class);
                         },
