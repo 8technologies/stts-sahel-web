@@ -113,4 +113,5 @@ Route::get('/package_types/{seedLabId}', [SeedLabelController::class, 'package_t
 Route::get('/place_order', [MarketableSeedController::class, 'place_order'])->name('place_order');
 Route::get('/feedback/{lotId}', [FeedBackController::class, 'feedbackDetails']);
 Route::get('/getVarieties', [LoadStockController::class, 'getVarieties']);
+Route::get('/getSeedClass', [LoadStockController::class, 'getSeedClass']);
 
