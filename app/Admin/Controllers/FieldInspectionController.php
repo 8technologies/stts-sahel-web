@@ -173,7 +173,9 @@ class FieldInspectionController extends AdminController
         $show->field('remarks', __('admin.form.Remarks'))->as(function ($value) {
             return $value ?? '-';
         });
-        $show->field('signature', __('admin.form.Signature'))->file();
+        $show->field('signature', __('admin.form.Signature'))->as(function ($signature) {
+            return $signature == null ? 'No file uploaded' : '<a href="/storage/' . $signature . '" target="_blank">View receipt</a>';
+        })->unescape();
         $show->field('status', __('admin.form.Status'))->as(function ($status) {
             return Utils::tell_status($status);
         })->unescape();
