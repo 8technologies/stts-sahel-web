@@ -42,8 +42,6 @@ class ResearchController extends AdminController
             return Validation::allowVerifiedUserToView($grid);
         }
 
-
-
         //function to show the loggedin user only what belongs to them
          Validation::showUserForms($grid);
 
@@ -52,6 +50,9 @@ class ResearchController extends AdminController
 
         //disable action buttons appropriately
         Utils::disable_buttons('Research', $grid);
+
+        //disable batch actions
+        $grid->disableBatchActions();
 
         //disable create button 
         if ($user->inRoles(['research'])) 
@@ -74,12 +75,10 @@ class ResearchController extends AdminController
         $grid->column('user_id', __('admin.form.Applicant'))->display(function ($user_id) {
             return \App\Models\User::find($user_id)->name??'-';
         });
-    
         $grid->column('researcher_registration_number', __('admin.form.Research registration number'))->display(function ($value) {
             return $value ?? '-';
         })->sortable();
         $grid->column('seed_generation', __('admin.form.Seed generation'))->sortable();
-      
         $grid->column('status', __('admin.form.Status'))->display(function ($status) {
             return \App\Models\Utils::tell_status($status)??'-';
         })->sortable();
@@ -92,20 +91,18 @@ class ResearchController extends AdminController
 
         //check user role then show a certificate button
 
-            $grid->column('id', __('admin.form.Certificate'))->display(function ($id) {
-                $seed_producer =  Research::find($id);
-            
-                if ($seed_producer&& $seed_producer->status == 'accepted') {
-                    $link = url('research_report?id=' . $id);
-                    return '<b><a target="_blank" href="' . $link . '">Imprimer le certificat</a></b>';
-                } else {
-                   
-                    return '<b>Aucun certificat disponible</b>';
-                }
-            });
+        $grid->column('id', __('admin.form.Certificate'))->display(function ($id) {
+            $seed_producer =  Research::find($id);
         
-
-
+            if ($seed_producer&& $seed_producer->status == 'accepted') {
+                $link = url('research_report?id=' . $id);
+                return '<b><a target="_blank" href="' . $link . '">Imprimer le certificat</a></b>';
+            } else {
+                
+                return '<b>Aucun certificat disponible</b>';
+            }
+        });
+        
         return $grid;
     }
     
