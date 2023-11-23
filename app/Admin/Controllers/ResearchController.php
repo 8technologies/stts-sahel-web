@@ -270,7 +270,7 @@ class ResearchController extends AdminController
                        
                     ])
                     ->when('recommended', function(Form $form){
-                       $form->textarea('recommendation', __('Recommendation'));
+                       $form->textarea('recommendation', __('Recommendation'))->rules('required');
                     });
 
             }
