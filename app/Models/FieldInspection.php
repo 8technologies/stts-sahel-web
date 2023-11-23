@@ -56,15 +56,12 @@ class FieldInspection extends Model
 
         });
 
-        self::updating(function ($model) {
 
-            
+        self::updated(function ($model) 
+        {
 
-        });
-
-        self::updated(function ($model) {
-
-            if ($model->status == 'accepted' && $model->is_done == 0) {
+            if ($model->status == 'accepted' && $model->is_done == 0) 
+            {
                 $next = $model->getNext();
                 if ($next != null) {
                     $model->is_done = 1;
@@ -83,7 +80,9 @@ class FieldInspection extends Model
                     }
                 }
             }
-            if ($model->status == 'rejected' && $model->is_done == 0) {
+            
+            if ($model->status == 'rejected' && $model->is_done == 0) 
+            {
                 $crop_declaration = CropDeclaration::find($model->crop_declaration_id);
                 if ($crop_declaration != null) {
                     $crop_declaration->status = 'rejected';

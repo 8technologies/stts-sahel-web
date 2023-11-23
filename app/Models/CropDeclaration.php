@@ -9,10 +9,7 @@ use \App\Models\Notification;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use App\Models\FieldInspection;
 use Carbon\Carbon;
-use Encore\Admin\Facades\Admin;
-use App\Models\SeedProducer;
-use App\Models\Utils;
-use Encore\Admin\Auth\Database\Administrator;
+
 
 class CropDeclaration extends Model
 {
@@ -76,11 +73,10 @@ class CropDeclaration extends Model
         });
 
       
-        self::updated(function ($model) {
+        self::updated(function ($model)
+         {
             //call back to send a notification to the user after form is updated
             
-          
-
             if ($model->status == 'inspector assigned') {
                 $crop_variety = CropVariety::find($model->crop_variety_id);
                 if ($crop_variety == null) {
