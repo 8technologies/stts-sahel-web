@@ -24,7 +24,6 @@ class ResearchController extends AdminController
         return trans('admin.form.Research');
     }
 
-
     /**
      * Make a grid builder.
      *
@@ -53,6 +52,9 @@ class ResearchController extends AdminController
 
         //disable batch actions
         $grid->disableBatchActions();
+
+        //disable export button
+        $grid->disableExport();
 
         //disable create button 
         if ($user->inRoles(['research'])) 
@@ -112,6 +114,7 @@ class ResearchController extends AdminController
      * @param mixed $id
      * @return Show
      */
+
     protected function detail($id)
     {
         $show = new Show(Research::findOrFail($id));
@@ -147,7 +150,6 @@ class ResearchController extends AdminController
         $show->field('status_comment', __('admin.form.Status comment'))->as(function ($value) {
             return $value ?? '-';
         });
-      
         $show->field('valid_from', __('admin.form.Seed producer approval date'))->as(function ($value) {
             return $value ?? '-';
         });
@@ -155,13 +157,12 @@ class ResearchController extends AdminController
             return $value ?? '-';
         });
 
-
-        //disable delete button
-        $show->panel()->tools(function ($tools) {
+        //disable delete and edit button
+        $show->panel()->tools(function ($tools) 
+        {
             $tools->disableDelete();
             $tools->disableEdit();
         });
-
 
         return $show;
     }
@@ -183,8 +184,9 @@ class ResearchController extends AdminController
         {
             $form->hidden('user_id')->default($user->id);
             //check if the user is allowed to create the form
-            if(!$user->isRole('basic-user')){
-             return Validation:: allowBasicUserToCreate($form);
+            if(!$user->isRole('basic-user'))
+            {
+              return Validation:: allowBasicUserToCreate($form);
             }
         }
 
@@ -255,8 +257,6 @@ class ResearchController extends AdminController
             }
 
             //inspectors decision
-            //inspectors decision
-            //inspectors decision
             if ($user->isRole('inspector')) 
             {
              
@@ -266,7 +266,8 @@ class ResearchController extends AdminController
                         'recommended'=> __('admin.form.Recommend'),
                        
                     ])->required()
-                    ->when('recommended', function(Form $form){
+                    ->when('recommended', function(Form $form)
+                    {
                        $form->textarea('recommendation', __('Recommendation'))->rules('required');
                     });
 
@@ -288,15 +289,6 @@ class ResearchController extends AdminController
             $form->text('proposed_farm_location', __('admin.form.Proposed farm location'))->required();
             $form->text('years_of_experience', __('admin.form.years of experience'));
             $form->textarea('storage_facilities_description', __('admin.form.Describe your storage facilities to handle the resultant seed'))->required();
-
-
-            if ($form->isEditing()) {
-                $form->saving(function ($form) {
-                    $form->status = 'pending';
-                    return $form;
-                });
-            }
-
             $form->file('receipt', __('admin.form.Proof of payment of application fees'))
             ->rules(['mimes:jpeg,pdf,jpg', 'max:1048']) // Assuming a maximum file size of 1MB 
             ->help(__('admin.form.Attach a copy of your proof of payment, and should be in pdf, jpg or jpeg format'));
