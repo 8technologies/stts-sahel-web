@@ -156,7 +156,7 @@ class LoadStockController extends AdminController
         $("#crop_declaration_id").change(function(){
             var crop_declaration_id = $("#crop_declaration_id").val();
             $.ajax({
-                url: "/get-variety/"+crop_declaration_id,
+                url: "/getVarieties/"+crop_declaration_id,
                 type: "GET",
                 dataType: "json",
                 success:function(data) {
