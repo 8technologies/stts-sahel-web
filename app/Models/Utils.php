@@ -116,7 +116,7 @@ class Utils extends Model
                 $grid->disableCreateButton();
                 $grid->actions(function ($actions) {
                     
-                if ($actions->row->status == 'accepted') {
+                if ($actions->row->status == 'accepted' ||  $actions->row->status == 'lab test assigned' ) {
                     $actions->disableDelete();
                     $actions->disableEdit();
                 }else{

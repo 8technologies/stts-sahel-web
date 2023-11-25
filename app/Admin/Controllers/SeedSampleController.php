@@ -47,6 +47,9 @@ class SeedSampleController extends AdminController
         $filter->like('user_id', 'Applicant')->select(\App\Models\User::pluck('name', 'id'));
         
         });
+        //disable action buttons appropriately
+        Utils::disable_buttons('SeedLab', $grid);
+
 
         //disable batch and export actions
         Utils::disable_batch_actions($grid);
@@ -75,10 +78,7 @@ class SeedSampleController extends AdminController
         });
         $grid->column('applicant_remarks', __('admin.form.Applicant remarks'));
 
-        //disable delete button
-        $grid->actions(function ($actions) {
-            $actions->disableDelete();
-        });
+    
         return $grid;
     }
 
