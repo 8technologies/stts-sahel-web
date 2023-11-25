@@ -208,7 +208,7 @@ class SeedSampleController extends AdminController
                 if (auth('admin')->user()->inRoles(['inspector', 'commissioner','developer'])) 
                 {
                     $form->display('', __('admin.form.Applicant name'))->default($applicant_name);
-                    $form->display('', __('admin.form.Loadd stock number'))->default($load_stock_number);
+                    $form->display('', __('admin.form.Load stock number'))->default($load_stock_number);
                     $form->display('', __('admin.form.Crop'))->default($crop_name);
                     $form->display('', __('admin.form.Variety'))->default($crop_variety->crop_variety_name);
                     $form->display('', __('admin.form.Generation'))->default($seed_class_name);
