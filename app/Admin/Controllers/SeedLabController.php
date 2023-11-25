@@ -50,7 +50,13 @@ class SeedLabController extends AdminController
             $grid->model()->where('status', '=', 'lab test assigned');
          }
 
-           //filter by name
+         //order in descending order;
+         $grid->model()->orderBy('id', 'desc');
+
+        //disable batch and export actions
+        Utils::disable_batch_actions($grid);
+
+        //filter by name
         $grid->filter(function ($filter) 
         {
             // Remove the default id filter
@@ -198,15 +204,7 @@ class SeedLabController extends AdminController
 
         //get looged in user
         $user = Admin::user();
-        if ($form->isCreating()) {
-            $form->hidden('user_id')->default($user->id);
-        }
-
-        
-
-        $crop_stock = LoadStock::where('user_id', $user->id);
-
-
+       
         if ($form->isEditing()) {
                //check if the user is a lab technician
             if (!$user->isRole('lab_technician')) {
@@ -224,9 +222,7 @@ class SeedLabController extends AdminController
 
 
             $form_id = request()->route()->parameters()['seed_lab_test'];
-            $seed_lab = SeedLab::find($form_id);
-
-            
+            $seed_lab = SeedLab::find($form_id); 
             $crop_declaration = LoadStock::where('id', $seed_lab->load_stock_id)->where('user_id', $seed_lab->user_id)->value('crop_declaration_id');
             //get crop variety from crop_declaration id
             $crop_variety_id = CropDeclaration::where('id', $crop_declaration)->value('crop_variety_id');
