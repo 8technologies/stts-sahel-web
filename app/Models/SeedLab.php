@@ -59,11 +59,12 @@ class SeedLab extends Model
 
             //if the user is an inspector,update the validated stock
             if (Admin::user()->isRole('inspector')) {
-                error_log($model->validated_stock);
+                if($model->status == 'lab test assigned'){
                   $load_stock = LoadStock::find($model->load_stock_id);
                   $load_stock->yield_quantity = $model->validated_stock;
+                  $load_stock->checked = 1;
                   $load_stock->save();
- 
+                }
             }
         });
         

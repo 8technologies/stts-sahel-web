@@ -44,13 +44,22 @@ class LoadStockController extends AdminController
         $grid->disableFilter();
         $grid->quickSearch('load_stock_number');
 
-
         if(!$user->isRole('commissioner')){
             $grid->model()->where('user_id', auth('admin')->user()->id);
+            $grid->actions(function ($actions) {
+                    
+                if ($actions->row->checked == 1) {
+                    $actions->disableDelete();
+                    $actions->disableEdit();
+                }
+            });
+
         }
 
         if ($user->inRoles(['developer','commissioner','inspector',])){
             $grid->disableCreateButton();
+            //disable actions
+            $grid->disableActions();
         }
         
         $grid->column('load_stock_number', __('admin.form.Crop stock number'));
