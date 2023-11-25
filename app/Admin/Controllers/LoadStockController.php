@@ -39,6 +39,12 @@ class LoadStockController extends AdminController
         //disable batch and export actions
         Utils::disable_batch_actions($grid);
 
+        //filter by stock number
+        //disable filter
+        $grid->disableFilter();
+        $grid->quickSearch('load_stock_number');
+
+
         if(!$user->isRole('commissioner')){
             $grid->model()->where('user_id', auth('admin')->user()->id);
         }
