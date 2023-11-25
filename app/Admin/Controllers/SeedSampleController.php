@@ -270,7 +270,7 @@ class SeedSampleController extends AdminController
             {
                 $form->divider(__('admin.form.Inspector decision'));
                 $form->text('sample_request_number', __('admin.form.Sample request number'))->readonly();
-                $form->decimal('validated_stock', __('admin.form.Validate farmer\'s stock(kgs)'));
+                $form->decimal('validated_stock', __('admin.form.Validate farmer\'s stock(kgs)'))->required();
                 $form->textarea('additional_instructions', __('admin.form.Analyst Information'));
                 $form->radioCard('status', __('admin.form.Decision'))->options([
                     'halted' => __('admin.form.Halted'),
