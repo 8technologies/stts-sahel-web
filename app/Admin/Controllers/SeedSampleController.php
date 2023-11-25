@@ -48,6 +48,9 @@ class SeedSampleController extends AdminController
         
         });
 
+        //disable batch and export actions
+        Utils::disable_batch_actions($grid);
+
         //order of the table 
         $grid->model()->orderBy('id', 'desc');
        
