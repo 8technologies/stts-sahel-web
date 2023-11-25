@@ -87,9 +87,6 @@ class LoadStockController extends AdminController
         $show->field('user_id', __('admin.form.Applicant'))->as(function ($value) {
             return \App\Models\User::find($value)->name ?? '-';
         });
-        $show->field('registration_number', __('admin.form.Registration number'))->as(function ($value) {
-            return \App\Models\SeedProducer::find($value)->producer_registration_number ?? '-';
-        });
         $show->field('seed_class', __('admin.form.Seed class'))->as(function ($value) {
             return \App\Models\SeedClass::find($value)->class_name ?? '-';
         });
@@ -123,63 +120,37 @@ class LoadStockController extends AdminController
             $form->hidden('user_id')->default($user->id);
         }
 
-         //check if the form is being edited
-         if ($form->isEditing()) 
-        {
-            //get request id
-            $id = request()->route()->parameters()['load_stock'];
-            //check if its valid to edit the form
-            Validation::checkFormEditable($form, $id, 'LoadStock');
-        }
-
         $form->saved(function (Form $form) 
         {
             admin_toastr(__('admin.form.Crop stock saved successfully'), 'success');
             return redirect('/load-stocks');
         });
 
-        $form->text('load_stock_number', __('admin.form.Crop stock number'))->default('LS'.rand(1000, 100000))->readonly();
+           //check if the form is being edited
+           if ($form->isEditing()) 
+           {
+               //get request id
+               $id = request()->route()->parameters()['load_stock'];
+               //check if its valid to edit the form
+               Validation::checkFormEditable($form, $id, 'LoadStock');
+              
+           }
 
-        //get all seed classes
-        $seed_classes = \App\Models\SeedClass::all();
+        $form->text('load_stock_number', __('admin.form.Crop stock number'))->default('LS'.rand(1000, 100000))->readonly();
         $crop_declarations = CropDeclaration::where('user_id', $user->id)
         ->where('status', 'accepted')->get();
         
         $form->select('crop_declaration_id', __('admin.form.Crop Declaration'))->options($crop_declarations->pluck('field_name', 'id'))
         ->attribute('id', 'crop_declaration_id')
         ->required();
-        $form->text('crop_variety_id', __('Crop Variety'))->attribute('id', 'crop_variety_id')->readonly();
-        $form->text('seed_class', __('admin.form.Seed class'))->attribute('id', 'seed_class')->readonly();
-
-        //script to get the crop variety id and seed class on crop declaration change
-        Admin::script('
-        $(document).ready(function() {
-            $("#crop_declaration_id").change(function () {
-                var id = $(this).val();
-        
-                $.ajax({
-                    url: "/crop-declarations/" + id,
-                        type: "GET",
-                        dataType: "json",
-                        success: function (response) {
-                            $("#crop_variety_id").val(response.crop_variety_name);
-
-                
-                        },
-                    error: function(xhr, status, error) {
-                        console.error("Error fetching crop variety:", error);
-                    }
-                });
-            });
-        });
-        
-        ');
-        
-        
-        $form->hidden('last_field_inspection_date', __('Date'));  
+        $form->text('crop_variety_id', __('admin.form.Crop Variety'))->attribute('id', 'crop_variety_name')->readonly();
+        $form->text('seed_class', __('admin.form.Seed class'))->attribute('id', 'seed_class')->readonly();  
         $form->decimal('field_size', __('admin.form.Field size(Acres)'))->required();
         $form->decimal('yield_quantity', __('admin.form.Yield quantity(kgs)'))->required();
         $form->date('load_stock_date', __('admin.form.Crop stock date'))->default(date('Y-m-d'))->required();
+        $form->hidden('crop_variety_id', __('admin.form.Crop Variety'))->attribute('id', 'crop_variety_id');
+        $form->hidden('seed_class', __('admin.form.Seed class'))->attribute('id', 'seed_class_id');
+        $form->hidden('last_field_inspection_date', __('admin.form.Date'))->attribute('id', 'last_field_inspection_date');
       
         //disable edit button and delete button
         $form->tools(function (Form\Tools $tools) {
@@ -194,6 +165,36 @@ class LoadStockController extends AdminController
             $footer->disableCreatingCheck();
         });
 
+        
+        //script to get the crop variety id and seed class on crop declaration change
+        Admin::script
+        ('
+            $(document).ready(function() {
+                $("#crop_declaration_id").change(function () {
+                    var id = $(this).val();
+            
+                    $.ajax({
+                        url: "/getVarieties/" + id,
+                        method: "GET",
+                        dataType: "json",
+                        success: function(data) {
+                            $("#crop_variety_id").val(data.crop_variety_id);
+                            $("#crop_variety_name").val(data.crop_variety);
+                            $("#seed_class_id").val(data.seed_class_id);
+                            $("#seed_class").val(data.seed_class);
+                            $("#last_field_inspection_date").val(data.last_field_inspection_date);
+                        },
+                        error: function (error) {
+                            console.log(error);
+                        }
+                    });
+                });
+            });
+        
+        
+        ');
+        
+
         return $form;
     }
 
@@ -205,13 +206,20 @@ class LoadStockController extends AdminController
         }
     
         $crop_variety_id = $cropDeclaration->crop_variety_id;
-        $crop_variety = \App\Models\CropVariety::find($crop_variety_id)->crop_variety_name;
+        $crop_variety = \App\Models\CropVariety::find($crop_variety_id);
 
-    
-        return response()->json(['crop_variety_name' => $crop_variety]);
+        $seed_class_id = $cropDeclaration->seed_class_id;
+        $seed_class = \App\Models\SeedClass::find($seed_class_id);
 
-        
-    
+
+        return response()->json([
+            'crop_variety_id' => $crop_variety_id,
+            'crop_variety' => $crop_variety->crop_variety_name,
+            'seed_class_id' => $seed_class_id,
+            'seed_class' => $seed_class->class_name,
+            'last_field_inspection_date' => $cropDeclaration->updated_at->format('Y-m-d'),
+        ]);
+
     }
     
 }
