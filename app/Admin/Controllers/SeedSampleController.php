@@ -188,8 +188,6 @@ class SeedSampleController extends AdminController
             Validation::checkFormEditable($form, $form_id , 'SeedLab');
             $seed_lab = SeedLab::find($form_id);
 
-          
-
             $crop_declaration = LoadStock::where('id', $seed_lab->load_stock_id)->where('user_id', $seed_lab->user_id)->value('crop_declaration_id');
             if($crop_declaration != null)
             {
@@ -209,31 +207,6 @@ class SeedSampleController extends AdminController
                 {
                     $form->display('', __('admin.form.Applicant name'))->default($applicant_name);
                     $form->display('', __('admin.form.Load stock number'))->default($load_stock_number);
-                    $form->display('', __('admin.form.Crop'))->default($crop_name);
-                    $form->display('', __('admin.form.Variety'))->default($crop_variety->crop_variety_name);
-                    $form->display('', __('admin.form.Generation'))->default($seed_class_name);
-                    $form->date('sample_request_date', __('admin.form.Sample request date'))->default(date('Y-m-d'))->readonly();
-                    $form->file('proof_of_payment', __('admin.form.Proof of payment'))->readonly();
-                    $form->display('applicant_remarks', __('admin.form.Applicant remarks'))->readonly();
-                }
-            }
-
-            else
-            {
-                $crop_variety_id = LoadStock::where('id', $seed_lab->load_stock_id)->value('crop_variety_id');
-                //get crop variety name from crop_variety id
-                $crop_variety = CropVariety::where('id', $crop_variety_id)->first();
-                //get crop name from crop variety
-                $crop_name = Crop::where('id', $crop_variety->crop_id)->value('crop_name');
-                //get the seed class
-                $seed_class = LoadStock::where('id', $seed_lab->load_stock_id)->value('seed_class');
-                $seed_class_name = SeedClass::where('id',$seed_class)->value('class_name');
-                $applicant_name = Administrator::where('id', $seed_lab->user_id)->value('name');
-
-                if (auth('admin')->user()->inRoles(['inspector', 'commissioner','developer'])) 
-                {
-                    $form->display('', __('admin.form.Applicant name'))->default($applicant_name);
-                    $form->display('load_stock_id', __('admin.form.Load stock number'))->readonly();
                     $form->display('', __('admin.form.Crop'))->default($crop_name);
                     $form->display('', __('admin.form.Variety'))->default($crop_variety->crop_variety_name);
                     $form->display('', __('admin.form.Generation'))->default($seed_class_name);
