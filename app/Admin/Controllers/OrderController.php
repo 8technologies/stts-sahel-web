@@ -359,7 +359,7 @@ class OrderController extends AdminController
             //if saving the form check if the quantity is available in the marketable seed is less than the quantity ordered
             $form->saving(function (Form $form) use ($order) {
                 // Check if the quantity is available in the marketable seed is less than the quantity ordered
-                if ($order->marketable_id !== null) {
+                if ($order->marketable_id != null) {
                     $stock = MarketableSeed::findOrFail($order->marketable_id);
             
                     if ($form->quantity > $stock->quantity) {
