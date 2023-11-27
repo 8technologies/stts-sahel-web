@@ -258,7 +258,7 @@ class SeedLabelController extends AdminController
                 $load_stock = LoadStock::where('id', $seed_lab->load_stock_id)->first();
                 if ($total_quantity > $load_stock->yield_quantity) {
                     error_log('here now');
-                    return back()->withInput()->withErrors(['label_packages' => 'The total quantity of the packages should not be greater than the quantity of seed( '. $load_stock->yield_quantity. ' )in the load stock.']);
+                    return back()->withInput()->withErrors(['label_packages' => 'The total quantity of the packages should not be greater than the quantity of seed( '. $load_stock->yield_quantity. ' )that you have in stock.']);
                 }
             });
         }
