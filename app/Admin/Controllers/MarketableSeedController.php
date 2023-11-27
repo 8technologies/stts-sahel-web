@@ -69,12 +69,12 @@ class MarketableSeedController extends AdminController
         {
             //check if the authenticated user is the owner of the marketable seed
             $user = auth()->user()->id;
+            $stock_quantity = ((int)(($this->quantity)));
             $owner = ((int)(($this->user_id)));
-            if ($owner != $user) {
+            if ($owner != $user && $stock_quantity > 0) {
                 return "<a href='" . admin_url('orders/create?marketable_id=' . $id) . "' class='btn btn-primary'>Place Order</a>";
             }
-           
-
+        
         })->sortable();
           
         return $grid;

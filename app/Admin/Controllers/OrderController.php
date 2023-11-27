@@ -49,7 +49,6 @@ class OrderController extends AdminController
         //check if the user is the one who made the order and disable the edit button
         $grid->actions(function ($actions) {
             if ($actions->row->order_by == Admin::user()->id) {
-                $actions->disableEdit();
                 $actions->disableDelete();
             }else{
                
@@ -106,7 +105,7 @@ class OrderController extends AdminController
                 {
                     return "<a  class='btn btn-success' data-id='{$id} ' disabled>$confirmedText</a>";
                 }
-                if($order->status == 'delivered')
+                if($order->status == 'delivered' )
                 {
                    if($order->order_by == Admin::user()->id)
                    {
@@ -349,7 +348,7 @@ class OrderController extends AdminController
         });
         
         
-        if ($form->isEditing()) 
+        if ($form->isEditing() )
         {
             
             //find the user who made the order
@@ -357,9 +356,10 @@ class OrderController extends AdminController
             $order = Order::find($order_id);
 
             //if saving the form check if the quantity is available in the marketable seed is less than the quantity ordered
-            $form->saving(function (Form $form) use ($order) {
+            $form->saving(function (Form $form) use ($order) 
+            {
                 // Check if the quantity is available in the marketable seed is less than the quantity ordered
-            
+                if ($order->marketable_id != null) {
                     $stock = MarketableSeed::findOrFail($order->marketable_id);
             
                     if ($form->quantity > $stock->quantity) {
@@ -367,9 +367,27 @@ class OrderController extends AdminController
                         admin_error('Warning', 'The quantity ordered is more than the available stock ' . $stock->quantity . ' Kgs');
                         return back();
                     }
-                
+                }
             });
-            
+
+            if($order->order_by == Admin::user()->id)
+            {
+               
+                $form->text('order_number', __('admin.form.Order number'))->default(rand(100, 999999))->readonly();
+                $form->decimal('quantity', __('admin.form.Quantity(kgs)'))->required();
+                $form->date('order_date', __('admin.form.Order date'))->default(date('Y-m-d'));
+                $form->textarea('details', __('admin.form.Details'));
+                $form->radio('payment_method', __('admin.form.Payment method'))->options([
+                    'cash' => 'Cash',
+                    'bank_transfer' => 'Bank transfer',
+                    'mobile_money' => 'Mobile money',
+                    'cheque' => 'Cheque',
+    
+    
+                ])->required();
+            }
+            else
+            {
                 $form->display('order_number', __('admin.form.Order number'));
 
                 $form->display('order_by', __('admin.form.Order by'))->with(function ($order_by) 
@@ -405,11 +423,11 @@ class OrderController extends AdminController
                     'delivered' => __('admin.form.Delivered'),
                     'cancelled' => __('admin.form.Cancelled'),
                 ]);
-                $form->text('status_comment', __('admin.form.Comment'));
-        
+                $form->text('status_comment', __('admin.form.Comment')); 
+            }
             
-      
-
+              
+        
         }
        
 
