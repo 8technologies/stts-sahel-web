@@ -6,8 +6,9 @@ use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Show;
+use \App\Models\Utils;
 use \App\Models\MarketableSeed;
-use Encore\Admin\Facades\Admin;
+
 
 class MarketableSeedController extends AdminController
 {
@@ -30,12 +31,14 @@ class MarketableSeedController extends AdminController
     protected function grid()
     {
         $grid = new Grid(new MarketableSeed());
-      //order
+        //order
         $grid->model()->orderBy('id', 'desc');
        
-
         //disable creation of new records
         $grid->disableCreateButton();
+
+         //disable batch and export actions
+         Utils::disable_batch_actions($grid);
        
         //if the marketable seed is not made by the user,disable the delete and edit button
         $grid->actions(function ($actions) {
@@ -49,9 +52,7 @@ class MarketableSeedController extends AdminController
                 $actions->disableDelete();
             }
         });
-
-     
-      
+   
         $grid->column('user_id', __('admin.form.User'))->display(function($user_id){
             return \App\Models\User::find($user_id)->name;
         });
@@ -76,8 +77,6 @@ class MarketableSeedController extends AdminController
 
         })->sortable();
           
-       
-
         return $grid;
     }
 

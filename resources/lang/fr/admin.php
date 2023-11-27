@@ -174,6 +174,7 @@ return [
         'Field name' => 'Nom du champ', 
         'District/Region' => 'District/Région', 
         'Circle' => 'Cercle', 
+        'Seed lab number' => 'Numéro du laboratoire de semences',
         'Region' => 'Région',
         'Township' => 'Commune', 
         'Village' => 'Village', 

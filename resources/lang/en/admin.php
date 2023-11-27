@@ -156,6 +156,7 @@ return [
         'Search by name of applicant' => 'Search by name applicant',
         //crop declaration form
         'Crop Variety' => 'Crop Variety',
+        'Seed lab number' => 'Seed lab number',
         'Phone number' => 'Phone number',
         'Applicant registration number' => 'Applicant registration number',
         'Garden size' => 'Garden size',
