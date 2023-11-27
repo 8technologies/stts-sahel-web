@@ -358,14 +358,28 @@ class OrderController extends AdminController
             //if saving the form check if the quantity is available in the marketable seed is less than the quantity ordered
             $form->saving(function (Form $form) use ($order) 
             {
+                
                 // Check if the quantity is available in the marketable seed is less than the quantity ordered
-                if ($order->marketable_id != null) {
+                if ($order->marketable_id != null) 
+                {
                     $stock = MarketableSeed::findOrFail($order->marketable_id);
-            
-                    if ($form->quantity > $stock->quantity) {
-                        $form->ignoreSaving();
-                        admin_error('Warning', 'The quantity ordered is more than the available stock ' . $stock->quantity . ' Kgs');
-                        return back();
+                    if($order->order_by ==  Admin::user()->id) {
+                       
+                        if ($form->quantity > $stock->quantity) {
+                            error_log('supplier is editing 2');
+                            $form->ignoreSaving();
+                            admin_error('Warning', 'The quantity ordered is more than the available stock ' . $stock->quantity . ' Kgs');
+                            return back();
+                        }
+                    }else{
+                        if($form->status != 'cancelled'){
+                            if ($form->quantity > $stock->quantity) {
+                                error_log('supplier is editing 2');
+                                $form->ignoreSaving();
+                                admin_error('Warning', 'The quantity ordered is more than the available stock ' . $stock->quantity . ' Kgs');
+                                return back();
+                            }
+                    }
                     }
                 }
             });
@@ -412,7 +426,7 @@ class OrderController extends AdminController
                 });
             
                 
-                $form->display('quantity', __('admin.form.Quantity(kgs)'));
+                $form->text('quantity', __('admin.form.Quantity(kgs)'))->readonly();
                 $form->display('price', __('admin.form.Price'));
                 $form->display('order_date', __('admin.form.Order date'));
                 $form->display('details', __('admin.form.Details'));
