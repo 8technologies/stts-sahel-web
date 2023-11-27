@@ -43,7 +43,7 @@ class SeedLabelController extends AdminController
     protected function grid()
     {
         $grid = new Grid(new SeedLabel());
-        $user = Admin::user();
+      
         if (Admin::user()->isRole('labosem')) {
             $grid->model()->where('status', '=', 'accepted')->orWhere('status', '=', 'printed');
         }
@@ -53,6 +53,9 @@ class SeedLabelController extends AdminController
 
        //order of table
        $grid->model()->orderBy('id', 'desc');
+
+        //disable batch and export actions
+        Utils::disable_batch_actions($grid);
 
        //disable action buttons appropriately
        Utils::disable_buttons('SeedLabel', $grid);
@@ -123,7 +126,7 @@ class SeedLabelController extends AdminController
                           {
                               _method: "PUT",
                               _token: LA.token,
-                              status: 6,
+                              status: "printed",
                           },
                           success: function (data) 
                           {

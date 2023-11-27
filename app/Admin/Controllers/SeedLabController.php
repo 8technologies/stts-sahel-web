@@ -133,6 +133,15 @@ class SeedLabController extends AdminController
         $show = new Show(SeedLab::findOrFail($id));
         //delete notification after viewing the form
         Utils::delete_notification('SeedLab', $id);
+
+        //check if the user is the owner of the form
+        $showable = Validation::checkUser('SeedLab', $id);
+        if (!$showable) 
+        {
+            return(' <p class="alert alert-danger">You do not have rights to view this form. <a href="/seed-producers"> Go Back </a></p> ');
+        }
+
+
         $crop_variety_id = SeedLab::find($id)->value('crop_variety_id');
         $load_stock_id = SeedLab::find($id)->value('load_stock_id');
 
@@ -165,9 +174,7 @@ class SeedLabController extends AdminController
             $methods = str_replace(['[', ']', '"'], '', $testingMethods);
             return $methods;
         });
-
-        
-        
+ 
         $show->field('germination_test_results', __('admin.form.Germination test results(%)'))->as(function ($germination_test_results) {
             return $germination_test_results ??__('admin.form.Not yet assigned');
         })->unescape();
@@ -207,7 +214,8 @@ class SeedLabController extends AdminController
        
         if ($form->isEditing()) {
                //check if the user is a lab technician
-            if (!$user->isRole('lab_technician')) {
+            if (!$user->isRole('lab_technician')) 
+            {
                   $form->html('<p class="alert alert-danger">' . __('admin.form.no rights to edit') . '</p>');
                     $form->footer(function ($footer) 
                     {
