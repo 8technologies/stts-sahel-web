@@ -37,8 +37,13 @@ class OrderController extends AdminController
         $grid = new Grid(new Order());
 
         //disable create button 
-        
         $grid->disableCreateButton();
+
+        //order of table
+       $grid->model()->orderBy('id', 'desc');
+
+       //disable batch and export actions
+       Utils::disable_batch_actions($grid);
 
     
         //check if the user is the one who made the order and disable the edit button
@@ -81,7 +86,6 @@ class OrderController extends AdminController
         });
   
         $grid->column('order_date', __('admin.form.Order date'));
-        $grid->column('supply_date', __('admin.form.Supply date'));
         $grid->column('order_by', __('admin.form.Order by'))->display(function ($order_by) 
         {
             return User::find($order_by)->name;
@@ -305,7 +309,7 @@ class OrderController extends AdminController
             });
           
         
-            $form->decimal('quantity', __('admin.form.Quantity(kgs)'));
+            $form->decimal('quantity', __('admin.form.Quantity(kgs)'))->required();
             $form->date('order_date', __('admin.form.Order date'))->default(date('Y-m-d'));
             $form->textarea('details', __('admin.form.Details'));
             $form->radio('payment_method', __('admin.form.Payment method'))->options([
@@ -315,7 +319,7 @@ class OrderController extends AdminController
                 'cheque' => 'Cheque',
 
 
-            ]);
+            ])->required();
 
             $form->hidden('supplier')->default($marketableSeed->user_id);
             $form->hidden('marketable_id')->default($marketableSeed->id);
