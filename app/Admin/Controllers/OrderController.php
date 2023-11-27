@@ -359,7 +359,7 @@ class OrderController extends AdminController
             //if saving the form check if the quantity is available in the marketable seed is less than the quantity ordered
             $form->saving(function (Form $form) use ($order) {
                 // Check if the quantity is available in the marketable seed is less than the quantity ordered
-                if ($order->marketable_id != null) {
+            
                     $stock = MarketableSeed::findOrFail($order->marketable_id);
             
                     if ($form->quantity > $stock->quantity) {
@@ -367,7 +367,7 @@ class OrderController extends AdminController
                         admin_error('Warning', 'The quantity ordered is more than the available stock ' . $stock->quantity . ' Kgs');
                         return back();
                     }
-                }
+                
             });
             
                 $form->display('order_number', __('admin.form.Order number'));
