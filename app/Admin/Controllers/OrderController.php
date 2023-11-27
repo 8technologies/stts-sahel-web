@@ -259,7 +259,7 @@ class OrderController extends AdminController
    
         //set the pre_order id to the one that has been passed from the button
         if ($form->isCreating()) 
-            {
+        {
                 if (request()->has('marketable_id') && !session()->has('marketable_id')) {
                 $id = request()->input('marketable_id');
                 session(['marketable_id' => $id]);
@@ -349,13 +349,27 @@ class OrderController extends AdminController
         });
         
         
-
         if ($form->isEditing()) 
         {
+            
             //find the user who made the order
             $order_id = request()->route()->parameters()['order'];
             $order = Order::find($order_id);
-       
+
+            //if saving the form check if the quantity is available in the marketable seed is less than the quantity ordered
+            $form->saving(function (Form $form) use ($order) {
+                // Check if the quantity is available in the marketable seed is less than the quantity ordered
+                if ($order->marketable_id !== null) {
+                    $stock = MarketableSeed::findOrFail($order->marketable_id);
+            
+                    if ($form->quantity > $stock->quantity) {
+                        $form->ignoreSaving();
+                        admin_error('Warning', 'The quantity ordered is more than the available stock ' . $stock->quantity . ' Kgs');
+                        return back();
+                    }
+                }
+            });
+            
                 $form->display('order_number', __('admin.form.Order number'));
 
                 $form->display('order_by', __('admin.form.Order by'))->with(function ($order_by) 
