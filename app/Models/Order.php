@@ -42,7 +42,7 @@ class Order extends Model
             Notification::order_notification($model, 'Order', request()->segment(count(request()->segments())-1));
 
             //if order status is confirmed, subtract the quanity from the marketable quantity stock
-            if($model->status == 'confirmed' && $model->marketable_type != null){
+            if($model->status == 'confirmed' && $model->marketable_id != null){
                 $stock = MarketableSeed::find($model->marketable_id);
                 $stock->quantity =  $stock->quantity - $model->quantity;
                 $stock->save();
