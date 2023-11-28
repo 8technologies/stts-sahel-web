@@ -98,7 +98,7 @@ class Notification extends Model
      //function to send notifications after creation of quotation
      public static function quotation_notification($model, $model_name, $entity)
      {
-         $name = User::find($model->user_id)->name;
+         $name = User::find($model->quotation_by)->name;
  
          //check if $entity is a string
          if(is_string($entity))
