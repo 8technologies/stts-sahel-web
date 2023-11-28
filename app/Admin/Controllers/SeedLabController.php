@@ -275,7 +275,7 @@ class SeedLabController extends AdminController
                 ->when('marketable', function (Form $form) use ($crop_variety, $crop) {
                     $form->text('lot_number', __('admin.form.Lot number'))->default($crop->crop_code.$crop_variety->crop_variety_code. mt_rand(10000, 999999))->readonly();
                 })->required();
-            $form->textarea('reporting_and_signature', __('admin.form.Reporting and signature'))->required();
+            $form->file('reporting_and_signature', __('admin.form.Reporting and signature'))->required();
         }
 
         //disable edit and delete buttons
