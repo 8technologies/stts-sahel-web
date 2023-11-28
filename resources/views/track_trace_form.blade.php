@@ -101,24 +101,25 @@
                         console.log(response);
 
                         // Access and use the returned data  
-                        // document.getElementById("result-container").textContent = response.id;
+                        
+                       var tests = response.testing_methods.replace(/[\[\]"]/g, '');
+                       //remove the Unicode escape sequences, from testing methods
+                        var tests = tests.replace(/\\u[\dA-F]{4}/gi, function (match) {
+                            return String.fromCharCode(parseInt(match.replace(/\\u/g, ''), 16));
+                        });
+      
+
                         document.getElementById("crop").textContent = response.crop;
                         document.getElementById("crop_variety").textContent = response.crop_variety;
                         document.getElementById("generation").textContent = response.generation;
                         document.getElementById("lab_test_number").textContent = response.lab_test_number;
                         document.getElementById("germination").textContent = response.germination;
                         document.getElementById("purity").textContent = response.purity;
-                        document.getElementById("testing_methods").textContent = response.testing_methods;
-                        document.getElementById("decision").textContent = response.test_decision;
+                        document.getElementById("testing_methods").textContent = tests;
+                        document.getElementById("decision").textContent = "Commercialisable";
                         document.getElementById("mother_lot").textContent = response.mother_lot;
                         document.getElementById("seed_lot_number").textContent = response.lot_number;
                       
-                       
-                        if (response.report_recommendation == 11) {
-                            document.getElementById("status").textContent = "Marketable";
-                        } else {
-                            document.getElementById("status").textContent = "Not Marketable";
-                        }
                         document.getElementById("test").textContent = response.tests_required;
                     },
                     error: function(error) {
