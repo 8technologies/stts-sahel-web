@@ -51,7 +51,7 @@ class SeedLabel extends Model
           });
 
           //call back to send a notification to the user
-            self::updated(function ($model) 
+            self::updating(function ($model) 
             {
                 //call back to send a notification to the user after form is updated
                 Notification::update_notification($model, 'SeedLabel', request()->segment(count(request()->segments())-1));
@@ -67,10 +67,12 @@ class SeedLabel extends Model
                         $total_quantity += $package['quantity'];
                     }
     
-                    error_log($total_quantity);
                     // Update the quantity in the load stock table
                     $load_stock_id = SeedLab::find($model->seed_lab_id)->first()->load_stock_id;
                     $load_stock = LoadStock::find($load_stock_id);
+                    error_log($load_stock->yield_quantity);
+                    error_log($total_quantity);
+                    error_log($load_stock->yield_quantity - $total_quantity);
                     $load_stock->yield_quantity = $load_stock->yield_quantity - $total_quantity;
                     $load_stock->save();
 
