@@ -73,6 +73,7 @@ class SeedLabel extends Model
                     $load_stock->yield_quantity = $load_stock->yield_quantity - $total_quantity;
                     $load_stock->save();
 
+                    //create a marketable seed
                     $marketable_seed = new MarketableSeed();
                     $marketable_seed->user_id = $model->user_id;
                     $marketable_seed->seed_lab_id = $model->seed_lab_id;

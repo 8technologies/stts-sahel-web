@@ -40,18 +40,8 @@ class MarketableSeedController extends AdminController
          //disable batch and export actions
          Utils::disable_batch_actions($grid);
        
-        //if the marketable seed is not made by the user,disable the delete and edit button
-        $grid->actions(function ($actions) {
-            $user = auth()->user()->id;
-            $owner = ((int)(($actions->row['user_id'])));
-            if ($owner != $user) {
-                $actions->disableDelete();
-               
-            }
-            else{
-                $actions->disableDelete();
-            }
-        });
+        //disable action column
+        $grid->disableActions();
    
         $grid->column('user_id', __('admin.form.User'))->display(function($user_id){
             return \App\Models\User::find($user_id)->name;
