@@ -95,6 +95,29 @@ class Notification extends Model
 
     }
 
+     //function to send notifications after creation of quotation
+     public static function quotation_notification($model, $model_name, $entity)
+     {
+         $name = User::find($model->user_id)->name;
+ 
+         //check if $entity is a string
+         if(is_string($entity))
+         {
+             $notification = new Notification();
+             $notification->receiver_id = $model->quotation_to;
+             $notification->message = "Nouveau {$entity} a été soumis par " . $name .' ';
+             $notification->link = admin_url("auth/login");
+             $notification->form_link = admin_url("{$entity}/{$model->id}/edit");
+             $notification->status = 'Non lu';
+             $notification->model = $model_name;
+             $notification->model_id = $model->id;
+             $notification->save();
+         
+             self::sendMail($notification);
+         }
+ 
+     }
+
     //function to send notifications after an update
     public static function update_notification($model, $model_name, $entity)
     {
@@ -216,6 +239,11 @@ class Notification extends Model
 
         $notificationData = 
         [
+            'pending' => [
+                'message' => "Une nouvelle commande a été passée par " . $name .' ',
+                'receiver_id' => $model->supplier,
+                'form_link' => admin_url("{$entity}/{$model->id}"),
+            ],
             'processing' => [
                 'message' => "Cher {$name}, votre {$entity} est en cours de traitement.",
                 'receiver_id' => $receiver_id,

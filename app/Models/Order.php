@@ -32,7 +32,8 @@ class Order extends Model
     {
         parent::boot();
 
-        static::creating(function ($model) {
+        static::created(function ($model) {
+            Notification::order_notification($model, 'Order', request()->segment(count(request()->segments())));
 
         });
 

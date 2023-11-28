@@ -34,6 +34,11 @@ class Quotation extends Model
 
         });
 
+        static::created(function ($model) {
+            Notification::quotation_notification($model, 'Quotation', request()->segment(count(request()->segments())));
+
+        });
+
         //after updating the status of the quotation, enter the order details to the order table
         static::updated(function ($model) {
             //send notification to the user who made the quotation
