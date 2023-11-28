@@ -68,18 +68,18 @@ class SeedLabel extends Model
                     }
     
                     // Update the quantity in the load stock table
-                     $seed_lab = SeedLab::find($model->seed_lab_id);
+                    $seed_lab = SeedLab::find($model->seed_lab_id);
                     $load_stock = LoadStock::find($seed_lab->load_stock_id);
                     $load_stock->yield_quantity = $load_stock->yield_quantity - $total_quantity;
                     $load_stock->save();
 
-                    // $marketable_seed = new MarketableSeed();
-                    // $marketable_seed->user_id = $model->user_id;
-                    // $marketable_seed->seed_lab_id = $model->seed_lab_id;
-                    // $marketable_seed->load_stock_id = $load_stock->id;
-                    // $marketable_seed->crop_variety_id = $load_stock->crop_variety_id;
-                    // $marketable_seed->quantity = $total_quantity;
-                    // $marketable_seed->save();
+                    $marketable_seed = new MarketableSeed();
+                    $marketable_seed->user_id = $model->user_id;
+                    $marketable_seed->seed_lab_id = $model->seed_lab_id;
+                    $marketable_seed->load_stock_id = $load_stock->id;
+                    $marketable_seed->crop_variety_id = $load_stock->crop_variety_id;
+                    $marketable_seed->quantity = $total_quantity;
+                    $marketable_seed->save();
       
                 }
          
