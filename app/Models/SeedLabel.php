@@ -70,7 +70,7 @@ class SeedLabel extends Model
                     // Update the quantity in the load stock table
                     $load_stock_id = SeedLab::find($model->seed_lab_id)->first()->load_stock_id;
                     $load_stock = LoadStock::find($load_stock_id);
-                    $load_stock->yield_quantity = $total_quantity;
+                    $load_stock->yield_quantity = 6000;
                     $load_stock->save();
 
                     // $marketable_seed = new MarketableSeed();
