@@ -149,7 +149,7 @@
                             response.forEach(function(item) {
                                 tableHTML += "<tr>";
                                 tableHTML += "<td>"+ lot_number + "</td>";
-                                tableHTML += "<td><a href='https://sahel.8technologies.cloud/admin/seed-lab-tests/" + item.id + "' onclick='closeModalAndRedirect(this)' data-dismiss='modal'>" + item.lot_number + "</a></td>";
+                                tableHTML += "<td><a href='https://certisemence.org/seed-lab-tests/" + item.id + "' onclick='closeModalAndRedirect(this)' data-dismiss='modal'>" + item.lot_number + "</a></td>";
 
 
                                 tableHTML += "</tr>";

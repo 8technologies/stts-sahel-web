@@ -39,7 +39,6 @@ class QuotationController extends AdminController
 
         //show the user quotations made by him or to him
         $user = auth()->user();
-        $pre_order_id = PreOrder::where('user_id', $user->id)->value('id');
         $grid->model()->where('quotation_by', $user->id)->orWhere('quotation_to', $user->id);
 
         //disable the edit and delete action buttons if the user is not the one who has submitted the form
@@ -70,8 +69,6 @@ class QuotationController extends AdminController
             return \App\Models\Utils::tell_status($status) ?? '-';
         })->sortable();
 
-
-
         return $grid;
     }
 
@@ -89,7 +86,6 @@ class QuotationController extends AdminController
          //delete notification after viewing the form
          Utils::delete_notification('Quotation', $id);
 
-    
         $preOrder = PreOrder::find($quotation->preorder_id);
 
         $show->field('crop_variety_id', __('admin.form.Crop Variety'))->as(function () use ($preOrder) {
