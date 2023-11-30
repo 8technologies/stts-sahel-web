@@ -356,6 +356,7 @@ return [
         'Contract' => 'Contrat',
         //order form
         'Order number' => 'Numéro de commande',
+        'Order received successfully' => 'Commande reçue avec succès',
         'Order date' => 'Date de commande',
         'Order by' => 'Commander par',
         'Price' => 'Prix',

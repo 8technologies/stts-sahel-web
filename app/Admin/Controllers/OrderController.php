@@ -50,8 +50,17 @@ class OrderController extends AdminController
         $grid->actions(function ($actions) {
             if ($actions->row->order_by == Admin::user()->id) {
                 $actions->disableDelete();
+                //check the status of the order and disable the edit button if the order is not pending
+                if($actions->row->status != 'pending')
+                {
+                    $actions->disableEdit();
+                }
             }else{
-               
+               //check the status of the order and disable the edit button if the order is confirmed
+                if($actions->row->status == 'confirmed')
+                {
+                    $actions->disableEdit();
+                }
                 $actions->disableDelete();
             }
            
@@ -140,7 +149,7 @@ class OrderController extends AdminController
                             success: function (data) 
                             {
                                 $.pjax.reload("#pjax-container");
-                                toastr.success("Printing confirmed successfully");
+                                toastr.success("Order received successfully");
                 
                             }
                         });
