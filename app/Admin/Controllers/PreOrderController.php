@@ -123,31 +123,31 @@ class PreOrderController extends AdminController
         if ($form->isCreating()) {
             $form->hidden('user_id')->default($user->id);
         }
-        $form->select('crop_variety_id', __('admin.form.Crop Variety'))->options(\App\Models\CropVariety::all()->pluck('crop_variety_name', 'id'));
+        $form->select('crop_variety_id', __('admin.form.Crop Variety'))->options(\App\Models\CropVariety::all()->pluck('crop_variety_name', 'id'))->required();
         $form->select(
             'seed_class',
             __('admin.form.Seed generation')
         )->options(
             \App\Models\SeedClass::where('class_name', 'prebase')->pluck('class_name', 'id')
-        );
+        )->required();
         
-        $form->decimal('quantity', __('admin.form.Quantity(kgs)'));
-        $form->date('preferred_delivery_date', __('admin.form.Preferred delivery date'))->default(date('Y-m-d'));
-        $form->date('order_date', __('admin.form.Order date'))->default(date('Y-m-d'));
-        $form->text('client_name', __('admin.form.Client name'));
-        $form->text('client_physical_address', __('admin.form.Client physical address'));
-        $form->text('client_contact_number', __('admin.form.Client contact number'));
-        $form->text('client_email_address', __('admin.form.Client email address'));
+        $form->decimal('quantity', __('admin.form.Quantity(kgs)'))->required();
+        $form->date('preferred_delivery_date', __('admin.form.Preferred delivery date'))->default(date('Y-m-d'))->required();
+        $form->date('order_date', __('admin.form.Order date'))->default(date('Y-m-d'))->required();
+        $form->text('client_name', __('admin.form.Client name'))->required();
+        $form->text('client_physical_address', __('admin.form.Client physical address'))->required();
+        $form->text('client_contact_number', __('admin.form.Client contact number'))->required();
+        $form->text('client_email_address', __('admin.form.Client email address'))->required();
         $form->radio('preferred_payment_method', __('admin.form.Preferred payment method'))-> options(
             ['Cash' => 'Cash',
             'Debit card' => 'Debit card',
             'Cheque' => 'Cheque',
             'Mobile money' => 'Mobile money',
 
-            'Bank transfer' => 'Bank transfer']);
+            'Bank transfer' => 'Bank transfer'])->required();
         $form->radio('seed_delivery_preferences', __('admin.form.Seed delivery preference'))-> options(
             ['Pick up' => 'Pick up',
-            'Delivery' => 'Delivery']);
+            'Delivery' => 'Delivery'])->required();
         $form->textarea('other_information', __('admin.form.Other information'));
 
 
