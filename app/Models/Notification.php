@@ -136,7 +136,7 @@ class Notification extends Model
                 'receiver_inspector_id' => $model->inspector_id,
                 'receiver_id' => $model->user_id,
                 'form_link' => admin_url("{$entity}/{$model->id}"),
-                'inspector_form_link' => admin_url("{$entity}/{$model->id}/edit"),
+                'inspector_form_link' => admin_url("{$entity}/{$model->id}"),
             ],
             'pending' => [
                 'message' => "Cher {$name}, votre {$entity} est désormais en attente.",
