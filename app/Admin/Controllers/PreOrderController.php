@@ -124,7 +124,13 @@ class PreOrderController extends AdminController
             $form->hidden('user_id')->default($user->id);
         }
         $form->select('crop_variety_id', __('admin.form.Crop Variety'))->options(\App\Models\CropVariety::all()->pluck('crop_variety_name', 'id'));
-        $form->select('seed_class', __('admin.form.Seed generation'))->options(\App\Models\SeedClass::all()->pluck('class_name', 'id'));
+        $form->select(
+            'seed_class',
+            __('admin.form.Seed generation')
+        )->options(
+            \App\Models\SeedClass::where('class_name', 'prebase')->pluck('class_name', 'id')
+        );
+        
         $form->decimal('quantity', __('admin.form.Quantity(kgs)'));
         $form->date('preferred_delivery_date', __('admin.form.Preferred delivery date'))->default(date('Y-m-d'));
         $form->date('order_date', __('admin.form.Order date'))->default(date('Y-m-d'));
