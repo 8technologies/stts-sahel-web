@@ -40,7 +40,7 @@ class IndividualProducerController extends AdminController
         $user = Admin::user();
         
         //hide details from other farmer roles
-        if(!$user->inRoles(['individual-producer','developer','inspector','commissioner','basic-user']))
+        if(!$user->inRoles(['individual-producers','developer','inspector','commissioner','basic-user']))
         {
              return Validation::allowVerifiedUserToView($grid);
         }
