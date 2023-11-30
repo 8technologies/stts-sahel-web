@@ -183,7 +183,7 @@ class Validation extends Model
         }
 
         //show the individual seed producer only his records
-        if (auth('admin')->user()->isRole('individual-producer')) {
+        if (auth('admin')->user()->isRole('individual-producers')) {
             $grid->model()->where('user_id', auth('admin')->user()->id);
         }
     }
