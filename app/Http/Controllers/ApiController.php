@@ -14,6 +14,7 @@ use Dflydev\DotAccessData\Util;
 use DragonCode\Contracts\Cashier\Auth\Auth;
 use Illuminate\Http\Request;
 use Tymon\JWTAuth\Facades\JWTAuth;
+use Encore\Admin\Auth\Database\Administrator;
 
 class ApiController extends Controller
 {
@@ -110,8 +111,9 @@ class ApiController extends Controller
         if ($r->password == null) {
             return Utils::apiError('Password is required.');
         }
-        $u = User::where('username', $r->username)
-            ->first();
+        $u = Administrator::where('username', $r->username)
+        ->with('roles') // Assuming 'role' is the name of the relationship in your User model
+        ->first();
         if ($u == null) {
             return Utils::apiError('User account not found.');
         }
