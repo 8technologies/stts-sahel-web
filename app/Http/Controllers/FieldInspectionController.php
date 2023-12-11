@@ -48,4 +48,25 @@ class  FieldInspectionController extends Controller
         $fieldInspection->delete();
         return Utils::apiSuccess($fieldInspection, 'Field inspection form deleted successfully.');
     }
+
+    //get the inspections assigned to an inspector
+    public function getAssignedInspections($id)
+    {
+ 
+        $fieldInspections = FieldInspection::where('inspector_id', $id)->get();
+        return Utils::apiSuccess($fieldInspections);
+    }
+
+    //edit the inspections of an inspector
+    public function editAssignedInspections(Request $request, $id)
+    {
+        $fieldInspection = FieldInspection::find($id);
+        // Check if the field inspection exists
+        if (!$fieldInspection) {
+            return Utils::apiError('Field inspection not found.', 404);
+        }
+        $data = $request->all();
+        $fieldInspection->update($data);
+        return Utils::apiSuccess($fieldInspection, 'Field inspection form edited successfully.');
+    }
 }
