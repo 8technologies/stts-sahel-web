@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\FieldInspection;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use App\Models\Utils;
+use Illuminate\Support\Facades\Storage;
 
 class  FieldInspectionController extends Controller
 {
@@ -75,6 +76,18 @@ class  FieldInspectionController extends Controller
         }
 
         $data = $request->all();
+        if ($request->has('signature')) 
+        {
+             $photoData = $request->input('signature');
+             list($type, $photoData) = explode(';', $photoData);
+             list(, $photoData) = explode(',', $photoData);
+             $photoData = base64_decode($photoData);
+         
+             $photoPath = 'images/' . uniqid() . '.jpg'; 
+             Storage::disk('admin')->put($photoPath, $photoData);
+             
+             $data['signature'] = $photoPath;
+         }
         $fieldInspection->update($data);
         return Utils::apiSuccess($fieldInspection, 'Field inspection form edited successfully.');
     }

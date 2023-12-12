@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\SeedLab;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use App\Models\Utils;
+use Illuminate\Support\Facades\Storage;
 
 class SeedLabController extends Controller
 {
@@ -35,6 +36,20 @@ class SeedLabController extends Controller
         $seedLab = SeedLab::findOrFail($id);
 
         $data = $request->all();
+
+        if ($request->has('reporting_and_signature')) 
+        {
+             $photoData = $request->input('reporting_and_signature');
+             list($type, $photoData) = explode(';', $photoData);
+             list(, $photoData) = explode(',', $photoData);
+             $photoData = base64_decode($photoData);
+         
+             $photoPath = 'images/' . uniqid() . '.jpg'; 
+             Storage::disk('admin')->put($photoPath, $photoData);
+             
+             $data['reporting_and_signature'] = $photoPath;
+         }
+
         $seedLab->update($data);
         return Utils::apiSuccess($seedLab, 'Seed Lab Request edited successfully.');
     }
