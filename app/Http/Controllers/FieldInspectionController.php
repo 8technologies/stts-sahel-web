@@ -58,13 +58,22 @@ class  FieldInspectionController extends Controller
     }
 
     //edit the inspections of an inspector
-    public function editAssignedInspections(Request $request, $id)
+    public function updateAssignedInspections(Request $request, $id)
     {
         $fieldInspection = FieldInspection::find($id);
         // Check if the field inspection exists
         if (!$fieldInspection) {
             return Utils::apiError('Field inspection not found.', 404);
         }
+
+        //get the authenticated user
+        $user = auth('api')->user();
+
+        //check if the user is an inspector and the inspector id is the same as the authenticated user
+        if ($fieldInspection->inspector_id != $user->id) {
+            return Utils::apiError('You are not authorized to edit this field inspection.', 403);
+        }
+
         $data = $request->all();
         $fieldInspection->update($data);
         return Utils::apiSuccess($fieldInspection, 'Field inspection form edited successfully.');
