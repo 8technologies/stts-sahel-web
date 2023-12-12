@@ -74,4 +74,34 @@ class SeedSampleRequestController extends Controller
         $seedSample->delete();
         return Utils::apiSuccess($seedSample, 'Seed Sample Request deleted successfully.');
     }
+
+       //get the inspections assigned to an inspector
+       public function getAssignedRequests($id)
+       {
+    
+           $SeedLabs = SeedLab::where('inspector_id', $id)->get();
+           return Utils::apiSuccess($SeedLabs);
+       }
+   
+       //edit the inspections of an inspector
+       public function updateAssignedRequests(Request $request, $id)
+       {
+           $SeedLab = SeedLab::find($id);
+           // Check if the seed sample request exists
+           if (!$SeedLab) {
+               return Utils::apiError('seed sample request not found.', 404);
+           }
+   
+           //get the authenticated user
+           $user = auth('api')->user();
+   
+           //check if the user is an inspector and the inspector id is the same as the authenticated user
+           if ($SeedLab->inspector_id != $user->id) {
+               return Utils::apiError('You are not authorized to edit this seed sample request.', 403);
+           }
+   
+           $data = $request->all();
+           $SeedLab->update($data);
+           return Utils::apiSuccess($SeedLab, 'seed sample request form edited successfully.');
+       }
 }

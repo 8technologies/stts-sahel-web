@@ -25,6 +25,11 @@ class SeedLab extends Model
         'seed_sample_size',
         'seed_class',
         'quantity',
+        'validated_stock',
+        'status',
+        'status_comment',
+        'inspector_id',
+        'additional_instructions',
         'testing_methods',
         'germination_test_results',
         'purity_test_results',
@@ -58,14 +63,14 @@ class SeedLab extends Model
             }
 
             //if the user is an inspector,update the validated stock
-            if (Admin::user()->isRole('inspector')) {
+
                 if($model->status == 'lab test assigned'){
                   $load_stock = LoadStock::find($model->load_stock_id);
                   $load_stock->yield_quantity = $model->validated_stock;
                   $load_stock->checked = 1;
                   $load_stock->save();
                 }
-            }
+            
         });
         
 
