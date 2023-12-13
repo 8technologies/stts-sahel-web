@@ -175,7 +175,7 @@ class SeedSampleController extends AdminController
             $form->date('sample_request_date', __('admin.form.Sample request date'))->default(date('Y-m-d'))->required(); 
             $form->file('proof_of_payment', __('admin.form.Proof of payment'))
             ->rules(['mimes:jpeg,pdf,jpg', 'max:1048']) // Assuming a maximum file size of 1MB 
-            ->help('Attach a copy of your proof of payment, and should be in pdf, jpg or jpeg format');
+            ->help(__('admin.form.Attach a copy of your proof of payment, and should be in pdf, jpg or jpeg format'));
             $form->textarea('applicant_remarks', __('admin.form.Applicant remarks'));
             $form->hidden('crop_variety_id');
         }

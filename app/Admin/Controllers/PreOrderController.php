@@ -139,15 +139,16 @@ class PreOrderController extends AdminController
         $form->text('client_contact_number', __('admin.form.Client contact number'))->required();
         $form->text('client_email_address', __('admin.form.Client email address'))->required();
         $form->radio('preferred_payment_method', __('admin.form.Preferred payment method'))-> options(
-            ['Cash' => 'Cash',
-            'Debit card' => 'Debit card',
-            'Cheque' => 'Cheque',
-            'Mobile money' => 'Mobile money',
-
-            'Bank transfer' => 'Bank transfer'])->required();
+            ['Espèces' => 'Espèces',
+            'Carte de débit' => 'Carte de débit',
+            'Chèque' => 'Chèque',
+            'Mobile money' => 'Mobile Money',
+           
+            'Bank transfer' => 'Virement bancaire'])->required();
         $form->radio('seed_delivery_preferences', __('admin.form.Seed delivery preference'))-> options(
-            ['Pick up' => 'Pick up',
-            'Delivery' => 'Delivery'])->required();
+            ['Ramassage' => 'Ramassage',
+            'Livraison' => 'Livraison'])->required();
+           
         $form->textarea('other_information', __('admin.form.Other information'));
 
 
