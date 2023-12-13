@@ -321,13 +321,11 @@ class OrderController extends AdminController
             $form->date('order_date', __('admin.form.Order date'))->default(date('Y-m-d'));
             $form->textarea('details', __('admin.form.Details'));
             $form->radio('payment_method', __('admin.form.Payment method'))->options([
-                'cash' => 'Cash',
-                'bank_transfer' => 'Bank transfer',
-                'mobile_money' => 'Mobile money',
-                'cheque' => 'Cheque',
-
-
-            ])->required();
+                'Espèces' => 'Espèces',
+                'Virement bancaire' => 'Virement bancaire',
+                'Mobile money' => 'Mobile Money',
+                'Chèque' => 'Chèque',
+                ])->required();
 
             $form->hidden('supplier')->default($marketableSeed->user_id);
             $form->hidden('marketable_id')->default($marketableSeed->id);
