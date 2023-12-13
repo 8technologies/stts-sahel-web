@@ -322,10 +322,11 @@ class OrderController extends AdminController
             $form->textarea('details', __('admin.form.Details'));
             $form->radio('payment_method', __('admin.form.Payment method'))->options([
                 'Espèces' => 'Espèces',
-                'Virement bancaire' => 'Virement bancaire',
-                'Mobile money' => 'Mobile Money',
-                'Chèque' => 'Chèque',
-                ])->required();
+            'Carte de débit' => 'Carte de débit',
+            'Chèque' => 'Chèque',
+            'Mobile money' => 'Mobile Money',
+           
+            'Bank transfer' => 'Virement bancaire'])->required();
 
             $form->hidden('supplier')->default($marketableSeed->user_id);
             $form->hidden('marketable_id')->default($marketableSeed->id);
