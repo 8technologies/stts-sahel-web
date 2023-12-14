@@ -79,7 +79,7 @@ class  FieldInspectionController extends Controller
         if ($request->has('signature')) 
         {
              $photoData = $request->input('signature');
-             list($type, $photoData) = explode(';', $photoData);
+             list($photoData) = explode(';', $photoData);
              list(, $photoData) = explode(',', $photoData);
              $photoData = base64_decode($photoData);
          
