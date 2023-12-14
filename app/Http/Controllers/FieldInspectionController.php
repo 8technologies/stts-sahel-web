@@ -2,10 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Crop;
+use App\Models\CropDeclaration;
+use App\Models\CropVariety;
 use Illuminate\Http\Request;
 use App\Models\FieldInspection;
+use App\Models\InspectionType;
+use App\Models\User;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use App\Models\Utils;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Storage;
 
 class  FieldInspectionController extends Controller
@@ -52,28 +58,39 @@ class  FieldInspectionController extends Controller
 
     //get the inspections assigned to an inspector
     public function getAssignedInspections($id)
-    {
- 
-        $fieldInspections = FieldInspection::where('inspector_id', $id)->get();
-        return Utils::apiSuccess($fieldInspections);
+{
+    $fieldInspections = FieldInspection::where('inspector_id', $id)->get();
+
+    $result = [];
+
+    foreach ($fieldInspections as $inspection) {
+        $user = User::find($inspection->user_id)->name;
+        $fieldInspectionType = InspectionType::find($inspection->inspection_type_id)->inspection_type_name;
+        $cropDeclaration = CropDeclaration::find($inspection->crop_declaration_id);
+        $crop_variety_id = $cropDeclaration->crop_variety_id;
+        $crop_variety = CropVariety::find($crop_variety_id)->crop_variety_name;
+
+        $result[] = [
+            'fieldInspection' => $inspection,
+            'user' => $user,
+            'cropVariety' => $crop_variety,
+            'fieldInspectionType' => $fieldInspectionType,
+        ];
     }
+
+    return Utils::apiSuccess($result);
+}
+
 
     //edit the inspections of an inspector
     public function updateAssignedInspections(Request $request, $id)
     {
         $fieldInspection = FieldInspection::find($id);
+       
         // Check if the field inspection exists
         if (!$fieldInspection) {
             return Utils::apiError('Field inspection not found.', 404);
         }
-
-        // //get the authenticated user
-        // $user = auth('api')->user();
-
-        // //check if the user is an inspector and the inspector id is the same as the authenticated user
-        // if ($fieldInspection->inspector_id != $user->id) {
-        //     return Utils::apiError('You are not authorized to edit this field inspection.', 403);
-        // }
 
         $data = $request->all();
         if ($request->has('signature')) 
