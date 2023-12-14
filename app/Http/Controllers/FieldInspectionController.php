@@ -67,13 +67,13 @@ class  FieldInspectionController extends Controller
             return Utils::apiError('Field inspection not found.', 404);
         }
 
-        //get the authenticated user
-        $user = auth('api')->user();
+        // //get the authenticated user
+        // $user = auth('api')->user();
 
-        //check if the user is an inspector and the inspector id is the same as the authenticated user
-        if ($fieldInspection->inspector_id != $user->id) {
-            return Utils::apiError('You are not authorized to edit this field inspection.', 403);
-        }
+        // //check if the user is an inspector and the inspector id is the same as the authenticated user
+        // if ($fieldInspection->inspector_id != $user->id) {
+        //     return Utils::apiError('You are not authorized to edit this field inspection.', 403);
+        // }
 
         $data = $request->all();
         if ($request->has('signature')) 
