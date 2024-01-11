@@ -75,6 +75,7 @@ class  FieldInspectionController extends Controller
             'user' => $user,
             'cropVariety' => $crop_variety,
             'fieldInspectionType' => $fieldInspectionType,
+            'cropDeclaration' => $cropDeclaration,
         ];
     }
 
