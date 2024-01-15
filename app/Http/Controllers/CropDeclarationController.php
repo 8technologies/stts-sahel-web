@@ -54,8 +54,8 @@ class CropDeclarationController extends Controller
         $result = [];
 
         foreach($cropDeclaration as $crop){
-            $cropVariety = CropVariety::where('id', $crop->crop_variety_id)->crop_variety_name;
-            $seed_class = SeedClass::where('id', $crop->seed_class_id)->class_name;
+            $cropVariety = CropVariety::find($crop->crop_variety_id)->crop_variety_name;
+            $seed_class = SeedClass::find($crop->seed_class_id)->class_name;
             $result[] =[
                 'crop_variety' => $cropVariety,
                 'seed_class' => $seed_class,
