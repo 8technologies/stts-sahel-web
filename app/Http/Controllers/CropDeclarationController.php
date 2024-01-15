@@ -46,5 +46,11 @@ class CropDeclarationController extends Controller
         $cropDeclaration->delete();
         return Utils::apiSuccess($cropDeclaration, 'Crop Declaration form deleted successfully.');
     }
+
+    public  function getAcceptedCropDeclarations($id)
+    {
+        $cropDeclaration = CropDeclaration::where('user_id', $id)->where('status', 'accepted')->get();
+        return response()->json($cropDeclaration);
+    }
 }
 
