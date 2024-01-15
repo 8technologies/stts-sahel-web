@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\CropDeclaration;
 use App\Models\CropVariety;
 use Illuminate\Http\Request;
-use App\Models\SeedProducer;
+use App\Models\SeedClass;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use App\Models\Utils;
 
@@ -50,6 +50,19 @@ class CropDeclarationController extends Controller
     public  function getAcceptedCropDeclarations($id)
     {
         $cropDeclaration = CropDeclaration::where('user_id', $id)->where('status', 'accepted')->get();
+
+        $result = [];
+
+        foreach($cropDeclaration as $crop){
+            $cropVariety = CropVariety::where('id', $crop->crop_variety_id)->crop_variety_name;
+            $seed_class = SeedClass::where('id', $crop->seed_class_id)->class_name;
+            $result[] =[
+                'crop_variety' => $cropVariety,
+                'seed_class' => $seed_class,
+                'crop_declaration' => $crop,
+
+            ];
+        }
         return response()->json($cropDeclaration);
     }
 }
