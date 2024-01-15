@@ -63,7 +63,7 @@ class CropDeclarationController extends Controller
 
             ];
         }
-        return response()->json($cropDeclaration);
+        return response()->json($result);
     }
 }
 
