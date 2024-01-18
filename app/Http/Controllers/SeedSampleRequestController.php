@@ -94,7 +94,7 @@ class SeedSampleRequestController extends Controller
                     'user' => $user,
                 ];
               }
-           return Utils::apiSuccess($SeedLab);
+           return Utils::apiSuccess($result);
        }
    
        //edit the inspections of an inspector
