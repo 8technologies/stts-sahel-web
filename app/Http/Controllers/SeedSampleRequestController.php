@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\SeedLab;
 use App\Models\LoadStock;
+use App\Models\User;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use App\Models\Utils;
 use Illuminate\Support\Facades\Storage;
@@ -81,7 +82,19 @@ class SeedSampleRequestController extends Controller
        {
     
            $SeedLabs = SeedLab::where('inspector_id', $id)->get();
-           return Utils::apiSuccess($SeedLabs);
+           $result = [];
+           //get the user name for each seed sample request
+              foreach ($SeedLabs as $SeedLab) 
+              {
+                $user = User::find($SeedLab->user_id);
+                $SeedLab->user_name = $user->name;
+
+                $result[] = [
+                    'seedLab' => $SeedLab,
+                    'user' => $user,
+                ];
+              }
+           return Utils::apiSuccess($SeedLab);
        }
    
        //edit the inspections of an inspector
