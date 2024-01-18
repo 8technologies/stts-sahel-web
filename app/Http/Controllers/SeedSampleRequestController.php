@@ -108,6 +108,7 @@ class SeedSampleRequestController extends Controller
    
            //get the authenticated user
            $user = auth('api')->user();
+           return $user;
    
            //check if the user is an inspector and the inspector id is the same as the authenticated user
            if ($SeedLab->inspector_id != $user->id) {
