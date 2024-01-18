@@ -106,15 +106,6 @@ class SeedSampleRequestController extends Controller
                return Utils::apiError('seed sample request not found.', 404);
            }
    
-           //get the authenticated user
-           $user = auth('api')->user();
-           return $user;
-   
-           //check if the user is an inspector and the inspector id is the same as the authenticated user
-           if ($SeedLab->inspector_id != $user->id) {
-               return Utils::apiError('You are not authorized to edit this seed sample request.', 403);
-           }
-   
            $data = $request->all();
 
            //check the status of the seed sample request

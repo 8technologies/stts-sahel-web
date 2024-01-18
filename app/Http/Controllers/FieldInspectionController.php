@@ -58,29 +58,29 @@ class  FieldInspectionController extends Controller
 
     //get the inspections assigned to an inspector
     public function getAssignedInspections($id)
-{
-    $fieldInspections = FieldInspection::where('inspector_id', $id)->get();
+    {
+        $fieldInspections = FieldInspection::where('inspector_id', $id)->get();
 
-    $result = [];
+        $result = [];
 
-    foreach ($fieldInspections as $inspection) {
-        $user = User::find($inspection->user_id)->name;
-        $fieldInspectionType = InspectionType::find($inspection->inspection_type_id)->inspection_type_name;
-        $cropDeclaration = CropDeclaration::find($inspection->crop_declaration_id);
-        $crop_variety_id = $cropDeclaration->crop_variety_id;
-        $crop_variety = CropVariety::find($crop_variety_id)->crop_variety_name;
+        foreach ($fieldInspections as $inspection) {
+            $user = User::find($inspection->user_id)->name;
+            $fieldInspectionType = InspectionType::find($inspection->inspection_type_id)->inspection_type_name;
+            $cropDeclaration = CropDeclaration::find($inspection->crop_declaration_id);
+            $crop_variety_id = $cropDeclaration->crop_variety_id;
+            $crop_variety = CropVariety::find($crop_variety_id)->crop_variety_name;
 
-        $result[] = [
-            'fieldInspection' => $inspection,
-            'user' => $user,
-            'cropVariety' => $crop_variety,
-            'fieldInspectionType' => $fieldInspectionType,
-            'cropDeclaration' => $cropDeclaration,
-        ];
+            $result[] = [
+                'fieldInspection' => $inspection,
+                'user' => $user,
+                'cropVariety' => $crop_variety,
+                'fieldInspectionType' => $fieldInspectionType,
+                'cropDeclaration' => $cropDeclaration,
+            ];
+        }
+
+        return Utils::apiSuccess($result);
     }
-
-    return Utils::apiSuccess($result);
-}
 
 
     //edit the inspections of an inspector
