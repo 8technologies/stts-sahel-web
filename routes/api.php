@@ -22,6 +22,7 @@ use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\UserRoleController;
 use App\Http\Controllers\IndividualProducerController;
 use App\Http\Controllers\ResearchController;
+use App\Http\Controllers\LabelPackageController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -68,6 +69,7 @@ Route::resource('notifications', NotificationController::class);
 Route::resource('research', ResearchController::class);
 Route::resource('individual-producers', IndividualProducerController::class);
 Route::resource('user_roles', UserRoleController::class);
+Route::resource('label_packages', LabelPackageController::class);
 
 Route::post('track', [SeedDetailsController::class, 'track']);
 Route::get('track_details', [SeedDetailsController::class, 'track']);
