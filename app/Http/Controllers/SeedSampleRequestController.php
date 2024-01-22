@@ -88,10 +88,12 @@ class SeedSampleRequestController extends Controller
               {
                 $user = User::find($SeedLab->user_id);
                 $SeedLab->user_name = $user->name;
+                $loadStock = LoadStock::where('id', $SeedLab->load_stock_id)->first();
 
                 $result[] = [
                     'seedLab' => $SeedLab,
                     'user' => $user,
+                    'loadStock' => $loadStock,
                 ];
               }
            return Utils::apiSuccess($result);
