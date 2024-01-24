@@ -30,7 +30,7 @@ class LoadStockController extends Controller
         $result = [];
         //for each get the seed class object
         foreach ($loadStock as $stock) {
-            $seed_class = SeedClass::find($stock->seed_class_id);
+            $seed_class = SeedClass::find($stock->seed_class);
             $result[] = [
                 'load_stock' => $stock,
                 'seed_class' => $seed_class
