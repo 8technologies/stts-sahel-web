@@ -37,7 +37,7 @@ class LoadStockController extends Controller
             ];
         }
 
-        return response()->json($loadStock);
+        return response()->json($result);
     }
 
     public function update(Request $request, $id)
