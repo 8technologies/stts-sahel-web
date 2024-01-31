@@ -33,6 +33,7 @@ class OrderController extends Controller
     public function showMyOrders($id)
     {
         $order = Order::where('order_by', $id)->get();
+        
         return response()->json($order);
     }
 
