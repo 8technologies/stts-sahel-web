@@ -57,7 +57,7 @@ Route::resource('seed-sample-requests', SeedSampleRequestController::class);
 Route::get('assigned-requests/{id}', [SeedSampleRequestController::class, 'getAssignedRequests']);
 Route::put('update-assigned-requests/{id}', [SeedSampleRequestController::class, 'updateAssignedRequests']);
 Route::resource('seed-labs', SeedLabController::class);
-Route::get('marketable-seeds/{id}', [SeedLabController::class, 'showMarketableSeed']);
+Route::get('marketable-seeds/{id}', [MarketableSeedController::class, 'showMarketableSeed']);
 Route::resource('seed-labels', SeedLabelController::class);
 Route::resource('marketable-seeds', MarketableSeedController::class);
 Route::resource('pre-orders', PreOrderController::class);
