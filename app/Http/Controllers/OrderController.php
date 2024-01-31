@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Order;
 use App\Models\CropVariety;
+use App\Models\MarketableSeed;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use App\Models\Utils;
 
@@ -32,7 +33,9 @@ class OrderController extends Controller
     
         // For each order, get the crop variety name
         foreach ($orders as $key => $value) {
-            $crop_variety = CropVariety::where('id', $value->crop_variety)->first(); // Assuming you want a single result
+            $crop_variety_id = MarketableSeed::where('id', $value->marketable_id)->first()->crop_variety_id;
+            $crop_variety = CropVariety::where('id', $crop_variety_id)->first(); 
+           
             $result[] = [
                 'crop_variety' => $crop_variety->crop_variety_name,
                 'order' => $value
@@ -49,7 +52,8 @@ class OrderController extends Controller
     
         // For each order, get the crop variety name
         foreach ($orders as $key => $value) {
-            $crop_variety = CropVariety::where('id', $value->crop_variety)->first(); // Assuming you want a single result
+            $crop_variety_id = MarketableSeed::where('id', $value->marketable_id)->first()->crop_variety_id;
+            $crop_variety = CropVariety::where('id', $crop_variety_id)->first(); 
             $result[] = [
                 'crop_variety' => $crop_variety->crop_variety_name,
                 'order' => $value
