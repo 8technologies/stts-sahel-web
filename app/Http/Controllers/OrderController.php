@@ -25,8 +25,14 @@ class OrderController extends Controller
 
     public function show($id)
     {
-        $order = Order::where('order_by', $id)->orWhere('supplier', $id)->get();
+        $order = Order::where('supplier', $id)->get();
 
+        return response()->json($order);
+    }
+
+    public function showMyOrders($id)
+    {
+        $order = Order::where('order_by', $id)->get();
         return response()->json($order);
     }
 

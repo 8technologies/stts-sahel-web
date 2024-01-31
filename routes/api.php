@@ -63,6 +63,7 @@ Route::resource('marketable-seed', MarketableSeedController::class);
 Route::resource('pre-orders', PreOrderController::class);
 Route::resource('quotations', QuotationController::class);
 Route::resource('orders', OrderController::class);
+Route::resource('orders/{id}', OrderController::class, 'showMyOrders');
 Route::resource('cooperatives', CooperativeController::class);
 Route::resource('cooperative-members', CooperativeMemberController::class);
 Route::resource('agro-dealers', AgroDealerController::class);
