@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Order;
+use App\Models\CropVariety;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use App\Models\Utils;
 
@@ -25,17 +26,39 @@ class OrderController extends Controller
 
     public function show($id)
     {
-        $order = Order::where('supplier', $id)->get();
+        $orders = Order::where('supplier', $id)->get();
 
-        return response()->json($order);
+        $result = [];
+    
+        // For each order, get the crop variety name
+        foreach ($orders as $key => $value) {
+            $crop_variety = CropVariety::where('id', $value->crop_variety)->first(); // Assuming you want a single result
+            $result[] = [
+                'crop_variety' => $crop_variety->crop_variety_name,
+                'order' => $value
+            ];
+        }
+    
+        return response()->json($result);
     }
 
     public function showMyOrders($id)
     {
-        $order = Order::where('order_by', $id)->get();
-        
-        return response()->json($order);
+        $orders = Order::where('order_by', $id)->get();
+        $result = [];
+    
+        // For each order, get the crop variety name
+        foreach ($orders as $key => $value) {
+            $crop_variety = CropVariety::where('id', $value->crop_variety)->first(); // Assuming you want a single result
+            $result[] = [
+                'crop_variety' => $crop_variety->crop_variety_name,
+                'order' => $value
+            ];
+        }
+    
+        return response()->json($result);
     }
+    
 
     public function update(Request $request, $id)
     {
