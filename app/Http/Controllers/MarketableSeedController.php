@@ -27,7 +27,7 @@ class MarketableSeedController extends Controller
 
     public function show($id)
     {
-        $marketableSeed = MarketableSeed::where('user_id', '=', $id)->where('status', '=', 'lab test assigned')->get();
+        $marketableSeed = MarketableSeed::where('user_id', '!=', $id)->get();
         $result = [];
         //for each get the seed class object
         foreach ($marketableSeed as $stock) {
