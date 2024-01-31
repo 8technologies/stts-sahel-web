@@ -34,7 +34,7 @@ class SeedLabController extends Controller
 
     public function showMarketableSeed($id)
     {
-        $seedLab = SeedLab::where('user_id', '!=', $id)->where('test_decision', '=', 'marketable')->get();
+        $seedLab = SeedLab::where('user_id', '=', $id)->where('test_decision', '=', 'marketable')->get();
         $result = [];
         //for each get the seed class object
         foreach ($seedLab as $stock) {
