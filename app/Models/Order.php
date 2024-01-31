@@ -14,6 +14,7 @@ class Order extends Model
     protected $fillable = [
         'preorder_id',
         'quotation_id',
+        'marketable_id',
         'quantity',
         'price',
         'supply_date',
