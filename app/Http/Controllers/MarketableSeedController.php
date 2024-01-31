@@ -27,14 +27,16 @@ class MarketableSeedController extends Controller
 
     public function show($id)
     {
-        $seedLab = SeedLab::where('user_id', '!=', $id)->where('test_decision', '=', 'marketable')->get();
+        $marketableSeed = MarketableSeed::where('user_id', '=', $id)->where('status', '=', 'lab test assigned')->get();
         $result = [];
         //for each get the seed class object
-        foreach ($seedLab as $stock) {
+        foreach ($marketableSeed as $stock) {
             $load_stock = LoadStock::find($stock->load_stock_id);
+            $seed_lab = SeedLab::find($stock->seed_lab_id);
             $result[] = [
-                'seed_lab' => $stock,
-                'load_stock' => $load_stock
+                'marketable_seed_id' => $stock->id,
+                'load_stock' => $load_stock,
+                'seed_lab' => $seed_lab
             ];
         }
         return response()->json($result);
