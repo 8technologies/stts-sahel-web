@@ -99,11 +99,33 @@ class SeedDetailsController extends Controller
       public function track(Request $request)
         {
             
-            $seed_details = [];
+            $lot_numbers = [];
            
-            if ($request->lot_number) {
-                $seed_details = SeedLab::where('mother_lot', $request->lot_number)
-                    ->get(['id', 'lot_number']);
+            if ($request->lot_number) 
+            {
+                
+                $lot_numbers = SeedLab::where('mother_lot', $request->lot_number)
+                    ->get();
+
+                if (!$lot_numbers) {
+                    return response()->json(null);
+                }
+                else{
+                    $seed_details = [];
+                    foreach ($lot_numbers as $lot_number) {
+                        $crop_variety = CropVariety::where('id', $lot_number->crop_variety_id)
+                            ->first();
+                        $crop = Crop::where('id', $crop_variety->crop_id)->value('crop_name');
+
+                        $seed_details[] = [
+                            'crop' => $crop,
+                            'crop_variety' => $crop_variety->crop_variety_name,
+                            'mother_lot' => $lot_number->mother_lot,
+                            'lot_number' => $lot_number->lot_number,
+                            'seed_lab_id' => $lot_number->id,
+                        ];
+                    }
+                }
             }
             
  

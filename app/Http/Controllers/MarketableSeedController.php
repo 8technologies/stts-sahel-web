@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\MarketableSeed;
+use App\Models\SeedLab;
+use App\Models\LoadStock;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use App\Models\Utils;
 
@@ -25,9 +27,17 @@ class MarketableSeedController extends Controller
 
     public function show($id)
     {
-        $marketableSeed = MarketableSeed::where('user_id', '!=', $id)->get();
-        
-        return response()->json($marketableSeed);
+        $seedLab = SeedLab::where('user_id', '!=', $id)->where('test_decision', '=', 'marketable')->get();
+        $result = [];
+        //for each get the seed class object
+        foreach ($seedLab as $stock) {
+            $load_stock = LoadStock::find($stock->load_stock_id);
+            $result[] = [
+                'seed_lab' => $stock,
+                'load_stock' => $load_stock
+            ];
+        }
+        return response()->json($result);
     }
 
     public function update(Request $request, $id)
