@@ -39,7 +39,7 @@ class OrderController extends Controller
             $crop_variety = CropVariety::where('id', $crop_variety_id)->first(); 
            
             $result[] = [
-                'order_by_name' => $user_name,
+                'name' => $user_name,
                 'crop_variety' => $crop_variety->crop_variety_name,
                 'order' => $value
             ];
@@ -59,7 +59,7 @@ class OrderController extends Controller
             $user_name =  User::where('id', $value->supplier)->first()->name;
             $crop_variety = CropVariety::where('id', $crop_variety_id)->first(); 
             $result[] = [
-                'supplier_name' => $user_name, 
+                'name' => $user_name, 
                 'crop_variety' => $crop_variety->crop_variety_name,
                 'order' => $value
             ];
