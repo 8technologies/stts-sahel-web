@@ -95,42 +95,52 @@ class SeedDetailsController extends Controller
       }
       
 
-  
-      public function track(Request $request)
-        {
-            
-            $lot_numbers = [];
-           
-            if ($request->lot_number) 
-            {
-                
-                $lot_numbers = SeedLab::where('mother_lot', $request->lot_number)
-                    ->get();
 
-                if (!$lot_numbers) {
-                    return response()->json(null);
-                }
-                else{
-                    $seed_details = [];
-                    foreach ($lot_numbers as $lot_number) {
-                        $crop_variety = CropVariety::where('id', $lot_number->crop_variety_id)
-                            ->first();
-                        $crop = Crop::where('id', $crop_variety->crop_id)->value('crop_name');
+    public function track(Request $request)
+    {
+        $seed_details_web = [];
 
-                        $seed_details[] = [
-                            'crop' => $crop,
-                            'crop_variety' => $crop_variety->crop_variety_name,
-                            'mother_lot' => $lot_number->mother_lot,
-                            'lot_number' => $lot_number->lot_number,
-                            'seed_lab_id' => $lot_number->id,
-                        ];
-                    }
+        if ($request->lot_number) {
+            $seed_details_web = SeedLab::where('mother_lot', $request->lot_number)
+                ->get(['id', 'lot_number']);
+        }
+
+        $seed_details = [];
+
+        if ($request->lot_number) {
+            $lot_numbers = SeedLab::where('mother_lot', $request->lot_number)->get();
+
+            if (!$lot_numbers->isEmpty()) {
+                foreach ($lot_numbers as $lot_number) {
+                    $crop_variety = CropVariety::where('id', $lot_number->crop_variety_id)
+                    ->first();
+                $crop = Crop::where('id', $crop_variety->crop_id)->value('crop_name');
+                $loadStock = LoadStock::where('id',  $lot_number->load_stock_id)
+                ->first();
+                $generation = SeedClass::where('id',$loadStock->seed_class)
+                ->value('class_name');
+
+                $seed_details[] = [
+                    'crop' => $crop,
+                    'crop_variety' => $crop_variety->crop_variety_name,
+                    'mother_lot' => $lot_number->mother_lot,
+                    'lot_number' => $lot_number->lot_number,
+                    'generation' =>  $generation,
+                    'seed_class' => $lot_number->seed_class,
+                    'lab_test_number'=> $lot_number->seed_lab_test_report_number,
+                    'germination' => $lot_number->germination_test_results,
+                    'purity' => $lot_number->purity_test_results,
+                    'testing_methods' => $lot_number->testing_methods,
+                    'test_decision'=> $lot_number->test_decision,
+                    'moisture' => $lot_number->moisture_content_test_results,
+                    'test_date' => $lot_number->updated_at,
+                ];
                 }
             }
-            
- 
-
-            return response()->json($seed_details);
         }
+
+        return response()->json(['seed_details' => $seed_details, 'seed_details_web' => $seed_details_web]);
+    }
+
       
 }
