@@ -142,12 +142,13 @@
                         success: function(response) {
                             // Handle the response from the backend and populate the modal
                             console.log(response);
+                            var seedDetailsWeb = response.seed_details_web;
                             var lot_number = $("#lot_number").val(); 
                             var tableHTML = "<table>";
                         
                             tableHTML += "<tbody>";
                             
-                            response.forEach(function(item) {
+                            seedDetailsWeb.forEach(function(item) {
                                 tableHTML += "<tr>";
                                 tableHTML += "<td>"+ lot_number + "</td>";
                                 tableHTML += "<td><a href='https://certisemence.org/seed-lab-tests/" + item.id + "' onclick='closeModalAndRedirect(this)' data-dismiss='modal'>" + item.lot_number + "</a></td>";

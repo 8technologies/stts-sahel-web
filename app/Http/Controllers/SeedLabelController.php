@@ -21,7 +21,7 @@ class SeedLabelController extends Controller
             // Extract seed label attributes from the request
             $seedLabelData = $request->only([
                 'seed_label_request_number',
-                'applicant_id',
+                'user_id',
                 'registration_number',
                 'seed_lab_id',
                 'quantity_of_seed',

@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Order;
+use App\Models\CropVariety;
+use App\Models\User;
+use App\Models\MarketableSeed;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use App\Models\Utils;
 
@@ -25,10 +28,46 @@ class OrderController extends Controller
 
     public function show($id)
     {
-        $order = Order::where('order_by', $id)->orWhere('supplier', $id)->get();
+        $orders = Order::where('supplier', $id)->get();
 
-        return response()->json($order);
+        $result = [];
+    
+        // For each order, get the crop variety name
+        foreach ($orders as $key => $value) {
+            $crop_variety_id = MarketableSeed::where('id', $value->marketable_id)->first()->crop_variety_id;
+            $user_name =  User::where('id', $value->order_by)->first()->name;
+            $crop_variety = CropVariety::where('id', $crop_variety_id)->first(); 
+           
+            $result[] = [
+                'name' => $user_name,
+                'crop_variety' => $crop_variety->crop_variety_name,
+                'order' => $value
+            ];
+        }
+    
+        return response()->json($result);
     }
+
+    public function showMyOrders($id)
+    {
+        $orders = Order::where('order_by', $id)->get();
+        $result = [];
+    
+        // For each order, get the crop variety name
+        foreach ($orders as $key => $value) {
+            $crop_variety_id = MarketableSeed::where('id', $value->marketable_id)->first()->crop_variety_id;
+            $user_name =  User::where('id', $value->supplier)->first()->name;
+            $crop_variety = CropVariety::where('id', $crop_variety_id)->first(); 
+            $result[] = [
+                'name' => $user_name, 
+                'crop_variety' => $crop_variety->crop_variety_name,
+                'order' => $value
+            ];
+        }
+    
+        return response()->json($result);
+    }
+    
 
     public function update(Request $request, $id)
     {
