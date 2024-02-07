@@ -482,6 +482,8 @@ return [
         'Show All Crops' => 'Afficher toutes les cultures',
         'Select Crop' => 'Sélectionnez une culture',
         'View all' => 'Voir tout',
+        'View receipt' => 'Voir le reçu',
+        'No file uploaded' => 'Aucun fichier téléchargé',
         'pending applications' => 'demandes en attente',
         'marketable seeds' => 'semences commercialisables',
         'Dashboard' => 'Tableau de bord',

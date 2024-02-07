@@ -4,10 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Encore\Admin\Facades\Admin;
-use Encore\Admin\Auth\Database\Administrator;
 
-class AgroDealers extends Model
+class AgroDealer extends Model
 {
     use HasFactory;
 
@@ -30,36 +28,39 @@ class AgroDealers extends Model
         'business_description',
         'trading_license_number',
         'trading_license_period',
-        'insuring authority',
+        'insuring_authority',
         'attachments_certificate',
         'proof_of_payment',
-        'cancellation_clauses',
-        'confidentiality_obligations',
-        'non_disclosure_agreement'
-        
+        'status',
+        'status_comment',
+        'valid_from',
+        'valid_until',
+        'inspector_id',
+        'recommendation',
     ];
 
-    //update the role of the user on update
     public static function boot()
     {
         parent::boot();
 
         //call back to send a notification to the user
-        self::created(function ($model) {
-            Notification::send_notification($model, 'AgroDealers', request()->segment(count(request()->segments())));
+        self::created(function ($model) 
+        {
+            Notification::send_notification($model, 'AgroDealer', request()->segment(count(request()->segments())));
         });
 
 
-        self::updating(function ($model) {
+        self::updating(function ($model){
           
         });
 
-        self::updated(function ($model) {
-            //call back to send a notification to the user after form is updated
-            Notification::update_notification($model, 'AgroDealers', request()->segment(count(request()->segments()) - 1));
-
-            //change the role of the basic user to that of an agro-dealer if approved
-            if ($model->status == 'accepted') {
+        self::updated(function ($model) 
+        {
+        //call back to send a notification to the user after form is updated
+           Notification::update_notification($model, 'AgroDealer', request()->segment(count(request()->segments())-1));
+            
+           //change the role of the basic user to that of the seed producer if approved
+           if($model->status == 'accepted'){
                 AdminRoleUser::where([
                     'user_id' => $model->user_id
                 ])->delete();
@@ -69,5 +70,7 @@ class AgroDealers extends Model
                 $new_role->save();
             }
         });
+
     }
+
 }

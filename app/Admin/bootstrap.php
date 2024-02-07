@@ -24,6 +24,7 @@ use App\Models\Notification;
 
 Encore\Admin\Form::forget(['map', 'editor']);
 
+
 Admin::navbar(function (\Encore\Admin\Widgets\Navbar $navbar) {
     $notifications = [];
     $user =  Auth::user();
@@ -32,6 +33,8 @@ Admin::navbar(function (\Encore\Admin\Widgets\Navbar $navbar) {
     }
 
     $navbar->right(view('notification_bell', ['notifications' => $notifications]));
+    //add language
+    $navbar->right(view('language'));
     
 });
 

@@ -62,6 +62,14 @@ Route::get('certificate', function () {
     return $pdf->stream();
 });
 
+
+Route::get('agro-dealer-certificate', function () {
+    $pdf = App::make('dompdf.wrapper');
+    $pdf->loadHTML(view('reports/agro_dealer'));
+    return $pdf->stream();
+});
+
+
 Route::get('research_report', function () {
     $pdf = App::make('dompdf.wrapper');
     $pdf->loadHTML(view('reports/research_report'));

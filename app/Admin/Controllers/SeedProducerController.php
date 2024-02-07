@@ -91,7 +91,7 @@ class SeedProducerController extends AdminController
             return $value ?? '-';
         });
 
-        //check user role then show a certificate button
+      
 
             $grid->column('id', __('admin.form.Certificate'))->display(function ($id) {
                 $seed_producer =  SeedProducer::find($id);
@@ -304,7 +304,7 @@ class SeedProducerController extends AdminController
             }
 
             $form->file('receipt', __('admin.form.Proof of payment of application fees'))
-            ->rules(['mimes:jpeg,pdf,jpg', 'max:1048']) // Assuming a maximum file size of 1MB 
+            ->rules(['mimes:jpeg,pdf,jpg', 'max:1048']) 
             ->help(__('admin.form.Attach a copy of your proof of payment, and should be in pdf, jpg or jpeg format'));
             $form->hidden('status')->default('pending');
             $form->hidden('inspector_id')->default(null);

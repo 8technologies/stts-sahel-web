@@ -101,7 +101,7 @@ class PreOrderController extends AdminController
             $user = auth()->user();
             $id = request()->route()->parameters['pre_order'];
             $preOrder = PreOrder::findOrFail($id);
-            if ($user->id != $preOrder->user_id) {
+            if ($user->id != $preOrder->user_id && $user->isRole('research')) {
                 $tools->append("<a href='" . admin_url('quotations/create?preorder_id=' . $id) . "' class='btn btn-primary'>SUBMIT QUOTATION</a>");
             }
         });
