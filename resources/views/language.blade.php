@@ -53,13 +53,24 @@
     <ul class="dropdown-menu">
         @foreach (Config::get('languages') as $lang => $language)
             @if ($lang != App::getLocale())
-                <li><a href="{{ route('lang.switch', $lang) }}"><span class="flag-icon flag-icon-{{$language['flag-icon']}}"></span> {{$language['display']}}</a></li>
+                <li><a class="lang-switch" href="{{ route('lang.switch', $lang) }}"><span class="flag-icon flag-icon-{{$language['flag-icon']}}"></span> {{$language['display']}}</a></li>
             @endif
         @endforeach
     </ul>
 </li>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    // Add click event listeners to language switch links
+    var langLinks = document.querySelectorAll('.lang-switch');
+    langLinks.forEach(function(link) {
+        link.addEventListener('click', function(event) {
+            event.preventDefault(); // Prevent the default action of the link
+            var href = this.getAttribute('href'); // Get the href attribute of the clicked link
+            window.location.href = href; // Reload the page with the new language
+        });
+    });
+});
+</script>
 </body>
 </html>
-
-                
-         
