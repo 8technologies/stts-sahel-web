@@ -44,7 +44,7 @@ class SeedLabController extends AdminController
         $lab_results = SeedLab::where('user_id', auth('admin')->user()->id)->get();
         //check the status of the form before displaying it
        
-        if($user->inRoles(['grower','cooperative','individual-producers','research'])){
+        if($user->inRoles(['grower','cooperative','individual-producers','research','agro-dealer'])){
           $grid->model()->where('user_id', '=', $user->id)->where('status', '=', 'lab test assigned');
          }else{
             $grid->model()->where('status', '=', 'lab test assigned');
