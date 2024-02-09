@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\AgroDealers;
+use App\Models\AgroDealer;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use App\Models\Utils;
 use Illuminate\Support\Facades\Storage;
@@ -12,7 +12,7 @@ class AgroDealerController extends Controller
 {
     public function index()
     {
-        $agroDealers = AgroDealers::all();
+        $agroDealers = AgroDealer::all();
         return response()->json($agroDealers);
     }
 
@@ -76,20 +76,20 @@ class AgroDealerController extends Controller
           
         }
 
-        $agroDealer = AgroDealers::create($data);
+        $agroDealer = AgroDealer::create($data);
         return Utils::apiSuccess($agroDealer, 'Agro Dealer submitted successfully.');
     }
 
     public function show($id)
     {
-        $agroDealer = AgroDealers::where('user_id', $id)->firstOrFail();
+        $agroDealer = AgroDealer::where('user_id', $id)->firstOrFail();
 
         return response()->json($agroDealer);
     }
 
     public function update(Request $request, $id)
     {
-        $agroDealer = AgroDealers::where('user_id', $id)->firstOrFail();
+        $agroDealer = AgroDealer::where('user_id', $id)->firstOrFail();
         $data = $request->all();
     
         if ($request->has('proof_of_payment')) {
@@ -135,7 +135,7 @@ class AgroDealerController extends Controller
     
     public function destroy($id)
     {
-        $agroDealer = AgroDealers::where('user_id', $id)->firstOrFail();
+        $agroDealer = AgroDealer::where('user_id', $id)->firstOrFail();
         $agroDealer->delete();
         return Utils::apiSuccess($agroDealer, 'Agro Dealer deleted successfully.');
     }
