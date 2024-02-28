@@ -24,6 +24,8 @@ return new class extends Migration
             $table->string('years_of_experience')->nullable();
             $table->text('gardening_history_description')->nullable();
             $table->text('storage_facilities_description')->nullable();
+            $table->text('adequate_isolation')->nullable();
+            $table->text('labor_details')->nullable();
             $table->string('receipt')->nullable();
             $table->string('status')->default('pending');
             $table->text('status_comment')->nullable();

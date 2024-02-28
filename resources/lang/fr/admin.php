@@ -550,6 +550,9 @@ return [
         'Marketable seed' => 'Semences commercialisables',
         'Confirm delivery' => 'Confirmer la livraison',
         'Once you accept this quotation, the decision cannot be reversed' => 'Une fois que vous acceptez ce devis, la décision ne peut pas être inversée.',
+        'Garden history of the proposed seed production field for the last three season or years' => 'Historique du jardin du champ de production de semences proposé pour les trois dernières saisons ou années',
+        'Describe your storage facilities to handle the resultant seed' => 'Décrivez vos installations de stockage pour manipuler les semences résultantes',
+        'Describe the isolation of the seed production site' => 'Décrivez l\'isolation du site de production de semences',
 
 ]
 ];

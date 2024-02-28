@@ -27,6 +27,8 @@ class SeedProducer extends Model
         'years_of_experience',
         'gardening_history_description',
         'storage_facilities_description',  
+        'adequate isolation',
+        'labor details',
         'receipt',
         'status',
         'status_comment',

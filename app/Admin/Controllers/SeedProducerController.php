@@ -141,7 +141,13 @@ class SeedProducerController extends AdminController
         $show->field('premises_location', __('admin.form.Company physical address'));
         $show->field('proposed_farm_location', __('admin.form.Proposed farm location'));
         $show->field('years_of_experience', __('admin.form.If seed company, years of experience as a seed producer'));
+        $show->field('gardening_history_description', __('admin.form.Garden history of the proposed seed production field for the last three season or years'));
         $show->field('storage_facilities_description', __('admin.form.Describe your storage facilities to handle the resultant seed'));
+        $show->field('adequate_isolation', __('admin.form.Describe the isolation of the seed production site'))->as(function ($value) {
+            return $value == 1 ? 'Yes' : 'No';
+        });
+
+        $show->field('labor_details', __('admin.form.Detail the labor you have at the farm in terms of numbers and competencies'));
         $show->field('receipt', __('admin.form.Proof of payment of application fees'))->as(function ($receipt) {
             return $receipt == null ? 'No file uploaded' : '<a href="/storage/' . $receipt . '" target="_blank">View receipt</a>';
         })->unescape();
@@ -220,7 +226,12 @@ class SeedProducerController extends AdminController
             $form->display('premises_location', __('admin.form.Company physical address'));
             $form->display('proposed_farm_location', __('admin.form.Proposed farm location'));
             $form->display('years_of_experience', __('admin.form.years of experience'));
+            $form->display('gardening_history_description', __('admin.form.Garden history of the proposed seed production field for the last three season or years'));
             $form->display('storage_facilities_description', __('admin.form.Describe your storage facilities to handle the resultant seed'));
+            $form->display('adequate_isolation', __('admin.form.Describe the isolation of the seed production site'))->with(function ($value) {
+                return $value == 1 ? 'Yes' : 'No';
+            });
+            $form->display('labor_details', __('admin.form.Detail the labor you have at the farm in terms of numbers and competencies'));
             $form->display('recommendation', __('admin.form.Recommendation'));
     
 
@@ -294,7 +305,10 @@ class SeedProducerController extends AdminController
             $form->text('premises_location', __('admin.form.Company physical address'))->required();
             $form->text('proposed_farm_location', __('admin.form.Proposed farm location'))->required();
             $form->text('years_of_experience', __('admin.form.years of experience'));
+            $form->textarea('gardening_history_description', __('admin.form.Garden history of the proposed seed production field for the last three season or years'))->required();
             $form->textarea('storage_facilities_description', __('admin.form.Describe your storage facilities to handle the resultant seed'))->required();
+            $form->switch('adequate_isolation', __('admin.form.Describe the isolation of the seed production site'))->required();
+            $form->textarea('labor_details', __('admin.form.Detail the labor you have at the farm in terms of numbers and competencies'))->required();
            
             if ($form->isEditing()) {
                 $form->saving(function ($form) {

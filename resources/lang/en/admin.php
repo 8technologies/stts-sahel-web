@@ -564,6 +564,10 @@ return [
         'Processing' => 'Processing',
         'Printed' => 'Printed',
         'Once you accept this quotation, the decision cannot be reversed' => 'Once you accept this quotation, the decision cannot be reversed.',
+        'Garden history of the proposed seed production field for the last three season or years' => 'Garden history of the proposed seed production field for the last three season or years',
+        'Describe your storage facilities to handle the resultant seed' => 'Describe your storage facilities to handle the resultant seed',
+        'Describe the isolation of the seed production site' => 'Describe the isolation of the seed production site',
+
        
 
 
