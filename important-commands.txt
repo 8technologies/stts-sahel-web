@@ -1,3 +1,4 @@
 php artisan admin:controller \App\Models\FieldInspection
 
 php artisan make:model AdminRoleUser
+ php artisan make:controller LoaderController --resource  
