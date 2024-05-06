@@ -64,8 +64,22 @@ class ResearchController extends AdminController
        {
         // Remove the default id filter
         $filter->disableIdFilter();
-        $filter->like('user_id', 'Applicant')->select(\App\Models\User::pluck('name', 'id'));
-       
+
+        if (Admin::user()->inRoles(['research','basic-user'])) 
+        {
+            //filte by seed generation
+            $filter->equal('seed_generation', __('admin.form.Seed generation'))->select(
+                [
+                    'Prébase' => 'Prébase',
+                    'Base' => 'Base',
+                ]
+            );
+        }
+        else{
+            //filter by user
+            $filter->like('user_id', 'Applicant')->select(\App\Models\User::pluck('name', 'id'));
+        }
+      
        });
 
         $grid->column('created_at', __('admin.form.Date'))->display(function ($created_at) {
