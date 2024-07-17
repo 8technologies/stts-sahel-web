@@ -57,10 +57,9 @@ class ApiController extends Controller
     
     public function register(Request $request)
     {
-
         $rules = [
-            'lastName' => 'required',
-            'firstName' => 'required',
+            'last_name' => 'required',
+            'first_name' => 'required',
             'username' => 'required|unique:admin_users',
             'email' => 'required|email|unique:admin_users',
             'password' => 'required',
@@ -78,10 +77,10 @@ class ApiController extends Controller
         }
 
         $user = User::create([
-            'first_name' => $validatedData[ 'firstName'],
-            'last_name'  => $validatedData[ 'lastName'] ,          
+            'first_name' => $validatedData[ 'first_name'],
+            'last_name'  => $validatedData[ 'last_name'] ,          
             'username' => $validatedData['username'],
-            'name' => $validatedData[ 'firstName'] . ' ' . $validatedData['lastName'],
+            'name' => $validatedData[ 'first_name'] . ' ' . $validatedData['last_name'],
             'email' => $validatedData['email'],
             'password' => Hash::make($validatedData['password']),
            
