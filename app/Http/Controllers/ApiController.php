@@ -8,6 +8,9 @@ use App\Models\Utils;
 use Illuminate\Http\Request;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use Encore\Admin\Auth\Database\Administrator;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\ValidationException;
+use Illuminate\Support\Facades\Hash;
 
 class ApiController extends Controller
 {
@@ -52,47 +55,44 @@ class ApiController extends Controller
     }
 
     
-    public function register(Request $r)
+    public function register(Request $request)
     {
-        if ($r->name == null) {
-            return Utils::apiError('Name is required.');
-        }
-        if ($r->email == null) {
-            return Utils::apiError('Email is required.');
-        }
-        if ($r->password == null) {
-            return Utils::apiError('Password is required.');
-        }
-        $u = User::where('email', $r->email)
-            ->orWhere('username', $r->email)
-            ->first();
-        if ($u != null) {
-            return Utils::apiError('Email already exists.');
-        }
-        $u = new User();
-        $u->name = $r->name;
-        $u->email = $r->email;
-        $u->username = $r->email;
-        $u->password = password_hash($r->password, PASSWORD_DEFAULT);
+
+        $rules = [
+            'lastName' => 'required',
+            'firstName' => 'required',
+            'username' => 'required|unique:admin_users',
+            'email' => 'required|email|unique:admin_users',
+            'password' => 'required',
+        ];
+
+
         try {
-            $u->save();
-            $role = new AdminRoleUser();
-            $role->user_id = $u->id;
-            $role->role_id = 3;
-            $role->save();
-        } catch (\Throwable $th) {
-            return Utils::apiError('Error saving user. ' . $th->getMessage());
+            // Validate the incoming request data
+            $validatedData = Validator::make($request->all(), $rules)->validate();
+        } catch (ValidationException $e) {
+            return response()->json([
+                'message' => 'Validation failed',
+                'errors' => $e->errors()
+            ], 422);
         }
 
-        $u = User::where('email', $r->email)->first();
-
-        JWTAuth::factory()->setTTL(60 * 24 * 30 * 12);
-        $token = auth('api')->attempt([
-            'email' => $u->email,
-            'password' => $r->password,
+        $user = User::create([
+            'first_name' => $validatedData[ 'firstName'],
+            'last_name'  => $validatedData[ 'lastName'] ,          
+            'username' => $validatedData['username'],
+            'name' => $validatedData[ 'firstName'] . ' ' . $validatedData['lastName'],
+            'email' => $validatedData['email'],
+            'password' => Hash::make($validatedData['password']),
+           
         ]);
-        $u->token = $token;
-        return Utils::apiSuccess($u, 'User registered successfully.');
+
+        $token = JWTAuth::fromUser($user);
+
+            return response()->json([
+                'user' => $user,
+                'token' => $token
+            ], 201);
     }
 
     public function login(Request $r)
