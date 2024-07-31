@@ -47,22 +47,24 @@ class CropDeclarationController extends Controller
             'status_comment' => 'nullable',
             'details' => 'nullable',
         ];
-
+    
         try {
             // Validate the incoming request data
             $validatedData = Validator::make($request->all(), $rules)->validate();
+            
+            // Automatically set the 'mobile' field to 'yes'
+            $validatedData['mobile'] = 'yes';
         } catch (ValidationException $e) {
             return response()->json([
                 'message' => 'Validation failed',
                 'errors' => $e->errors()
             ], 422);
         }
-
     
         $cropDeclaration = CropDeclaration::create($validatedData);
-        return Utils::apiSuccess($cropDeclaration, 'Crop Declaration  form submitted successfully.');
+        return Utils::apiSuccess($cropDeclaration, 'Crop Declaration form submitted successfully.');
     }
-
+    
     public function show($id)
     {
         $cropDeclaration = CropDeclaration::where('user_id', $id)->get();
