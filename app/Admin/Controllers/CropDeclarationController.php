@@ -316,7 +316,7 @@ class CropDeclarationController extends AdminController
             $form->decimal('garden_size', __('admin.form.Garden size(Acres)'))->required();
             
             $randomFieldName = 'FIELD' . mt_rand(100, 999);
-            $form->hidden('field_name', __('admin.form.Field name'))->default( $randomFieldName)->required();
+            $form->hidden('field_name', __('admin.form.Field name'))->default($randomFieldName)->required();
             $form->text('district_region', __('admin.form.District/Region'))->required();
             $form->text('circle', __('admin.form.Circle'))->required();
             $form->text('township', __('admin.form.Township'))->required();

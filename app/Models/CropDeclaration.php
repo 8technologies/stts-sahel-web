@@ -39,8 +39,8 @@ class CropDeclaration extends Model
         'seed_class_id',
         'crop_variety_id',
         'out_grower_id',
-        'lot_number',
-        'remarks',
+        'status_comment',
+        'details'
 
     ];
 
