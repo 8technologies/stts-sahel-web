@@ -24,7 +24,6 @@ class CropDeclarationController extends Controller
             'user_id' => 'required|exists:admin_users,id',
             'phone_number' => 'required',
             'garden_size' => 'required|numeric',
-            'land_architecture' => 'required',
             'field_name' => 'required|unique:crop_declarations',
             'district_region' => 'required',
             'circle' => 'required',
@@ -80,7 +79,6 @@ class CropDeclarationController extends Controller
             'user_id' => 'required|exists:admin_users,id',
             'phone_number' => 'required',
             'garden_size' => 'required|numeric',
-            'land_architecture' => 'required',
             'field_name' => 'required|unique:crop_declarations',
             'district_region' => 'required',
             'circle' => 'required',
@@ -103,7 +101,7 @@ class CropDeclarationController extends Controller
             'status_comment' => 'nullable',
             'details' => 'nullable',
         ];
-        
+
         try {
             // Validate the incoming request data
             $validatedData = Validator::make($request->all(), $rules)->validate();

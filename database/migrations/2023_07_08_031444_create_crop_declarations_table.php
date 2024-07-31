@@ -19,7 +19,6 @@ return new class extends Migration
             $table->unsignedBigInteger('out_grower_id')->nullable();
             $table->string('phone_number')->nullable();
             $table->decimal('garden_size', 8, 2)->nullable();
-            $table->string('land_architecture')->nullable();
             $table->string('field_name')->nullable();
             $table->string('district_region')->nullable();
             $table->string('circle')->nullable();
