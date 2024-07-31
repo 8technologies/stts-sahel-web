@@ -30,9 +30,9 @@ class CropDeclarationController extends Controller
             'circle' => 'required',
             'township' => 'required',
             'village' => 'required',
-            'planting_date' => 'required',
+            'planting_date' => 'required|date',
             'quantity_of_seed_planted' => 'required|numeric',
-            'expected_yield' => 'required',
+            'expected_yield' => 'required|numeric',
             'seed_supplier_name' => 'required',
             'seed_supplier_registration_number' => 'nullable',
             'source_lot_number' => 'required',
@@ -86,9 +86,9 @@ class CropDeclarationController extends Controller
             'circle' => 'required',
             'township' => 'required',
             'village' => 'required',
-            'planting_date' => 'required',
+            'planting_date' => 'required|date',
             'quantity_of_seed_planted' => 'required|numeric',
-            'expected_yield' => 'required',
+            'expected_yield' => 'required|numeric',
             'seed_supplier_name' => 'required',
             'seed_supplier_registration_number' => 'nullable',
             'source_lot_number' => 'required',
@@ -103,7 +103,7 @@ class CropDeclarationController extends Controller
             'status_comment' => 'nullable',
             'details' => 'nullable',
         ];
-
+        
         try {
             // Validate the incoming request data
             $validatedData = Validator::make($request->all(), $rules)->validate();
