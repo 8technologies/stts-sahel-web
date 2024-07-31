@@ -21,7 +21,7 @@ class CropDeclarationController extends Controller
     public function store(Request $request)
     {
         $rules = [
-            'user_id' => 'required|exists:admins,id',
+            'user_id' => 'required|exists:admin_users,id',
             'phone_number' => 'required',
             'garden_size' => 'required|numeric',
             'land_architecture' => 'required',
@@ -40,7 +40,7 @@ class CropDeclarationController extends Controller
             'garden_location_latitude' => 'required',
             'garden_location_longitude' => 'required',
             'status' => 'nullable',
-            'inspector_id' => 'nullable|exists:inspectors,id',
+            'inspector_id' => 'nullable|exists:admin_users,id',
             'seed_class_id' => 'required|exists:seed_classes,id',
             'crop_variety_id' => 'required|exists:crop_varieties,id',
             'out_grower_id' => 'nullable|exists:out_growers,id',
@@ -77,7 +77,7 @@ class CropDeclarationController extends Controller
         $cropDeclaration = CropDeclaration::find($id);
 
         $rules = [
-            'user_id' => 'required|exists:admins,id',
+            'user_id' => 'required|exists:admin_users,id',
             'phone_number' => 'required',
             'garden_size' => 'required|numeric',
             'land_architecture' => 'required',
@@ -96,7 +96,7 @@ class CropDeclarationController extends Controller
             'garden_location_latitude' => 'required',
             'garden_location_longitude' => 'required',
             'status' => 'nullable',
-            'inspector_id' => 'nullable|exists:inspectors,id',
+            'inspector_id' => 'nullable|exists:admin_users,id',
             'seed_class_id' => 'required|exists:seed_classes,id',
             'crop_variety_id' => 'required|exists:crop_varieties,id',
             'out_grower_id' => 'nullable|exists:out_growers,id',
