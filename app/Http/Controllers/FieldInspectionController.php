@@ -107,11 +107,16 @@ class  FieldInspectionController extends Controller
             'signature' => 'sometimes|required',
             'status' => 'required',
             'remarks' => 'required',
+            'inspection_date' => 'required|date',
         ];
     
         try {
             // Validate the incoming request data
             $validatedData = Validator::make($request->all(), $rules)->validate();
+             // Automatically set the 'mobile' field to 'yes'
+             $validatedData['field_inspection_form_number'] = 'FieldInspection/' . date('Y/') . rand(1000, 9999);
+             $validatedData['mobile'] = "yes";
+             
         } catch (ValidationException $e) {
             return response()->json([
                 'message' => 'Validation failed',
@@ -131,7 +136,7 @@ class  FieldInspectionController extends Controller
     
             $validatedData['signature'] = $photoPath;
         }
-        
+
         $fieldInspection->update($validatedData);
         return Utils::apiSuccess($fieldInspection, 'Field inspection form edited successfully.');
     }
