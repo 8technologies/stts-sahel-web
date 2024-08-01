@@ -96,7 +96,7 @@ class  FieldInspectionController extends Controller
         }
     
         $rules = [
-            'field_inspection_form_number' => 'required|unique:field_inspections,field_inspection_form_number,' . $id,
+            
             'field_size' => 'required|numeric',
             'seed_generation' => 'required|exists:seed_classes,id',
             'crop_condition' => 'required',
@@ -116,7 +116,7 @@ class  FieldInspectionController extends Controller
              // Automatically set the 'mobile' field to 'yes'
              $validatedData['field_inspection_form_number'] = 'FieldInspection/' . date('Y/') . rand(1000, 9999);
              $validatedData['mobile'] = "yes";
-             
+
         } catch (ValidationException $e) {
             return response()->json([
                 'message' => 'Validation failed',
