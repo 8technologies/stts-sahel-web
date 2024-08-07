@@ -81,7 +81,7 @@ class SeedSampleRequestController extends Controller
        public function getAssignedRequests($id)
        {
     
-           $SeedLabs = SeedLab::where('inspector_id', $id)->get();
+           $SeedLabs = SeedLab::where('inspector_id', $id)->where('status', 'inspector assigned')->get();
            $result = [];
            //get the user name for each seed sample request
               foreach ($SeedLabs as $SeedLab) 
