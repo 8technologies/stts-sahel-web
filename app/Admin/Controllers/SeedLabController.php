@@ -142,8 +142,10 @@ class SeedLabController extends AdminController
         }
 
 
-        $crop_variety_id = SeedLab::find($id)->value('crop_variety_id');
-        $load_stock_id = SeedLab::find($id)->value('load_stock_id');
+        $seed_lab = SeedLab::find($id);
+        $crop_variety_id = $seed_lab->crop_variety_id;
+        
+        $load_stock_id = $seed_lab->load_stock_id;
 
         $show->field('user_id', __('admin.form.Applicant'))->as(function ($user_id) {
             return \App\Models\User::find($user_id)->name;
