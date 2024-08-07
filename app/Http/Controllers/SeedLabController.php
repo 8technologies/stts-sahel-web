@@ -13,7 +13,7 @@ class SeedLabController extends Controller
 {
     public function index()
     {
-        $seedLabs = SeedLab::all();
+        $seedLabs = SeedLab::where('status', '=', 'lab test assigned')->get();
         return response()->json($seedLabs);
     }
 
@@ -25,7 +25,7 @@ class SeedLabController extends Controller
         return Utils::apiSuccess($seedLab, 'Seed Lab Request submitted successfully.');
     }
 
-    public function show($id)
+    public function show($id) 
     {
         $seedLab = SeedLab::where('user_id', '=', $id)->where('status', '=', 'lab test assigned')->get();
 
