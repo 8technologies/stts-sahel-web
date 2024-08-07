@@ -135,7 +135,7 @@
 <div class="login-box-body" style="border: 3px solid green; border-radius: 25px;">
 <div class="login-logo">
     <a href="{{ admin_url('/') }}">
-    <img src="{{ asset('storage/assets/coat.png') }}" alt="Logo" style="max-width: 35%; height: 35%;">
+    <img src="{{ asset('storage/assets/logo.png') }}" alt="Logo" style="max-width: 45%; height: 45%;">
     </a>
     <hr>
 </div>

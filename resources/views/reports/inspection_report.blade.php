@@ -1,7 +1,15 @@
 <?php
 // Retrieve the necessary data
 $form = \App\Models\FieldInspection::find($_GET['id']);
-$image = public_path('storage/' . $form->signature);
+$imagePath = public_path('storage/' . $form->signature);
+
+if (file_exists($imagePath) && is_readable($imagePath) && !is_dir($imagePath)) {
+    $image = $imagePath;
+} else {
+    // Set to null or a default image path
+    $image = null; // or public_path('path/to/default/image.jpg');
+}
+
 $inspector = \App\Models\User::find($form->inspector_id)->name;
 $status = __('admin.form.' . $form->status);
 $fieldData = [
@@ -77,7 +85,12 @@ $fieldData = [
             <div class="signature">
                 <p>SIGNATURE DE L'INSPECTEUR</p>
                 <p>{{ $inspector }}</p>
-                <img src="{{ $image }}" alt="Signature de l'inspecteur" width="200" height="100">
+                @if ($image)
+                    <img src="{{ $image }}" alt="Signature de l'inspecteur" width="200" height="100">
+                @else
+                    <img src="{{ public_path('storage/assets/No_signature.png') }}" alt="Signature de l'inspecteur" width="50" height="50">
+                @endif
+
             </div>
         </div>
     </div>
