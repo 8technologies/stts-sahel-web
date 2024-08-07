@@ -59,7 +59,11 @@ class SeedLab extends Model
                   $load_stock->yield_quantity = $load_stock->yield_quantity - $model->quantity;
                   $load_stock->status = 'tested';
                   $load_stock->save();
+                  $model->status = 'marketable';
  
+            }
+            else{
+                $model->status = 'not marketable';
             }
 
             //if the user is an inspector,update the validated stock

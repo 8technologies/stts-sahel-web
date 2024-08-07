@@ -13,7 +13,7 @@ class SeedLabController extends Controller
 {
     public function index()
     {
-        $seedLabs = SeedLab::where('status', '=', 'lab test assigned')->get();
+        $seedLabs = SeedLab::where('status', 'lab test assigned')->get();
         return response()->json($seedLabs);
     }
 
@@ -27,14 +27,14 @@ class SeedLabController extends Controller
 
     public function show($id) 
     {
-        $seedLab = SeedLab::where('user_id', '=', $id)->where('status', '=', 'lab test assigned')->get();
+        $seedLab = SeedLab::where('user_id', $id)->where('status', 'lab test assigned')->get();
 
         return response()->json($seedLab);
     }
 
     public function showMarketableSeed($id)
     {
-        $seedLab = SeedLab::where('user_id', '=', $id)->where('test_decision', '=', 'marketable')->get();
+        $seedLab = SeedLab::where('user_id', $id)->where('test_decision',  'marketable')->get();
         $result = [];
         //for each get the seed class object
         foreach ($seedLab as $stock) {
