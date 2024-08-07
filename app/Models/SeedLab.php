@@ -60,10 +60,12 @@ class SeedLab extends Model
                   $load_stock->status = 'tested';
                   $load_stock->save();
                   $model->status = 'marketable';
+                  $model->save();
  
             }
             else{
                 $model->status = 'not marketable';
+                $model->save();
             }
 
             //if the user is an inspector,update the validated stock
