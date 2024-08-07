@@ -47,7 +47,7 @@ class SeedLabController extends AdminController
         if($user->inRoles(['grower','cooperative','individual-producers','research'])){
           $grid->model()->where('user_id', '=', $user->id)->where('status', '=', 'lab test assigned');
          }else{
-            $grid->model()->where('status', '=', 'lab test assigned');
+            $grid->model()->where('status', '!=', 'pending');
          }
 
          //order in descending order;
