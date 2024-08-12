@@ -36,4 +36,5 @@ Route::group([
     $router->resource('out-growers', OuGrowerController::class);
     $router->resource('research', ResearchController::class);
     $router->resource('individual-producers', IndividualProducerController::class);
+    $router->resource('agro-dealers', AgroDealerController::class);
 });

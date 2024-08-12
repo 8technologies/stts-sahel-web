@@ -34,9 +34,6 @@ return new class extends Migration
             $table->string('insuring_authority')->nullable();
             $table->string('attachments_certificate')->nullable();
             $table->string('proof_of_payment')->nullable();
-            $table->string('cancellation_clauses')->nullable();
-            $table->string('confidentiality_obligations')->nullable();
-            $table->string('non_disclosure_agreement')->nullable();
             $table->string('status')->default('pending');
             $table->string('status_comment')->nullable();
             $table->string('valid_from')->nullable();

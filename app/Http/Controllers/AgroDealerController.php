@@ -21,6 +21,7 @@ class AgroDealerController extends Controller
         $user = auth('api')->user();
         $data = $request->all();
 
+
         if ($request->has('proof_of_payment')) 
         {
           
