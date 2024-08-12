@@ -6,7 +6,8 @@ use App\Models\CropDeclaration;
 use App\Models\CropVariety;
 use Illuminate\Http\Request;
 use App\Models\SeedClass;
-use Tymon\JWTAuth\Facades\JWTAuth;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\ValidationException;
 use App\Models\Utils;
 
 class CropDeclarationController extends Controller
@@ -19,11 +20,50 @@ class CropDeclarationController extends Controller
 
     public function store(Request $request)
     {
-        $data = $request->all();
-        $cropDeclaration = CropDeclaration::create($data);
-        return Utils::apiSuccess($cropDeclaration, 'Crop Declaration  form submitted successfully.');
+        $rules = [
+            'user_id' => 'required|exists:admin_users,id',
+            'phone_number' => 'required',
+            'garden_size' => 'required|numeric',
+            'field_name' => 'required|unique:crop_declarations',
+            'district_region' => 'required',
+            'circle' => 'required',
+            'township' => 'required',
+            'village' => 'required',
+            'planting_date' => 'required|date',
+            'quantity_of_seed_planted' => 'required|numeric',
+            'expected_yield' => 'required|numeric',
+            'seed_supplier_name' => 'required',
+            'seed_supplier_registration_number' => 'nullable',
+            'source_lot_number' => 'required',
+            'origin_of_variety' => 'required',
+            'garden_location_latitude' => 'required',
+            'garden_location_longitude' => 'required',
+            'status' => 'nullable',
+            'inspector_id' => 'nullable|exists:admin_users,id',
+            'seed_class_id' => 'required|exists:seed_classes,id',
+            'crop_variety_id' => 'required|exists:crop_varieties,id',
+            'out_grower_id' => 'nullable|exists:out_growers,id',
+            'status_comment' => 'nullable',
+            'details' => 'nullable',
+        ];
+    
+        try {
+            // Validate the incoming request data
+            $validatedData = Validator::make($request->all(), $rules)->validate();
+            
+            // Automatically set the 'mobile' field to 'yes'
+            $validatedData['mobile'] = 'yes';
+        } catch (ValidationException $e) {
+            return response()->json([
+                'message' => 'Validation failed',
+                'errors' => $e->errors()
+            ], 422);
+        }
+    
+        $cropDeclaration = CropDeclaration::create($validatedData);
+        return Utils::apiSuccess($cropDeclaration, 'Crop Declaration form submitted successfully.');
     }
-
+    
     public function show($id)
     {
         $cropDeclaration = CropDeclaration::where('user_id', $id)->get();
@@ -35,8 +75,44 @@ class CropDeclarationController extends Controller
     {
         $cropDeclaration = CropDeclaration::find($id);
 
-        $data = $request->all();
-        $cropDeclaration->update($data);
+        $rules = [
+            'user_id' => 'required|exists:admin_users,id',
+            'phone_number' => 'required',
+            'garden_size' => 'required|numeric',
+            'field_name' => 'required|unique:crop_declarations',
+            'district_region' => 'required',
+            'circle' => 'required',
+            'township' => 'required',
+            'village' => 'required',
+            'planting_date' => 'required|date',
+            'quantity_of_seed_planted' => 'required|numeric',
+            'expected_yield' => 'required|numeric',
+            'seed_supplier_name' => 'required',
+            'seed_supplier_registration_number' => 'nullable',
+            'source_lot_number' => 'required',
+            'origin_of_variety' => 'required',
+            'garden_location_latitude' => 'required',
+            'garden_location_longitude' => 'required',
+            'status' => 'nullable',
+            'inspector_id' => 'nullable|exists:admin_users,id',
+            'seed_class_id' => 'required|exists:seed_classes,id',
+            'crop_variety_id' => 'required|exists:crop_varieties,id',
+            'out_grower_id' => 'nullable|exists:out_growers,id',
+            'status_comment' => 'nullable',
+            'details' => 'nullable',
+        ];
+
+        try {
+            // Validate the incoming request data
+            $validatedData = Validator::make($request->all(), $rules)->validate();
+        } catch (ValidationException $e) {
+            return response()->json([
+                'message' => 'Validation failed',
+                'errors' => $e->errors()
+            ], 422);
+        }
+
+        $cropDeclaration->update($validatedData);
         return Utils::apiSuccess($cropDeclaration, 'Crop Declaration form edited successfully.');
     }
 

@@ -14,13 +14,11 @@ return new class extends Migration
         Schema::create('crop_declarations', function (Blueprint $table) {
             $table->id();
             $table->unsignedInteger('user_id');
-            $table->unsignedBigInteger('seed_producer_id')->nullable();
-            $table->unsignedBigInteger('crop_variety_id')->nullable();
+            $table->unsignedBigInteger('crop_variety_id');
             $table->unsignedBigInteger('seed_class_id')->nullable();
             $table->unsignedBigInteger('out_grower_id')->nullable();
             $table->string('phone_number')->nullable();
             $table->decimal('garden_size', 8, 2)->nullable();
-            $table->string('land_architecture')->nullable();
             $table->string('field_name')->nullable();
             $table->string('district_region')->nullable();
             $table->string('circle')->nullable();
@@ -37,13 +35,13 @@ return new class extends Migration
             $table->decimal('garden_location_longitude', 10, 6)->nullable();
             $table->string('status')->nullable();
             $table->unsignedInteger('inspector_id')->nullable();
-            $table->string('lot_number')->nullable();
+            $table->string('status_comment')->nullable();
             $table->string('remarks')->nullable();
             $table->string('details')->nullable();
             
             $table->timestamps();
 
-            $table->foreign('seed_producer_id')->references('id')->on('seed_producers')->onDelete('cascade');
+            
             $table->foreign('user_id')->references('id')->on('admin_users')->onDelete('cascade');
             $table->foreign('crop_variety_id')->references('id')->on('crop_varieties')->onDelete('cascade');
 

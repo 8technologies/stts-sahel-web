@@ -116,9 +116,6 @@ class CropDeclarationController extends AdminController
 
         $show->field('phone_number', __('admin.form.Phone number'));
         $show->field('garden_size', __('admin.form.Garden size(Acres)'));
-        $show->field('land_architecture', __('admin.form.Land architecture'))->as(function ($land_architecture) {
-            return $land_architecture == null ? 'No file uploaded' : '<a href="/storage/' . $land_architecture . '" target="_blank">View land architecture</a>';
-        })->unescape();
         $show->field('field_name', __('admin.form.Field name'));
         $show->field('district_region', __('admin.form.District/Region'));
         $show->field('circle', __('admin.form.Circle'));
@@ -214,7 +211,6 @@ class CropDeclarationController extends AdminController
 
             $form->display('phone_number', __('admin.form.Phone number'));
             $form->display('garden_size', __('admin.form.Garden size(Acres)'));
-            $form->display('land_architecture', __('admin.form.Land architecture'));
             $form->display('field_name', __('admin.form.Field name'));
             $form->display('district_region', __('admin.form.District/Region'));
             $form->display('circle', __('admin.form.Circle'));
@@ -316,7 +312,7 @@ class CropDeclarationController extends AdminController
             $form->decimal('garden_size', __('admin.form.Garden size(Acres)'))->required();
             
             $randomFieldName = 'FIELD' . mt_rand(100, 999);
-            $form->hidden('field_name', __('admin.form.Field name'))->default( $randomFieldName)->required();
+            $form->hidden('field_name', __('admin.form.Field name'))->default($randomFieldName)->required();
             $form->text('district_region', __('admin.form.District/Region'))->required();
             $form->text('circle', __('admin.form.Circle'))->required();
             $form->text('township', __('admin.form.Township'))->required();

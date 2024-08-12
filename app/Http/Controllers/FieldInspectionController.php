@@ -13,6 +13,8 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 use App\Models\Utils;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\ValidationException;
 
 class  FieldInspectionController extends Controller
 {
@@ -87,26 +89,55 @@ class  FieldInspectionController extends Controller
     public function updateAssignedInspections(Request $request, $id)
     {
         $fieldInspection = FieldInspection::find($id);
-       
+    
         // Check if the field inspection exists
         if (!$fieldInspection) {
             return Utils::apiError('Field inspection not found.', 404);
         }
+    
+        $rules = [
+            
+            'field_size' => 'required|numeric',
+            'seed_generation' => 'required|exists:seed_classes,id',
+            'crop_condition' => 'required',
+            'plant_density' => 'required',
+            'seed_category' => 'required',
+            'planting_ratio' => 'required',
+            'estimated_yield' => 'required|numeric',
+            'signature' => 'sometimes|required',
+            'status' => 'required',
+            'remarks' => 'required',
+            'inspection_date' => 'required|date',
+        ];
+    
+        try {
+            // Validate the incoming request data
+            $validatedData = Validator::make($request->all(), $rules)->validate();
+             // Automatically set the 'mobile' field to 'yes'
+             $validatedData['field_inspection_form_number'] = 'FieldInspection/' . date('Y/') . rand(1000, 9999);
+             $validatedData['mobile'] = "yes";
 
-        $data = $request->all();
-        if ($request->has('signature')) 
-        {
-             $photoData = $request->input('signature');
-             list($type, $photoData) = explode(';', $photoData);
-             list(, $photoData) = explode(',', $photoData);
-             $photoData = base64_decode($photoData);
-         
-             $photoPath = 'images/' . uniqid() . '.jpg'; 
-             Storage::disk('admin')->put($photoPath, $photoData);
-             
-             $data['signature'] = $photoPath;
-         }
-        $fieldInspection->update($data);
+        } catch (ValidationException $e) {
+            return response()->json([
+                'message' => 'Validation failed',
+                'errors' => $e->errors()
+            ], 422);
+        }
+    
+        // Handle the signature
+        if ($request->has('signature')) {
+            $photoData = $request->input('signature');
+            list($type, $photoData) = explode(';', $photoData);
+            list(, $photoData) = explode(',', $photoData);
+            $photoData = base64_decode($photoData);
+    
+            $photoPath = 'images/' . uniqid() . '.jpg';
+            Storage::disk('admin')->put($photoPath, $photoData);
+    
+            $validatedData['signature'] = $photoPath;
+        }
+
+        $fieldInspection->update($validatedData);
         return Utils::apiSuccess($fieldInspection, 'Field inspection form edited successfully.');
     }
 }

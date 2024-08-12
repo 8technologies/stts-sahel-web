@@ -19,7 +19,6 @@ class CropDeclaration extends Model
         'user_id',
         'phone_number',
         'garden_size',
-        'land_architecture',
         'field_name',
         'district_region',
         'circle',
@@ -39,8 +38,9 @@ class CropDeclaration extends Model
         'seed_class_id',
         'crop_variety_id',
         'out_grower_id',
-        'lot_number',
-        'remarks',
+        'status_comment',
+        'details',
+        'mobile'
 
     ];
 

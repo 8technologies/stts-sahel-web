@@ -85,7 +85,6 @@ class ApiController extends Controller
             'password' => Hash::make($validatedData['password']),
            
         ]);
-
         $token = JWTAuth::fromUser($user);
 
             return response()->json([
