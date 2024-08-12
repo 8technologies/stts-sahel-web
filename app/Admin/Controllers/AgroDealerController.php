@@ -70,7 +70,7 @@ class AgroDealerController extends AdminController
         }
       
     
-        $grid->column('agro_dealer_reg_number', __('admin.form.Agro dealer reg number'));
+        $grid->column('agro_dealer_reg_number', __('admin.form.Agro-dealer registration number'));
         $grid->column('first_name', __('admin.form.First name'));
         $grid->column('last_name', __('admin.form.Last name'));
         $grid->column('email', __('admin.form.Email'));
@@ -116,7 +116,7 @@ class AgroDealerController extends AdminController
              return('<p class="alert alert-danger">You do not have rights to view this form. <a href="/agro-dealers"> Go Back </a></p> ');
          }
        
-        $show->field('agro_dealer_reg_number', __('admin.form.Agro dealer reg number'));
+        $show->field('agro_dealer_reg_number', __('admin.form.Agro-dealer registration number'));
         $show->field('first_name', __('admin.form.First name'));
         $show->field('last_name', __('admin.form.Last name'));
         $show->field('email', __('admin.form.Email'));
@@ -243,7 +243,7 @@ class AgroDealerController extends AdminController
                         //get the current year
                         $year = date('y');
 
-                        $form->text('agro_dealer_reg_number', __('admin.form.Agro dealer registration number'))->default('agro_dealer'.'/'.rand(1000, 10000).'/'. $year )->required();
+                        $form->text('agro_dealer_reg_number', __('admin.form.Agro-dealer registration number'))->default('agro_dealer'.'/'.rand(1000, 10000).'/'. $year )->required();
                         $form->datetime('valid_from', __('admin.form.Cooperative approval date'))->default(date('Y-m-d H:i:s'))->required();
                         $nextYear = Carbon::now()->addYear(); // Get the date one year from now
                         $defaultDateTime = $nextYear->format('Y-m-d H:i:s'); // Format the date for default value
