@@ -36,6 +36,7 @@ return new class extends Migration
             $table->string('proof_of_payment')->nullable();
             $table->string('status')->default('pending');
             $table->string('status_comment')->nullable();
+            $table->string('recommendation')->nullable();
             $table->string('valid_from')->nullable();
             $table->string('valid_until')->nullable();
             $table->unsignedInteger('inspector_id')->nullable();

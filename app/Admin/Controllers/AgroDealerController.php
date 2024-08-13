@@ -70,7 +70,9 @@ class AgroDealerController extends AdminController
         }
       
     
-        $grid->column('agro_dealer_reg_number', __('admin.form.Agro-dealer registration number'));
+        $grid->column('agro_dealer_reg_number', __('admin.form.Agro-dealer registration number'))->display(function ($agro_dealer_reg_number) {
+            return $agro_dealer_reg_number ?? 'Not yet assigned';
+        })->sortable();
         $grid->column('first_name', __('admin.form.First name'));
         $grid->column('last_name', __('admin.form.Last name'));
         $grid->column('email', __('admin.form.Email'));
@@ -85,7 +87,7 @@ class AgroDealerController extends AdminController
             $agro_dealer =  AgroDealers::find($id);
         
             if ( $agro_dealer &&  $agro_dealer->status == 'accepted') {
-                $link = url('agro-dealer?id=' . $id);
+                $link = url('agro_certificate?id=' . $id);
                 return '<b><a target="_blank" href="' . $link . '">Imprimer le certificat</a></b>';
             } else {
             
@@ -116,7 +118,9 @@ class AgroDealerController extends AdminController
              return('<p class="alert alert-danger">You do not have rights to view this form. <a href="/agro-dealers"> Go Back </a></p> ');
          }
        
-        $show->field('agro_dealer_reg_number', __('admin.form.Agro-dealer registration number'));
+        $show->field('agro_dealer_reg_number', __('admin.form.Agro-dealer registration number'))->as(function ($value) {
+            return $value ?? 'Not yet assigned';
+        });
         $show->field('first_name', __('admin.form.First name'));
         $show->field('last_name', __('admin.form.Last name'));
         $show->field('email', __('admin.form.Email'));
@@ -134,13 +138,11 @@ class AgroDealerController extends AdminController
         $show->field('trading_license_number', __('admin.form.Trading license number'));
         $show->field('trading_license_period', __('admin.form.Trading license period'));
         $show->field('insuring_authority', __('admin.form.Insuring authority'));
-        $show->field('attachments_certificate', __('admin.form.Attachments certificate'));
-        $show->field('proof_of_payment', __('admin.form.Proof of payment'));
-        $show->field('inspector_id', __('admin.form.Inspector'))->as(function ($inspector_id) {
-            return Utils::get_inspector_name($inspector_id) ?? '-'; 
-        });
-
-       
+        $show->field('attachments_certificate', __('admin.form.Certificate'))->as(function ($certificate) {
+            return $certificate == null ? 'No file uploaded' : '<a href="/storage/' . $certificate . '" target="_blank">View certificate</a>';
+        })->unescape();
+        //$show->file('proof_of_payment', __('admin.form.Proof of payment'));
+      
         $show->field('status', __('admin.form.Status'))->as(function ($status) {
             return Utils::tell_status($status) ?? '-';
         })->unescape();
@@ -148,7 +150,7 @@ class AgroDealerController extends AdminController
             return $value ?? '-';
         });
       
-        $show->field('valid_from', __('admin.form.Cooperative approval date'))->as(function ($value) {
+        $show->field('valid_from', __('admin.form.Approval date'))->as(function ($value) {
             return $value ?? '-';
         });
         $show->field('valid_until', __('admin.form.Valid until'))->as(function ($value) {
@@ -190,7 +192,7 @@ class AgroDealerController extends AdminController
         if ($form->isEditing()) 
         {
             //get request id
-            $id = request()->route()->parameters()['agro-dealer'];
+            $id = request()->route()->parameters()['agro_dealer'];
              Validation::checkFormEditable($form, $id, 'AgroDealers');
         }
 
@@ -221,8 +223,8 @@ class AgroDealerController extends AdminController
             $form->display('trading_license_number', __('admin.form.Trading license number'));
             $form->display('trading_license_period', __('admin.form.Trading license period'));
             $form->display('insuring_authority', __('admin.form.Insuring authority'));
-            $form->display('attachments_certificate', __('admin.form.Attachments certificate'));
-            $form->display('proof_of_payment', __('admin.form.Proof of payment'));
+            $form->file('attachments_certificate', __('admin.form.Certificate'));
+            //$form->display('proof_of_payment', __('admin.form.Proof of payment'));
             $form->display('recommendation', __('admin.form.Recommendation'));
             //admin decision
             if ($user->inRoles(['commissioner','developer'])) 
@@ -278,29 +280,32 @@ class AgroDealerController extends AdminController
             }
         } 
 
+        else
+        {
         
-        $form->text('agro_dealer_reg_number', __('Agro dealer reg number'));
-        $form->text('first_name', __('First name'));
-        $form->text('last_name', __('Last name'));
-        $form->email('email', __('Email'));
-        $form->text('physical_address', __('Physical address'));
-        $form->text('district', __('District'));
-        $form->text('circle', __('Circle'));
-        $form->text('township', __('Township'));
-        $form->text('town_plot_number', __('Town plot number'));
-        $form->text('shop_number', __('Shop number'));
-        $form->text('company_name', __('Company name'));
-        $form->text('retailers_in', __('Retailers in'));
-        $form->text('business_registration_number', __('Business registration number'));
-        $form->number('years_in_operation', __('Years in operation'));
-        $form->textarea('business_description', __('Business description'));
-        $form->text('trading_license_number', __('Trading license number'));
-        $form->text('trading_license_period', __('Trading license period'));
-        $form->text('insuring_authority', __('Insuring authority'));
-        $form->text('attachments_certificate', __('Attachments certificate'));
-        $form->text('proof_of_payment', __('Proof of payment'));
-        $form->hidden('status')->default('pending');
-        $form->hidden('inspector_id')->default(null);
+        
+            $form->text('first_name', __('admin.form.First name'))->rules('required');
+            $form->text('last_name', __('admin.form.Last name'))->rules('required');
+            $form->email('email', __('admin.form.Email'))->rules('required|unique:agro_dealers,email');
+            $form->text('physical_address', __('admin.form.Physical address'))->rules('required');
+            $form->text('district', __('admin.form.District'))->rules('required');
+            $form->text('circle', __('admin.form.Circle'))->rules('required');
+            $form->text('township', __('admin.form.Township'))->rules('required');
+            $form->text('town_plot_number', __('admin.form.Town plot number'))->rules('required');
+            $form->text('shop_number', __('admin.form.Shop number'))->rules('required');
+            $form->text('company_name', __('admin.form.Company name'))->rules('required');
+            $form->text('retailers_in', __('admin.form.Retailers in'))->rules('required');
+            $form->text('business_registration_number', __('admin.form.Business registration number'))->rules('required');
+            $form->number('years_in_operation', __('admin.form.Years in operation'))->rules('required');
+            $form->textarea('business_description', __('admin.form.Business description'))->rules('required');
+            $form->text('trading_license_number', __('admin.form.Trading license number'))->rules('required');
+            $form->text('trading_license_period', __('admin.form.Trading license period'))->rules('required');
+            $form->text('insuring_authority', __('admin.form.Insuring authority'))->rules('required');
+            $form->file('attachments_certificate', __('admin.form.Certificate'))->rules('required|mimes:pdf')->help('Upload a pdf file');
+            //$form->file('proof_of_payment', __('admin.form.Proof of payment'))->rules('required|mimes:pdf,png,jpeg,jpg,')->help('Upload a pdf/png/jpeg/jpg file');
+            $form->hidden('status')->default('pending');
+            $form->hidden('inspector_id')->default(null);
+        }
 
         //disable the edit and delete action buttons
         $form->tools(function (Form\Tools $tools) 

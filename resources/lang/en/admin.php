@@ -230,10 +230,13 @@ return [
         'Insuring authority'=>'Insuring authority',
         'Attachments certificate'=>'Attachments certificate',
         'Proof of payment'=>'Proof of payment',
+         'Agro-dealer Registration'=>'Agro-dealer Registration',
         'Agro-dealer registration number'=>'Agro-dealer registration number',
         'Agro-dealer approval date'=>'Agro-dealer approval date',
         'Administrator decision'=>'Administrator decision',
         'Inspector decision'=>'Inspector decision',
+        'Certificate' => 'Certificate',
+        'Approval date' => 'Approval date',
         //field inspection form
         'Inspection type'=>'Inspection type',
         'Field inspection form number'=>'Field inspection form number',

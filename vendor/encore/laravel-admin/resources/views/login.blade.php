@@ -66,7 +66,7 @@
     </button>
     <a class="navbar-brand" href="{{ url('/') }}">
         <span><img src="{{ asset('storage/assets/flag.png') }}" alt="Logo" class="logo-image" style="max-width: 40px; height: auto;"></span>
-        <span class="brand-text" style="font-size: 18px; font-weight: bold;">REPUBLIQUE DU MALI</span>
+        <span class="brand-text" style="font-size: 18px; font-weight: bold;">REPUBLIQUE DU NIGER</span>
     </a>
 </div>
 
@@ -136,7 +136,7 @@
 <div class="login-box-body" style="border: 3px solid green; border-radius: 25px;">
 <div class="login-logo">
     <a href="{{ admin_url('/') }}">
-    <img src="{{ asset('storage/assets/logo.png') }}" alt="Logo" style="max-width: 45%; height: 45%;">
+    <img src="{{ asset('storage/assets/coat.png') }}" alt="Logo" style="max-width: 45%; height: 45%;">
     </a>
     <hr>
 </div>

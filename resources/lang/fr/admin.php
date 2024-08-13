@@ -236,10 +236,13 @@ return [
         'Insuring authority' => 'Autorité d\'assurance',
         'Attachments certificate'=>'Certificat de pièces jointes',
         'Proof of payment'=>'Preuve de paiement',
+        'Agro-dealer Registration' => 'Enregistrement de l\'agro-distributeur',
         'Agro-dealer registration number' => 'Numéro d\'enregistrement de l\'agro-distributeur',
         'Agro-dealer approval date' => 'Date d\'approbation de l\'agro-distributeur',
         'Administrator decision' => 'Décision de l\'administrateur',
         'Inspector decision' => 'Décision de l\'inspecteur',
+        'Certificate' => 'Certificat',
+        'Approval date' => 'Date d\'approbation',
         //field inspection form
         'Field inspection form number' => 'Numéro du formulaire d\'inspection sur le terrain',
         'Field size' => 'Superficie(ha)',
