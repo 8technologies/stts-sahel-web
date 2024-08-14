@@ -410,7 +410,7 @@ return [
         //seed lab
         'Mother lot number' => 'Numéro de lot mère',
         'registration_success' => 'Inscription réussie! Veuillez vérifier votre e-mail pour la confirmation.',
-        'registration_failure' => 'L\'inscription a échoué. Veuillez vérifier votre connexion Internet et réessayer.',
+        'registration_failure' => 'Échec de l\'envoi de l\'e-mail. Veuillez vérifier votre adresse e-mail et réessayer.',
         'Garden size(Acres)' => 'Superficie  (ha)',
         'Quantity of seed planted(kgs)' => 'Quantité de semences semées(kgs)',
         'Expected yield(kgs)' => 'Rendement attendu (kgs)',
