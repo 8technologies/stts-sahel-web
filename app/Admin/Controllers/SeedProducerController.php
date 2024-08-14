@@ -65,7 +65,7 @@ class SeedProducerController extends AdminController
        {
         // Remove the default id filter
         $filter->disableIdFilter();
-        $filter->like('user_id', 'Applicant')->select(\App\Models\User::pluck('name', 'id'));
+        $filter->like('user_id', 'admin.form.Applicant')->select(\App\Models\User::pluck('name', 'id'));
        
        });
 

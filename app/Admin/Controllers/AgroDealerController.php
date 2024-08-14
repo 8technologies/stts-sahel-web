@@ -48,19 +48,21 @@ class AgroDealerController extends AdminController
         }
 
 
-
         //function to show the loggedin user only what belongs to them
         Validation::showUserForms($grid);
 
         //order in descending order
         $grid->model()->orderBy('id', 'desc');
 
+         //disable action buttons appropriately
+         Utils::disable_buttons('AgroDealers', $grid);
+
         //filter by cooperative name
         $grid->filter(function ($filter) 
         {
             // Remove the default id filter
             $filter->disableIdFilter();
-            $filter->like('first_name', __('admin.form.First name'));
+            $filter->like('first_name', __('admin.form.First name'))->select(\App\Models\AgroDealers::pluck('first_name', 'first_name'));;
         });
 
         //disable create button 
