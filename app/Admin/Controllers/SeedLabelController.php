@@ -278,7 +278,7 @@ class SeedLabelController extends AdminController
         $seed_lab_id = SeedLab::where('user_id', Auth::user()->id)->where('test_decision', 'marketable')->get();
       
 
-        if ($user->inRoles(['research', 'grower','individual-producer','cooperative'])) 
+        if ($user->inRoles(['research','agro-dealer', 'grower','individual-producer','cooperative'])) 
         {
 
             $form->select('seed_lab_id', __('admin.form.Lot number'))->options($seed_lab_id->pluck('lot_number', 'id'))->attribute('id', 'seed_lab')->required();
