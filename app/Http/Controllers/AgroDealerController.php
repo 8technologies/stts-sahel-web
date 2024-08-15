@@ -20,6 +20,7 @@ class AgroDealerController extends Controller
 
     public function store(Request $request)
     {
+        $data = $request->all();
        
         $rules = [
             'user_id' => 'required|exists:admin_users,id',
@@ -31,7 +32,7 @@ class AgroDealerController extends Controller
             $validatedData = Validator::make($request->all(), $rules)->validate();
             
             // Automatically set the 'mobile' field to 'yes'
-            $validatedData['mobile'] = 'yes';
+            //$validatedData['mobile'] = 'yes';
         } catch (ValidationException $e) {
             return response()->json([
                 'message' => 'Validation failed',
@@ -49,11 +50,11 @@ class AgroDealerController extends Controller
              $photoPath = 'images/' . uniqid() . '.jpg'; 
              Storage::disk('admin')->put($photoPath, $photoData);
             
-             $validatedData['attachments_certificate'] = $photoPath;
+             $data['attachments_certificate'] = $photoPath;
         }
 
 
-        $agroDealer = AgroDealers::create($validatedData);
+        $agroDealer = AgroDealers::create($data);
         return Utils::apiSuccess($agroDealer, 'Agro Dealer submitted successfully.');
     }
 
