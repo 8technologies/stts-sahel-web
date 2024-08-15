@@ -7,6 +7,8 @@ use App\Models\AgroDealers;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use App\Models\Utils;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\ValidationException;
 
 class AgroDealerController extends Controller
 {
@@ -18,9 +20,24 @@ class AgroDealerController extends Controller
 
     public function store(Request $request)
     {
-        $user = auth('api')->user();
-        $data = $request->all();
+       
+        $rules = [
+            'user_id' => 'required|exists:admin_users,id',
+        ];
 
+        
+        try {
+            // Validate the incoming request data
+            $validatedData = Validator::make($request->all(), $rules)->validate();
+            
+            // Automatically set the 'mobile' field to 'yes'
+            $validatedData['mobile'] = 'yes';
+        } catch (ValidationException $e) {
+            return response()->json([
+                'message' => 'Validation failed',
+                'errors' => $e->errors()
+            ], 422);
+        }
 
         if ($request->has('attachments_certificate'))
         {
@@ -32,11 +49,11 @@ class AgroDealerController extends Controller
              $photoPath = 'images/' . uniqid() . '.jpg'; 
              Storage::disk('admin')->put($photoPath, $photoData);
             
-             $data['attachments_certificate'] = $photoPath;
+             $validatedData['attachments_certificate'] = $photoPath;
         }
 
 
-        $agroDealer = AgroDealers::create($data);
+        $agroDealer = AgroDealers::create($validatedData);
         return Utils::apiSuccess($agroDealer, 'Agro Dealer submitted successfully.');
     }
 
