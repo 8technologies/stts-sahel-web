@@ -50,7 +50,8 @@ class SeedLab extends Model
             Notification::send_notification($model, 'SeedLab', request()->segment(count(request()->segments())));
         });
 
-        self::updated(function ($model) {
+        self::updated(function ($model) 
+        {
             Notification::update_notification($model, 'SeedLab', request()->segment(count(request()->segments())-1));
         
             if ($model->test_decision == 'marketable') {
@@ -63,19 +64,19 @@ class SeedLab extends Model
                   $model->save();
  
             }
-            else{
+            elseif ($model->test_decision == 'not marketable') {
                 $model->status = 'not marketable';
                 $model->save();
             }
 
             //if the user is an inspector,update the validated stock
 
-                if($model->status == 'lab test assigned'){
-                  $load_stock = LoadStock::find($model->load_stock_id);
-                  $load_stock->yield_quantity = $model->validated_stock;
-                  $load_stock->checked = 1;
-                  $load_stock->save();
-                }
+            elseif($model->status == 'lab test assigned'){
+                $load_stock = LoadStock::find($model->load_stock_id);
+                $load_stock->yield_quantity = $model->validated_stock;
+                $load_stock->checked = 1;
+                $load_stock->save();
+            }
             
         });
         
