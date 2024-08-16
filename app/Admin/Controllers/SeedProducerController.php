@@ -227,7 +227,7 @@ class SeedProducerController extends AdminController
             $form->file('receipt', __('admin.form.Proof of payment of application fees'))->readonly();
 
             //admin decision
-            if ($user->isRole('commissioner')) 
+            if ($user->inRoles(['commissioner','administrator','developer'])) 
             {
                 $form->divider('Administartor decision');
                 $form->radio('status', __('admin.form.Status'))
