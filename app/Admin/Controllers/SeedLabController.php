@@ -272,7 +272,8 @@ class SeedLabController extends AdminController
                   //get crop variety name from crop_variety id
                   $crop_variety = CropVariety::where('id', $load_stock->crop_variety_id)->first();
                   //get crop name from crop variety
-                  $crop_name = Crop::where('id', $crop_variety->crop_id)->value('crop_name');
+                  $crop = Crop::find($crop_variety->crop_id);
+                  $crop_name = $crop->crop_name;
                   //get applicant name
                   $applicant_name = Administrator::where('id', $seed_lab->user_id)->value('name');
                   //get seed class name
