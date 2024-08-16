@@ -260,7 +260,35 @@ class SeedLabController extends AdminController
                 $form->hidden('crop_variety_id', __('admin.form.Crop Variety'))->default($crop_variety->id);
                 $form->text('mother_lot',__('admin.form.Mother lot number'))->default($mother_lot)->readonly();
 
-        }
+            }
+            else
+            {
+
+                  //get crop variety from crop_declaration id
+                  $crop_variety_id = CropDeclaration::where('id', $crop_declaration)->value('crop_variety_id');
+              
+                  $load_stock = LoadStock::find($seed_lab->load_stock_id);
+                  
+                  //get crop variety name from crop_variety id
+                  $crop_variety = CropVariety::where('id', $load_stock->crop_variety_id)->first();
+                  //get crop name from crop variety
+                  $crop_name = Crop::where('id', $crop_variety->crop_id)->value('crop_name');
+                  //get applicant name
+                  $applicant_name = Administrator::where('id', $seed_lab->user_id)->value('name');
+                  //get seed class name
+                  $seed_class = SeedClass::where('id',$load_stock->seed_class)->value('class_name');
+
+                  $form->display('', __('admin.form.Applicant name'))->default($applicant_name);
+                  $form->display('', __('admin.form.Crop stock number'))->default($load_stock->load_stock_number);
+                  $form->display('', __('admin.form.Crop'))->default($crop_name);
+                  $form->display('', __('admin.form.Variety'))->default($crop_variety->crop_variety_name);
+                  $form->display('', __('Generation'))->default($seed_class);
+                  $form->display('quantity', __('admin.form.Seed Sample size(kgs)'));
+                  $form->hidden('crop_variety_id', __('admin.form.Crop Variety'))->default($crop_variety->id);
+                  
+                 
+            }
+
             $form->text('seed_lab_test_report_number', __('admin.form.Seed lab test report number'))->default('labtest' . "/" . mt_rand(10000000, 99999999))->readonly();
             $form->decimal('seed_sample_size', __('admin.form.Test sample size(g)'))->required();
             $form->multipleSelect('testing_methods', __('admin.form.Testing method'))->options(
