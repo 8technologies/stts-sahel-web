@@ -166,10 +166,10 @@ class LoadStockController extends AdminController
                 ->required();
     
             $form->hidden('crop_variety_id', __('admin.form.Crop Variety'))->attribute('id', 'crop_variety_id')->required();
-            $form->text('crop_variety_name', __('admin.form.Crop Variety Name'))->attribute('id', 'crop_variety_name')->readonly();
+            $form->text('', __('admin.form.Crop Variety Name'))->attribute('id', 'crop_variety_name')->readonly();
     
-            $form->hidden('seed_class_id', __('admin.form.Seed class'))->attribute('id', 'seed_class_id')->required();
-            $form->text('seed_class', __('admin.form.Seed class Name'))->attribute('id', 'seed_class')->readonly();  
+            $form->hidden('seed_class', __('admin.form.Seed class'))->attribute('id', 'seed_class_id')->required();
+            $form->text('', __('admin.form.Seed class Name'))->attribute('id', 'seed_class')->readonly();  
         }
     
         $form->decimal('field_size', __('admin.form.Field size(Acres)'))->required();
