@@ -147,9 +147,9 @@ class SeedSampleController extends AdminController
             $form->saving(function (Form $form) 
             {
                $load_stock_quantity = LoadStock::where('id', $form->load_stock_id)->first();
-                if($form->quantity > $load_stock_quantity->yield_quantity)
+                if($form->quantity > 5)
                 {
-                    return back()->withInput()->withErrors(['quantity' => 'The quantity requested is more than the available quantity(' . $load_stock_quantity->yield_quantity.'kgs) in the crop stock']);
+                    return back()->withInput()->withErrors(['quantity' => 'The sample size should not be more than 5kgs']);
                 }
                 $form->crop_variety_id = $load_stock_quantity->crop_variety_id;
 
@@ -216,6 +216,7 @@ class SeedSampleController extends AdminController
                     $form->display('applicant_remarks', __('admin.form.Applicant remarks'))->readonly();
                 }
             }
+
             else
             {
 
@@ -285,6 +286,7 @@ class SeedSampleController extends AdminController
                 
                
             }
+
         }
 
         //disable delete button
