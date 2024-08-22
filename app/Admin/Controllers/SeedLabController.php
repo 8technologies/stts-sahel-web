@@ -214,7 +214,8 @@ class SeedLabController extends AdminController
         //get looged in user
         $user = Admin::user();
        
-        if ($form->isEditing()) {
+        if ($form->isEditing()) 
+        {
                //check if the user is a lab technician
             if (!$user->isRole('lab_technician')) 
             {

@@ -21,6 +21,7 @@ class FieldInspection extends Model
         'crop_condition',
         'field_spacing',
         'estimated_yield',
+        'plant_density',
         'planting_ratio',
         'remarks',
         'inspector_id',
