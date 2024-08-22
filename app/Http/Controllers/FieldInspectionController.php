@@ -140,4 +140,33 @@ class  FieldInspectionController extends Controller
         $fieldInspection->update($validatedData);
         return Utils::apiSuccess($fieldInspection, 'Field inspection form edited successfully.');
     }
+
+
+       //get the active inspections assigned to an inspector
+       public function getActiveAssignedInspections($id)
+       {
+           $fieldInspections = FieldInspection::where('inspector_id', $id)
+                            ->where('is_active', 1)->get();
+   
+           $result = [];
+   
+           foreach ($fieldInspections as $inspection) {
+               $user = User::find($inspection->user_id)->name;
+               $fieldInspectionType = InspectionType::find($inspection->inspection_type_id)->inspection_type_name;
+               $cropDeclaration = CropDeclaration::find($inspection->crop_declaration_id);
+               $crop_variety_id = $cropDeclaration->crop_variety_id;
+               $crop_variety = CropVariety::find($crop_variety_id)->crop_variety_name;
+   
+               $result[] = [
+                   'fieldInspection' => $inspection,
+                   'user' => $user,
+                   'cropVariety' => $crop_variety,
+                   'fieldInspectionType' => $fieldInspectionType,
+                   'cropDeclaration' => $cropDeclaration,
+               ];
+           }
+   
+           return Utils::apiSuccess($result);
+       }
+   
 }
