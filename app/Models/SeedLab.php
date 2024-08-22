@@ -53,35 +53,12 @@ class SeedLab extends Model
         self::updated(function ($model) 
         {
             Notification::update_notification($model, 'SeedLab', request()->segment(count(request()->segments())-1));
-        
-            if ($model->test_decision == 'marketable') {
-                  // Update the quantity in the load stock table
-                  $load_stock = LoadStock::find($model->load_stock_id);
-                  $load_stock->yield_quantity = $load_stock->yield_quantity - $model->quantity;
-                  $load_stock->status = 'tested';
-                  $load_stock->save();
-                  $model->status = 'marketable';
-                  $model->save();
- 
-            }
-            elseif ($model->test_decision == 'not marketable') {
-                $model->status = 'not marketable';
-                $model->save();
-            }
-
-            //if the user is an inspector,update the validated stock
-
-            elseif($model->status == 'lab test assigned'){
-                $load_stock = LoadStock::find($model->load_stock_id);
-                $load_stock->yield_quantity = $model->validated_stock;
-                $load_stock->checked = 1;
-                $load_stock->save();
-            }
             
         });
         
 
-        self::updating(function ($model) {
+        self::updating(function ($model) 
+        {
             //get the user id from the model and check if the user is a basic user or not
             $user = Administrator::find($model->user_id);
             if ($user->isRole('basic-user')) {
@@ -89,6 +66,34 @@ class SeedLab extends Model
                 $model->inspector_id = null;
                 return $model;
             }
+
+            $load_stock = LoadStock::find($model->load_stock_id);
+            if ($model->test_decision == 'marketable') {
+                // Update the quantity in the load stock table
+                $load_stock->yield_quantity = $load_stock->yield_quantity - $model->quantity;
+                $load_stock->status = 'tested';   
+                $model->status = 'marketable';
+               
+
+          }
+          elseif ($model->test_decision == 'not marketable') {
+                 // Update the quantity in the load stock table
+                 $load_stock->yield_quantity = $load_stock->yield_quantity - $model->quantity;
+                 $load_stock->status = 'tested';
+                 $model->status = 'not marketable';
+             
+          }
+
+          //if the user is an inspector,update the validated stock
+          elseif($model->status == 'lab test assigned'){
+              $load_stock->yield_quantity = $model->validated_stock;
+              $load_stock->checked = 1;
+           
+          }
+
+            $load_stock->save();
+
+          
         });
     }
 }
