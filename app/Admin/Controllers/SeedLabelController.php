@@ -159,9 +159,9 @@ class SeedLabelController extends AdminController
         $seed_lab = SeedLab::where('id', $seed_label->seed_lab_id)->first();
         $load_stock = LoadStock::where('id', $seed_lab->load_stock_id)->where('user_id', $seed_lab->user_id)->first();
         //get crop variety from crop_declaration id
-        $crop_variety_id = CropDeclaration::where('id', $load_stock->crop_declaration_id )->value('crop_variety_id');
+        //$crop_variety_id = CropDeclaration::where('id', $load_stock->crop_declaration_id )->value('crop_variety_id');
         //get crop variety name from crop_variety id
-        $crop_variety = CropVariety::where('id', $crop_variety_id)->first();
+        $crop_variety = CropVariety::find($load_stock->crop_variety_id);
         //get crop name from crop variety
         $crop_name = Crop::where('id', $crop_variety->crop_id)->value('crop_name');
         $show->field('seed_label_request_number', __('admin.form.Seed label request number'));
@@ -249,18 +249,25 @@ class SeedLabelController extends AdminController
                     return back()->withInput()->withErrors(['seed_lab_id' => 'Please add the packages you are requesting for.']);
                 }
 
+                //check if the package_id is unique
+                $package_ids = [];
+                foreach ($form->packages as $package) {
+                    if (in_array($package['package_id'], $package_ids)) {
+                        return back()->withInput()->withErrors(['seed_lab_id' => 'The label package should be unique.']);
+                    }
+                    $package_ids[] = $package['package_id'];
+                }
+
                 //get the total quantity of the packages
                 $total_quantity = 0;
                 foreach ($form->packages as $package) {
                     $total_quantity += $package['quantity'];
                 }
 
-                error_log($total_quantity);
                 //check if the total quantity is equal to the quantity of seed in the load stock
                 $seed_lab = SeedLab::where('id', $form->seed_lab_id)->first();
                 $load_stock = LoadStock::where('id', $seed_lab->load_stock_id)->first();
                 if ($total_quantity > $load_stock->yield_quantity) {
-                    error_log('here now');
                     return back()->withInput()->withErrors(['label_packages' => 'The total quantity of the packages should not be greater than the quantity of seed( '. $load_stock->yield_quantity. ' )that you have in stock.']);
                 }
             });
@@ -284,7 +291,7 @@ class SeedLabelController extends AdminController
             $form->select('seed_lab_id', __('admin.form.Lot number'))->options($seed_lab_id->pluck('lot_number', 'id'))->attribute('id', 'seed_lab')->required();
             $form->text('seed_label_request_number', __('admin.form.Seed label request number'))->default('SLR' . date('YmdHis') . rand(1000, 9999))->readonly();
             $form->file('proof_of_payment', __('admin.form.Proof of payment'))
-            ->rules(['mimes:jpeg,pdf,jpg', 'max:2048']) // Assuming a maximum file size of 2MB 
+            ->rules(['mimes:jpeg,pdf,jpg', 'max:2048','required']) // Assuming a maximum file size of 2MB 
             ->help(__('admin.form.Attach a copy of your proof of payment, and should be in pdf, jpg or jpeg format'));
             $form->date('request_date', __('admin.form.Request date'))->default(date('Y-m-d'));
             $form->textarea('applicant_remarks', __('admin.form.Applicant remarks'));
@@ -345,15 +352,17 @@ class SeedLabelController extends AdminController
             $seed_lab = SeedLab::where('id', $seed_label->seed_lab_id)->first();
             $load_stock = LoadStock::where('id', $seed_lab->load_stock_id)->where('user_id', $seed_lab->user_id)->first();
             //get crop variety from crop_declaration id
-            $crop_variety_id = CropDeclaration::where('id', $load_stock->crop_declaration_id )->value('crop_variety_id');
+            // $crop_variety_id = CropDeclaration::where('id', $load_stock->crop_declaration_id )->value('crop_variety_id');
+            // error_log($crop_variety_id);
             //get crop variety name from crop_variety id
-            $crop_variety = CropVariety::where('id', $crop_variety_id)->first();
+            $crop_variety = CropVariety::find($load_stock->crop_variety_id);
+            error_log($crop_variety);
             //get crop name from crop variety
             $crop_name = Crop::where('id', $crop_variety->crop_id)->value('crop_name');
 
             $applicant_name = Administrator::where('id', $seed_lab->user_id)->value('name');
             $seed_class = SeedClass::where('id',$load_stock->seed_class)->value('class_name');
-            if ($user->inRoles(['commissioner', 'labosem'])) 
+            if ($user->inRoles(['commissioner', 'labosem','developer'])) 
             {
 
                 $form->display('seed_label_request_number', __('admin.form.Seed label request number'));
@@ -364,7 +373,7 @@ class SeedLabelController extends AdminController
                 $form->display('', __('admin.form.Generation'))->default($seed_class);
                 $form->display('label_packages', __('admin.form.Label packages'));
                 // $form->display('quantity_of_seed', __('Quantity of seed'));
-                $form->display('proof_of_payment', __('admin.form.Proof of payment'));
+                $form->file('proof_of_payment', __('admin.form.Proof of payment'));
                 $form->display('request_date', __('admin.form.Request date'))->default(date('Y-m-d'));
                 $form->display('applicant_remarks', __('admin.form.Applicant remarks'));
               
@@ -384,7 +393,7 @@ class SeedLabelController extends AdminController
                 
             }
 
-            if ($user->isRole('commissioner')) 
+            if ($user->inRoles(['commissioner','developer'])) 
             {
                 $form->divider('Administrator descision');
                 $form->select('status', __('admin.form.Status'))->

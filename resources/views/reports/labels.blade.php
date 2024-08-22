@@ -9,9 +9,9 @@ $seed_class = App\Models\SeedClass::where('id', $load_stock->seed_class)->value(
 
 $crop_declaration = $load_stock->crop_declaration_id;
 //get crop variety from crop_declaration id
-$crop_variety_id = App\Models\CropDeclaration::where('id', $crop_declaration)->value('crop_variety_id');
+//$crop_variety_id = App\Models\CropDeclaration::where('id', $crop_declaration)->value('crop_variety_id');
 //get crop variety name from crop_variety id
-$crop_variety= App\Models\CropVariety::where('id', $crop_variety_id)->first();
+$crop_variety= App\Models\CropVariety::find($load_stock->crop_variety_id);
 //get crop name from crop variety
 $crop_name = App\Models\Crop::where('id', $crop_variety->crop_id)->value('crop_name');
 //get current date
