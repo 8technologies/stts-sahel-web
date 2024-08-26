@@ -9,6 +9,8 @@ class LabelPackage extends Model
 {
     use HasFactory;
 
+     protected $table = 'label_packages';
+
     protected $fillable = [
         'price',
         'package_type',
