@@ -19,6 +19,7 @@ class SeedLabel extends Model
         'request_date',
         'applicant_remarks',
         'status',
+        'label_packages',
     ];
 
     public function packages()
