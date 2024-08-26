@@ -37,9 +37,16 @@ class SeedLabelController extends Controller
             'user_id' => 'required|exists:admin_users,id|numeric',
         ];
 
-        // Validate the incoming request data
-        $validatedData = $request->validate($rules);
-
+        try {
+            // Validate the incoming request data
+            $validatedData = Validator::make($request->all(), $rules)->validate();
+        } catch (ValidationException $e) {
+            return response()->json([
+                'message' => 'Validation failed',
+                'errors' => $e->errors()
+            ], 422);
+        }
+        
 
         // Handle proof_of_payment
         if ($request->has('proof_of_payment')) 
@@ -55,6 +62,7 @@ class SeedLabelController extends Controller
             // Add the photo path to validated data
             $validatedData['proof_of_payment'] = $photoPath;
         }
+
 
         // Create a new seed label
         $seedLabel = SeedLabel::create($validatedData);
@@ -100,8 +108,16 @@ class SeedLabelController extends Controller
             'user_id' => 'required|exists:admin_users,id|numeric',
         ];
     
-        // Validate the incoming request data
-        $validatedData = $request->validate($rules);
+        try {
+            // Validate the incoming request data
+            $validatedData = Validator::make($request->all(), $rules)->validate();
+        } catch (ValidationException $e) {
+            return response()->json([
+                'message' => 'Validation failed',
+                'errors' => $e->errors()
+            ], 422);
+        }
+        
     
         // Find the existing seed label by ID
         $seedLabel = SeedLabel::findOrFail($id);
