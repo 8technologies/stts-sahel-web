@@ -67,8 +67,12 @@ class SeedLabelController extends Controller
             );
         }
 
-        // Return a success response
-        return Utils::apiSuccess($seedLabel, 'Seed Label Request submitted successfully.');
+            // Return a JSON success response
+        return response()->json([
+            'success' => true,
+            'message' => 'Seed Label Request submitted successfully.',
+            'data' => $seedLabel
+        ], 201);
     }
 
     public function show($id)
