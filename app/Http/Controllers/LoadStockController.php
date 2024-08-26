@@ -25,7 +25,7 @@ class LoadStockController extends Controller
             'seed_class' => 'required|exists:seed_classes,id|numeric',
             'crop_declaration_id' => 'nullable|exists:crop_declarations,id|numeric',
             'crop_variety_id' => 'required|exists:crop_varieties,id|numeric',
-            'user_id' => 'required|exists:users,id|numeric',
+            'user_id' => 'required|exists:admin_users,id|numeric',
             'yield_quantity' => 'required',
             
         ];
@@ -71,7 +71,7 @@ class LoadStockController extends Controller
             'seed_class' => 'required|exists:seed_classes,id|numeric',
             'crop_declaration_id' => 'nullable|exists:crop_declarations,id|numeric',
             'crop_variety_id' => 'required|exists:crop_varieties,id|numeric',
-            'user_id' => 'required|exists:users,id|numeric',
+            'user_id' => 'required|exists:admin_users,id|numeric',
             'yield_quantity' => 'required',
             
         ];
