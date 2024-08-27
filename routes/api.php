@@ -48,6 +48,7 @@ Route::get('crop-varieties', [CropController::class, 'crop_varieties']);
 Route::resource('seed-producers', SeedProducerController::class);
 Route::resource('crop-declarations', CropDeclarationController::class);
 Route::get('accepted-crop-declarations/{id}', [CropDeclarationController::class, 'getAcceptedCropDeclarations']);
+Route::get('get-seed-class/{id}', [CropDeclarationController::class, 'getSeedClass']);
 Route::resource('field-inspections', FieldInspectionController::class);
 Route::get('assigned-inspections/{id}', [FieldInspectionController::class, 'getAssignedInspections']);
 Route::get('active-assigned-inspections/{id}', [FieldInspectionController::class, 'getActiveAssignedInspections']);

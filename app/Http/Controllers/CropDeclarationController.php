@@ -11,7 +11,7 @@ use App\Models\SeedClass;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 use App\Models\Research;
-use Illuminate\Auth\Database\Role;
+use Encore\Admin\Auth\Database\Role;
 use App\Models\SeedProducer;
 use App\Models\Cooperative;
 
@@ -160,14 +160,14 @@ class CropDeclarationController extends Controller
         }
     
         // Get the role name
-        $role = Role::find($role_id)->name;
+        $role = Role::find($role_id)->slug;
     
         // Mapping roles to their respective models
         $roleModels = [
             'research' => Research::class,
-            'seed-producer' => SeedProducer::class,
+            'grower' => SeedProducer::class,
             'cooperative' => Cooperative::class,
-            'individual-producer' => IndividualProducer::class,
+            'individual-producers' => IndividualProducer::class,
         ];
     
         // Check if the user's role is in the map
