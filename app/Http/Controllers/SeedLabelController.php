@@ -25,7 +25,6 @@ class SeedLabelController extends Controller
         $rules = [
             'seed_label_request_number' => 'required',
             'seed_lab_id' => 'required|numeric|exists:seed_labs,id',
-            'quantity_of_seed' => 'required|numeric',
             'proof_of_payment' => 'nullable',
             'label_packages'=> 'required',
             'request_date' => 'required',
@@ -95,7 +94,6 @@ class SeedLabelController extends Controller
         $rules = [
             'seed_label_request_number' => 'required',
             'seed_lab_id' => 'required|numeric|exists:seed_labs,id',
-            'quantity_of_seed' => 'required|numeric',
             'proof_of_payment' => 'nullable',
             'request_date' => 'required',
             'label_packages'=> 'required',
