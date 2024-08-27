@@ -107,6 +107,9 @@ class  FieldInspectionController extends Controller
             'signature' => 'sometimes|required',
             'status' => 'required',
             'remarks' => 'required',
+            'isolation' => 'nullable',
+            'isolation_time' => 'nullable',
+            'isolation_distance' => 'nullable',
          
         ];
     
