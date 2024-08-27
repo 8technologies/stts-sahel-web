@@ -173,6 +173,28 @@ class FieldInspectionController extends AdminController
         $show->field('estimated_yield', __('admin.form.Estimated yield(kgs)'))->as(function ($value) {
             return $value ?? '-';
         });
+
+        $show->field('plant_density', __('admin.form.Plant density'))->as(function ($value) {
+            return $value ?? '-';
+        });
+
+        $show->field('planting_ratio', __('admin.form.Planting ratio'))->as(function ($value) {
+            return $value ?? '-';
+        });
+
+        $show->field('isolation', __('admin.form.Isolation'))->as(function ($value) {
+            return $value ?? '-';
+        });
+
+        $show->field('isolation_time', __('admin.form.Isolation time'))->as(function ($value) {
+            return $value ?? '-';
+        });
+
+        $show->field('isolation_distance', __('admin.form.Isolation distance'))->as(function ($value) {
+            return $value ?? '-';
+        });
+
+        
         $show->field('remarks', __('admin.form.Remarks'))->as(function ($value) {
             return $value ?? '-';
         });
