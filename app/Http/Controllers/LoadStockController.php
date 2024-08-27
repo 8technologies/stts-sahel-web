@@ -22,11 +22,17 @@ class LoadStockController extends Controller
     {
        
         $rules = [
+            'load_stock_number' => 'required',
             'seed_class' => 'required|exists:seed_classes,id|numeric',
             'crop_declaration_id' => 'nullable|exists:crop_declarations,id|numeric',
             'crop_variety_id' => 'required|exists:crop_varieties,id|numeric',
             'user_id' => 'required|exists:admin_users,id|numeric',
             'yield_quantity' => 'required',
+            'field_size' => 'required',
+            'last_field_inspection_date' => 'nullable',
+            'load_stock_date' => 'required',
+            'status' => 'nullable',
+
             
         ];
 
@@ -68,11 +74,17 @@ class LoadStockController extends Controller
         $loadStock = LoadStock::findOrFail($id);
 
         $rules = [
+            'load_stock_number' => 'required',
             'seed_class' => 'required|exists:seed_classes,id|numeric',
             'crop_declaration_id' => 'nullable|exists:crop_declarations,id|numeric',
             'crop_variety_id' => 'required|exists:crop_varieties,id|numeric',
             'user_id' => 'required|exists:admin_users,id|numeric',
             'yield_quantity' => 'required',
+            'field_size' => 'required',
+            'last_field_inspection_date' => 'required',
+            'load_stock_date' => 'required',
+            'status' => 'nullable',
+
             
         ];
 
