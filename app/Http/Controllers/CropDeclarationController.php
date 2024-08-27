@@ -152,6 +152,7 @@ class CropDeclarationController extends Controller
     //function to get the logged in user's seed class
     public function getSeedClass($id)
     {
+    
         // Get the role ID of the user
         $role_id = AdminRoleUser::where('user_id', $id)->value('role_id');
         
@@ -162,35 +163,33 @@ class CropDeclarationController extends Controller
         // Get the role name
         $role = Role::find($role_id)->slug;
     
-        // Mapping roles to their respective models
-        $roleModels = [
-            'research' => Research::class,
-            'grower' => SeedProducer::class,
-            'cooperative' => Cooperative::class,
-            'individual-producers' => IndividualProducer::class,
-        ];
+        $seed_class = null;
     
-        // Check if the user's role is in the map
-        if (!array_key_exists($role, $roleModels)) {
-            return response()->json(['error' => 'Invalid role'], 400);
+        // Determine seed class based on the user's role
+        if ($role == 'research') {
+            $research = Research::where('user_id', $id)->first();
+            $seed_class = $research ? SeedClass::where('class_name', $research->seed_generation)->get() : null;
+    
+        } elseif ($role == 'grower') {
+            $seed_producer = SeedProducer::where('user_id', $id)->first();
+            $seed_class = $seed_producer ? SeedClass::where('class_name', $seed_producer->seed_generation)->get() : null;
+    
+        } elseif ($role == 'cooperative') {
+            $cooperative = Cooperative::where('user_id', $id)->first();
+            $seed_class = $cooperative ? SeedClass::where('class_name', $cooperative->seed_generation)->get() : null;
+    
+        } elseif ($role == 'individual-producers') {
+            $individual_producer = IndividualProducer::where('user_id', $id)->first();
+            $seed_class = $individual_producer ? SeedClass::where('class_name', $individual_producer->seed_generation)->get() : null;
         }
     
-        // Get the model class for the user's role and retrieve the seed class
-        $modelClass = $roleModels[$role];
-        $modelInstance = $modelClass::where('user_id', $id)->first();
-    
-        if (!$modelInstance) {
+        if ($seed_class) {
+            return response()->json($seed_class);
+        } else {
             return response()->json(['error' => 'Seed class not found'], 404);
         }
-    
-        $seed_class = SeedClass::where('class_name', $modelInstance->seed_class)->get();
-    
-        if ($seed_class->isEmpty()) {
-            return response()->json(['error' => 'Seed class not found'], 404);
-        }
-    
-        return response()->json($seed_class);
     }
+    
     
 }
 
