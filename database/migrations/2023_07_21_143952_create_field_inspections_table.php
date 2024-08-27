@@ -35,6 +35,9 @@ return new class extends Migration
             $table->integer('order_number')->nullable();
             $table->date('inspection_date')->nullable();
             $table->string('mobile')->nullable();
+            $table->string('isolation')->nullable();
+            $table->string('isolation_time')->nullable();
+            $table->string('isolation_distance')->nullable();
             $table->timestamps();
 
             $table->foreign('crop_variety_id')->references('id')->on('crop_varieties')->onDelete('cascade');

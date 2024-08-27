@@ -120,6 +120,9 @@ return [
     'form'=>[
         //Seed Producer form
         'Applicant name' => 'Applicant name',
+        'isolation' => 'Isolation',
+        'isolation_time' => 'Isolation time',
+        'isolation_distance' => 'Isolation distance(m)',
         'Date' => 'Date',
         'Producer category' => 'Producer Category',
         'Knowledge of crops and varieties' =>  'Knowledge of crops and varieties', 

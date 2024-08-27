@@ -14,7 +14,20 @@ class MarketableSeedController extends Controller
     public function index()
     {
         $marketableSeeds = MarketableSeed::all();
-        return response()->json($marketableSeeds);
+    
+        $result = [];
+        // For each marketable seed, get the load stock and seed lab objects
+        foreach ($marketableSeeds as $stock) {
+            $load_stock = LoadStock::find($stock->load_stock_id);
+            $seed_lab = SeedLab::find($stock->seed_lab_id);
+            $result[] = [
+                'marketable_seed_id' => $stock->id,
+                'load_stock' => $load_stock,
+                'seed_lab' => $seed_lab
+            ];
+        }
+    
+        return response()->json($result);
     }
 
     public function store(Request $request)

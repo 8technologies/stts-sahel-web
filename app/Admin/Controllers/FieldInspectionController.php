@@ -278,7 +278,24 @@ class FieldInspectionController extends AdminController
                 ]
             );
         })->required();
-     
+        
+
+        $form->radio('isolation', __('admin.form.isolation'))->options([
+            'temps' => 'Temps',
+             'distance' => 'Distance'
+        ])->when('distance', function (Form $form) {
+            $form->number('isolation_distance', __('admin.form.isolation_distance'))->rules('min:300');
+        })
+        ->when('temps', function (Form $form) {
+            $form->select('isolation_time', __('admin.form.isolation_time'))->options(
+                [
+                    'Adéquat' => 'Adéquat',
+                    'Inadéquat' => 'Inadéquat',
+
+                ]
+            );
+        });
+       
         $form->decimal('estimated_yield', __('admin.form.Estimated yield(kgs)'))->required();
         $form->file('signature', __('admin.form.Signature'))->required();
 

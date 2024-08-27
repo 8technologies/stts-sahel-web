@@ -116,12 +116,16 @@ return [
   
     'form' => [
         //Seed Producer form
+        
         'Applicant Name' => 'Nom du demandeur',
         'Date' => 'Date',
         'Producer category' => 'Catégorie de producteur',
         'Knowledge of crops and varieties' => 'Connaissance des cultures et des variétés',
         'Valid until' => 'Valide jusqu\'au',
         'Inspector' => 'Inspecteur',
+        'isolation' => 'Isolation',
+        'isolation_time ' => 'Temps d\'isolation',
+        'isolation_distance' => 'Distance d\'isolation(m)',
         'Status comment' => 'Commentaire sur le statut',
         'Seed producer category' => 'Catégorie de producteur de semences',
         'years of experience' => 'Nombre d\'année d\'expérience',
