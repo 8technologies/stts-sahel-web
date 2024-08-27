@@ -11,7 +11,7 @@ use App\Models\SeedClass;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 use App\Models\Research;
-use Illuminate\Role;
+use Illuminate\Auth\Database\Role;
 use App\Models\SeedProducer;
 use App\Models\Cooperative;
 
