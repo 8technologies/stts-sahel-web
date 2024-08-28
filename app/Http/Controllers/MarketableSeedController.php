@@ -49,7 +49,7 @@ class MarketableSeedController extends Controller
         foreach ($marketableSeed as $stock) {
             $load_stock = LoadStock::find($stock->load_stock_id);
             $seed_lab = SeedLab::find($stock->seed_lab_id);
-            $user = User::find($id);
+            $user = User::find($stock->user_id);
             $result[] = [
                 'marketable_seed_id' => $stock->id,
                 'load_stock' => $load_stock,
