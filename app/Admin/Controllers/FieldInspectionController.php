@@ -306,7 +306,7 @@ class FieldInspectionController extends AdminController
             'temps' => 'Temps',
              'distance' => 'Distance'
         ])->when('distance', function (Form $form) {
-            $form->number('isolation_distance', __('admin.form.isolation_distance'))->rules('min:300');
+            $form->decimal('isolation_distance', __('admin.form.isolation_distance'));
         })
         ->when('temps', function (Form $form) {
             $form->select('isolation_time', __('admin.form.isolation_time'))->options(
