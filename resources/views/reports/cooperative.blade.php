@@ -49,7 +49,7 @@ $aujourdHui = date("j F Y");
   <div class="header">CARTE D'ENREGISTREMENT DE LA COOPÉRATIVE</div>
 
 <div class="content">
-  <p>DE : LABOSEM, SOCQC/OPA</p>
+  <p>DE : DCCS, SOCQC/OPA</p>
   <p>DATE : {{$form->updated_at}}</p>
   <p>NUMÉRO DE DEMANDE : {{$form->registration_number}} </p>
   <br>
@@ -58,7 +58,7 @@ $aujourdHui = date("j F Y");
 </div>
 
 <div class="signature">
-<p>SIGNATURE DU DIRECTEUR DE LABOSEM</p>
+<p>SIGNATURE DU DIRECTEUR DE DCCS</p>
   
     <div>
       <img src="{{ public_path('storage/assets/signature.png') }}" alt="logo" width="200" height="100">

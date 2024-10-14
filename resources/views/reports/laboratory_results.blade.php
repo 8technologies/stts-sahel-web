@@ -63,7 +63,7 @@ $fieldData = [
             <p><span class="field-label">{{ $fieldLabel }}:</span> {{ $fieldValue }}</p>
         @endforeach
         <div class="signature">
-            <p>SIGNATURE DU DIRECTEUR DE LABOSEM</p>
+            <p>SIGNATURE DU DIRECTEUR DE DCCS</p>
            
             <img src="{{ public_path('storage/assets/signature.png') }}" alt="Signature du directeur" width="200" height="100">
         </div>

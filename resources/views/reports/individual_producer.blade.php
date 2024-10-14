@@ -63,7 +63,7 @@ $aujourdHui = date("j F Y");
     <br>
 
    
-    <p>SIGNATURE DU DIRECTEUR DE LABOSEM</p>
+    <p>SIGNATURE DU DIRECTEUR DE DCCS</p>
    
     <div>
   <img src="{{ public_path('storage/assets/signature.png') }}" alt="logo" width="200" height="100">

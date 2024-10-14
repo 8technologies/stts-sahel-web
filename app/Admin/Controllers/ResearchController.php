@@ -249,7 +249,7 @@ class ResearchController extends AdminController
                         $form->textarea('status_comment', __('admin.form.Status comment'))->rules('required');
                     })
                     ->when('accepted', function (Form $form) {
-                        $form->text('researcher_registration_number', __('admin.form.Research registration number')) ->default('Labosem/' . date('Y/M/') . rand(1000, 100000))->required();
+                        $form->text('researcher_registration_number', __('admin.form.Research registration number')) ->default('DCCS/' . date('Y/M/') . rand(1000, 100000))->required();
                         $form->datetime('valid_from', __('admin.form.Research approval date'))->default(date('Y-m-d H:i:s'))->required();
                         $nextYear = Carbon::now()->addYear(); // Get the date one year from now
                         $defaultDateTime = $nextYear->format('Y-m-d H:i:s'); // Format the date for default value
