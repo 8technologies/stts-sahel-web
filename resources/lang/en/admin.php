@@ -503,6 +503,8 @@ return [
         'My Stock' => 'My Stock',
         'My Total Stock' => 'My Total Stock',
         'View Stock' => 'View Stock',
+        'Number of days before submission of crop declaration' => 'Number of days before submission of crop declaration',
+        'Deadline for submission of crop declaration' => 'Deadline for submission of crop declaration',
         //outgrower
         'Out-grower' => 'Out-grower',
         'Contract number' => 'Contract number',

@@ -373,6 +373,7 @@ return [
         'Crop code' => 'Code de la culture',
         'Number of inspections' => 'Nombre d\'inspections',
         'Number of days before submission of crop declaration' => 'Nombre de jours avant la soumission de la déclaration de culture',
+        'Deadline for submission of crop declaration' => 'Date limite de soumission de la déclaration de culture',
         'Seed viability period (in days)' => 'Période de viabilité des semences (en jours)',
         'Crop varieties' => 'Variétés de culture',
         'Crop Variety Name' => 'Nom de la variété de culture',
