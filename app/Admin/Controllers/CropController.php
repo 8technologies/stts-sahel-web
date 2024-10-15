@@ -79,6 +79,12 @@ class CropController extends AdminController
             $crop_varieties->disableExport();
             //disable the column selector
             $crop_varieties->disableColumnSelector();
+            //disable the creation button
+            $crop_varieties->disableCreateButton();
+            //disable actions
+            $crop_varieties->disableActions();
+            //disable batch actions
+            $crop_varieties->disableBatchActions();
 
            
         });
@@ -94,6 +100,12 @@ class CropController extends AdminController
             $inspection_types->disableExport();
             //disable the column selector
             $inspection_types->disableColumnSelector();
+            //disable the creation button
+            $inspection_types->disableCreateButton();
+            //disable actions
+            $inspection_types->disableActions();
+            //disable batch actions
+            $inspection_types->disableBatchActions();
           
            
         });
