@@ -113,7 +113,7 @@ class UserController extends AdminController
             ->updateRules(['required', "unique:{$connection}.{$userTable},username,{{id}}"]);
         $form->email('email', trans('admin.email'));
         $form->image('avatar', trans('admin.avatar'))
-            ->rules(['mimes:jpeg,pdf,jpg', 'max:2048'])
+            ->rules(['mimes:jpeg,pdf,jpg,png', 'max:2048'])
             ->help('Please upload a valid image file. Size of image should not be more than 2MB.');
         
         $form->password('password', trans('admin.password'))->rules('required|confirmed');

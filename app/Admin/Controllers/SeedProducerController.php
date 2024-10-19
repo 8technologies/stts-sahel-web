@@ -65,7 +65,7 @@ class SeedProducerController extends AdminController
        {
         // Remove the default id filter
         $filter->disableIdFilter();
-        $filter->like('user_id', 'Applicant')->select(\App\Models\User::pluck('name', 'id'));
+        $filter->like('user_id', 'admin.form.Applicant')->select(\App\Models\User::pluck('name', 'id'));
        
        });
 
@@ -227,7 +227,7 @@ class SeedProducerController extends AdminController
             $form->file('receipt', __('admin.form.Proof of payment of application fees'))->readonly();
 
             //admin decision
-            if ($user->isRole('commissioner')) 
+            if ($user->inRoles(['commissioner','administrator','developer'])) 
             {
                 $form->divider('Administartor decision');
                 $form->radio('status', __('admin.form.Status'))
@@ -241,7 +241,7 @@ class SeedProducerController extends AdminController
                         $form->textarea('status_comment', __('admin.form.Status comment'))->rules('required');
                     })
                     ->when('accepted', function (Form $form) {
-                        $form->text('producer_registration_number', __('admin.form.Seed producer registration number')) ->default('Labosem/' . date('Y/M/') . rand(1000, 100000))->required();
+                        $form->text('producer_registration_number', __('admin.form.Seed producer registration number')) ->default('DCCS/' . date('Y/M/') . rand(1000, 100000))->required();
                         $form->datetime('valid_from', __('admin.form.Seed producer approval date'))->default(date('Y-m-d H:i:s'))->required();
                         $nextYear = Carbon::now()->addYear(); // Get the date one year from now
                         $defaultDateTime = $nextYear->format('Y-m-d H:i:s'); // Format the date for default value

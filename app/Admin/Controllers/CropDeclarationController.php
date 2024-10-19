@@ -278,21 +278,25 @@ class CropDeclarationController extends AdminController
             // Define a configuration array for roles and their corresponding seed class options
             $roleSeedClassOptions = [
                 'individual-producers' => [
-                    'Semence Certifiée Première Reproduction',
-                    'Semence Certifiée Deuxième Reproduction',
+                    'Semence Certifiée Première génération',
+                    'Semence Certifiée Deuxième génération',
                 ],
                 'research' => [
                     'Prébase',
                     'Base',
                 ],
                 'cooperative' => [
-                    'Semence Certifiée Première Reproduction',
-                    'Semence Certifiée Deuxième Reproduction',
+                    'Semence Certifiée Première génération',
+                    'Semence Certifiée Deuxième génération',
                 ],
                 'grower' => [
                     'Base',
-                    'Semence Certifiée Première Reproduction',
-                    'Semence Certifiée Deuxième Reproduction',
+                    'Semence Certifiée Première génération',
+                    'Semence Certifiée Deuxième génération',
+                ],
+                'agro-dealer' => [
+                    'Semence Certifiée Première génération',
+                    'Semence Certifiée Deuxième génération',
                 ],
             ];
             

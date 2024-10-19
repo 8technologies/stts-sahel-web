@@ -7,6 +7,8 @@ use App\Models\AgroDealers;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use App\Models\Utils;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\ValidationException;
 
 class AgroDealerController extends Controller
 {
@@ -18,13 +20,29 @@ class AgroDealerController extends Controller
 
     public function store(Request $request)
     {
-        $user = auth('api')->user();
         $data = $request->all();
+       
+        $rules = [
+            'user_id' => 'required|exists:admin_users,id',
+        ];
 
-        if ($request->has('proof_of_payment')) 
+        
+        try {
+            // Validate the incoming request data
+            $validatedData = Validator::make($request->all(), $rules)->validate();
+            
+            // Automatically set the 'mobile' field to 'yes'
+            //$validatedData['mobile'] = 'yes';
+        } catch (ValidationException $e) {
+            return response()->json([
+                'message' => 'Validation failed',
+                'errors' => $e->errors()
+            ], 422);
+        }
+
+        if ($request->has('attachments_certificate'))
         {
-          
-             $photoData = $request->input('proof_of_payment');
+            $photoData = $request->input('attachments_certificate');
              list($type, $photoData) = explode(';', $photoData);
              list(, $photoData) = explode(',', $photoData);
              $photoData = base64_decode($photoData);
@@ -32,49 +50,9 @@ class AgroDealerController extends Controller
              $photoPath = 'images/' . uniqid() . '.jpg'; 
              Storage::disk('admin')->put($photoPath, $photoData);
             
-             $data['proof_of_payment'] = $photoPath;
-         }
-
-         $fileDataObject = $request->input('attachments_certificate');
-        if (isset($fileDataObject['data'])) 
-        {
-             $fileData = $fileDataObject['data'];
-             // Extract and decode the base64 data
-             list(, $fileData) = explode(',', $fileData);
-             $fileData = base64_decode($fileData);
-             
-             // Determine the MIME type from the "mime_type" property
-             $mime = $fileDataObject['mime_type'];
-            
-
-            // Define allowed file extensions for non-image files
-            $allowedExtensions = [
-                'pdf' => 'application/pdf',
-                'docx' => 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-                // Add more allowed file types here
-            ];
-
-            // Determine the file extension based on the MIME type
-            $fileExtension = array_search($mime, $allowedExtensions);
-
-            if ($fileExtension === false) 
-            {
-                // Handle unsupported file types
-                return response()->json(['error' => 'Unsupported file type.'], 400);
-            }
-          
-            
-            // Generate a unique file name with the determined extension
-            $newFileName = uniqid() . '.' . $fileExtension;
-            $filePath = 'files/' . $newFileName;
-
-            // Store the file
-            Storage::disk('admin')->put($filePath, base64_decode($fileData));
-
-            // Update the 'receipt' field in the $data array with the new file name
-            $data['attachments_certificate'] = $filePath;
-          
+             $data['attachments_certificate'] = $photoPath;
         }
+
 
         $agroDealer = AgroDealers::create($data);
         return Utils::apiSuccess($agroDealer, 'Agro Dealer submitted successfully.');
@@ -92,41 +70,18 @@ class AgroDealerController extends Controller
         $agroDealer = AgroDealers::where('user_id', $id)->firstOrFail();
         $data = $request->all();
     
-        if ($request->has('proof_of_payment')) {
-            $photoData = $request->input('proof_of_payment');
-            [$type, $photoData] = explode(';', $photoData);
-            [, $photoData] = explode(',', $photoData);
-            $photoData = base64_decode($photoData);
-            $photoPath = 'images/' . uniqid() . '.jpg';
-            Storage::disk('admin')->put($photoPath, $photoData);
-            $data['proof_of_payment'] = $photoPath;
-        }
-    
-        $fileDataObject = $request->input('attachments_certificate');
-    
-        if (isset($fileDataObject['data'])) {
-            $fileData = $fileDataObject['data'];
-            [, $fileData] = explode(',', $fileData);
-            $fileData = base64_decode($fileData);
-            $mime = $fileDataObject['mime_type'];
-    
-            $allowedExtensions = [
-                'pdf' => 'application/pdf',
-                'docx' => 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-                // Add more allowed file types here
-            ];
-    
-            $fileExtension = array_search($mime, $allowedExtensions);
-    
-            if ($fileExtension === false) {
-                return response()->json(['error' => 'Unsupported file type.'], 400);
-            }
-    
-            $newFileName = uniqid() . '.' . $fileExtension;
-            $filePath = 'files/' . $newFileName;
-    
-            Storage::disk('admin')->put($filePath, $fileData);
-            $data['attachments_certificate'] = $filePath;
+        
+        if ($request->has('attachments_certificate'))
+        {
+            $photoData = $request->input('attachments_certificate');
+             list($type, $photoData) = explode(';', $photoData);
+             list(, $photoData) = explode(',', $photoData);
+             $photoData = base64_decode($photoData);
+         
+             $photoPath = 'images/' . uniqid() . '.jpg'; 
+             Storage::disk('admin')->put($photoPath, $photoData);
+            
+             $data['attachments_certificate'] = $photoPath;
         }
     
         $agroDealer->update($data);

@@ -233,10 +233,13 @@ return [
         'Insuring authority'=>'Insuring authority',
         'Attachments certificate'=>'Attachments certificate',
         'Proof of payment'=>'Proof of payment',
+         'Agro-dealer Registration'=>'Agro-dealer Registration',
         'Agro-dealer registration number'=>'Agro-dealer registration number',
         'Agro-dealer approval date'=>'Agro-dealer approval date',
         'Administrator decision'=>'Administrator decision',
         'Inspector decision'=>'Inspector decision',
+        'Certificate' => 'Certificate',
+        'Approval date' => 'Approval date',
         //field inspection form
         'Inspection type'=>'Inspection type',
         'Field inspection form number'=>'Field inspection form number',
@@ -418,7 +421,7 @@ return [
         //seed lab
         'Mother lot number' => 'Mother lot number',
         'registration_success' => 'Registration successful! Please check your email for the confirmation.',
-        'registration_failure' => 'Registration failed. Please check your internet and try again.',
+        'registration_failure' => 'Email sending failed. Please check your email and try again.',
         'Garden size(Acres)' => 'Garden size(Acres)',
         'A Summary of Pre-Orders over the months'=>'A Summary of Pre-orders over the months',
         'Seed lab number' => 'Seed lab number',
@@ -503,6 +506,8 @@ return [
         'My Stock' => 'My Stock',
         'My Total Stock' => 'My Total Stock',
         'View Stock' => 'View Stock',
+        'Number of days before submission of crop declaration' => 'Number of days before submission of crop declaration',
+        'Deadline for submission of crop declaration' => 'Deadline for submission of crop declaration',
         //outgrower
         'Out-grower' => 'Out-grower',
         'Contract number' => 'Contract number',

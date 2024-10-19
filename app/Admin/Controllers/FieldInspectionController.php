@@ -54,7 +54,7 @@ class FieldInspectionController extends AdminController
         //$inspection = FieldInspection::where('user_id', auth('admin')->user()->id)->value('is_done');
 
         //show users their respective forms
-        if (!auth('admin')->user()->isRole('commissioner')) 
+        if (!auth('admin')->user()->inRoles(['commissioner','administrator','developer'])) 
         {
 
             if (!auth('admin')->user()->isRole('inspector')) {

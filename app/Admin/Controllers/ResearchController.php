@@ -64,8 +64,22 @@ class ResearchController extends AdminController
        {
         // Remove the default id filter
         $filter->disableIdFilter();
-        $filter->like('user_id', 'Applicant')->select(\App\Models\User::pluck('name', 'id'));
-       
+
+        if (Admin::user()->inRoles(['research','basic-user'])) 
+        {
+            //filte by seed generation
+            $filter->equal('seed_generation', __('admin.form.Seed generation'))->select(
+                [
+                    'Prébase' => 'Prébase',
+                    'Base' => 'Base',
+                ]
+            );
+        }
+        else{
+            //filter by user
+            $filter->like('user_id', 'Applicant')->select(\App\Models\User::pluck('name', 'id'));
+        }
+      
        });
 
         $grid->column('created_at', __('admin.form.Date'))->display(function ($created_at) {
@@ -221,7 +235,7 @@ class ResearchController extends AdminController
             $form->file('receipt', __('admin.form.Proof of payment of application fees'))->readonly();
 
             //admin decision
-            if ($user->isRole('commissioner')) 
+            if ($user->inRoles(['commissioner','administrator','developer'])) 
             {
                 $form->divider('Administartor decision');
                 $form->radio('status', __('admin.form.Status'))
@@ -235,7 +249,7 @@ class ResearchController extends AdminController
                         $form->textarea('status_comment', __('admin.form.Status comment'))->rules('required');
                     })
                     ->when('accepted', function (Form $form) {
-                        $form->text('researcher_registration_number', __('admin.form.Research registration number')) ->default('Labosem/' . date('Y/M/') . rand(1000, 100000))->required();
+                        $form->text('researcher_registration_number', __('admin.form.Research registration number')) ->default('DCCS/' . date('Y/M/') . rand(1000, 100000))->required();
                         $form->datetime('valid_from', __('admin.form.Research approval date'))->default(date('Y-m-d H:i:s'))->required();
                         $nextYear = Carbon::now()->addYear(); // Get the date one year from now
                         $defaultDateTime = $nextYear->format('Y-m-d H:i:s'); // Format the date for default value

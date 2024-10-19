@@ -24,7 +24,6 @@ Route::group([
     $router->resource('seed-labels', SeedLabelController::class);
     $router->resource('label-packages', LabelPackageController::class);
     $router->resource('cooperatives', CooperativeController::class);
-    $router->resource('agro-dealers', AgroDealersController::class);
     $router->resource('feedback', FeedBackController::class);
     $router->resource('track-and-trace', TrackAndTraceController::class);
     $router->resource('pre-orders', PreOrderController::class);
@@ -36,4 +35,5 @@ Route::group([
     $router->resource('out-growers', OuGrowerController::class);
     $router->resource('research', ResearchController::class);
     $router->resource('individual-producers', IndividualProducerController::class);
+    $router->resource('agro-dealers', AgroDealerController::class);
 });

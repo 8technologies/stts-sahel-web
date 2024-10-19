@@ -6,6 +6,7 @@
   <title>{{config('admin.title')}} | {{ trans('admin.login') }}</title>
   <!-- Tell the browser to be responsive to screen width -->
   <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+  <link rel="icon" type="image/x-icon" href="{{ asset('storage/assets/favicon.ico') }}">
   
   @if(!is_null($favicon = Admin::favicon()))
   <link rel="shortcut icon" href="{{$favicon}}">
@@ -54,7 +55,7 @@
   
 </head>
 <body class="hold-transition login-page" style="background: url({{ asset('storage/assets/sahel.jpg') }}) no-repeat;background-size: cover;">
-<nav class="navbar navbar-default" role="navigation" style="border: 3px solid green; ">
+<nav class="navbar navbar-default" role="navigation" style="border: 1px solid green; ">
     <div class="container">
        <div class="navbar-header">
     <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbarSupportedContent" aria-expanded="false">
@@ -64,8 +65,8 @@
         <span class="icon-bar"></span>
     </button>
     <a class="navbar-brand" href="{{ url('/') }}">
-        <span><img src="{{ asset('storage/assets/flag.png') }}" alt="Logo" class="logo-image" style="max-width: 50px; height: auto;"></span>
-        <span class="brand-text" style="font-size: 18px; font-weight: bold;">REPUBLIQUE DU MALI</span>
+        <span><img src="{{ asset('storage/assets/flag.png') }}" alt="Logo" class="logo-image" style="max-width: 40px; height: auto;"></span>
+        <span class="brand-text" style="font-size: 18px; font-weight: bold;">REPUBLIQUE DU NIGER</span>
     </a>
 </div>
 
@@ -135,7 +136,7 @@
 <div class="login-box-body" style="border: 3px solid green; border-radius: 25px;">
 <div class="login-logo">
     <a href="{{ admin_url('/') }}">
-    <img src="{{ asset('storage/assets/logo.png') }}" alt="Logo" style="max-width: 45%; height: 45%;">
+    <img src="{{ asset('storage/assets/coat.png') }}" alt="Logo" style="max-width: 45%; height: 45%;">
     </a>
     <hr>
 </div>
