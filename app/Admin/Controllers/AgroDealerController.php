@@ -79,7 +79,7 @@ class AgroDealerController extends AdminController
         $grid->column('last_name', __('admin.form.Last name'));
         $grid->column('email', __('admin.form.Email'));
         $grid->column('physical_address', __('admin.form.Physical address'));
-        $grid->column('district', __('admin.form.District'));
+        $grid->column('Region', __('admin.form.Region'));
         $grid->column('status', __('admin.form.Status'))->display(function ($status) {
             return Utils::tell_status($status)??'-';
         })->sortable();
@@ -127,10 +127,10 @@ class AgroDealerController extends AdminController
         $show->field('last_name', __('admin.form.Last name'));
         $show->field('email', __('admin.form.Email'));
         $show->field('physical_address', __('admin.form.Physical address'));
-        $show->field('district', __('admin.form.District'));
-        $show->field('circle', __('admin.form.Circle'));
-        $show->field('township', __('admin.form.Township'));
-        $show->field('town_plot_number', __('admin.form.Town plot number'));
+        $show->field('region', __('admin.form.region'));
+        $show->field('department', __('admin.form.Department'));
+        $show->field('commune', __('admin.form.Commune'));
+        $show->field('village', __('admin.form.Village'));
         $show->field('shop_number', __('admin.form.Shop number'));
         $show->field('company_name', __('admin.form.Company name'));
         $show->field('retailers_in', __('admin.form.Retailers in'));
@@ -212,10 +212,10 @@ class AgroDealerController extends AdminController
             $form->display('last_name', __('admin.form.Last name'));
             $form->display('email', __('admin.form.Email'));
             $form->display('physical_address', __('admin.form.Physical address'));
-            $form->display('district', __('admin.form.District'));
-            $form->display('circle', __('admin.form.Circle'));
-            $form->display('township', __('admin.form.Township'));
-            $form->display('town_plot_number', __('admin.form.Town plot number'));
+            $form->display('region', __('admin.form.Region'));
+            $form->display('department', __('admin.form.Department'));
+            $form->display('commune', __('admin.form.Commune'));
+            $form->display('village/quartier', __('admin.form.Village/quartier'));
             $form->display('shop_number', __('admin.form.Shop number'));
             $form->display('company_name', __('admin.form.Company name'));
             $form->display('retailers_in', __('admin.form.Retailers in'));
@@ -285,15 +285,14 @@ class AgroDealerController extends AdminController
         else
         {
         
-        
             $form->text('first_name', __('admin.form.First name'))->rules('required');
             $form->text('last_name', __('admin.form.Last name'))->rules('required');
             $form->email('email', __('admin.form.Email'))->rules('required|unique:agro_dealers,email');
             $form->text('physical_address', __('admin.form.Physical address'))->rules('required');
-            $form->text('district', __('admin.form.District'))->rules('required');
-            $form->text('circle', __('admin.form.Circle'))->rules('required');
-            $form->text('township', __('admin.form.Township'))->rules('required');
-            $form->text('town_plot_number', __('admin.form.Town plot number'))->rules('required');
+            $form->display('region', __('admin.form.Region'))->rules('required');
+            $form->display('department', __('admin.form.Department'))->rules('required');
+            $form->text('commune', __('admin.form.commune'))->rules('required');
+            $form->text('village', __('admin.form.Village/quartier'))->rules('required');
             $form->text('shop_number', __('admin.form.Shop number'))->rules('required');
             $form->text('company_name', __('admin.form.Company name'))->rules('required');
             $form->text('retailers_in', __('admin.form.Retailers in'))->rules('required');
