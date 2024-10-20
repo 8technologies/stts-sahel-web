@@ -175,12 +175,13 @@ return [
         'Gps coordinates 2' => 'Coordonnées GPS 2', 
         'Gps coordinates 3' => 'Coordonnées GPS 3', 
         'Gps coordinates 4' => 'Coordonnées GPS 4', 
+
         'Field name' => 'Nom du champ', 
         'District/Region' => 'District/Région', 
-        'Circle' => 'Cercle', 
+        'Department' => 'Département', 
         'Seed lab number' => 'Numéro du laboratoire de semences',
         'Region' => 'Région',
-        'Township' => 'Commune', 
+        'Commune' => 'Commune', 
         'Village' => 'Village', 
         'Community' => 'Communauté',
         'Planting date' => 'Date de semis', 
@@ -219,6 +220,7 @@ return [
         'Inspector' => 'Inspecteur',
         'Assign Inspector'=>'Assigner un inspecteur',
         //agro dealer form
+        'Agro Dealer Category'=>'Catégorie de revendeur agroalimentaire',
         'First name' => 'Prénom',
         'Last name' => 'Nom de famille',
         'Email' => 'Email',
