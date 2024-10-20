@@ -47,7 +47,7 @@ class AgroDealerController extends AdminController
             
             return Validation::allowVerifiedUserToView($grid);
         }
-        if ($user->inRoles(['agro-dealer', 'basic-user','developer','inspector','commissioner'])) {
+        if ($user->inRoles(['agro-dealer', 'basic-user'])) {
             // Disable batch delete only
             $grid->disableBatchActions();
     
