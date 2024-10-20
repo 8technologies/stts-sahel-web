@@ -47,11 +47,10 @@ class AgroDealerController extends AdminController
             
             return Validation::allowVerifiedUserToView($grid);
         }
-        if ($user->inRoles(['agro-dealer', 'basic-user'])) {
-            // Disable batch delete only
+        
             $grid->disableBatchActions();
     
-        }
+    
         //function to show the loggedin user only what belongs to them
         Validation::showUserForms($grid);
 
@@ -133,7 +132,7 @@ class AgroDealerController extends AdminController
         $show->field('email', __('admin.form.Email'));
         $show->field('category', __('admin.form.Agro Dealer Category'));
         $show->field('physical_address', __('admin.form.Physical address'));
-        $show->field('region', __('admin.form.region'));
+        $show->field('region', __('admin.form.Region'));
         $show->field('department', __('admin.form.Department'));
         $show->field('commune', __('admin.form.Commune'));
         $show->field('village', __('admin.form.Village'));
