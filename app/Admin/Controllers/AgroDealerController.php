@@ -44,10 +44,14 @@ class AgroDealerController extends AdminController
         //hide details from other farmer roles
         if(!$user->inRoles(['agro-dealer','developer','inspector','commissioner','basic-user']))
         {
+            
             return Validation::allowVerifiedUserToView($grid);
         }
-
-
+        if ($user->inRoles(['agro-dealer', 'basic-user','developer','inspector','commissioner'])) {
+            // Disable batch delete only
+            $grid->disableBatchActions();
+    
+        }
         //function to show the loggedin user only what belongs to them
         Validation::showUserForms($grid);
 

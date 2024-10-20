@@ -17,6 +17,7 @@ class AgroDealers extends Model
         'first_name',
         'last_name',
         'email',
+        'category',
         'physical_address',
         'region',
         'department',
