@@ -24,7 +24,7 @@ Route::group([
     $router->resource('seed-labels', SeedLabelController::class);
     $router->resource('label-packages', LabelPackageController::class);
     $router->resource('cooperatives', CooperativeController::class);
-    $router->resource('feedback', FeedBackController::class);
+    // $router->resource('feedback', FeedBackController::class);
     $router->resource('track-and-trace', TrackAndTraceController::class);
     $router->resource('pre-orders', PreOrderController::class);
     $router->resource('quotations', QuotationController::class);
