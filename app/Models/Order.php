@@ -46,7 +46,9 @@ class Order extends Model
             //if order status is confirmed, subtract the quanity from the marketable quantity stock
             if($model->status == 'confirmed' && $model->marketable_id != null){
                 $stock = MarketableSeed::find($model->marketable_id);
-                $stock->quantity =  $stock->quantity - $model->quantity;
+                $remaining_quantity = ($stock->quantity ?? 0) - $model->quantity;
+                $stock->quantity = max(0, $remaining_quantity);
+                
                 $stock->save();
             }
 

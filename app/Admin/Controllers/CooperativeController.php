@@ -205,7 +205,7 @@ class CooperativeController extends AdminController
             if ($user->inRoles(['commissioner','developer'])) 
             {
                 $form->divider('Administartor decision');
-                $form->radioButton('status', __('admin.form.Status'))
+                $form->radio('status', __('admin.form.Status'))
                     ->options([
                         'accepted' => __('admin.form.Accepted'),
                         'rejected' => __('admin.form.Rejected'),
@@ -249,7 +249,7 @@ class CooperativeController extends AdminController
                       
                      ])
                      ->when('recommended', function(Form $form){
-                        $form->textarea('recommendation', __('Recommendation'));
+                        $form->textarea('recommendation', __('Recommendation'))->rules('required');
                      });
  
              }

@@ -31,8 +31,8 @@ class MarketableSeedController extends AdminController
     protected function grid()
     {
         $grid = new Grid(new MarketableSeed());
-        //order
-        $grid->model()->orderBy('id', 'desc');
+        $grid->model()->where('quantity', '>', 0)->orderBy('id', 'desc');
+
        
         //disable creation of new records
         $grid->disableCreateButton();

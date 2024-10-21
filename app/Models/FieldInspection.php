@@ -31,7 +31,10 @@ class FieldInspection extends Model
         'order_number',
         'status',
         'inspection_date',
-        'mobile'
+        'mobile',
+        'isolation',
+        'isolation_time',
+        'isolation_distance',
     ];
 
     public function crop_variety()

@@ -2,12 +2,19 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\AdminRoleUser;
 use App\Models\CropDeclaration;
 use App\Models\CropVariety;
+use App\Models\IndividualProducer;
 use Illuminate\Http\Request;
 use App\Models\SeedClass;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
+use App\Models\Research;
+use Encore\Admin\Auth\Database\Role;
+use App\Models\SeedProducer;
+use App\Models\Cooperative;
+
 use App\Models\Utils;
 
 class CropDeclarationController extends Controller
@@ -141,5 +148,48 @@ class CropDeclarationController extends Controller
         }
         return response()->json($result);
     }
+
+    //function to get the logged in user's seed class
+    public function getSeedClass($id)
+    {
+    
+        // Get the role ID of the user
+        $role_id = AdminRoleUser::where('user_id', $id)->value('role_id');
+        
+        if (!$role_id) {
+            return response()->json(['error' => 'Role not found'], 404);
+        }
+    
+        // Get the role name
+        $role = Role::find($role_id)->slug;
+    
+        $seed_class = null;
+    
+        // Determine seed class based on the user's role
+        if ($role == 'research') {
+            $research = Research::where('user_id', $id)->first();
+            $seed_class = $research ? SeedClass::where('class_name', $research->seed_generation)->get() : null;
+    
+        } elseif ($role == 'grower') {
+            $seed_producer = SeedProducer::where('user_id', $id)->first();
+            $seed_class = $seed_producer ? SeedClass::where('class_name', $seed_producer->seed_generation)->get() : null;
+    
+        } elseif ($role == 'cooperative') {
+            $cooperative = Cooperative::where('user_id', $id)->first();
+            $seed_class = $cooperative ? SeedClass::where('class_name', $cooperative->seed_generation)->get() : null;
+    
+        } elseif ($role == 'individual-producers') {
+            $individual_producer = IndividualProducer::where('user_id', $id)->first();
+            $seed_class = $individual_producer ? SeedClass::where('class_name', $individual_producer->seed_generation)->get() : null;
+        }
+    
+        if ($seed_class) {
+            return response()->json($seed_class);
+        } else {
+            return response()->json(['error' => 'Seed class not found'], 404);
+        }
+    }
+    
+    
 }
 

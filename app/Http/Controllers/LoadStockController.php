@@ -7,6 +7,8 @@ use App\Models\LoadStock;
 use App\Models\SeedClass;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use App\Models\Utils;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\ValidationException;
 
 class LoadStockController extends Controller
 {
@@ -18,9 +20,36 @@ class LoadStockController extends Controller
 
     public function store(Request $request)
     {
-        $user = auth('api')->user();
-        $data = $request->all();
-        $loadStock = LoadStock::create($data);
+       
+        $rules = [
+            'load_stock_number' => 'required',
+            'seed_class' => 'required|exists:seed_classes,id|numeric',
+            'crop_declaration_id' => 'nullable|exists:crop_declarations,id|numeric',
+            'crop_variety_id' => 'required|exists:crop_varieties,id|numeric',
+            'user_id' => 'required|exists:admin_users,id|numeric',
+            'yield_quantity' => 'required',
+            'field_size' => 'required',
+            'last_field_inspection_date' => 'nullable',
+            'load_stock_date' => 'required',
+            'status' => 'nullable',
+
+            
+        ];
+
+        try {
+            // Validate the incoming request data
+            $validatedData = Validator::make($request->all(), $rules)->validate();
+            
+            // Automatically set the 'mobile' field to 'yes'
+            $validatedData['mobile'] = 'yes';
+        } catch (ValidationException $e) {
+            return response()->json([
+                'message' => 'Validation failed',
+                'errors' => $e->errors()
+            ], 422);
+        }
+    
+        $loadStock = LoadStock::create($validatedData );
         return Utils::apiSuccess($loadStock, 'Crop Stock submitted successfully.');
     }
 
@@ -44,8 +73,35 @@ class LoadStockController extends Controller
     {
         $loadStock = LoadStock::findOrFail($id);
 
-        $data = $request->all();
-        $loadStock->update($data);
+        $rules = [
+            'load_stock_number' => 'required',
+            'seed_class' => 'required|exists:seed_classes,id|numeric',
+            'crop_declaration_id' => 'nullable|exists:crop_declarations,id|numeric',
+            'crop_variety_id' => 'required|exists:crop_varieties,id|numeric',
+            'user_id' => 'required|exists:admin_users,id|numeric',
+            'yield_quantity' => 'required',
+            'field_size' => 'required',
+            'last_field_inspection_date' => 'required',
+            'load_stock_date' => 'required',
+            'status' => 'nullable',
+
+            
+        ];
+
+        try {
+            // Validate the incoming request data
+            $validatedData = Validator::make($request->all(), $rules)->validate();
+            
+            // Automatically set the 'mobile' field to 'yes'
+            $validatedData['mobile'] = 'yes';
+        } catch (ValidationException $e) {
+            return response()->json([
+                'message' => 'Validation failed',
+                'errors' => $e->errors()
+            ], 422);
+        }
+
+        $loadStock->update($validatedData );
         return Utils::apiSuccess($loadStock, 'Crop Stock edited successfully.');
     }
 

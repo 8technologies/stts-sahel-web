@@ -173,6 +173,28 @@ class FieldInspectionController extends AdminController
         $show->field('estimated_yield', __('admin.form.Estimated yield(kgs)'))->as(function ($value) {
             return $value ?? '-';
         });
+
+        $show->field('plant_density', __('admin.form.Plant density'))->as(function ($value) {
+            return $value ?? '-';
+        });
+
+        $show->field('planting_ratio', __('admin.form.Planting ratio'))->as(function ($value) {
+            return $value ?? '-';
+        });
+
+        $show->field('isolation', __('admin.form.Isolation'))->as(function ($value) {
+            return $value ?? '-';
+        });
+
+        $show->field('isolation_time', __('admin.form.Isolation time'))->as(function ($value) {
+            return $value ?? '-';
+        });
+
+        $show->field('isolation_distance', __('admin.form.Isolation distance'))->as(function ($value) {
+            return $value ?? '-';
+        });
+
+        
         $show->field('remarks', __('admin.form.Remarks'))->as(function ($value) {
             return $value ?? '-';
         });
@@ -278,7 +300,24 @@ class FieldInspectionController extends AdminController
                 ]
             );
         })->required();
-     
+        
+
+        $form->radio('isolation', __('admin.form.isolation'))->options([
+            'temps' => 'Temps',
+             'distance' => 'Distance'
+        ])->when('distance', function (Form $form) {
+            $form->decimal('isolation_distance', __('admin.form.isolation_distance'));
+        })
+        ->when('temps', function (Form $form) {
+            $form->select('isolation_time', __('admin.form.isolation_time'))->options(
+                [
+                    'Adéquat' => 'Adéquat',
+                    'Inadéquat' => 'Inadéquat',
+
+                ]
+            );
+        });
+       
         $form->decimal('estimated_yield', __('admin.form.Estimated yield(kgs)'))->required();
         $form->file('signature', __('admin.form.Signature'))->required();
 

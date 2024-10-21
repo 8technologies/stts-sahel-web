@@ -8,14 +8,33 @@ use App\Models\SeedLab;
 use App\Models\LoadStock;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use App\Models\Utils;
+use App\Models\User;
 
 class MarketableSeedController extends Controller
 {
     public function index()
     {
-        $marketableSeeds = MarketableSeed::all();
-        return response()->json($marketableSeeds);
+        // Fetch all marketable seeds with quantity greater than zero
+        $marketableSeeds = MarketableSeed::where('quantity', '>', 0)->get();
+
+        $result = [];
+
+        // For each marketable seed, get the load stock and seed lab objects
+        foreach ($marketableSeeds as $stock) {
+            $load_stock = LoadStock::find($stock->load_stock_id);
+            $seed_lab = SeedLab::find($stock->seed_lab_id);
+            $user = User::find($stock->user_id);
+            $result[] = [
+                'marketable_seed_id' => $stock->id,
+                'load_stock' => $load_stock,
+                'seed_lab' => $seed_lab,
+                'user' => $user
+            ];
+        }
+
+        return response()->json($result);
     }
+
 
     public function store(Request $request)
     {
@@ -24,24 +43,31 @@ class MarketableSeedController extends Controller
         $marketableSeed = MarketableSeed::create($data);
         return Utils::apiSuccess($marketableSeed, 'Marketable Seed submitted successfully.');
     }
-
     public function show($id)
     {
-        $marketableSeed = MarketableSeed::where('user_id', '!=', $id)->get();
+        // Fetch marketable seeds where the user_id is not the provided $id and quantity is greater than zero
+        $marketableSeed = MarketableSeed::where('user_id', '!=', $id)
+                                        ->where('quantity', '>', 0)
+                                        ->get();
+    
         $result = [];
-        //for each get the seed class object
+    
         foreach ($marketableSeed as $stock) {
             $load_stock = LoadStock::find($stock->load_stock_id);
             $seed_lab = SeedLab::find($stock->seed_lab_id);
+            $user = User::find($stock->user_id);
+            
             $result[] = [
                 'marketable_seed_id' => $stock->id,
                 'load_stock' => $load_stock,
-                'seed_lab' => $seed_lab
+                'seed_lab' => $seed_lab,
+                'user' => $user
             ];
         }
+    
         return response()->json($result);
     }
-
+    
     public function update(Request $request, $id)
     {
         $marketableSeed = MarketableSeed::findOrFail($id);

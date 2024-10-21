@@ -150,14 +150,6 @@ class SeedSampleRequestController extends Controller
 
         $data = $request->all();
 
-        //check the status of the seed sample request
-            if ($SeedLab->status == 'lab test assigned') {
-                //if its approved, then update the load stock table quantity column with the quantity of the seed sample request
-                $loadStock = LoadStock::where('id', $SeedLab->load_stock_id)->first();
-                $loadStock->yield_quantity = $data['validated_stock'];
-                $loadStock->save();
-
-            }
         $SeedLab->update($data);
         return Utils::apiSuccess($SeedLab, 'seed sample request form edited successfully.');
     }
