@@ -130,7 +130,6 @@ class AgroDealerController extends AdminController
         $show->field('first_name', __('admin.form.First name'));
         $show->field('last_name', __('admin.form.Last name'));
         $show->field('email', __('admin.form.Email'));
-        $show->field('category', __('admin.form.Agro Dealer Category'));
         $show->field('physical_address', __('admin.form.Physical address'));
         $show->field('region', __('admin.form.Region'));
         $show->field('department', __('admin.form.Department'));
@@ -138,6 +137,7 @@ class AgroDealerController extends AdminController
         $show->field('village', __('admin.form.Village'));
         $show->field('shop_number', __('admin.form.Shop number'));
         $show->field('company_name', __('admin.form.Company name'));
+        $show->field('category', __('admin.form.Agro Dealer Category'));
         $show->field('retailers_in', __('admin.form.Retailers in'));
         $show->field('business_registration_number', __('admin.form.Business registration number'));
         $show->field('years_in_operation', __('admin.form.Years in operation'));
@@ -290,13 +290,6 @@ class AgroDealerController extends AdminController
 
         else
         {
-            $form->radio('category', __('admin.form.Agro Dealer Category'))
-        ->options([
-            'retailers' => 'Retailers',
-            'wholesalers' => 'Wholesalers'
-        ])
-        ->rules('required')
-        ->default('retailers'); 
         
             $form->text('first_name', __('admin.form.First name'))->rules('required');
             $form->text('last_name', __('admin.form.Last name'))->rules('required');
@@ -304,11 +297,22 @@ class AgroDealerController extends AdminController
             $form->text('physical_address', __('admin.form.Physical address'))->rules('required');
             $form->text('region', __('admin.form.Region'))->rules('required');
             $form->text('department', __('admin.form.Department'))->rules('required');
-            $form->text('commune', __('admin.form.commune'))->rules('required');
+            $form->text('commune', __('admin.form.Commune'))->rules('required');
             $form->text('village', __('admin.form.Village'))->rules('required');
             $form->text('shop_number', __('admin.form.Shop number'))->rules('required');
             $form->text('company_name', __('admin.form.Company name'))->rules('required');
-            $form->text('retailers_in', __('admin.form.Retailers in'))->rules('required');
+            $form->radio('category', __('admin.form.Agro Dealer Category'))
+             ->options([
+            'retailers' => 'Retailers',
+            'wholesalers' => 'Wholesalers'
+                ])
+            ->when('retailers', function (Form $form) {
+                $form->text('retailer_in', __('admin.form.Retailer In'))->required(); // Add the retailer_in field
+            })
+            ->when('wholesalers', function (Form $form) {
+                $form->text('retailer_in', __('admin.form.Wholesaler In'))->required(); // Add the wholesaler_in field
+            })->rules('required')
+            ->default('retailers'); 
             $form->text('business_registration_number', __('admin.form.Business registration number'))->rules('required');
             $form->number('years_in_operation', __('admin.form.Years in operation'))->rules('required');
             $form->textarea('business_description', __('admin.form.Business description'))->rules('required');
@@ -320,6 +324,31 @@ class AgroDealerController extends AdminController
             $form->hidden('status')->default('pending');
             $form->hidden('inspector_id')->default('28');
         }
+
+        $form->html('<script>
+    function toggleFields() {
+        // Get the value of the selected radio button
+        const category = document.querySelector("input[name="category"]:checked").value;
+
+        // Get the input fields
+        const retailerInput = document.querySelector("[name="retailer_in"]");
+        const wholesalerInput = document.querySelector("[name="wholesaler_in"]");
+
+        // Show/hide the input fields based on the selected category
+        if (category === "retailers") {
+            retailerInput.parentElement.style.display = "block"; // Show retailer input
+            wholesalerInput.parentElement.style.display = "none"; // Hide wholesaler input
+        } else {
+            retailerInput.parentElement.style.display = "none"; // Hide retailer input
+            wholesalerInput.parentElement.style.display = "block"; // Show wholesaler input
+        }
+    }
+
+    // Call toggleFields on page load to set initial state
+    document.addEventListener("DOMContentLoaded", function () {
+        toggleFields(); // Set the initial state based on the default value
+    });
+</script>');
 
         //disable the edit and delete action buttons
         $form->tools(function (Form\Tools $tools) 
