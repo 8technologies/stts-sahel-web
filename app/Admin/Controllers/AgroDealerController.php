@@ -130,7 +130,7 @@ class AgroDealerController extends AdminController
         $show->field('first_name', __('admin.form.First name'));
         $show->field('last_name', __('admin.form.Last name'));
         $show->field('email', __('admin.form.Email'));
-        $show->field('category', __('admin.form.Agro Dealer Category'));
+        $show->field('telephone', __('admin.form.Telephone'));
         $show->field('physical_address', __('admin.form.Physical address'));
         $show->field('region', __('admin.form.Region'));
         $show->field('department', __('admin.form.Department'));
@@ -138,7 +138,8 @@ class AgroDealerController extends AdminController
         $show->field('village', __('admin.form.Village'));
         $show->field('shop_number', __('admin.form.Shop number'));
         $show->field('company_name', __('admin.form.Company name'));
-        $show->field('retailers_in', __('admin.form.Retailers in'));
+        $show->field('category', __('admin.form.Agro Dealer Category'));
+        $show->field('retailers_in', __('admin.form.Retailer/Wholesaler in'));
         $show->field('business_registration_number', __('admin.form.Business registration number'));
         $show->field('years_in_operation', __('admin.form.Years in operation'));
         $show->field('business_description', __('admin.form.Business description'));
@@ -216,7 +217,7 @@ class AgroDealerController extends AdminController
             $form->display('first_name', __('admin.form.First name'));
             $form->display('last_name', __('admin.form.Last name'));
             $form->display('email', __('admin.form.Email'));
-            $form->display('category', __('admin.form.Agro Dealer Category'));
+            $form->display('telephone', __('admin.form.Telephone'));
             $form->display('physical_address', __('admin.form.Physical address'));
             $form->display('region', __('admin.form.Region'));
             $form->display('department', __('admin.form.Department'));
@@ -224,7 +225,8 @@ class AgroDealerController extends AdminController
             $form->display('village', __('admin.form.Village'));
             $form->display('shop_number', __('admin.form.Shop number'));
             $form->display('company_name', __('admin.form.Company name'));
-            $form->display('retailers_in', __('admin.form.Retailers in'));
+            $form->display('category', __('admin.form.Agro Dealer Category'));
+            $form->display('retailers_in', __('admin.form.Retailer/Wholesaler In'));
             $form->display('business_registration_number', __('admin.form.Business registration number'));
             $form->display('years_in_operation', __('admin.form.Years in operation'));
             $form->display('business_description', __('admin.form.Business description'));
@@ -253,7 +255,7 @@ class AgroDealerController extends AdminController
                         //get the current year
                         $year = date('y');
 
-                        $form->text('agro_dealer_reg_number', __('admin.form.Agro-dealer registration number'))->default('agro_dealer'.'/'.rand(1000, 10000).'/'. $year )->required();
+                        $form->text('agro_dealer_reg_number', __('admin.form.Agro-dealer registration number'))->default('DCCS/AGRO_DEALER/'.rand(1000, 10000).'/'. $year )->required();
                         $form->datetime('valid_from', __('admin.form.Cooperative approval date'))->default(date('Y-m-d H:i:s'))->required();
                         $nextYear = Carbon::now()->addYear(); // Get the date one year from now
                         $defaultDateTime = $nextYear->format('Y-m-d H:i:s'); // Format the date for default value
@@ -267,8 +269,8 @@ class AgroDealerController extends AdminController
                         //get all inspectors
                         $inspectors = \App\Models\Utils::get_inspectors();
                         $form->select('inspector_id', __('admin.form.Inspector'))
-                            ->options($inspectors);
-                    })->required();
+                            ->options($inspectors)->required();
+                        })->required();
             }
            
             //inspectors decision
@@ -282,33 +284,40 @@ class AgroDealerController extends AdminController
                     
                     ])
                     ->when('recommended', function(Form $form){
-                    $form->textarea('recommendation', __('Recommendation'));
-                    });
+                    $form->textarea('recommendation', __('Recommendation'))->required();
+                    })->required();
 
             }
         } 
 
         else
         {
-            $form->radio('category', __('admin.form.Agro Dealer Category'))
-        ->options([
-            'retailers' => 'Retailers',
-            'wholesalers' => 'Wholesalers'
-        ])
-        ->rules('required')
-        ->default('retailers'); 
+             
         
             $form->text('first_name', __('admin.form.First name'))->rules('required');
             $form->text('last_name', __('admin.form.Last name'))->rules('required');
+            $form->text('telephone', __('admin.form.Telephone'))->rules('required');
             $form->email('email', __('admin.form.Email'))->rules('required|unique:agro_dealers,email');
             $form->text('physical_address', __('admin.form.Physical address'))->rules('required');
             $form->text('region', __('admin.form.Region'))->rules('required');
             $form->text('department', __('admin.form.Department'))->rules('required');
-            $form->text('commune', __('admin.form.commune'))->rules('required');
+            $form->text('commune', __('admin.form.Commune'))->rules('required');
             $form->text('village', __('admin.form.Village'))->rules('required');
             $form->text('shop_number', __('admin.form.Shop number'))->rules('required');
             $form->text('company_name', __('admin.form.Company name'))->rules('required');
-            $form->text('retailers_in', __('admin.form.Retailers in'))->rules('required');
+            $form->radio('category', __('admin.form.Agro Dealer Category'))
+            ->options([
+            'retailer' => 'Retailer',
+            'wholesaler' => 'Wholesaler'
+            ])->when('retailer', function(Form $form){
+                $form->text('retailers_in', __('admin.form.Retailer in'))->rules('required');
+                })
+            ->when('wholesaler', function(Form $form){
+                $form->text('retailers_in', __('admin.form.Wholesaler in'))->rules('required');
+                })
+            ->rules('required')
+            ->default('retailers');
+            
             $form->text('business_registration_number', __('admin.form.Business registration number'))->rules('required');
             $form->number('years_in_operation', __('admin.form.Years in operation'))->rules('required');
             $form->textarea('business_description', __('admin.form.Business description'))->rules('required');
