@@ -50,6 +50,8 @@ class SeedProducerController extends AdminController
       
         //order of table
         $grid->model()->orderBy('id', 'desc');
+        //disable batch delete
+        $grid->disableBatchActions();
 
         //disable action buttons appropriately
         Utils::disable_buttons('SeedProducer', $grid);
@@ -79,8 +81,10 @@ class SeedProducerController extends AdminController
         $grid->column('producer_registration_number', __('admin.form.Seed producer registration number'))->display(function ($value) {
             return $value ?? '-';
         })->sortable();
-        $grid->column('seed_generation', __('admin.form.Seed generation'))->sortable();
-      
+        $grid->column('seed_generation', __('admin.form.Seed generation'))
+        ->display(function ($seed_generation) {
+            return implode(', ', $seed_generation); // Convert array to a comma-separated string
+        });
         $grid->column('status', __('admin.form.Status'))->display(function ($status) {
             return \App\Models\Utils::tell_status($status)??'-';
         })->sortable();
@@ -213,7 +217,10 @@ class SeedProducerController extends AdminController
         if ($user->inRoles(['commissioner','developer', 'inspector'])) 
         {
 
-            $form->display('seed_generation', __('admin.form.Seed generation'));
+            $form->display('seed_generation', __('admin.form.Seed generation'))
+                ->with(function ($seed_generation) {
+                    return implode(', ', $seed_generation); // Convert array to a comma-separated string
+                });
             $form->display('name_of_applicant', __('admin.form.Responsible manager name'));
             $form->display('applicant_phone_number', __('admin.form.Responsible manager phone number'));
             $form->display('applicant_email', __('admin.form.Company email'));
@@ -230,7 +237,7 @@ class SeedProducerController extends AdminController
             if ($user->inRoles(['commissioner','administrator','developer'])) 
             {
                 $form->divider('Administartor decision');
-                $form->radio('status', __('admin.form.Status'))
+                $form->radioButton('status', __('admin.form.Status'))
                 ->options([
                     'accepted'=> __('admin.form.Accepted'),
                     'halted' => __('admin.form.Halted'),
@@ -241,7 +248,7 @@ class SeedProducerController extends AdminController
                         $form->textarea('status_comment', __('admin.form.Status comment'))->rules('required');
                     })
                     ->when('accepted', function (Form $form) {
-                        $form->text('producer_registration_number', __('admin.form.Seed producer registration number')) ->default('DCCS/' . date('Y/M/') . rand(1000, 100000))->required();
+                        $form->text('producer_registration_number', __('admin.form.Seed producer registration number')) ->default('DCCS/SEEDPRODUCER/'  . rand(1000, 100000).'/'. date('Y'))->required();
                         $form->datetime('valid_from', __('admin.form.Seed producer approval date'))->default(date('Y-m-d H:i:s'))->required();
                         $nextYear = Carbon::now()->addYear(); // Get the date one year from now
                         $defaultDateTime = $nextYear->format('Y-m-d H:i:s'); // Format the date for default value
@@ -255,7 +262,7 @@ class SeedProducerController extends AdminController
                         //get all inspectors
                         $inspectors = \App\Models\Utils::get_inspectors();
                         $form->select('inspector_id', __('admin.form.Inspector'))
-                            ->options($inspectors);
+                            ->options($inspectors)->required();
                     })->required();
             }
 
@@ -264,15 +271,15 @@ class SeedProducerController extends AdminController
             {
              
                 $form->divider('Inspectors decision');
-                $form->radio('status', __('admin.form.Status'))
+                $form->radioButton('status', __('admin.form.Status'))
                     ->options([
                         'recommended'=> __('admin.form.Recommend'),
                        
                     ])
                   
                     ->when('recommended', function(Form $form){
-                       $form->textarea('recommendation', __('Recommendation'));
-                    });
+                       $form->textarea('recommendation', __('Recommendation'))->required();
+                    })->required();
 
             }
         }
@@ -281,19 +288,19 @@ class SeedProducerController extends AdminController
         else 
         {
 
-            $form->select('seed_generation', __('admin.form.Seed generation'))->options(
+            $form->multipleSelect('seed_generation', __('admin.form.Seed generation'))->options(
                 [
                     'Base' => 'Base(B)',
                     'Semence Certifiée Première Reproduction' => 'Semence Certifiée Premiere Reproduction(R1)',
                     'Semence Certifiée Deuxième Reproduction' => 'Semence Certifiée Deuxième Reproduction(R2)',
                 ]
-            );
+            )->required();
             $form->text('name_of_applicant', __('admin.form.Responsible manager name'))->required();
             $form->text('applicant_phone_number', __('admin.form.Responsible manager phone number'))->required();
             $form->text('applicant_email', __('admin.form.Company email'))->required();
             $form->text('premises_location', __('admin.form.Company physical address'))->required();
             $form->text('proposed_farm_location', __('admin.form.Proposed farm location'))->required();
-            $form->text('years_of_experience', __('admin.form.years of experience'));
+            $form->text('years_of_experience', __('admin.form.years of experience'))->required();
             $form->textarea('storage_facilities_description', __('admin.form.Describe your storage facilities to handle the resultant seed'))->required();
            
             if ($form->isEditing()) {
