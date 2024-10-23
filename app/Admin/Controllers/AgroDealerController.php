@@ -253,7 +253,7 @@ class AgroDealerController extends AdminController
                         //get the current year
                         $year = date('y');
 
-                        $form->text('agro_dealer_reg_number', __('admin.form.Agro-dealer registration number'))->default('agro_dealer'.'/'.rand(1000, 10000).'/'. $year )->required();
+                        $form->text('agro_dealer_reg_number', __('admin.form.Agro-dealer registration number'))->default('DCCS/AGRO_DEALER/' . rand(1000, 100000).'/'. date('Y'))->required();
                         $form->datetime('valid_from', __('admin.form.Cooperative approval date'))->default(date('Y-m-d H:i:s'))->required();
                         $nextYear = Carbon::now()->addYear(); // Get the date one year from now
                         $defaultDateTime = $nextYear->format('Y-m-d H:i:s'); // Format the date for default value
