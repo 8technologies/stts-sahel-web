@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedInteger('user_id')->nullable();
             $table->string('producer_registration_number')->nullable();
-            $table->string('seed_generation')->nullable();
+            $table->json('seed_generation')->nullable();
             $table->string('name_of_applicant')->nullable();
             $table->string('applicant_phone_number')->nullable();
             $table->string('applicant_email')->nullable();
