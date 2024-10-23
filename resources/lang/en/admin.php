@@ -227,6 +227,7 @@ return [
         'Retailers in'=>'Retailers in',
         'Business registration number'=>'Business registration number',
         'Years in operation'=>'Years in operation',
+        'If seed company, years of experience as a seed producer' => 'If seed company, years of experience as a seed producer',
         'Business description'=>'Business description',
         'Trading license number'=>'Trading license number',
         'Trading license period'=>'Trading license period',
