@@ -37,7 +37,8 @@ class CooperativeController extends AdminController
         $grid = new Grid(new Cooperative());
         $user = Admin::user();
 
-         
+        // disable batch delete
+         $grid->disableBatchActions();
         //hide details from other farmer roles
         if(!$user->inRoles(['cooperative','developer','inspector','commissioner','basic-user']))
         {
