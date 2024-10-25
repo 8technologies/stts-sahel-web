@@ -6,6 +6,7 @@ use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Show;
 use Illuminate\Support\Facades\Hash;
+use Encore\Admin\Facades\Admin;
 
 class UserController extends AdminController
 {
@@ -98,8 +99,12 @@ class UserController extends AdminController
         $userModel = config('admin.database.users_model');
         $permissionModel = config('admin.database.permissions_model');
         $roleModel = config('admin.database.roles_model');
+        
 
         $form = new Form(new $userModel());
+        $pass = $form->model()->password;
+        $currentUser = auth()->user(); // Assuming you're using the default auth system
+        $currentPassword = $currentUser->password;
 
         $userTable = config('admin.database.users_table');
         $connection = config('admin.database.connection');
@@ -116,11 +121,62 @@ class UserController extends AdminController
             ->rules(['mimes:jpeg,pdf,jpg,png', 'max:2048'])
             ->help('Please upload a valid image file. Size of image should not be more than 2MB.');
         
-        $form->password('password', trans('admin.password'))->rules('required|confirmed');
-        $form->password('password_confirmation', trans('admin.password_confirmation'))->rules('required')
-            ->default(function ($form) {
-                return $form->model()->password;
+        // $form->password('password', trans('admin.password'))->rules('required|confirmed');
+        
+        $form->html('<div class="input-group">
+                    <span class="input-group-addon">
+                    <i class="fa fa-eye" id="eye-icon"></i></span>
+                    <input id="password-input" type="text" class="form-control password" name="password" required >
+
+                </div>','<span style="color:red;">*</span>'. trans('admin.password'))->rules('confirmed|required');
+        $pass = $form->model()->password;       
+        $form->html('<div class="input-group">
+                <span class="input-group-addon">
+                <i class="fa fa-eye" id="eye-icon1"></i></span>
+                <input id="password-confirm" type="text" class="form-control password" value="' . $pass . '" name="password" required >
+
+                </div>', '<span style="color:red;">*</span>'. trans('admin.password_confirmation')
+        )
+        ->rules('confirmed|required')
+        ->default(function ($form) {
+                    return $form->model()->password;
+                });
+        Admin::script(
+
+            'document.getElementById("eye-icon").addEventListener("click", function() {
+                var passwordInput = document.getElementById("password-input");
+                var eyeIcon = document.getElementById("eye-icon");
+                if (passwordInput.type === "password") {
+                    eyeIcon.classList.remove("fa-eye");
+                    eyeIcon.classList.add("fa-eye-slash");
+                    passwordInput.type = "text"; // Show password
+                    
+                } else {
+                    passwordInput.type = "password"; // Hide password
+                    eyeIcon.classList.remove("fa-eye-slash");
+                    eyeIcon.classList.add("fa-eye");
+                }
             });
+            document.getElementById("eye-icon1").addEventListener("click", function() {
+                var passwordInput = document.getElementById("password-confirm");
+                var eyeIcon = document.getElementById("eye-icon1");
+                if (passwordInput.type === "password") {
+                    eyeIcon.classList.remove("fa-eye");
+                    eyeIcon.classList.add("fa-eye-slash");
+                    passwordInput.type = "text"; // Show password
+                    
+                } else {
+                    passwordInput.type = "password"; // Hide password
+                    eyeIcon.classList.remove("fa-eye-slash");
+                    eyeIcon.classList.add("fa-eye");
+                }
+            });'
+        );
+    
+        // $form->password('password_confirmation', trans('admin.password_confirmation'))->rules('required')
+        //     ->default(function ($form) {
+        //         return $form->model()->password;
+        //     });
 
         $form->ignore(['password_confirmation']);
 
@@ -138,5 +194,6 @@ class UserController extends AdminController
         });
 
         return $form;
-    }
+        
+}
 }
