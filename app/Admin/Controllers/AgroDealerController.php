@@ -254,8 +254,7 @@ class AgroDealerController extends AdminController
                     ->when('accepted', function (Form $form) {
                         //get the current year
                         $year = date('y');
-
-                        $form->text('agro_dealer_reg_number', __('admin.form.Agro-dealer registration number'))->default('DCCS/AGRO_DEALER/'.rand(1000, 10000).'/'. $year )->required();
+                        $form->text('agro_dealer_reg_number', __('admin.form.Agro-dealer registration number'))->default('DCCS/AGRO_DEALER/' . rand(1000, 100000).'/'. date('Y'))->required();
                         $form->datetime('valid_from', __('admin.form.Cooperative approval date'))->default(date('Y-m-d H:i:s'))->required();
                         $nextYear = Carbon::now()->addYear(); // Get the date one year from now
                         $defaultDateTime = $nextYear->format('Y-m-d H:i:s'); // Format the date for default value
@@ -292,7 +291,6 @@ class AgroDealerController extends AdminController
 
         else
         {
-             
         
             $form->text('first_name', __('admin.form.First name'))->rules('required');
             $form->text('last_name', __('admin.form.Last name'))->rules('required');
@@ -329,6 +327,31 @@ class AgroDealerController extends AdminController
             $form->hidden('status')->default('pending');
             $form->hidden('inspector_id')->default('28');
         }
+
+        $form->html('<script>
+    function toggleFields() {
+        // Get the value of the selected radio button
+        const category = document.querySelector("input[name="category"]:checked").value;
+
+        // Get the input fields
+        const retailerInput = document.querySelector("[name="retailer_in"]");
+        const wholesalerInput = document.querySelector("[name="wholesaler_in"]");
+
+        // Show/hide the input fields based on the selected category
+        if (category === "retailers") {
+            retailerInput.parentElement.style.display = "block"; // Show retailer input
+            wholesalerInput.parentElement.style.display = "none"; // Hide wholesaler input
+        } else {
+            retailerInput.parentElement.style.display = "none"; // Hide retailer input
+            wholesalerInput.parentElement.style.display = "block"; // Show wholesaler input
+        }
+    }
+
+    // Call toggleFields on page load to set initial state
+    document.addEventListener("DOMContentLoaded", function () {
+        toggleFields(); // Set the initial state based on the default value
+    });
+</script>');
 
         //disable the edit and delete action buttons
         $form->tools(function (Form\Tools $tools) 
