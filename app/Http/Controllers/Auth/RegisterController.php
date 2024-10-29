@@ -5,12 +5,13 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use App\Models\User;
-use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\RegistrationConfirmation; 
+use Illuminate\Support\Facades\Log; 
+use Illuminate\Http\Request;
 
 
 class RegisterController extends Controller
@@ -25,8 +26,6 @@ class RegisterController extends Controller
     | provide this functionality without requiring any additional code.
     |
     */
-
-    use RegistersUsers;
 
     /**
      * Where to redirect users after registration.
@@ -45,6 +44,10 @@ class RegisterController extends Controller
         $this->middleware('guest');
     }
 
+    public function showRegistrationForm()// show the registration view
+    {
+        return view('auth.register'); 
+    }
     /**
      * Get a validator for an incoming registration request.
      *
@@ -58,6 +61,18 @@ class RegisterController extends Controller
             'email' => ['required', 'string', 'email', 'max:255', 'unique:admin_users'],
 
         ]);
+    }
+    public function register(Request $request)//override the register function
+    {
+        $this->validator($request->all())->validate();
+
+        $registrationStatus = $this->create($request->all());
+
+        if ($registrationStatus['status'] === 'success') {
+            return redirect()->route('register')->with('success', 'Registration successful! Please check your email for your password.');
+        } else {
+            return redirect()->route('register')->with('warning', 'Registration successful, but email could not be sent.');
+        }
     }
 
     /**
@@ -107,13 +122,17 @@ class RegisterController extends Controller
     
             // If email sending is successful, save the user
             $user->save();
-    
+
             return [
-                'user' => $user,
-                'password' => $randomPassword,
+                'message' => 'Registration successful!',
+                'status' => 'success'
             ];
         } catch (\Exception $e) {
             // Handle email sending error here
+            Log::error('Email sending failed: ' . $e->getMessage(), [
+                'user_email' => $user->email,
+                'exception' => $e,
+            ]);
             return null;
         }
     }

@@ -4,17 +4,19 @@
 <div class="container">
     <div class="row justify-content-center" >
         <div class="col-md-6" >
-            <div class="card"  style="border: 3px solid green; border-radius: 25px;">
+            <div class="card"  style="border: 3px solid green; border-radius: 25px; ">
                 <div class="card-header">{{ __('Register') }}</div>
                 @if (Session::has('success'))
                 <div class="alert alert-success">
                     {{ Session::get('success') }}
                 </div>
+                {{ Session::forget('success') }}
                 @endif
                 @if (Session::has('error'))
                 <div class="alert alert-danger">
                     {{ Session::get('error') }}
                 </div>
+                {{ Session::forget('error') }}
                 @endif
                 <div class="card-body">
                     <form method="POST" action="{{ route('register') }}">
@@ -77,11 +79,15 @@
 
 
                         <div class="row mb-0">
-                            <div class="col-md-6 offset-md-4">
-                                <button type="submit" class="btn btn-primary">
+                            <div class="col-md-4 offset-md-4">
+                                <button type="submit" class="btn btn-block btn-flat" style="border-radius: 5px; background-color:#3c8dbc; color: white;">
                                     {{ __('Register') }}
                                 </button>
                             </div>
+                            {{-- <a class="btn btn-link" href="{{ admin_url('auth/login') }}">
+                                Already have an account? Login
+                            </a>
+                            </div> --}}
                         </div>
                     </form>
                 </div>
