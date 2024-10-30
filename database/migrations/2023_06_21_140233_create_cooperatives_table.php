@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedInteger('user_id')->nullable();
             $table->string('cooperative_number');
-            $table->string('seed_generation');
+            $table->json('seed_generation');
             $table->string('date_of_creation');
             $table->string('cooperative_name');
             $table->string('registration_number')->nullable();
@@ -24,7 +24,7 @@ return new class extends Migration
             $table->string('contact_phone_number');
             $table->string('contact_email')->nullable();
             $table->string('status')->nullable()->default('pending');
-            $table->string('recommendation')->nullable();
+            $table->text('recommendation')->nullable();
             $table->text('status_comment')->nullable();
             $table->unsignedInteger('inspector_id')->nullable();
             $table->string('valid_from')->nullable();
