@@ -2,6 +2,7 @@
 
 namespace Encore\Admin\Controllers;
 
+use App\Models\User;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Show;
@@ -122,18 +123,21 @@ class UserController extends AdminController
             ->help('Please upload a valid image file. Size of image should not be more than 2MB.');
         
         // $form->password('password', trans('admin.password'))->rules('required|confirmed');
-        
+        $id = request()->route()->parameters()["user"];
+        // dd($id);
+        $user = User::findOrFail($id);
+
         $form->html('<div class="input-group">
                     <span class="input-group-addon">
                     <i class="fa fa-eye" id="eye-icon"></i></span>
-                    <input id="password-input" type="text" class="form-control password" name="password" required >
+                    <input id="password-input" type="text" class="form-control password" value="'.$user->password.'" name="password" required >
 
                 </div>','<span style="color:red;">*</span>'. trans('admin.password'))->rules('confirmed|required');
-        $pass = $form->model()->password;       
+            
         $form->html('<div class="input-group">
                 <span class="input-group-addon">
                 <i class="fa fa-eye" id="eye-icon1"></i></span>
-                <input id="password-confirm" type="text" class="form-control password" value="' . $pass . '" name="password" required >
+                <input id="password-confirm" type="text" class="form-control password" value="'.$user->password.'" name="password" required >
 
                 </div>', '<span style="color:red;">*</span>'. trans('admin.password_confirmation')
         )
@@ -156,7 +160,8 @@ class UserController extends AdminController
                     eyeIcon.classList.remove("fa-eye-slash");
                     eyeIcon.classList.add("fa-eye");
                 }
-            });
+                    });
+        
             document.getElementById("eye-icon1").addEventListener("click", function() {
                 var passwordInput = document.getElementById("password-confirm");
                 var eyeIcon = document.getElementById("eye-icon1");
@@ -172,11 +177,6 @@ class UserController extends AdminController
                 }
             });'
         );
-    
-        // $form->password('password_confirmation', trans('admin.password_confirmation'))->rules('required')
-        //     ->default(function ($form) {
-        //         return $form->model()->password;
-        //     });
 
         $form->ignore(['password_confirmation']);
 
