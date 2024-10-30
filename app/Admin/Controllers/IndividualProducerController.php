@@ -45,6 +45,7 @@ class IndividualProducerController extends AdminController
              return Validation::allowVerifiedUserToView($grid);
         }
 
+        $grid->disableBatchActions();
 
         //function to show the loggedin user only what belongs to them
         Validation::showUserForms($grid);
@@ -80,8 +81,10 @@ class IndividualProducerController extends AdminController
         $grid->column('producer_registration_number', __('admin.form.Seed producer registration number'))->display(function ($value) {
             return $value ?? '-';
         })->sortable();
-        $grid->column('seed_generation', __('admin.form.Seed Category'))->sortable();
-      
+        $grid->column('seed_generation', __('admin.form.Seed generation'))
+        ->display(function ($seed_generation) {
+        return implode(', ', $seed_generation); // Convert array to a comma-separated string
+        });
         $grid->column('status', __('admin.form.Status'))->display(function ($status) {
             return \App\Models\Utils::tell_status($status)??'-';
         })->sortable();
@@ -136,7 +139,10 @@ class IndividualProducerController extends AdminController
         $show->field('producer_registration_number', __('admin.form.Seed producer registration number'))->as(function ($value) {
             return $value ?? '-';
         });
-        $show->field('seed_generation', __('admin.form.Seed category'));
+        $show->field('seed_generation', __('admin.form.Seed generation'))
+    ->as(function ($seed_generation) {
+        return implode(', ', $seed_generation); // Convert array to a comma-separated string
+    });
         $show->field('applicant_phone_number', __('admin.form.Applicant phone number'));
         $show->field('applicant_email', __('admin.form.Applicant email'));
         $show->field('premises_location', __('admin.form.Applicant physical address'));
@@ -215,8 +221,10 @@ class IndividualProducerController extends AdminController
         if ($user->inRoles(['commissioner','developer', 'inspector'])) 
         {
 
-            $form->display('seed_generation', __('admin.form.Seed generation'));
-            
+            $form->display('seed_generation', __('admin.form.Seed generation'))
+            ->with(function ($seed_generation) {
+                return implode(', ', $seed_generation); // Convert array to a comma-separated string
+            });
             $form->display('applicant_phone_number', __('admin.form.Applicant phone number'));
             $form->display('applicant_email', __('admin.form.Applicant email'));
             $form->display('premises_location', __('admin.form.Applicant physical address'));
@@ -229,10 +237,10 @@ class IndividualProducerController extends AdminController
             $form->file('receipt', __('admin.form.Proof of payment of application fees'))->readonly();
 
             //admin decision
-            if ($user->isRole('commissioner')) 
+            if ($user->isRole('commissioner','developer')) 
             {
                 $form->divider('Administartor decision');
-                $form->radio('status', __('admin.form.Status'))
+                $form->radioButton('status', __('admin.form.Status'))
                 ->options([
                     'accepted'=> __('admin.form.Accepted'),
                     'halted' => __('admin.form.Halted'),
@@ -243,7 +251,7 @@ class IndividualProducerController extends AdminController
                         $form->textarea('status_comment', __('admin.form.Status comment'))->rules('required');
                     })
                     ->when('accepted', function (Form $form) {
-                        $form->text('producer_registration_number', __('admin.form.Seed producer registration number')) ->default('DCCS/' . date('Y/M/') . rand(1000, 100000))->required();
+                        $form->text('producer_registration_number', __('admin.form.Seed producer registration number')) ->default('DCCS/INDIVIDUAL_PROD/'. rand(1000, 100000).'/'. date('Y'))->required();
                         $form->datetime('valid_from', __('admin.form.Seed producer approval date'))->default(date('Y-m-d H:i:s'))->required();
                         $nextYear = Carbon::now()->addYear(); // Get the date one year from now
                         $defaultDateTime = $nextYear->format('Y-m-d H:i:s'); // Format the date for default value
@@ -257,7 +265,7 @@ class IndividualProducerController extends AdminController
                         //get all inspectors
                         $inspectors = \App\Models\Utils::get_inspectors();
                         $form->select('inspector_id', __('admin.form.Inspector'))
-                            ->options($inspectors);
+                            ->options($inspectors)->required();
                     })->required();
             }
 
@@ -267,15 +275,14 @@ class IndividualProducerController extends AdminController
             {
              
                 $form->divider('Inspectors decision');
-                $form->radio('status', __('admin.form.Status'))
+                $form->radioButton('status', __('admin.form.Status'))
                     ->options([
                         'recommended'=> __('admin.form.Recommend'),
                        
                     ])
-                    
                     ->when('recommended', function(Form $form){
-                       $form->textarea('recommendation', __('Recommendation'));
-                    });
+                       $form->textarea('recommendation', __('Recommendation'))->required();
+                    })->required();
 
             }
         }
@@ -283,12 +290,12 @@ class IndividualProducerController extends AdminController
         //basic user
         else 
         {
-            $form->select('seed_generation', __('admin.form.Seed generation'))->options(
+            $form->multipleSelect('seed_generation', __('admin.form.Seed generation'))->options(
                 [
                     'Semence Certifiée Première Reproduction' => 'Semence Certifiée Premiere Reproduction(R1)',
                     'Semence Certifiée Deuxième Reproduction' => 'Semence Certifiée Deuxième Reproduction(R2)',
                 ]
-            );
+            )->required();
             $form->text('applicant_phone_number', __('admin.form.Applicant phone number'))->required();
             $form->text('applicant_email', __('admin.form.Applicant email'))->required();
             $form->text('premises_location', __('admin.form.Applicant physical address'))->required();
