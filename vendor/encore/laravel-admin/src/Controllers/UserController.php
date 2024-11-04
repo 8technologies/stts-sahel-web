@@ -122,9 +122,8 @@ class UserController extends AdminController
             ->rules(['mimes:jpeg,pdf,jpg,png', 'max:2048'])
             ->help('Please upload a valid image file. Size of image should not be more than 2MB.');
         
-        // $form->password('password', trans('admin.password'))->rules('required|confirmed');
         $id = request()->route()->parameters()["user"];
-        // dd($id);
+        
         $user = User::findOrFail($id);
 
         $form->html('<div class="input-group">
