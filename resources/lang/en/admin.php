@@ -306,6 +306,7 @@ return [
         'Nationality'=>'Nationality',
         'Phone number'=>'Phone number',
         'Email address'=>'Email address',
+        'Observation'=>'Observation',
         'Residential physical address'=>'Residential physical address',
         'Agriculture value chain'=>'Agriculture value chain',
         'Cooperative member saved successfully'=>'Cooperative member saved successfully',

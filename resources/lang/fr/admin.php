@@ -306,6 +306,7 @@ return [
         'Number of years of experience'=> 'Nombre d\'années d\'expérience',
         'Date of birth'=>'Date de naissance',
         'Nationality'=>'Nationalité',
+        'Observation'=>'Observation',
         'Phone number'=>'Numéro de téléphone',
         'Email address'=>'Adresse e-mail',
         'Residential physical address'=>'Adresse physique résidentielle',
