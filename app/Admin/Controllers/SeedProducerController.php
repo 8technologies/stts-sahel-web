@@ -281,16 +281,17 @@ class SeedProducerController extends AdminController
         else 
         {
 
-            $form->select('seed_generation', __('admin.form.Seed generation'))->options(
+            $form->multipleSelect('seed_generation', __('admin.form.Seed generation'))->options(
                 [
                     'Base' => 'Base(B)',
                     'Semence Certifiée Première Reproduction' => 'Semence Certifiée Premiere Reproduction(R1)',
                     'Semence Certifiée Deuxième Reproduction' => 'Semence Certifiée Deuxième Reproduction(R2)',
                 ]
-            );
+            )->required();
             $form->text('name_of_applicant', __('admin.form.Responsible manager name'))->required();
             $form->text('applicant_phone_number', __('admin.form.Responsible manager phone number'))->required();
             $form->text('applicant_email', __('admin.form.Company email'))->required();
+            $form->text('seed_company-name', __('admin.form.Seed company name'))->required();
             $form->text('premises_location', __('admin.form.Company physical address'))->required();
             $form->text('proposed_farm_location', __('admin.form.Proposed farm location'))->required();
             $form->text('years_of_experience', __('admin.form.years of experience'));

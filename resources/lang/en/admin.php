@@ -222,6 +222,7 @@ return [
         'Township'=>'Township',
         'Town plot number'=>'Town plot number',
         'Shop number'=>'Shop number',
+        'Agro dealer category'=>'Agro dealer category',
         'Company name'=>'Company name',
         'Retailers in'=>'Retailers in',
         'Business registration number'=>'Business registration number',

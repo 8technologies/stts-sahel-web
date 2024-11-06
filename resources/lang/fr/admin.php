@@ -227,6 +227,7 @@ return [
         'Circle' => 'Cercle',
         'Township' => 'Commune',
         'Research'=>'Recherche',
+        'Agro dealer category'=>'Catégorie de revendeur agroalimentaire',
         'Town plot number' => 'Numéro de parcelle de ville',
         'Shop number' => 'Numéro de magasin',
         'Company name' => 'Nom de la compagnie',
