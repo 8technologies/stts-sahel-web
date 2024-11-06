@@ -11,8 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('seed_producers', function (Blueprint $table) {
-            $table->string('company_name')->nullable();
+        Schema::table('cooperatives', function (Blueprint $table) {
+            $table->string('years_of_experience')->nullable();
         });
     }
 
@@ -21,8 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('seed_producers', function (Blueprint $table) {
-            $table->dropColumn('company_name');
+        Schema::table('cooperatives', function (Blueprint $table) {
+            $table->dropColumn('years_of_experience');
         });
     }
 };

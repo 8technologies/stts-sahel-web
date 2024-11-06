@@ -32,11 +32,12 @@ class CooperativeMemberController extends AdminController
     {
         $grid = new Grid(new CooperativeMember());
 
+        
         //show a cooperative only members belonging to the cooperative
         $user = Admin::user()->id;
         $cooperative_id = \App\Models\Cooperative::where('user_id', $user)->first()->id;
         $grid->model()->where('cooperative_id', $cooperative_id);
-
+        $grid->column('member_number', __('admin.form.Member number'));
 
         $grid->column('member_number', __('admin.form.Member number'));
         $grid->column('farmer_first_name', __('admin.form.Farmer first name'));

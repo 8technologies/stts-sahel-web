@@ -303,6 +303,7 @@ return [
         'Farmer first name' => 'Prénom de l\'agriculteur',
         'Farmer last name' => 'Nom de l\'agriculteur',
         'Gender'=>'Genre',
+        'Number of years of experience'=> 'Nombre d\'années d\'expérience',
         'Date of birth'=>'Date de naissance',
         'Nationality'=>'Nationalité',
         'Phone number'=>'Numéro de téléphone',

@@ -16,6 +16,7 @@ class Cooperative extends Model
         'cooperative_number',
         'seed_generation',
         'date_of_creation',
+        'years_of_experience',
         'user_id',
         'cooperative_name',
         'registration_number',
