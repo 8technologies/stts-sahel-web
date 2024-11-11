@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::table('crop_declarations', function (Blueprint $table) {
             $table->json('cooperative_members')->nullable();
-            $table->string('name');
+            $table->string('name')->nullable();
         });
     }
 

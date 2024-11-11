@@ -245,6 +245,7 @@ return [
         'Attachments certificate'=>'Certificat de pièces jointes',
         'Proof of payment'=>'Preuve de paiement',
         'Agro-dealer registration number' => 'Numéro d\'enregistrement de l\'agro-distributeur',
+        'Agro-dealer Registration'=>'Inscription d\'un agro-distributeur',
         'Agro-dealer approval date' => 'Date d\'approbation de l\'agro-distributeur',
         'Administrator decision' => 'Décision de l\'administrateur',
         'Inspector decision' => 'Décision de l\'inspecteur',

@@ -236,6 +236,7 @@ return [
         'Attachments certificate'=>'Attachments certificate',
         'Proof of payment'=>'Proof of payment',
         'Agro-dealer registration number'=>'Agro-dealer registration number',
+        'Agro-dealer Registration'=>'Agro-dealer Registration',
         'Agro-dealer approval date'=>'Agro-dealer approval date',
         'Administrator decision'=>'Administrator decision',
         'Inspector decision'=>'Inspector decision',

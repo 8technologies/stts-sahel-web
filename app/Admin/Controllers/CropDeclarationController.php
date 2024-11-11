@@ -67,7 +67,7 @@ class CropDeclarationController extends AdminController
             return CropVariety::find($crop_variety_id)->crop_variety_name;
         });
         $grid->column('garden_size', __('admin.form.Garden size(Acres)'));
-        $grid->column('field_name', __('admin.form.Field name'));
+        $grid->column('field_name', __('admin.form.Field number'));
         $grid->column('planting_date', __('admin.form.Planting date'))->display(function ($planting_date) {
             return date('d-m-Y', strtotime($planting_date));
         });
@@ -119,7 +119,7 @@ class CropDeclarationController extends AdminController
 
         $show->field('phone_number', __('admin.form.Phone number'));
         $show->field('garden_size', __('admin.form.Garden size(Acres)'));
-        $show->field('field_name', __('admin.form.Field name'));
+        $show->field('field_name', __('admin.form.Field number'));
         $show->field('district_region', __('admin.form.District/Region'));
         $show->field('circle', __('admin.form.Circle'));
         $show->field('township', __('admin.form.Township'));
@@ -219,9 +219,11 @@ class CropDeclarationController extends AdminController
                 })
                 ->required();
                 
-
+            $crop_declaration = request()->route()->parameters()['crop_declaration'];
+             
+            $name = CropDeclaration::where('id', $crop_declaration)->pluck('name')->first(); 
                 // check if the cooperative/seed company name is empty
-            if (empty($form->model()->name)) {
+            if (!empty($name)) {
                 $form->display('name', __('admin.form.Cooperative/seed company name'));
                 if (empty($form->model()->cooperative_members)) { 
 
@@ -235,7 +237,8 @@ class CropDeclarationController extends AdminController
                         return "$lastName $firstName ";
                     })->join(', ');
                     });
-            }}
+                }
+            }
 
             $form->display('phone_number', __('admin.form.Phone number'));
             $form->display('garden_size', __('admin.form.Garden size(Acres)'));
@@ -346,7 +349,7 @@ class CropDeclarationController extends AdminController
             $form->decimal('garden_size', __('admin.form.Garden size(Acres)'))->required();
             
             $randomFieldName = 'FIELD' . mt_rand(100, 999);
-            $form->hidden('field_name', __('admin.form.Field name'))->default($randomFieldName)->required();
+            $form->hidden('field_name', __('admin.form.Field number'))->default($randomFieldName)->required();
             $form->text('district_region', __('admin.form.District/Region'))->required();
             $form->text('circle', __('admin.form.Circle'))->required();
             $form->text('township', __('admin.form.Township'))->required();
