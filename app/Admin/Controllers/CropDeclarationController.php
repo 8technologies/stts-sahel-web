@@ -214,8 +214,8 @@ class CropDeclarationController extends AdminController
                 })
                 ->required();
             $form->display('previous_seed_culture', __('admin.form.Previous Seed culture'))
-                ->with(function ($seed_class) {
-                    return \App\Models\SeedClass::find($seed_class)->class_name;
+                ->with(function ($crop_variety_id) {
+                    return CropVariety::find($crop_variety_id)->crop_variety_name;
                 })
                 ->required();
                 
