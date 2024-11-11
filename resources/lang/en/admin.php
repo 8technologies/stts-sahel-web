@@ -168,6 +168,7 @@ return [
         'GPS coordinates 3' => 'GPS coordinates 3',
         'GPS coordinates 4' => 'GPS coordinates 4',
         'Field name' => 'Field name',
+        'Field number' => 'Field number', 
         'District/Region' => 'District/Region',
         'Circle' => 'Circle',
         'Get GPS Coordinates' => 'Get GPS Coordinates',
@@ -320,7 +321,8 @@ return [
         'Form submitted successfully' => 'Form submitted successfully',
         'Print results' => 'Print results',
         'Cooperative members' => 'Cooperative members',
-        'Previous Seed generation'=>'Previous Seed generation',
+        'Previous Seed culture'=>'Previous Seed culture',
+        'Cooperative/seed company name'=>'Cooperative/seed company name',
         //marketable seeds
         'User' => 'User',
         'Crop Variety' => 'Crop Variety',

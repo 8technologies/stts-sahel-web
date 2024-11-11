@@ -175,7 +175,7 @@ return [
         'Gps coordinates 2' => 'Coordonnées GPS 2', 
         'Gps coordinates 3' => 'Coordonnées GPS 3', 
         'Gps coordinates 4' => 'Coordonnées GPS 4', 
-        'Field name' => 'Nom du champ', 
+        'Field number' => 'Numéro de champ', 
         'District/Region' => 'District/Région', 
         'Circle' => 'Cercle', 
         'Seed lab number' => 'Numéro du laboratoire de semences',
@@ -205,7 +205,8 @@ return [
         'Status comment' => 'Commentaire sur le statut', 
         'Cooperative members'=>'Membres de la coopérative',
         'Accepted' => 'Accepté', 
-        'Previous Seed generation'=>'Génération de semences précédente',
+        'Previous Seed culture'=>'Culture de semences précédente',
+        'Cooperative/seed company name'=>'Nom de la coopérative/entreprise semencière',
         //cooperative form
         'Cooperative name' => 'Nom de la coopérative',
         'Registration number' => 'Numéro d\'enregistrement',

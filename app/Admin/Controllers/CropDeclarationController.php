@@ -15,7 +15,7 @@ use App\Models\User;
 use App\Models\Utils;
 use Encore\Admin\Facades\Admin;
 use \App\Models\Validation;
-
+use Symfony\Contracts\Service\Attribute\Required;
 
 class CropDeclarationController extends AdminController
 {
@@ -213,6 +213,11 @@ class CropDeclarationController extends AdminController
                     return \App\Models\SeedClass::find($seed_class)->class_name;
                 })
                 ->required();
+            $form->display('previous_seed_culture', __('admin.form.Previous Seed culture'))
+                ->with(function ($seed_class) {
+                    return \App\Models\SeedClass::find($seed_class)->class_name;
+                })
+                ->required();
                 
 
                 // check if the cooperative/seed company name is empty
@@ -234,7 +239,7 @@ class CropDeclarationController extends AdminController
 
             $form->display('phone_number', __('admin.form.Phone number'));
             $form->display('garden_size', __('admin.form.Garden size(Acres)'));
-            $form->display('field_name', __('admin.form.Field name'));
+            $form->display('field_name', __('admin.form.Field number'));
             $form->display('district_region', __('admin.form.District/Region'));
             $form->display('circle', __('admin.form.Circle'));
             $form->display('township', __('admin.form.Township'));
@@ -269,14 +274,14 @@ class CropDeclarationController extends AdminController
 
             ])
             ->when('in', ['rejected', 'halted'], function (Form $form) {
-                $form->textarea('status_comment', __('admin.form.Status comment'));
+                $form->textarea('status_comment', __('admin.form.Status comment'))->Required();
             })
             ->when('inspector assigned', function (Form $form) {
 
                 //get all inspectors
                 $inspectors = \App\Models\Utils::get_inspectors();
                 $form->select('inspector_id', __('admin.form.Inspector'))
-                    ->options($inspectors);
+                    ->options($inspectors)->required();
             })->required();
 
             
@@ -330,7 +335,7 @@ class CropDeclarationController extends AdminController
                     \App\Models\SeedClass::whereIn('class_name', $roleSeedClassOptions[$userRole])->pluck('class_name', 'id')
                 )
                 ->required();
-            $form->select('previous_seed_culture', __('admin.form.Previous Seed generation'))
+            $form->select('previous_seed_culture', __('admin.form.Previous Seed culture'))
             ->options(
                 \App\Models\SeedClass::whereIn('class_name', $roleSeedClassOptions[$userRole])->pluck('class_name', 'id')
             )
