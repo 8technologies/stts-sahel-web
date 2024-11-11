@@ -319,6 +319,8 @@ return [
         'Seed-breeder' => 'Seed-breeder',
         'Form submitted successfully' => 'Form submitted successfully',
         'Print results' => 'Print results',
+        'Cooperative members' => 'Cooperative members',
+        'Previous Seed generation'=>'Previous Seed generation',
         //marketable seeds
         'User' => 'User',
         'Crop Variety' => 'Crop Variety',

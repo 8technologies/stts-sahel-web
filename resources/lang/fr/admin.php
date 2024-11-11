@@ -203,7 +203,9 @@ return [
         'Rejected' => 'Rejeté', 
         'Halted' => 'Arrêté', 
         'Status comment' => 'Commentaire sur le statut', 
+        'Cooperative members'=>'Membres de la coopérative',
         'Accepted' => 'Accepté', 
+        'Previous Seed generation'=>'Génération de semences précédente',
         //cooperative form
         'Cooperative name' => 'Nom de la coopérative',
         'Registration number' => 'Numéro d\'enregistrement',

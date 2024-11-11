@@ -62,8 +62,6 @@ class CooperativeMemberController extends AdminController
     {
         $show = new Show(CooperativeMember::findOrFail($id));
 
-        $user = Admin::user()->id;
-        $cooperative_name = Cooperative::where('user_id', $user)->first()->cooperative_name;
         $show->field('cooperative.cooperative_name', __('admin.form.Cooperative name'));
         $show->field('member_number', __('admin.form.Member number'));
         $show->field('farmer_first_name', __('admin.form.Farmer first name'));

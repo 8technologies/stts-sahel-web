@@ -40,7 +40,9 @@ class CropDeclaration extends Model
         'out_grower_id',
         'status_comment',
         'details',
-        'mobile'
+        'mobile',
+        'name',
+        'cooperative_members'
 
     ];
 
@@ -51,6 +53,7 @@ class CropDeclaration extends Model
         'expected_yield' => 'decimal:2',
         'garden_location_latitude' => 'decimal:6',
         'garden_location_longitude' => 'decimal:6',
+        'cooperative_members'=>'array'
     ];
 
     public function crop_varieties(): BelongsToMany
