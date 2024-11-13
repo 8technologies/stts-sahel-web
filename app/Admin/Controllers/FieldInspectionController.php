@@ -200,15 +200,15 @@ class FieldInspectionController extends AdminController
             return $value ?? '-';
         });
 
-        $show->field('isolation', __('admin.form.Isolation'))->as(function ($value) {
+        $show->field('isolation', __('admin.form.isolation'))->as(function ($value) {
             return $value ?? '-';
         });
 
-        $show->field('isolation_time', __('admin.form.Isolation time'))->as(function ($value) {
+        $show->field('isolation_time', __('admin.form.isolation_time'))->as(function ($value) {
             return $value ?? '-';
         });
 
-        $show->field('isolation_distance', __('admin.form.Isolation distance'))->as(function ($value) {
+        $show->field('isolation_distance', __('admin.form.isolation_distance'))->as(function ($value) {
             return $value ?? '-';
         });
 
