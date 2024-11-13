@@ -108,6 +108,11 @@ class CropDeclaration extends Model
                     $inspection->user_id = $model->user_id;
                     $inspection->physical_address = $model->village;
                     $inspection->field_size = $model->garden_size;
+                    $inspection->seed_generation= $model->seed_class_id;
+                    $inspection->coop_seed_name= $model->coop_seed_name;
+                    $inspection->planting_date = $model->planting_date;
+                    $inspection->origin_of_variety = $model->origin_of_variety;
+                    $inspection->previous_seed_culture = $model->previous_seed_culture;
                     $inspection->inspector_id = $model->inspector_id;
                     $inspection->order_number = $type->order;
                     $inspection->status = 'inspector assigned';

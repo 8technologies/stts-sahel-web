@@ -2,6 +2,7 @@
 
 namespace App\Admin\Controllers;
 
+use App\Models\CropVariety;
 use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
@@ -149,12 +150,29 @@ class FieldInspectionController extends AdminController
         $show->field('user_id', __('admin.form.Applicant'))->as(function ($user_id) {
             return \App\Models\User::find($user_id)->name;
         });
+        $field_inspection = request()->route()->parameters()['field_inspection'];
+            
+        $coop_seed_name = FieldInspection::where('id', $field_inspection)->pluck('coop_seed_name')->first(); 
+                // check if the cooperative/seed company name is empty
+        if (!empty($coop_seed_name)) {
+            $show->field('coop_seed_name', __('admin.form.Cooperative/seed company name'));
+        }
+        
         $show->field('crop_variety_id', __('admin.form.Crop Variety'))->as(function ($crop_variety_id) {
             return \App\Models\CropVariety::find($crop_variety_id)->crop_variety_name;
         });
+
         $show->field('inspection_type_id', __('admin.form.Inspection type'))->as(function ($inspection_type_id) {
             return \App\Models\InspectionType::find($inspection_type_id)->inspection_type_name;
         });
+        $show->field('previous_seed_culture', __('admin.form.Previous Seed culture'))
+        ->as(function ($crop_variety_id) {
+            return CropVariety::find($crop_variety_id)->crop_variety_name;
+        }) ->required();
+
+        $show->field('planting_date', __('admin.form.Planting date'));
+        $show->field('origin_of_variety', __('admin.form.Origin of variety'));
+        
         $show->field('physical_address', __('admin.form.Physical address'))->as(function ($value) {
             return $value ?? '-';
         });
@@ -263,6 +281,9 @@ class FieldInspectionController extends AdminController
         $form->display('user_id', __('admin.form.Applicant'))->with(function ($user_id) {
             return \App\Models\User::find($user_id)->name;
         });
+
+        $form->display('coop_seed_name', __('admin.form.Cooperative/seed company name'));
+        
         $form->display('crop_variety_id', __('admin.form.Crop Variety'))->with(function ($crop_variety_id) {
             return \App\Models\CropVariety::find($crop_variety_id)->crop_variety_name;
         });
@@ -279,7 +300,15 @@ class FieldInspectionController extends AdminController
         $form->decimal('field_size', __('admin.form.Field size'))->required();
         $form->select('seed_generation', __('admin.form.Seed generation'))->options(
             \App\Models\SeedClass::all()->pluck('class_name', 'id')->all() 
-        )->required();
+        )->readOnly();
+
+        $form->display('previous_seed_culture', __('admin.form.Previous Seed culture'))
+        ->with(function ($crop_variety_id) {
+            return CropVariety::find($crop_variety_id)->crop_variety_name;
+        }) ->required();
+
+        $form->display('planting_date', __('admin.form.Planting date'));
+        $form->display('origin_of_variety', __('admin.form.Origin of variety'));
         
         $form->text('crop_condition', __('admin.form.Crop condition'))->required();
         $form->select('plant_density', __('admin.form.Plant density'))->options([

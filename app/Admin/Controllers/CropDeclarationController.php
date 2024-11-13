@@ -221,10 +221,10 @@ class CropDeclarationController extends AdminController
                 
             $crop_declaration = request()->route()->parameters()['crop_declaration'];
              
-            $name = CropDeclaration::where('id', $crop_declaration)->pluck('name')->first(); 
+            $coop_seed_name = CropDeclaration::where('id', $crop_declaration)->pluck('coop_seed_name')->first(); 
                 // check if the cooperative/seed company name is empty
-            if (!empty($name)) {
-                $form->display('name', __('admin.form.Cooperative/seed company name'));
+            if (!empty($coop_seed_name)) {
+                $form->display('coop_seed_name', __('admin.form.Cooperative/seed company name'));
                 if (empty($form->model()->cooperative_members)) { 
 
                 $form->display('cooperative_members', __('admin.form.Cooperative members'))
@@ -277,7 +277,7 @@ class CropDeclarationController extends AdminController
 
             ])
             ->when('in', ['rejected', 'halted'], function (Form $form) {
-                $form->textarea('status_comment', __('admin.form.Status comment'))->Required();
+                $form->textarea('status_comment', __('admin.form.Status comment'));
             })
             ->when('inspector assigned', function (Form $form) {
 
@@ -339,11 +339,8 @@ class CropDeclarationController extends AdminController
                 )
                 ->required();
             $form->select('previous_seed_culture', __('admin.form.Previous Seed culture'))
-            ->options(
-                \App\Models\SeedClass::whereIn('class_name', $roleSeedClassOptions[$userRole])->pluck('class_name', 'id')
-            )
-            ->required();
-
+            ->options(Utils::get_varieties())
+                ->required();
 
             $form->text('phone_number', __('admin.form.Phone number'))->required();
             $form->decimal('garden_size', __('admin.form.Garden size(Acres)'))->required();
