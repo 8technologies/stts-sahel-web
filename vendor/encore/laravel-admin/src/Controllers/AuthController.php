@@ -126,6 +126,8 @@ class AuthController extends Controller
     protected function settingForm()
     {
         $class = config('admin.database.users_model');
+        $currentUser = auth()->user(); // Assuming you're using the default auth system
+        $currentPassword = $currentUser->password;;
 
         $form = new Form(new $class());
 
@@ -133,11 +135,20 @@ class AuthController extends Controller
         $form->text('name', trans('admin.name'))->rules('required');
         $form->email('email', trans('admin.email'))->rules('required');
         $form->image('avatar', trans('admin.avatar'));
-        $form->password('password', trans('admin.password'))->rules('confirmed|required');
-        $form->password('password_confirmation', trans('admin.password_confirmation'))->rules('required')
-            ->default(function ($form) {
-                return $form->model()->password;
-            });
+        $form->html('<div class="input-group">
+                    <span class="input-group-addon">
+                    <i class="fa fa-eye" id="eye-icon"></i></span>
+                    <input id="password-input" type="text" class="form-control password" name="password" value="' . $currentPassword . '" required >
+
+                </div>','<span style="color:red;">*</span>'. trans('admin.password'))->rules('confirmed|required');
+        $form->html('<div class="input-group">
+            <span class="input-group-addon">
+            <i class="fa fa-eye" id="eye-icon1"></i></span>
+            <input id="password-confirm" type="text" class="form-control password" name="password" autocomplete="current-password" value="'. $currentPassword .'" required >
+
+        </div>', '<span style="color:red;">*</span>'.trans('admin.password_confirmation'))->default(function ($form) {
+            return $form->model()->password;
+        });
 
         $form->setAction(admin_url('auth/setting'));
 
@@ -166,7 +177,37 @@ class AuthController extends Controller
         $form->disableEditingCheck();
         $form->disableViewCheck();
         $form->disableCreatingCheck();
-        
+        $form->html('<script>
+        document.getElementById("eye-icon").addEventListener("click", function() {
+            var passwordInput = document.getElementById("password-input");
+            var eyeIcon = document.getElementById("eye-icon");
+            if (passwordInput.type === "password") {
+                eyeIcon.classList.remove("fa-eye");
+                eyeIcon.classList.add("fa-eye-slash");
+                passwordInput.type = "text"; // Show password
+                
+            } else {
+                passwordInput.type = "password"; // Hide password
+                eyeIcon.classList.remove("fa-eye-slash");
+                eyeIcon.classList.add("fa-eye");
+            }
+        });
+        document.getElementById("eye-icon1").addEventListener("click", function() {
+            var passwordInput = document.getElementById("password-confirm");
+            var eyeIcon = document.getElementById("eye-icon1");
+            if (passwordInput.type === "password") {
+                eyeIcon.classList.remove("fa-eye");
+                eyeIcon.classList.add("fa-eye-slash");
+                passwordInput.type = "text"; // Show password
+                
+            } else {
+                passwordInput.type = "password"; // Hide password
+                eyeIcon.classList.remove("fa-eye-slash");
+                eyeIcon.classList.add("fa-eye");
+            }
+        });
+    </script>');
+
 
         return $form;
     }
