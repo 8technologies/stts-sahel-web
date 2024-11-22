@@ -2,6 +2,8 @@
 
 namespace App\Admin\Controllers;
 
+use App\Models\Cooperative;
+use App\Models\CooperativeMember;
 use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
@@ -9,10 +11,11 @@ use Encore\Admin\Show;
 use \App\Models\CropDeclaration;
 use App\Models\CropVariety;
 use App\Models\SeedProducer;
+use App\Models\User;
 use App\Models\Utils;
 use Encore\Admin\Facades\Admin;
 use \App\Models\Validation;
-
+use Symfony\Contracts\Service\Attribute\Required;
 
 class CropDeclarationController extends AdminController
 {
@@ -64,7 +67,7 @@ class CropDeclarationController extends AdminController
             return CropVariety::find($crop_variety_id)->crop_variety_name;
         });
         $grid->column('garden_size', __('admin.form.Garden size(Acres)'));
-        $grid->column('field_name', __('admin.form.Field name'));
+        $grid->column('field_name', __('admin.form.Field number'));
         $grid->column('planting_date', __('admin.form.Planting date'))->display(function ($planting_date) {
             return date('d-m-Y', strtotime($planting_date));
         });
@@ -109,6 +112,9 @@ class CropDeclarationController extends AdminController
         $show->field('seed_class_id', __('admin.form.Seed generation'))->as(function ($seed_class) {
             return \App\Models\SeedClass::find($seed_class)->class_name;
         });
+        $show->field('previous_seed_culture', __('admin.form.Previous Seed culture'))->as(function ($crop_variety_id) {
+            return CropVariety::find($crop_variety_id)->crop_variety_name;
+        });
 
         $show->field('out_grower_id', __('admin.form.Out-grower'))->as(function ($out_grower_id) {
             return \App\Models\OutGrower::find($out_grower_id)->name ?? 'No out-grower selected';
@@ -116,7 +122,7 @@ class CropDeclarationController extends AdminController
 
         $show->field('phone_number', __('admin.form.Phone number'));
         $show->field('garden_size', __('admin.form.Garden size(Acres)'));
-        $show->field('field_name', __('admin.form.Field name'));
+        $show->field('field_name', __('admin.form.Field number'));
         $show->field('district_region', __('admin.form.District/Region'));
         $show->field('circle', __('admin.form.Circle'));
         $show->field('township', __('admin.form.Township'));
@@ -197,6 +203,8 @@ class CropDeclarationController extends AdminController
         //admin, inspector and developer
         if ($user->inRoles(['commissioner','developer'])) 
         {
+            // $userid =
+            // $owner= User::where('user_id', $userid)->first()->id;
             $form->display('crop_variety_id', __('admin.form.Crop variety'))
                 ->with(function ($crop_variety_id) {
                     return CropVariety::find($crop_variety_id)->crop_variety_name;
@@ -208,10 +216,36 @@ class CropDeclarationController extends AdminController
                     return \App\Models\SeedClass::find($seed_class)->class_name;
                 })
                 ->required();
+            $form->display('previous_seed_culture', __('admin.form.Previous Seed culture'))
+                ->with(function ($crop_variety_id) {
+                    return CropVariety::find($crop_variety_id)->crop_variety_name;
+                })
+                ->required();
+                
+            $crop_declaration = request()->route()->parameters()['crop_declaration'];
+             
+            $coop_seed_name = CropDeclaration::where('id', $crop_declaration)->pluck('coop_seed_name')->first(); 
+                // check if the cooperative/seed company name is empty
+            if (!empty($coop_seed_name)) {
+                $form->display('coop_seed_name', __('admin.form.Cooperative/seed company name'));
+                if (empty($form->model()->cooperative_members)) { 
+
+                $form->display('cooperative_members', __('admin.form.Cooperative members'))
+                    ->with(function ($cooperativeMemberIds) {
+                    // Fetch the names based on the stored IDs
+                    $memberNames = CooperativeMember::whereIn('id', $cooperativeMemberIds)->pluck('farmer_first_name', 'farmer_last_name');
+
+                    // Combine first and last names and return as a comma-separated list
+                    return $memberNames->map(function ($lastName, $firstName) {
+                        return "$lastName $firstName ";
+                    })->join(', ');
+                    });
+                }
+            }
 
             $form->display('phone_number', __('admin.form.Phone number'));
             $form->display('garden_size', __('admin.form.Garden size(Acres)'));
-            $form->display('field_name', __('admin.form.Field name'));
+            $form->display('field_name', __('admin.form.Field number'));
             $form->display('district_region', __('admin.form.District/Region'));
             $form->display('circle', __('admin.form.Circle'));
             $form->display('township', __('admin.form.Township'));
@@ -253,7 +287,7 @@ class CropDeclarationController extends AdminController
                 //get all inspectors
                 $inspectors = \App\Models\Utils::get_inspectors();
                 $form->select('inspector_id', __('admin.form.Inspector'))
-                    ->options($inspectors);
+                    ->options($inspectors)->required();
             })->required();
 
             
@@ -262,6 +296,7 @@ class CropDeclarationController extends AdminController
         //basic user
         else 
         {
+            
             //check if the user has a seed producer account
             $seed_producer = SeedProducer::where('user_id', $user->id)->first();
             if ($seed_producer != null) 
@@ -310,13 +345,15 @@ class CropDeclarationController extends AdminController
                     \App\Models\SeedClass::whereIn('class_name', $roleSeedClassOptions[$userRole])->pluck('class_name', 'id')
                 )
                 ->required();
-
+            $form->select('previous_seed_culture', __('admin.form.Previous Seed culture'))
+            ->options(Utils::get_varieties())
+                ->required();
 
             $form->text('phone_number', __('admin.form.Phone number'))->required();
             $form->decimal('garden_size', __('admin.form.Garden size(Acres)'))->required();
             
             $randomFieldName = 'FIELD' . mt_rand(100, 999);
-            $form->hidden('field_name', __('admin.form.Field name'))->default($randomFieldName)->required();
+            $form->hidden('field_name', __('admin.form.Field number'))->default($randomFieldName)->required();
             $form->text('district_region', __('admin.form.District/Region'))->required();
             $form->text('circle', __('admin.form.Circle'))->required();
             $form->text('township', __('admin.form.Township'))->required();
@@ -337,8 +374,35 @@ class CropDeclarationController extends AdminController
             
             $form->text('seed_supplier_name', __('admin.form.Seed supplier name'));
             $form->text('seed_supplier_registration_number', __('admin.form.Seed supplier registration number'));
-            $form->text('source_lot_number', __('admin.form.Source lot number'))->required();
+            $form->text('source_lot_number', __('admin.form.Source lot number'));
             $form->text('origin_of_variety', __('admin.form.Origin of variety'))->required();
+            // check if the user 
+            if($user->inRoles(['grower'])){
+                $form->text('name', __('admin.form.Seed company name'))->required();
+            }
+
+            // check if the user is a cooperative 
+            if($user->inRoles(['cooperative']) ){
+                // 
+                $user = Admin::user()->id;
+        
+                $cooperative_name = Cooperative::where('user_id', $user)->first()->cooperative_name;
+               
+                $cooperative_id = Cooperative::where('user_id', $user)->first()->id;
+
+                // get the cooperative members
+                $cooperative_members = CooperativeMember::where('cooperative_id', $cooperative_id)
+                    ->get(['id', 'farmer_first_name', 'farmer_last_name'])
+                    ->mapWithKeys(function ($member) {
+                    // Concatenate first and last names with a space in between
+                    return [$member->id => $member->farmer_first_name . ' ' . $member->farmer_last_name];
+                });
+                $form->text('name', __('admin.form.Cooperative name'))->required();
+                $form->multipleSelect('cooperative_members', __('admin.form.Cooperative members'))
+                ->options($cooperative_members)->required();
+                
+
+            }
             //add a get gps coordinate button
             $form->html('<button type="button" id="getLocationButton">' . __('admin.form.Get GPS Coordinates') . '</button>');
 

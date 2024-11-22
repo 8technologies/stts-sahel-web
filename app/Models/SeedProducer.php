@@ -25,6 +25,7 @@ class SeedProducer extends Model
         'name_of_applicant',
         'applicant_phone_number',
         'applicant_email',
+        'company_name',
         'premises_location',
         'proposed_farm_location',
         'years_of_experience',

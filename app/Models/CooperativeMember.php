@@ -20,6 +20,7 @@ class CooperativeMember extends Model
         'email_address',
         'residential_physical_address',
         'agriculture_value_chains',
+        'observation',
     ];
 
     protected $casts = [

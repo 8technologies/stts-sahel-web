@@ -122,6 +122,7 @@ class CooperativeController extends AdminController
        
         $show->field('cooperative_number', __('admin.form.Cooperative number'));
         $show->field('date_of_creation', __('admin.form.Date of creation'));
+        $show->field('years_of_experience', __('admin.form.Number of years of experience'));
         $show->field('cooperative_name', __('admin.form.Cooperative name'));
         $show->field('registration_number', __('admin.form.Registration number'))->as(function ($value) {
             return $value ?? '-';
@@ -195,6 +196,7 @@ class CooperativeController extends AdminController
         {
             $form->display('cooperative_number', __('admin.form.Cooperative number'));
             $form->display('date_of_creation', __('admin.form.Date of creation'));
+            $form->display('years_of_experience', __('admin.form.Number of years of experience'));
             $form->display('cooperative_name', __('admin.form.Cooperative name'));
             $form->display('cooperative_physical_address', __('admin.form.Cooperative physical address'));
             $form->display('contact_person_name', __('admin.form.Name of cooperative president'));
@@ -204,7 +206,7 @@ class CooperativeController extends AdminController
             //admin decision
             if ($user->inRoles(['commissioner','developer'])) 
             {
-                $form->divider('Administartor decision');
+                $form->divider(__('admin.form.Administrator decision'));
                 $form->radio('status', __('admin.form.Status'))
                     ->options([
                         'accepted' => __('admin.form.Accepted'),
@@ -234,7 +236,7 @@ class CooperativeController extends AdminController
                         //get all inspectors
                         $inspectors = \App\Models\Utils::get_inspectors();
                         $form->select('inspector_id', __('admin.form.Inspector'))
-                            ->options($inspectors);
+                            ->options($inspectors)->required();
                     })->required();
             }
             //inspector decision
@@ -250,7 +252,7 @@ class CooperativeController extends AdminController
                      ])
                      ->when('recommended', function(Form $form){
                         $form->textarea('recommendation', __('Recommendation'))->rules('required');
-                     });
+                     })->required();
  
              }
         } 
@@ -259,12 +261,14 @@ class CooperativeController extends AdminController
         {
             $form->select('seed_generation', __('admin.form.Seed generation'))->options(
                 [
+                    'Base'=>'Base',
                     'Semence Certifiée Première Reproduction' => 'Semence Certifiée Premiere Reproduction(R1)',
                     'Semence Certifiée Deuxième Reproduction' => 'Semence Certifiée Deuxième Reproduction(R2)',
                 ]
-            );
+            )->required();
             $form->text('cooperative_number', __('admin.form.Cooperative number'));
-            $form->date('date_of_creation', __('admin.form.Date of creation'));
+            $form->date('date_of_creation', __('admin.form.Date of creation'))->required();
+            $form->text('years_of_experience', __('admin.form.Number of years of experience'));
             $form->text('cooperative_name', __('admin.form.Cooperative name'))->required();
             $form->text('cooperative_physical_address', __('admin.form.Cooperative physical address'))->required();
             $form->text('contact_person_name', __('admin.form.Name of cooperative president'))->required();

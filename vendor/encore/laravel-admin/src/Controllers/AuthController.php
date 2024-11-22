@@ -149,10 +149,6 @@ class AuthController extends Controller
         </div>', '<span style="color:red;">*</span>'.trans('admin.password_confirmation'))->default(function ($form) {
             return $form->model()->password;
         });
-        // $form->text('password_confirmation', trans('admin.password_confirmation'))->rules('required')
-        //     ->default(function ($form) {
-        //         return $form->model()->password;
-        //     });
 
         $form->setAction(admin_url('auth/setting'));
 
@@ -181,7 +177,7 @@ class AuthController extends Controller
         $form->disableEditingCheck();
         $form->disableViewCheck();
         $form->disableCreatingCheck();
-
+      
         //javascript to make the password visible
         $form->html('<script>
         document.getElementById("eye-icon").addEventListener("click", function() {
@@ -214,7 +210,6 @@ class AuthController extends Controller
         });
     </script>');
 
-        
 
         return $form;
     }
