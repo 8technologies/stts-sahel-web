@@ -138,6 +138,7 @@ class SeedProducerController extends AdminController
         $show->field('name_of_applicant', __('admin.form.Responsible manager name'));
         $show->field('applicant_phone_number', __('admin.form.Responsible manager phone number'));
         $show->field('applicant_email', __('admin.form.Company email'));
+        $show->field('company_name', __('admin.form.Seed company name'));
         $show->field('premises_location', __('admin.form.Company physical address'));
         $show->field('proposed_farm_location', __('admin.form.Proposed farm location'));
         $show->field('years_of_experience', __('admin.form.If seed company, years of experience as a seed producer'));
@@ -217,6 +218,7 @@ class SeedProducerController extends AdminController
             $form->display('name_of_applicant', __('admin.form.Responsible manager name'));
             $form->display('applicant_phone_number', __('admin.form.Responsible manager phone number'));
             $form->display('applicant_email', __('admin.form.Company email'));
+            $form->display('company_name', __('admin.form.Seed company name'));
             $form->display('premises_location', __('admin.form.Company physical address'));
             $form->display('proposed_farm_location', __('admin.form.Proposed farm location'));
             $form->display('years_of_experience', __('admin.form.years of experience'));
@@ -229,7 +231,7 @@ class SeedProducerController extends AdminController
             //admin decision
             if ($user->isRole('commissioner')) 
             {
-                $form->divider('Administartor decision');
+                $form->divider(__('admin.form.Administrator decision'));
                 $form->radio('status', __('admin.form.Status'))
                 ->options([
                     'accepted'=> __('admin.form.Accepted'),
@@ -255,7 +257,7 @@ class SeedProducerController extends AdminController
                         //get all inspectors
                         $inspectors = \App\Models\Utils::get_inspectors();
                         $form->select('inspector_id', __('admin.form.Inspector'))
-                            ->options($inspectors);
+                            ->options($inspectors)->required();
                     })->required();
             }
 
@@ -263,7 +265,7 @@ class SeedProducerController extends AdminController
             if ($user->isRole('inspector')) 
             {
              
-                $form->divider('Inspectors decision');
+                $form->divider(__('admin.form.Inspectors decision'));
                 $form->radio('status', __('admin.form.Status'))
                     ->options([
                         'recommended'=> __('admin.form.Recommend'),
@@ -271,8 +273,8 @@ class SeedProducerController extends AdminController
                     ])
                   
                     ->when('recommended', function(Form $form){
-                       $form->textarea('recommendation', __('Recommendation'));
-                    });
+                       $form->textarea('recommendation', __('Recommendation'))->required();
+                    })->required();
 
             }
         }
@@ -287,10 +289,11 @@ class SeedProducerController extends AdminController
                     'Semence Certifiée Première Reproduction' => 'Semence Certifiée Premiere Reproduction(R1)',
                     'Semence Certifiée Deuxième Reproduction' => 'Semence Certifiée Deuxième Reproduction(R2)',
                 ]
-            );
+            )->required();
             $form->text('name_of_applicant', __('admin.form.Responsible manager name'))->required();
             $form->text('applicant_phone_number', __('admin.form.Responsible manager phone number'))->required();
             $form->text('applicant_email', __('admin.form.Company email'))->required();
+            $form->text('company_name', __('admin.form.Seed company name'))->required();
             $form->text('premises_location', __('admin.form.Company physical address'))->required();
             $form->text('proposed_farm_location', __('admin.form.Proposed farm location'))->required();
             $form->text('years_of_experience', __('admin.form.years of experience'));

@@ -40,7 +40,9 @@ class CropDeclaration extends Model
         'out_grower_id',
         'status_comment',
         'details',
-        'mobile'
+        'mobile',
+        'name',
+        'cooperative_members'
 
     ];
 
@@ -51,6 +53,7 @@ class CropDeclaration extends Model
         'expected_yield' => 'decimal:2',
         'garden_location_latitude' => 'decimal:6',
         'garden_location_longitude' => 'decimal:6',
+        'cooperative_members'=>'array'
     ];
 
     public function crop_varieties(): BelongsToMany
@@ -105,6 +108,11 @@ class CropDeclaration extends Model
                     $inspection->user_id = $model->user_id;
                     $inspection->physical_address = $model->village;
                     $inspection->field_size = $model->garden_size;
+                    $inspection->seed_generation= $model->seed_class_id;
+                    $inspection->coop_seed_name= $model->coop_seed_name;
+                    $inspection->planting_date = $model->planting_date;
+                    $inspection->origin_of_variety = $model->origin_of_variety;
+                    $inspection->previous_seed_culture = $model->previous_seed_culture;
                     $inspection->inspector_id = $model->inspector_id;
                     $inspection->order_number = $type->order;
                     $inspection->status = 'inspector assigned';
