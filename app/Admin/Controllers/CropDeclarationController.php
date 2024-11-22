@@ -112,6 +112,9 @@ class CropDeclarationController extends AdminController
         $show->field('seed_class_id', __('admin.form.Seed generation'))->as(function ($seed_class) {
             return \App\Models\SeedClass::find($seed_class)->class_name;
         });
+        $show->field('previous_seed_culture', __('admin.form.Previous Seed culture'))->as(function ($crop_variety_id) {
+            return CropVariety::find($crop_variety_id)->crop_variety_name;
+        });
 
         $show->field('out_grower_id', __('admin.form.Out-grower'))->as(function ($out_grower_id) {
             return \App\Models\OutGrower::find($out_grower_id)->name ?? 'No out-grower selected';
@@ -214,8 +217,8 @@ class CropDeclarationController extends AdminController
                 })
                 ->required();
             $form->display('previous_seed_culture', __('admin.form.Previous Seed culture'))
-                ->with(function ($seed_class) {
-                    return \App\Models\SeedClass::find($seed_class)->class_name;
+                ->with(function ($crop_variety_id) {
+                    return CropVariety::find($crop_variety_id)->crop_variety_name;
                 })
                 ->required();
                 
