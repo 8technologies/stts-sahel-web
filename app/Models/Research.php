@@ -10,6 +10,10 @@ class Research extends Model
 
     use HasFactory;
 
+    protected $casts = [
+      'seed_generation' => 'array',
+    ];
+
     protected $fillable = 
     [
        'user_id',

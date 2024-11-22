@@ -76,7 +76,7 @@ Route::get('lab_results', function () {
 
 Route::get('agro_certificate', function () {
     $pdf = App::make('dompdf.wrapper');
-    $pdf->loadHTML(view('reports/agro_dealer_certificate'));
+    $pdf->loadHTML(view('reports/agro_dealer'));
     return $pdf->stream();
 });
 
@@ -91,6 +91,7 @@ Route::get('individual', function () {
     $pdf->loadHTML(view('reports/individual_producer'));
     return $pdf->stream();
 });
+
 
 Route::get('inspection', function () {
     $pdf = App::make('dompdf.wrapper');

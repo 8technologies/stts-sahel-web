@@ -57,7 +57,6 @@ class ApiController extends Controller
     
     public function register(Request $request)
     {
-
         $rules = [
             'last_name' => 'required',
             'first_name' => 'required',

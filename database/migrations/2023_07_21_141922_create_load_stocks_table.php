@@ -25,6 +25,7 @@ return new class extends Migration
             $table->date('last_field_inspection_date')->nullable();
             $table->date('load_stock_date')->nullable();
             $table->string('status')->default('pending');
+            $table->boolean('checked')->default(false);
             $table->timestamps();
 
             $table->foreign('crop_declaration_id')->references('id')->on('crop_declarations')->onDelete('cascade');

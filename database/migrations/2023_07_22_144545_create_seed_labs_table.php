@@ -27,6 +27,7 @@ return new class extends Migration
             $table->unsignedInteger('inspector_id')->nullable();
             $table->unsignedInteger('lab_officer_id')->nullable();
             $table->dateTime('reporting_date')->nullable();
+            $table->string('validated_stock')->nullable();
     
 
 

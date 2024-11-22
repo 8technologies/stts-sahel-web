@@ -14,6 +14,9 @@ use Encore\Admin\Auth\Database\Administrator;
 class SeedProducer extends Model
 {
     use HasFactory;
+    protected $casts = [
+        'seed_generation' => 'array',
+    ];
 
      protected $fillable = [
         'user_id',

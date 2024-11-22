@@ -174,8 +174,7 @@ class Notification extends Model
                 'receiver_id' => null,
                 'form_link' => admin_url("{$entity}/{$model->id}"),
             ],
-
-             
+            
             'marketable' => [
                 'message' => "Cher {$name}, votre {$entity} a été testé et est commercialisable.",
                 'receiver_id' => $receiver_id,

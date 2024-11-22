@@ -21,6 +21,7 @@ class LoadStock extends Model
         'last_field_inspection_date',
         'load_stock_date',
         'status',
+        'checked'
     ];
 
     public function crop_declaration()

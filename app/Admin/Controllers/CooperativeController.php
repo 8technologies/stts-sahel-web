@@ -35,7 +35,6 @@ class CooperativeController extends AdminController
     protected function grid()
     {
         $grid = new Grid(new Cooperative());
-        $cooperatives = Cooperative::where('user_id', auth('admin')->user()->id)->get();
         $user = Admin::user();
 
          

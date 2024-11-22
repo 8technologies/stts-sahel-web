@@ -186,6 +186,11 @@ class Validation extends Model
         if (auth('admin')->user()->isRole('individual-producers')) {
             $grid->model()->where('user_id', auth('admin')->user()->id);
         }
+
+        //show the individual agro dealer only his records
+        if (auth('admin')->user()->isRole('agro-dealer')) {
+            $grid->model()->where('user_id', auth('admin')->user()->id);
+        }
     }
 
     //allow only basic users to create forms

@@ -17,11 +17,12 @@ class AgroDealers extends Model
         'first_name',
         'last_name',
         'email',
+        'category',
         'physical_address',
-        'district',
-        'circle',
-        'township',
-        'town_plot_number',
+        'region',
+        'department',
+        'commune',
+        'village',
         'shop_number',
         'company_name',
         'retailers_in',
@@ -32,10 +33,7 @@ class AgroDealers extends Model
         'trading_license_period',
         'insuring authority',
         'attachments_certificate',
-        'proof_of_payment',
-        'cancellation_clauses',
-        'confidentiality_obligations',
-        'non_disclosure_agreement'
+        'proof_of_payment'
         
     ];
 

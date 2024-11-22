@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedInteger('user_id');
             $table->string('researcher_registration_number')->nullable();
-            $table->string('seed_generation')->nullable();
+            $table->json('seed_generation')->nullable();
             $table->string('name_of_applicant')->nullable();
             $table->string('applicant_phone_number')->nullable();
             $table->string('applicant_email')->nullable();
@@ -23,11 +23,11 @@ return new class extends Migration
             $table->string('proposed_farm_location')->nullable();
             $table->string('years_of_experience')->nullable();
             $table->string('gardening_history_description')->nullable();
-            $table->string('storage_facilities_description')->nullable();
+            $table->text('storage_facilities_description')->nullable();
             $table->string('receipt')->nullable();
             $table->string('status')->nullable();
             $table->string('status_comment')->nullable();
-            $table->string('recommendation')->nullable();
+            $table->text('recommendation')->nullable();
             $table->unsignedInteger('inspector_id')->nullable();
             $table->string('researcher_number')->nullable();
             $table->string('valid_from')->nullable();

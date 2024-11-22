@@ -103,6 +103,9 @@ class UserController extends AdminController
         
 
         $form = new Form(new $userModel());
+        $pass = $form->model()->password;
+        $currentUser = auth()->user(); // Assuming you're using the default auth system
+        $currentPassword = $currentUser->password;
 
         $userTable = config('admin.database.users_table');
         $connection = config('admin.database.connection');

@@ -13,7 +13,7 @@
     <link rel="dns-prefetch" href="//fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-    <link rel="icon" type="image/x-icon" href="{{ asset('storage/assets/window.ico') }}">
+    <link rel="icon" type="image/x-icon" href="{{ asset('storage/assets/favicon.ico') }}">
 
 
     <style>
@@ -62,11 +62,12 @@
 </head>
 <body>
     <div id="app" style="background: url({{ asset('storage/assets/sahel.jpg') }}) no-repeat;background-size: cover;">
-        <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm"  style="border: 3px solid green;">
+        <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm"  style="border: 1px solid green;">
             <div class="container">
-                <a class="navbar-brand" href="{{ url('/') }}">
-                    {{ config('app.name', 'Sahel') }}
-                </a>
+            <a class="navbar-brand" href="{{ url('/') }}">
+                <span><img src="{{ asset('storage/assets/flag.png') }}" alt="Logo" class="logo-image" style="max-width: 40px; height: auto;"></span>
+                <span class="brand-text" style="font-size: 18px; font-weight: bold;">REPUBLIQUE DU NIGER</span>
+            </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
                     <span class="navbar-toggler-icon"></span>
                 </button>

@@ -6,7 +6,7 @@
     <meta name="renderer" content="webkit">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>{{ Admin::title() }} @if($header) | {{ $header }}@endif</title>
-    <link rel="icon" type="image/x-icon" href="{{ asset('storage/assets/favicon-32x32.png') }}">
+    <link rel="icon" type="image/x-icon" href="{{ asset('storage/assets/favicon.ico') }}">
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
 
