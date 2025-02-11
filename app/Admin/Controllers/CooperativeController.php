@@ -8,9 +8,11 @@ use Encore\Admin\Grid;
 use Encore\Admin\Show;
 use Encore\Admin\Facades\Admin;
 use \App\Models\Cooperative;
+use App\Models\SeedClass;
 use \App\Models\Validation;
 use \App\Models\Utils;
 use Carbon\Carbon;
+use Encore\Admin\Auth\Database\Role;
 
 class CooperativeController extends AdminController
 {
@@ -121,6 +123,13 @@ class CooperativeController extends AdminController
              return('<p class="alert alert-danger">You do not have rights to view this form. <a href="/cooperatives"> Go Back </a></p> ');
          }
        
+         $show->field('seed_generation', __('admin.form.Seed generation'))->as(function ($seedGeneration) {
+            // Assuming $seedGeneration contains an array of seed class IDs
+            
+            return \App\Models\SeedClass::whereIn('id', $seedGeneration)
+                ->pluck('class_name')
+                ->implode(', '); // Display the names as a comma-separated string
+        });
         $show->field('cooperative_number', __('admin.form.Cooperative number'));
         $show->field('date_of_creation', __('admin.form.Date of creation'));
         $show->field('cooperative_name', __('admin.form.Cooperative name'));
@@ -197,7 +206,9 @@ class CooperativeController extends AdminController
         {
             $form->display('seed_generation', __('admin.form.Seed generation'))
             ->with(function ($seed_generation) {
-                return implode(', ', $seed_generation); // Convert array to a comma-separated string
+                return \App\Models\SeedClass::whereIn('id', $seed_generation)
+                ->pluck('class_name')
+                ->implode(', ');  // Convert array to a comma-separated string
             });
             $form->display('cooperative_number', __('admin.form.Cooperative number'));
             $form->display('date_of_creation', __('admin.form.Date of creation'));
@@ -264,12 +275,11 @@ class CooperativeController extends AdminController
 
         else 
         {
-            $form->multipleSelect('seed_generation', __('admin.form.Seed generation'))->options(
-                [
-                    'Semence Certifiée Première Reproduction' => 'Semence Certifiée Premiere Reproduction(R1)',
-                    'Semence Certifiée Deuxième Reproduction' => 'Semence Certifiée Deuxième Reproduction(R2)',
-                ]
-            )->required();
+            $seedClasses = \App\Models\Utils::getSeedClassNamesByRoleSlug('Cooperative');
+            $form->multipleSelect('seed_generation', __('admin.form.Seed generation'))
+            ->options($seedClasses )
+            ->required();
+
             $form->text('cooperative_number', __('admin.form.Cooperative number'))->required();
             $form->date('date_of_creation', __('admin.form.Date of creation'))->required();
             $form->text('cooperative_name', __('admin.form.Cooperative name'))->required();

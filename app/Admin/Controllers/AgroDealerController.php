@@ -331,11 +331,11 @@ class AgroDealerController extends AdminController
         $form->html('<script>
     function toggleFields() {
         // Get the value of the selected radio button
-        const category = document.querySelector("input[name="category"]:checked").value;
+        const category = document.querySelector(\'input[name="category\"]:checked\').value;
 
         // Get the input fields
-        const retailerInput = document.querySelector("[name="retailer_in"]");
-        const wholesalerInput = document.querySelector("[name="wholesaler_in"]");
+        const retailerInput = document.querySelector("[name=\'retailer_in\']");
+        const wholesalerInput = document.querySelector("[name=\'wholesaler_in\']");
 
         // Show/hide the input fields based on the selected category
         if (category === "retailers") {
