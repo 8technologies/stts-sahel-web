@@ -209,12 +209,13 @@ class CropDeclarationController extends AdminController
                 })
                 ->required();
 
+
             $form->display('phone_number', __('admin.form.Phone number'));
             $form->display('garden_size', __('admin.form.Garden size(Acres)'));
             $form->display('field_name', __('admin.form.Field name'));
-            $form->display('district_region', __('admin.form.District/Region'));
-            $form->display('circle', __('admin.form.Circle'));
-            $form->display('township', __('admin.form.Township'));
+            $form->display('region', __('admin.form.District/Region'));
+            $form->display('department', __('admin.form.Circle'));
+            $form->display('commune', __('admin.form.Township'));
             $form->display('village', __('admin.form.Village'));
             $form->display('planting_date', __('admin.form.Planting date'))->default(date('Y-m-d'));
             $form->display('quantity_of_seed_planted', __('admin.form.Quantity of seed planted(kgs)'));
@@ -253,7 +254,7 @@ class CropDeclarationController extends AdminController
                 //get all inspectors
                 $inspectors = \App\Models\Utils::get_inspectors();
                 $form->select('inspector_id', __('admin.form.Inspector'))
-                    ->options($inspectors);
+                    ->options($inspectors)->required();
             })->required();
 
             
@@ -275,51 +276,25 @@ class CropDeclarationController extends AdminController
                 ->options(Utils::get_varieties())
                 ->required();
 
-            // Define a configuration array for roles and their corresponding seed class options
-            $roleSeedClassOptions = [
-                'individual-producers' => [
-                    'Semence Certifiée Première génération',
-                    'Semence Certifiée Deuxième génération',
-                ],
-                'research' => [
-                    'Prébase',
-                    'Base',
-                ],
-                'cooperative' => [
-                    'Semence Certifiée Première génération',
-                    'Semence Certifiée Deuxième génération',
-                ],
-                'grower' => [
-                    'Base',
-                    'Semence Certifiée Première génération',
-                    'Semence Certifiée Deuxième génération',
-                ],
-                'agro-dealer' => [
-                    'Semence Certifiée Première génération',
-                    'Semence Certifiée Deuxième génération',
-                ],
-            ];
             
             //get the user role
             $userRole = $user->roles->pluck('slug')->toArray();
             $userRole = $userRole[0];
 
-
+            $seedClasses = \App\Models\Utils::getSeedClassNamesByRoleSlug($userRole);
             $form->select('seed_class_id', __('admin.form.Seed generation'))
-                ->options(
-                    \App\Models\SeedClass::whereIn('class_name', $roleSeedClassOptions[$userRole])->pluck('class_name', 'id')
-                )
-                ->required();
+            ->options($seedClasses )
+            ->required();
 
-
+            
             $form->text('phone_number', __('admin.form.Phone number'))->required();
             $form->decimal('garden_size', __('admin.form.Garden size(Acres)'))->required();
             
             $randomFieldName = 'FIELD' . mt_rand(100, 999);
             $form->hidden('field_name', __('admin.form.Field name'))->default($randomFieldName)->required();
-            $form->text('district_region', __('admin.form.District/Region'))->required();
-            $form->text('circle', __('admin.form.Circle'))->required();
-            $form->text('township', __('admin.form.Township'))->required();
+            $form->text('region', __('admin.form.District/Region'))->required();
+            $form->text('department', __('admin.form.Circle'))->required();
+            $form->text('commune', __('admin.form.Township'))->required();
             $form->text('village', __('admin.form.Village'))->required();
             $form->date('planting_date', __('admin.form.Planting date'))->default(date('Y-m-d'))->required();
             $form->text('quantity_of_seed_planted', __('admin.form.Quantity of seed planted(kgs)'))->attribute(

@@ -204,13 +204,6 @@ class AgroDealerController extends AdminController
              Validation::checkFormEditable($form, $id, 'AgroDealers');
         }
 
-         //onsaved return to the list page
-         $form->saved(function (Form $form) 
-        {
-            admin_toastr(__('admin.form.Form submitted successfully'), 'success');
-            return redirect('/agro-dealers');
-        });
-
         
         if ($user->inRoles(['commissioner', 'inspector', 'developer'])) 
         {
@@ -233,7 +226,7 @@ class AgroDealerController extends AdminController
             $form->display('trading_license_number', __('admin.form.Trading license number'));
             $form->display('trading_license_period', __('admin.form.Trading license period'));
             $form->display('insuring_authority', __('admin.form.Insuring authority'));
-            $form->file('attachments_certificate', __('admin.form.Certificate'));
+            $form->file('attachments_certificate', __('admin.form.Certificate'))->readonly();
             //$form->display('proof_of_payment', __('admin.form.Proof of payment'));
             $form->display('recommendation', __('admin.form.Recommendation'));
             //admin decision
@@ -327,6 +320,13 @@ class AgroDealerController extends AdminController
             $form->hidden('status')->default('pending');
             $form->hidden('inspector_id')->default('28');
         }
+
+         //onsaved return to the list page
+         $form->saved(function (Form $form) 
+        {
+            admin_toastr(__('admin.form.Form submitted successfully'), 'success');
+            return redirect('/agro-dealers');
+        });
 
         $form->html('<script>
     function toggleFields() {

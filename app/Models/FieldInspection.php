@@ -58,7 +58,7 @@ class FieldInspection extends Model
 
         //call back to send a notification to the user
         self::created(function ($model) {
-            Notification::update_notification($model, 'FieldInspection', 'field-inspections');
+            // Notification::update_notification($model, 'FieldInspection', 'field-inspections');
 
         });
 
@@ -99,7 +99,7 @@ class FieldInspection extends Model
                 }
             }
 
-            Notification::update_notification($model, 'FieldInspection', request()->segment(count(request()->segments())-1));
+            // Notification::update_notification($model, 'FieldInspection', request()->segment(count(request()->segments())-1));
         });
     }
 

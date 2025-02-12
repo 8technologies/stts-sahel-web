@@ -195,7 +195,7 @@ class CooperativeController extends AdminController
         }
 
          //onsaved return to the list page
-         $form->saved(function (Form $form) 
+        $form->saved(function (Form $form) 
         {
             admin_toastr(__('admin.form.Form submitted successfully'), 'success');
             return redirect('/cooperatives');
