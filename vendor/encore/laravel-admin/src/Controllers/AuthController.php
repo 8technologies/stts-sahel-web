@@ -132,7 +132,7 @@ class AuthController extends Controller
 
         $form = new Form(new $class());
 
-        $form->text('username', trans('admin.username'));
+        $form->text('username', trans('admin.username'))->rules('required');
         $form->text('name', trans('admin.name'))->rules('required');
         $form->email('email', trans('admin.email'))->rules('required');
         $form->image('avatar', trans('admin.avatar'));
@@ -198,6 +198,8 @@ class AuthController extends Controller
         $form->disableEditingCheck();
         $form->disableViewCheck();
         $form->disableCreatingCheck();
+      
+        //javascript to make the password visible
         $form->html('<script>
         document.getElementById("eye-icon").addEventListener("click", function() {
             var passwordInput = document.getElementById("password-input");

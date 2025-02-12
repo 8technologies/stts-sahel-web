@@ -142,7 +142,7 @@ trait ResetsPasswords
             return new JsonResponse(['message' => trans($response)], 200);
         }
 
-        return redirect('https://certisemence.org')
+        return redirect(url('/'))
                 ->with('status', trans($response));
     }
 

@@ -50,8 +50,9 @@ class ResearchController extends AdminController
         //disable action buttons appropriately
         Utils::disable_buttons('Research', $grid);
 
-        //disable batch and export actions
-        Utils::disable_batch_actions($grid);
+        //disable batch actions only without disabling the export button
+        $grid->disableBatchActions();
+        //Utils::disable_batch_actions($grid);
 
         //disable create button 
         if ($user->inRoles(['research'])) 
@@ -64,8 +65,22 @@ class ResearchController extends AdminController
        {
         // Remove the default id filter
         $filter->disableIdFilter();
-        $filter->like('user_id', 'Applicant')->select(\App\Models\User::pluck('name', 'id'));
-       
+
+        if (Admin::user()->inRoles(['research','basic-user'])) 
+        {
+            //filte by seed generation
+            $filter->equal('seed_generation', __('admin.form.Seed generation'))->select(
+                [
+                    'Prébase' => 'Prébase',
+                    'Base' => 'Base',
+                ]
+            );
+        }
+        else{
+            //filter by user
+            $filter->like('user_id', 'Applicant')->select(\App\Models\User::pluck('name', 'id'));
+        }
+      
        });
 
         $grid->column('created_at', __('admin.form.Date'))->display(function ($created_at) {
@@ -77,7 +92,11 @@ class ResearchController extends AdminController
         $grid->column('researcher_registration_number', __('admin.form.Research registration number'))->display(function ($value) {
             return $value ?? '-';
         })->sortable();
-        $grid->column('seed_generation', __('admin.form.Seed generation'))->sortable();
+        //$grid->column('seed_generation', __('admin.form.Seed generation'))->sortable();
+        $grid->column('seed_generation', __('admin.form.Seed generation'))
+        ->display(function ($seed_generation) {
+        return implode(', ', $seed_generation); // Convert array to a comma-separated string
+        });
         $grid->column('status', __('admin.form.Status'))->display(function ($status) {
             return \App\Models\Utils::tell_status($status)??'-';
         })->sortable();
@@ -131,12 +150,15 @@ class ResearchController extends AdminController
         $show->field('researcher_registration_number', __('admin.form.Research registration number'))->as(function ($value) {
             return $value ?? '-';
         });
-        $show->field('seed_generation', __('admin.form.Seed generation'));
+        $show->field('seed_generation', __('admin.form.Seed generation'))
+    ->as(function ($seed_generation) {
+        return implode(', ', $seed_generation); // Convert array to a comma-separated string
+    });
         $show->field('applicant_phone_number', __('admin.form.Applicant phone number'));
         $show->field('applicant_email', __('admin.form.Applicant email'));
         $show->field('premises_location', __('admin.form.Applicant physical address'));
         $show->field('proposed_farm_location', __('admin.form.Proposed farm location'));
-        $show->field('years_of_experience', __('admin.form.If seed company, years of experience as a seed producer'));
+        $show->field('years_of_experience', __('admin.form.years of experience'));
         $show->field('storage_facilities_description', __('admin.form.Describe your storage facilities to handle the resultant seed'));
         $show->field('receipt', __('admin.form.Proof of payment of application fees'))->as(function ($receipt) {
             return $receipt == null ? 'No file uploaded' : '<a href="/storage/' . $receipt . '" target="_blank">View receipt</a>';
@@ -208,7 +230,10 @@ class ResearchController extends AdminController
         if ($user->inRoles(['commissioner','developer', 'inspector'])) 
         {
 
-            $form->display('seed_generation', __('admin.form.Seed generation'));
+            $form->display('seed_generation', __('admin.form.Seed generation'))
+            ->with(function ($seed_generation) {
+                return implode(', ', $seed_generation); // Convert array to a comma-separated string
+            });
             
             $form->display('applicant_phone_number', __('admin.form.Applicant phone number'));
             $form->display('applicant_email', __('admin.form.Applicant email'));
@@ -221,10 +246,10 @@ class ResearchController extends AdminController
             $form->file('receipt', __('admin.form.Proof of payment of application fees'))->readonly();
 
             //admin decision
-            if ($user->isRole('commissioner')) 
+            if ($user->inRoles(['commissioner','administrator','developer'])) 
             {
                 $form->divider('Administartor decision');
-                $form->radio('status', __('admin.form.Status'))
+                $form->radioButton('status', __('admin.form.Status'))
                 ->options([
                     'accepted'=> __('admin.form.Accepted'),
                     'halted' => __('admin.form.Halted'),
@@ -235,7 +260,7 @@ class ResearchController extends AdminController
                         $form->textarea('status_comment', __('admin.form.Status comment'))->rules('required');
                     })
                     ->when('accepted', function (Form $form) {
-                        $form->text('researcher_registration_number', __('admin.form.Research registration number')) ->default('Labosem/' . date('Y/M/') . rand(1000, 100000))->required();
+                        $form->text('researcher_registration_number', __('admin.form.Research registration number')) ->default('DCCS/RESEARCH/' . rand(1000, 100000).'/'. date('Y') )->required();
                         $form->datetime('valid_from', __('admin.form.Research approval date'))->default(date('Y-m-d H:i:s'))->required();
                         $nextYear = Carbon::now()->addYear(); // Get the date one year from now
                         $defaultDateTime = $nextYear->format('Y-m-d H:i:s'); // Format the date for default value
@@ -249,7 +274,7 @@ class ResearchController extends AdminController
                         //get all inspectors
                         $inspectors = \App\Models\Utils::get_inspectors();
                         $form->select('inspector_id', __('admin.form.Inspector'))
-                            ->options($inspectors);
+                            ->options($inspectors)->required();
                     })->required();
             }
 
@@ -274,7 +299,7 @@ class ResearchController extends AdminController
         //basic user
         else 
         {
-            $form->select('seed_generation', __('admin.form.Seed generation'))->options(
+            $form->multipleSelect('seed_generation', __('admin.form.Seed generation'))->options(
                 [
                     'Prébase' => 'Prébase',
                     'Base' => 'Base',
