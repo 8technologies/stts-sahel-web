@@ -279,7 +279,7 @@ class ResearchController extends AdminController
                     'Prébase' => 'Prébase',
                     'Base' => 'Base',
                 ]
-            );
+            )->required();
             $form->text('applicant_phone_number', __('admin.form.Applicant phone number'))->required();
             $form->text('applicant_email', __('admin.form.Applicant email'))->required();
             $form->text('premises_location', __('admin.form.Applicant physical address'))->required();

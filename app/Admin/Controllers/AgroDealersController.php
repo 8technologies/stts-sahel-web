@@ -294,7 +294,7 @@ class AgroDealersController extends AdminController
         
             $form->text('first_name', __('admin.form.First name'))->rules('required');
             $form->text('last_name', __('admin.form.Last name'))->rules('required');
-            $form->text('telephone', __('admin.form.Telephone'))->rules('required');
+            $form->text('telephone', __('Telephone'))->rules('required');
             $form->email('email', __('admin.form.Email'))->rules('required|unique:agro_dealers,email');
             $form->text('physical_address', __('admin.form.Physical address'))->rules('required');
             $form->text('region', __('admin.form.Region'))->rules('required');

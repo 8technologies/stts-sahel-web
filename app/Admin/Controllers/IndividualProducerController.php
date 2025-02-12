@@ -288,7 +288,7 @@ class IndividualProducerController extends AdminController
                     'Semence Certifiée Première Reproduction' => 'Semence Certifiée Premiere Reproduction(R1)',
                     'Semence Certifiée Deuxième Reproduction' => 'Semence Certifiée Deuxième Reproduction(R2)',
                 ]
-            );
+            )->required();
             $form->text('applicant_phone_number', __('admin.form.Applicant phone number'))->required();
             $form->text('applicant_email', __('admin.form.Applicant email'))->required();
             $form->text('premises_location', __('admin.form.Applicant physical address'))->required();
