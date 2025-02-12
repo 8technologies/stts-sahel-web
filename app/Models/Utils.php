@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
 use Encore\Admin\Auth\Database\Administrator;
+use Encore\Admin\Auth\Database\Role;
+use Illuminate\Support\Facades\Log;
 
 class Utils extends Model
 {
@@ -216,5 +218,20 @@ class Utils extends Model
         if($model_name == 'Order'){
             \App\Models\Notification::where(['receiver_id' => $user->id, 'model_id' => $id, 'model' => $model_name])->delete();
         }
+    }
+
+
+    public static function getSeedClassNamesByRoleSlug(string $roleSlug): array
+    {
+        $role = Role::where('slug', $roleSlug)->first();
+
+        if (!$role) {
+            // Role not found, return an empty array
+            return [];
+        }
+
+        Log::info([$role->seedClasses()->get()->toArray()]);
+        // Fetch the associated seed classes' names
+        return $role->seedClasses()->pluck('class_name', 'id')->toArray();
     }
 }

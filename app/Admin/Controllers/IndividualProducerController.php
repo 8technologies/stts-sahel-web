@@ -83,7 +83,9 @@ class IndividualProducerController extends AdminController
         })->sortable();
         $grid->column('seed_generation', __('admin.form.Seed generation'))
         ->display(function ($seed_generation) {
-        return implode(', ', $seed_generation); // Convert array to a comma-separated string
+            return \App\Models\SeedClass::whereIn('id', $seed_generation)
+            ->pluck('class_name')
+            ->implode(', '); // Convert array to a comma-separated string
         });
         $grid->column('status', __('admin.form.Status'))->display(function ($status) {
             return \App\Models\Utils::tell_status($status)??'-';
@@ -139,10 +141,13 @@ class IndividualProducerController extends AdminController
         $show->field('producer_registration_number', __('admin.form.Seed producer registration number'))->as(function ($value) {
             return $value ?? '-';
         });
-        $show->field('seed_generation', __('admin.form.Seed generation'))
-    ->as(function ($seed_generation) {
-        return implode(', ', $seed_generation); // Convert array to a comma-separated string
-    });
+        $show->field('seed_generation', __('admin.form.Seed generation'))->as(function ($seedGeneration) {
+            // Assuming $seedGeneration contains an array of seed class IDs
+            
+            return \App\Models\SeedClass::whereIn('id', $seedGeneration)
+                ->pluck('class_name')
+                ->implode(', '); // Display the names as a comma-separated string
+        });
         $show->field('applicant_phone_number', __('admin.form.Applicant phone number'));
         $show->field('applicant_email', __('admin.form.Applicant email'));
         $show->field('premises_location', __('admin.form.Applicant physical address'));
@@ -223,7 +228,9 @@ class IndividualProducerController extends AdminController
 
             $form->display('seed_generation', __('admin.form.Seed generation'))
             ->with(function ($seed_generation) {
-                return implode(', ', $seed_generation); // Convert array to a comma-separated string
+                return \App\Models\SeedClass::whereIn('id', $seed_generation)
+                ->pluck('class_name')
+                ->implode(', ');  // Convert array to a comma-separated string
             });
             $form->display('applicant_phone_number', __('admin.form.Applicant phone number'));
             $form->display('applicant_email', __('admin.form.Applicant email'));
@@ -290,12 +297,12 @@ class IndividualProducerController extends AdminController
         //basic user
         else 
         {
-            $form->multipleSelect('seed_generation', __('admin.form.Seed generation'))->options(
-                [
-                    'Semence Certifiée Première Reproduction' => 'Semence Certifiée Premiere Reproduction(R1)',
-                    'Semence Certifiée Deuxième Reproduction' => 'Semence Certifiée Deuxième Reproduction(R2)',
-                ]
-            )->required();
+            $seedClasses = \App\Models\Utils::getSeedClassNamesByRoleSlug('individual-producers');
+            $form->multipleSelect('seed_generation', __('admin.form.Seed generation'))
+            ->options($seedClasses )
+            ->required();
+
+            
             $form->text('applicant_phone_number', __('admin.form.Applicant phone number'))->required();
             $form->text('applicant_email', __('admin.form.Applicant email'))->required();
             $form->text('premises_location', __('admin.form.Applicant physical address'))->required();

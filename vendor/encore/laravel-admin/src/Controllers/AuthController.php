@@ -2,6 +2,7 @@
 
 namespace Encore\Admin\Controllers;
 
+use Encore\Admin\Admin as AdminAdmin;
 use Encore\Admin\Facades\Admin;
 use Encore\Admin\Form;
 use Encore\Admin\Layout\Content;
@@ -9,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Lang;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Validator;
 
@@ -138,34 +140,50 @@ class AuthController extends Controller
         $form->html('<div class="input-group">
                     <span class="input-group-addon">
                     <i class="fa fa-eye" id="eye-icon"></i></span>
-                    <input id="password-input" type="text" class="form-control password" name="password" value="' . $currentPassword . '" required >
-
+                    <input type="text" id="password" name="password"  class="form-control password" placeholder="'.$currentPassword.'" value= "'.$form->password.'" >
+        
                 </div>','<span style="color:red;">*</span>'. trans('admin.password'))->rules('confirmed|required');
+
         $form->html('<div class="input-group">
             <span class="input-group-addon">
             <i class="fa fa-eye" id="eye-icon1"></i></span>
-            <input id="password-confirm" type="text" class="form-control password" name="password" autocomplete="current-password" value="'. $currentPassword .'" required >
+            <input id="password-confirm" type="text" class="form-control password" name="password-confirm" autocomplete="current-password" placeholder="' . $currentPassword . '" required >
 
-        </div>', '<span style="color:red;">*</span>'.trans('admin.password_confirmation'))->default(function ($form) {
-            return $form->model()->password;
-        });
-        // $form->text('password_confirmation', trans('admin.password_confirmation'))->rules('required')
-        //     ->default(function ($form) {
-        //         return $form->model()->password;
-        //     });
-
+        </div>', '<span style="color:red;">*</span>'.trans('admin.password_confirmation'));
         $form->setAction(admin_url('auth/setting'));
 
         $form->ignore(['password_confirmation']);
 
         $form->saving(function (Form $form) {
+            // Access password and confirmation from the request
+            $password = request('password');
+            $passwordConfirmation = request('password_confirmation');
+
+            // Validate that the password matches the confirmation
+            // if ($password != $passwordConfirmation) {
+            //     admin_error('Error', 'Passwords do not match.');
+            //     return back()->withInput();
+            // }
+
+            // Hash and save the password to the database
+            if ($password) {
+                $form->password = $password;
+                Log::info([$form->password]);
+                
+            }
             if ($form->password && $form->model()->password != $form->password) {
-                $form->password = Hash::make($form->password);
+                $form->model()->password = Hash::make($form->password);
+                Log::info([$form->password]);
+            }
+            else{
+                Log::info([$form->password]);
             }
         });
+        // Log::info([$form]);
 
         $form->saved(function () {
             admin_toastr(trans('admin.update_succeeded'));
+            
 
             return redirect(admin_url('auth/setting'));
         });
@@ -183,38 +201,66 @@ class AuthController extends Controller
         $form->disableCreatingCheck();
 
         //javascript to make the password visible
-        $form->html('<script>
-        document.getElementById("eye-icon").addEventListener("click", function() {
-            var passwordInput = document.getElementById("password-input");
-            var eyeIcon = document.getElementById("eye-icon");
-            if (passwordInput.type === "password") {
-                eyeIcon.classList.remove("fa-eye");
-                eyeIcon.classList.add("fa-eye-slash");
-                passwordInput.type = "text"; // Show password
+        // Admin::script('
+        //     document.getElementById("eye-icon").addEventListener("click", function() {
+        //         var passwordInput = document.getElementById("password-input");
+        //         var eyeIcon = document.getElementById("eye-icon");
+        //         if (passwordInput.type === "password") {
+        //             eyeIcon.classList.remove("fa-eye");
+        //             eyeIcon.classList.add("fa-eye-slash");
+        //             passwordInput.type = "text"; // Show password
+                    
+        //         } else {
+        //             passwordInput.type = "password"; // Hide password
+        //             eyeIcon.classList.remove("fa-eye-slash");
+        //             eyeIcon.classList.add("fa-eye");
+        //         }
+        //     });
+        //     document.getElementById("eye-icon1").addEventListener("click", function() {
+        //         var passwordInput = document.getElementById("password-confirm");
+        //         var eyeIcon = document.getElementById("eye-icon1");
+        //         if (passwordInput.type === "password") {
+        //             eyeIcon.classList.remove("fa-eye");
+        //             eyeIcon.classList.add("fa-eye-slash");
+        //             passwordInput.type = "text"; // Show password
+                    
+        //         } else {
+        //             passwordInput.type = "password"; // Hide password
+        //             eyeIcon.classList.remove("fa-eye-slash");
+        //             eyeIcon.classList.add("fa-eye");
+        //         }
+        //     });
+        // ');
+    //     $form->html('<script>
+    //     document.getElementById("eye-icon").addEventListener("click", function() {
+    //         var passwordInput = document.getElementById("password-input");
+    //         var eyeIcon = document.getElementById("eye-icon");
+    //         if (passwordInput.type === "password") {
+    //             eyeIcon.classList.remove("fa-eye");
+    //             eyeIcon.classList.add("fa-eye-slash");
+    //             passwordInput.type = "text"; // Show password
                 
-            } else {
-                passwordInput.type = "password"; // Hide password
-                eyeIcon.classList.remove("fa-eye-slash");
-                eyeIcon.classList.add("fa-eye");
-            }
-        });
-        document.getElementById("eye-icon1").addEventListener("click", function() {
-            var passwordInput = document.getElementById("password-confirm");
-            var eyeIcon = document.getElementById("eye-icon1");
-            if (passwordInput.type === "password") {
-                eyeIcon.classList.remove("fa-eye");
-                eyeIcon.classList.add("fa-eye-slash");
-                passwordInput.type = "text"; // Show password
+    //         } else {
+    //             passwordInput.type = "password"; // Hide password
+    //             eyeIcon.classList.remove("fa-eye-slash");
+    //             eyeIcon.classList.add("fa-eye");
+    //         }
+    //     });
+    //     document.getElementById("eye-icon1").addEventListener("click", function() {
+    //         var passwordInput = document.getElementById("password-confirm");
+    //         var eyeIcon = document.getElementById("eye-icon1");
+    //         if (passwordInput.type === "password") {
+    //             eyeIcon.classList.remove("fa-eye");
+    //             eyeIcon.classList.add("fa-eye-slash");
+    //             passwordInput.type = "text"; // Show password
                 
-            } else {
-                passwordInput.type = "password"; // Hide password
-                eyeIcon.classList.remove("fa-eye-slash");
-                eyeIcon.classList.add("fa-eye");
-            }
-        });
-    </script>');
-
-        
+    //         } else {
+    //             passwordInput.type = "password"; // Hide password
+    //             eyeIcon.classList.remove("fa-eye-slash");
+    //             eyeIcon.classList.add("fa-eye");
+    //         }
+    //     });
+    // </script>');
 
         return $form;
     }

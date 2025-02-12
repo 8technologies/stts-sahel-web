@@ -83,7 +83,9 @@ class SeedProducerController extends AdminController
         })->sortable();
         $grid->column('seed_generation', __('admin.form.Seed generation'))
         ->display(function ($seed_generation) {
-            return implode(', ', $seed_generation); // Convert array to a comma-separated string
+            return \App\Models\SeedClass::whereIn('id', $seed_generation)
+            ->pluck('class_name')
+            ->implode(', '); // Convert array to a comma-separated string
         });
         $grid->column('status', __('admin.form.Status'))->display(function ($status) {
             return \App\Models\Utils::tell_status($status)??'-';
@@ -133,6 +135,13 @@ class SeedProducerController extends AdminController
             return(' <p class="alert alert-danger">You do not have rights to view this form. <a href="/seed-producers"> Go Back </a></p> ');
         }
 
+        $show->field('seed_generation', __('admin.form.Seed generation'))->as(function ($seedGeneration) {
+            // Assuming $seedGeneration contains an array of seed class IDs
+            
+            return \App\Models\SeedClass::whereIn('id', $seedGeneration)
+                ->pluck('class_name')
+                ->implode(', '); // Display the names as a comma-separated string
+        });
         $show->field('user_id', __('admin.form.Applicant Name'))->as(function ($user_id) {
             return \App\Models\User::find($user_id)->name;
         });
@@ -218,9 +227,11 @@ class SeedProducerController extends AdminController
         {
 
             $form->display('seed_generation', __('admin.form.Seed generation'))
-                ->with(function ($seed_generation) {
-                    return implode(', ', $seed_generation); // Convert array to a comma-separated string
-                });
+            ->with(function ($seed_generation) {
+                return \App\Models\SeedClass::whereIn('id', $seed_generation)
+                ->pluck('class_name')
+                ->implode(', ');  // Convert array to a comma-separated string
+            });
             $form->display('name_of_applicant', __('admin.form.Responsible manager name'));
             $form->display('applicant_phone_number', __('admin.form.Responsible manager phone number'));
             $form->display('applicant_email', __('admin.form.Company email'));
@@ -287,14 +298,11 @@ class SeedProducerController extends AdminController
         //basic user
         else 
         {
-
-            $form->multipleSelect('seed_generation', __('admin.form.Seed generation'))->options(
-                [
-                    'Base' => 'Base(B)',
-                    'Semence Certifiée Première Reproduction' => 'Semence Certifiée Premiere Reproduction(R1)',
-                    'Semence Certifiée Deuxième Reproduction' => 'Semence Certifiée Deuxième Reproduction(R2)',
-                ]
-            )->required();
+            $seedClasses = \App\Models\Utils::getSeedClassNamesByRoleSlug('research');
+            $form->multipleSelect('seed_generation', __('admin.form.Seed generation'))
+            ->options($seedClasses )
+            ->required();
+            
             $form->text('name_of_applicant', __('admin.form.Responsible manager name'))->required();
             $form->text('applicant_phone_number', __('admin.form.Responsible manager phone number'))->required();
             $form->text('applicant_email', __('admin.form.Company email'))->required();

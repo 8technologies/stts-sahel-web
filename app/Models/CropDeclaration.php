@@ -9,7 +9,7 @@ use \App\Models\Notification;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use App\Models\FieldInspection;
 use Carbon\Carbon;
-
+use Illuminate\Support\Facades\Log;
 
 class CropDeclaration extends Model
 {
@@ -79,25 +79,33 @@ class CropDeclaration extends Model
             
             if ($model->status == 'inspector assigned') {
                 $crop_variety = CropVariety::find($model->crop_variety_id);
-                if ($crop_variety == null) {
-                    return;
-                }
-                $crop = Crop::find($crop_variety->crop_id);
-                if ($crop == null) {
-                    return;
-                }
+                // if ($crop_variety == null) {
+                //     return;
+                // }
+                // $croped = $crop_variety->crop->
+                // $crop = Crop::find($crop_variety->crop_id);
+                // if ($crop == null) {
+                //     return;
+                // }
+                Log::info([$model->crop_variety_id]);
+                Log::info([$crop_variety->crop_id]);
 
-                $inspectionTypes = $crop->inspection_types()->orderBy('order')->get();
-                
+                // $inspectionTypes = $crop->inspection_types()->orderBy('order')->pluck('id');
+                $inspectionTypes = $crop_variety->crop->inspection_types()
+                ->select(['id', 'order', 'period_after_planting']) // Select only the necessary columns
+                ->orderBy('order')
+                ->get();
+                Log::info([$inspectionTypes]);
+
                 $isFirst = true;
-                foreach ($inspectionTypes as $key => $type) {
-                    $inspection = FieldInspection::where([
-                        'crop_declaration_id' => $model->id,
-                        'inspection_type_id' => $type->id,
-                    ])->first();
-                    if ($inspection != null) {
-                        continue;
-                    }
+                foreach ($inspectionTypes as  $type) {
+                    // $inspection = FieldInspection::where([
+                    //     'crop_declaration_id' => $model->id,
+                    //     'inspection_type_id' => $type->id,
+                    // ])->first();
+                    // if ($inspection != null) {
+                    //     continue;
+                    // }
                     $inspection = new FieldInspection();
                     $inspection->crop_variety_id = $crop_variety->id;
                     $inspection->inspection_type_id = $type->id;
@@ -109,17 +117,23 @@ class CropDeclaration extends Model
                     $inspection->order_number = $type->order;
                     $inspection->status = 'inspector assigned';
                     $inspection->is_done = 0;
+
+                    
                     try {
                         $pd = Carbon::parse($model->planting_date);
                         $inspection->inspection_date = $pd->addDays((int)($type->period_after_planting))->format('Y-m-d');
                     } catch (\Exception $e) {
                     }
+
+                    Log::info([$inspection]);
+
                     if ($isFirst) {
                         $inspection->is_active = 1;
                         $isFirst = false;
                     } else {
                         $inspection->is_active = 0;
                     }
+
                     $inspection->save();
                 }
             }
