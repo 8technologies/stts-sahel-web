@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Lang;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Validator;
 
@@ -138,13 +139,13 @@ class AuthController extends Controller
         $form->html('<div class="input-group">
                     <span class="input-group-addon">
                     <i class="fa fa-eye" id="eye-icon"></i></span>
-                    <input id="password-input" type="text" class="form-control password" name="password" value="' . $currentPassword . '" required >
+                    <input id="password-input" type="text" class="form-control password" name="password" placeholder="' . $currentPassword . '" required >
 
                 </div>','<span style="color:red;">*</span>'. trans('admin.password'))->rules('confirmed|required');
         $form->html('<div class="input-group">
             <span class="input-group-addon">
             <i class="fa fa-eye" id="eye-icon1"></i></span>
-            <input id="password-confirm" type="text" class="form-control password" name="password" autocomplete="current-password" value="'. $currentPassword .'" required >
+            <input id="password-confirm" type="text" class="form-control password" name="password" autocomplete="current-password" placeholder="'. $currentPassword .'" required >
 
         </div>', '<span style="color:red;">*</span>'.trans('admin.password_confirmation'))->default(function ($form) {
             return $form->model()->password;
