@@ -155,8 +155,28 @@ class AuthController extends Controller
         $form->ignore(['password_confirmation']);
 
         $form->saving(function (Form $form) {
+            // Access password and confirmation from the request
+            $password = request('password');
+            $passwordConfirmation = request('password_confirmation');
+
+            // Validate that the password matches the confirmation
+            // if ($password != $passwordConfirmation) {
+            //     admin_error('Error', 'Passwords do not match.');
+            //     return back()->withInput();
+            // }
+
+            // Hash and save the password to the database
+            if ($password) {
+                $form->password = $password;
+                Log::info([$form->password]);
+                
+            }
             if ($form->password && $form->model()->password != $form->password) {
-                $form->password = Hash::make($form->password);
+                $form->model()->password = Hash::make($form->password);
+                Log::info([$form->password]);
+            }
+            else{
+                Log::info([$form->password]);
             }
         });
 
