@@ -303,7 +303,7 @@ class ResearchController extends AdminController
             {
              
                 $form->divider('Inspectors decision');
-                $form->radio('status', __('admin.form.Status'))
+                $form->radioButton('status', __('admin.form.Status'))
                     ->options([
                         'recommended'=> __('admin.form.Recommend'),
                        
