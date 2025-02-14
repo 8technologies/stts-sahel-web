@@ -28,11 +28,11 @@ class Cooperative extends Model
         'contact_email',
         'proof_of_payment',
         'status',
-        'recommendation',
-        'inspector_id',
-        'status_comment',
-        'valid_from',
-        'valid_until',
+        // 'recommendation',
+        // // 'inspector_id',
+        // 'status_comment',
+        // 'valid_from',
+        // 'valid_until',
     ];
 
     //relatinship with coperative members
