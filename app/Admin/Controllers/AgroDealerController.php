@@ -260,9 +260,18 @@ class AgroDealerController extends AdminController
 
                         //get all inspectors
                         $inspectors = \App\Models\Utils::get_inspectors();
+
+                        // Convert to an array
+                        $inspectorsArray = $inspectors->toArray();
+
+                        // Get the first inspector's ID as the default value
+                         $firstInspectorId = array_key_first($inspectorsArray);
+
                         $form->select('inspector_id', __('admin.form.Inspector'))
-                            ->options($inspectors)->required();
-                        })->required();
+                            ->options($inspectors)
+                            ->default($firstInspectorId);
+                            
+                    })->required();
             }
            
             //inspectors decision

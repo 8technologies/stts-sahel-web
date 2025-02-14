@@ -256,7 +256,7 @@ class SeedProducerController extends AdminController
                     'inspector assigned' => __('admin.form.Assign Inspector'),
                 ])
                     ->when('in', ['rejected', 'halted'], function (Form $form) {
-                        $form->textarea('status_comment', __('admin.form.Status comment'))->rules('required');
+                        $form->textarea('status_comment', __('admin.form.Status comment'))->required();
                     })
                     ->when('accepted', function (Form $form) {
                         $form->text('producer_registration_number', __('admin.form.Seed producer registration number')) ->default('DCCS/SEEDPRODUCER/'  . rand(1000, 100000).'/'. date('Y'))->required();
@@ -272,8 +272,17 @@ class SeedProducerController extends AdminController
 
                         //get all inspectors
                         $inspectors = \App\Models\Utils::get_inspectors();
+
+                        // Convert to an array
+                        $inspectorsArray = $inspectors->toArray();
+
+                        // Get the first inspector's ID as the default value
+                         $firstInspectorId = array_key_first($inspectorsArray);
+
                         $form->select('inspector_id', __('admin.form.Inspector'))
-                            ->options($inspectors)->required();
+                            ->options($inspectors)
+                            ->default($firstInspectorId);
+                            
                     })->required();
             }
 
