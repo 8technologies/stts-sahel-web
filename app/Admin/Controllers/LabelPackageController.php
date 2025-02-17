@@ -8,6 +8,7 @@ use Encore\Admin\Grid;
 use Encore\Admin\Show;
 use \App\Models\LabelPackage;
 use \App\Models\SeedClass;
+use Illuminate\Support\Facades\Log;
 
 class LabelPackageController extends AdminController
 {
@@ -90,14 +91,54 @@ class LabelPackageController extends AdminController
 
         $form->text('package_type', __('admin.form.Package Type'))->required();
         $form->select('seed_generation', __('Seed Generation'))->options(\App\Models\SeedClass::all()->pluck('class_name', 'id'))->required();
-        $form->multipleSelect('quantity', __('admin.form.Quantity(kgs)'))->options([
-            '0.5' => '0.5 kgs',
-            '1' => '1 kgs',
-            '5' => '5 kgs',
-            '10' => '10 kgs',
-            '20' => '20 kgs',
-            '50' => '50 kgs',
-        ])->required();
+        
+
+        if($form->isCreating()){
+            $form->multipleSelect('quantity', __('admin.form.Quantity(kgs)'))->options([
+                '1' => '1 kgs',
+                '5' => '5 kgs',
+                '10' => '10 kgs',
+                '20' => '20 kgs',
+                '50' => '50 kgs',
+            ])->required();
+
+            $form->saving(function (Form $form) {
+                $quantities = $form->input('quantity'); // Get the selected quantities
+            
+                // Prevent the main record from being saved
+                $form->model()->exists = true;
+            
+                if ($quantities) {
+                    // For each quantity, create a new label package
+                    foreach ($quantities as $quantity) {
+                        if (!is_null($quantity)) {  // Ensure $quantity is not null before saving
+                            $labelPackage = new LabelPackage();
+                            $labelPackage->package_type = $form->package_type;
+                            $labelPackage->seed_generation = $form->seed_generation;
+                            $labelPackage->price = $form->price;
+                            $labelPackage->quantity = $quantity; // Assign each individual selected quantity
+                            $labelPackage->save();
+                        }
+                    }
+                }
+            
+                // Do not save the main record again, only create new records for quantities
+                return false;
+            });
+        }
+
+        if ($form->isEditing()){
+            $form->select('quantity', __('admin.form.Quantity(kgs)'))->options([
+                "1" => '1 kgs',
+                "5" => '5 kgs',
+                "10" => '10 kgs',
+                "20" => '20 kgs',
+                "50" => '50 kgs',
+            ])->required();
+
+        }
+
+        Log::info($form->quantity);
         
         
         $form->text('price', __('admin.form.Price'))->attribute( 
@@ -108,32 +149,6 @@ class LabelPackageController extends AdminController
         )
         ->required();
         
-        $form->saving(function (Form $form) {
-            $quantities = $form->input('quantity'); // Get the selected quantities
-        
-            // Prevent the main record from being saved
-            $form->model()->exists = true;
-        
-            if ($quantities) {
-                // For each quantity, create a new label package
-                foreach ($quantities as $quantity) {
-                    if (!is_null($quantity)) {  // Ensure $quantity is not null before saving
-                        $labelPackage = new LabelPackage();
-                        $labelPackage->package_type = $form->package_type;
-                        $labelPackage->seed_generation = $form->seed_generation;
-                        $labelPackage->price = $form->price;
-                        $labelPackage->quantity = $quantity; // Assign each individual selected quantity
-                        $labelPackage->save();
-                    }
-                }
-            }
-        
-            // Do not save the main record again, only create new records for quantities
-            return false;
-        });
-        
-        
-
         return $form;
     }
 }
