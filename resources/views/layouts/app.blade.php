@@ -66,7 +66,7 @@
             <div class="container">
             <a class="navbar-brand" href="{{ url('/') }}">
                 <span><img src="{{ asset('storage/assets/flag.png') }}" alt="Logo" class="logo-image" style="max-width: 40px; height: auto;"></span>
-                <span class="brand-text" style="font-size: 18px; font-weight: bold;">REPUBLIQUE DU NIGER</span>
+                <span class="brand-text" style="font-size: 18px; font-weight: bold;">REPUBLIQUE DU MALI</span>
             </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
                     <span class="navbar-toggler-icon"></span>

@@ -1,4 +1,4 @@
-@extends('layouts.app')
+{{-- @extends('layouts.app')
 
 @section('content')
 <div class="container"  >
@@ -27,7 +27,7 @@
                         </div>
 
                         <div class="row mb-3">
-                            <label for="password" class="col-md-4 col-form-label text-md-end">{{ __('Password') }}</label>
+                            <label for="password" class="col-md-4 col-form-label text-md-end">{{ __('password') }}</label>
 
                             <div class="col-md-6 input-icon">
                           
@@ -99,4 +99,4 @@
 
 
 
-@endsection
+@endsection --}}
