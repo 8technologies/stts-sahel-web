@@ -93,10 +93,12 @@ class ResearchController extends AdminController
             return $value ?? '-';
         })->sortable();
         //$grid->column('seed_generation', __('admin.form.Seed generation'))->sortable();
-        $grid->column('seed_generation', __('admin.form.Seed generation'));
-        // ->display(function ($seed_generation) {
-        // return implode(', ', $seed_generation); // Convert array to a comma-separated string
-        // });
+        $grid->column('seed_generation', __('admin.form.Seed generation'))
+        ->display(function ($seed_generation) {
+            return \App\Models\SeedClass::whereIn('id', $seed_generation)
+            ->pluck('class_name')
+            ->implode(', '); // Convert array to a comma-separated string
+        });
         $grid->column('status', __('admin.form.Status'))->display(function ($status) {
             return \App\Models\Utils::tell_status($status)??'-';
         })->sortable();
@@ -150,10 +152,13 @@ class ResearchController extends AdminController
         $show->field('researcher_registration_number', __('admin.form.Research registration number'))->as(function ($value) {
             return $value ?? '-';
         });
-        $show->field('seed_generation', __('admin.form.Seed generation'))
-    ->as(function ($seed_generation) {
-        return implode(', ', $seed_generation); // Convert array to a comma-separated string
-    });
+        $show->field('seed_generation', __('admin.form.Seed generation'))->as(function ($seedGeneration) {
+            // Assuming $seedGeneration contains an array of seed class IDs
+            
+            return \App\Models\SeedClass::whereIn('id', $seedGeneration)
+                ->pluck('class_name')
+                ->implode(', '); // Display the names as a comma-separated string
+        });
         $show->field('applicant_phone_number', __('admin.form.Applicant phone number'));
         $show->field('applicant_email', __('admin.form.Applicant email'));
         $show->field('premises_location', __('admin.form.Applicant physical address'));
@@ -232,7 +237,9 @@ class ResearchController extends AdminController
 
             $form->display('seed_generation', __('admin.form.Seed generation'))
             ->with(function ($seed_generation) {
-                return implode(', ', $seed_generation); // Convert array to a comma-separated string
+                return \App\Models\SeedClass::whereIn('id', $seed_generation)
+                ->pluck('class_name')
+                ->implode(', ');  // Convert array to a comma-separated string
             });
             
             $form->display('applicant_phone_number', __('admin.form.Applicant phone number'));
@@ -299,12 +306,10 @@ class ResearchController extends AdminController
         //basic user
         else 
         {
-            $form->multipleSelect('seed_generation', __('admin.form.Seed generation'))->options(
-                [
-                    'Prébase' => 'Prébase',
-                    'Base' => 'Base',
-                ]
-            )->required();
+            $seedClasses = \App\Models\Utils::getSeedClassNamesByRoleSlug('research');
+            $form->multipleSelect('seed_generation', __('admin.form.Seed generation'))
+            ->options($seedClasses )
+            ->required();
             $form->text('applicant_phone_number', __('admin.form.Applicant phone number'))->required();
             $form->text('applicant_email', __('admin.form.Applicant email'))->required();
             $form->text('premises_location', __('admin.form.Applicant physical address'))->required();

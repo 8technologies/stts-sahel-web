@@ -2,6 +2,7 @@
 
 namespace Encore\Admin\Auth\Database;
 
+use App\Models\SeedClass;
 use Encore\Admin\Traits\DefaultDatetimeFormat;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -108,5 +109,10 @@ class Role extends Model
 
             $model->permissions()->detach();
         });
+    }
+
+    public function seedClasses()
+    {
+        return $this->belongsToMany(SeedClass::class, 'role_seed_class');
     }
 }
