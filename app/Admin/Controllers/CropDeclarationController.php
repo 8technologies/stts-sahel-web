@@ -340,11 +340,11 @@ class CropDeclarationController extends AdminController
             $userRole = $userRole[0];
 
 
+            $seedClasses = \App\Models\Utils::getSeedClassNamesByRoleSlug($userRole);
             $form->select('seed_class_id', __('admin.form.Seed generation'))
-                ->options(
-                    \App\Models\SeedClass::whereIn('class_name', $roleSeedClassOptions[$userRole])->pluck('class_name', 'id')
-                )
-                ->required();
+            ->options($seedClasses )
+            ->required();
+            
             $form->select('previous_seed_culture', __('admin.form.Previous Seed culture'))
             ->options(Utils::get_varieties())
                 ->required();
