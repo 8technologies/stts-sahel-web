@@ -80,8 +80,12 @@ class IndividualProducerController extends AdminController
         $grid->column('producer_registration_number', __('admin.form.Seed producer registration number'))->display(function ($value) {
             return $value ?? '-';
         })->sortable();
-        $grid->column('seed_generation', __('admin.form.Seed Category'))->sortable();
-      
+        $grid->column('seed_generation', __('admin.form.Seed generation'))
+        ->display(function ($seed_generation) {
+            return \App\Models\SeedClass::whereIn('id', $seed_generation)
+            ->pluck('class_name')
+            ->implode(', '); // Convert array to a comma-separated string
+        });
         $grid->column('status', __('admin.form.Status'))->display(function ($status) {
             return \App\Models\Utils::tell_status($status)??'-';
         })->sortable();
@@ -215,8 +219,12 @@ class IndividualProducerController extends AdminController
         if ($user->inRoles(['commissioner','developer', 'inspector'])) 
         {
 
-            $form->display('seed_generation', __('admin.form.Seed generation'));
-            
+            $form->display('seed_generation', __('admin.form.Seed generation'))
+            ->with(function ($seed_generation) {
+                return \App\Models\SeedClass::whereIn('id', $seed_generation)
+                ->pluck('class_name')
+                ->implode(', ');  // Convert array to a comma-separated string
+            });
             $form->display('applicant_phone_number', __('admin.form.Applicant phone number'));
             $form->display('applicant_email', __('admin.form.Applicant email'));
             $form->display('premises_location', __('admin.form.Applicant physical address'));
@@ -283,12 +291,11 @@ class IndividualProducerController extends AdminController
         //basic user
         else 
         {
-            $form->select('seed_generation', __('admin.form.Seed generation'))->options(
-                [
-                    'Semence Certifiée Première Reproduction' => 'Semence Certifiée Premiere Reproduction(R1)',
-                    'Semence Certifiée Deuxième Reproduction' => 'Semence Certifiée Deuxième Reproduction(R2)',
-                ]
-            )->required();
+            $seedClasses = \App\Models\Utils::getSeedClassNamesByRoleSlug('individual-producer');
+            $form->select('seed_generation', __('admin.form.Seed generation'))
+            ->options($seedClasses )
+            ->required();
+            
             $form->text('applicant_phone_number', __('admin.form.Applicant phone number'))->required();
             $form->text('applicant_email', __('admin.form.Applicant email'))->required();
             $form->text('premises_location', __('admin.form.Applicant physical address'))->required();

@@ -188,7 +188,8 @@ class UserController extends AdminController
 
         $form->saving(function (Form $form) {
             if ($form->password && $form->model()->password != $form->password) {
-                $form->password = Hash::make($form->password);
+                // $form->password = Hash::make($form->password);
+                $form->model()->password = Hash::make($form->password);
             }
             $form->name = $form->first_name.' '.$form->last_name;
         });

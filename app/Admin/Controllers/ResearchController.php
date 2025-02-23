@@ -307,7 +307,7 @@ class ResearchController extends AdminController
         else 
         {
             $seedClasses = \App\Models\Utils::getSeedClassNamesByRoleSlug('research');
-            $form->multipleSelect('seed_generation', __('admin.form.Seed generation'))
+            $form->select('seed_generation', __('admin.form.Seed generation'))
             ->options($seedClasses )
             ->required();
             $form->text('applicant_phone_number', __('admin.form.Applicant phone number'))->required();
