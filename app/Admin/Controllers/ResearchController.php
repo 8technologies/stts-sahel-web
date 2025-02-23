@@ -282,7 +282,7 @@ class ResearchController extends AdminController
                         //get all inspectors
                         $inspectors = \App\Models\Utils::get_inspectors();
                         $form->select('inspector_id', __('admin.form.Inspector'))
-                            ->options($inspectors)->required();
+                            ->options($inspectors)->rules('required');
                     })->required();
             }
 
