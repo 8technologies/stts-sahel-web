@@ -84,8 +84,8 @@ class SeedProducerController extends AdminController
         $grid->column('seed_generation', __('admin.form.Seed generation'))
         ->display(function ($seed_generation) {
             return \App\Models\SeedClass::whereIn('id', $seed_generation)
-            ->pluck('class_name')
-            ->implode(', '); // Convert array to a comma-separated string
+            ->pluck('class_name');
+            // ->implode(', '); // Convert array to a comma-separated string
         });
        
         $grid->column('status', __('admin.form.Status'))->display(function ($status) {
@@ -140,8 +140,8 @@ class SeedProducerController extends AdminController
             // Assuming $seedGeneration contains an array of seed class IDs
             
             return \App\Models\SeedClass::whereIn('id', $seedGeneration)
-                ->pluck('class_name')
-                ->implode(', '); // Display the names as a comma-separated string
+                ->pluck('class_name');
+                // ->implode(', '); // Display the names as a comma-separated string
         });
         $show->field('user_id', __('admin.form.Applicant Name'))->as(function ($user_id) {
             return \App\Models\User::find($user_id)->name;
@@ -231,8 +231,8 @@ class SeedProducerController extends AdminController
             $form->display('seed_generation', __('admin.form.Seed generation'))
             ->with(function ($seed_generation) {
                 return \App\Models\SeedClass::whereIn('id', $seed_generation)
-                ->pluck('class_name')
-                ->implode(', ');  // Convert array to a comma-separated string
+                ->pluck('class_name');
+                // ->implode(', ');  // Convert array to a comma-separated string
             });
             $form->display('name_of_applicant', __('admin.form.Responsible manager name'));
             $form->display('applicant_phone_number', __('admin.form.Responsible manager phone number'));

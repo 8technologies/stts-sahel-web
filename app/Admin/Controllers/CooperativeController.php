@@ -124,8 +124,8 @@ class CooperativeController extends AdminController
             // Assuming $seedGeneration contains an array of seed class IDs
             
             return \App\Models\SeedClass::whereIn('id', $seedGeneration)
-                ->pluck('class_name')
-                ->implode(', '); // Display the names as a comma-separated string
+                ->pluck('class_name');
+                // ->implode(', '); // Display the names as a comma-separated string
         });
         $show->field('cooperative_number', __('admin.form.Cooperative number'));
         $show->field('date_of_creation', __('admin.form.Date of creation'));
@@ -204,8 +204,8 @@ class CooperativeController extends AdminController
             $form->display('seed_generation', __('admin.form.Seed generation'))
             ->with(function ($seed_generation) {
                 return \App\Models\SeedClass::whereIn('id', $seed_generation)
-                ->pluck('class_name')
-                ->implode(', ');  // Convert array to a comma-separated string
+                ->pluck('class_name');
+                // ->implode(', ');  // Convert array to a comma-separated string
             });
             $form->display('cooperative_number', __('admin.form.Cooperative number'));
             $form->display('date_of_creation', __('admin.form.Date of creation'));
