@@ -95,9 +95,9 @@ class ResearchController extends AdminController
         //$grid->column('seed_generation', __('admin.form.Seed generation'))->sortable();
         $grid->column('seed_generation', __('admin.form.Seed generation'))
         ->display(function ($seed_generation) {
-            return \App\Models\SeedClass::whereIn('id', $seed_generation)
-            ->pluck('class_name');
-            // ->implode(', '); // Convert array to a comma-separated string
+            return \App\Models\SeedClass::where('id', $seed_generation)
+            ->pluck('class_name')
+            ->implode(', '); // Convert array to a comma-separated string
         });
         $grid->column('status', __('admin.form.Status'))->display(function ($status) {
             return \App\Models\Utils::tell_status($status)??'-';
@@ -155,9 +155,9 @@ class ResearchController extends AdminController
         $show->field('seed_generation', __('admin.form.Seed generation'))->as(function ($seedGeneration) {
             // Assuming $seedGeneration contains an array of seed class IDs
             
-            return \App\Models\SeedClass::whereIn('id', $seedGeneration)
-                ->pluck('class_name');
-                // ->implode(', '); // Display the names as a comma-separated string
+            return \App\Models\SeedClass::where('id', $seedGeneration)
+                ->pluck('class_name')
+                ->implode(', '); // Display the names as a comma-separated string
         });
         $show->field('applicant_phone_number', __('admin.form.Applicant phone number'));
         $show->field('applicant_email', __('admin.form.Applicant email'));
@@ -237,9 +237,10 @@ class ResearchController extends AdminController
 
             $form->display('seed_generation', __('admin.form.Seed generation'))
             ->with(function ($seed_generation) {
-                return \App\Models\SeedClass::whereIn('id', $seed_generation)
-                ->pluck('class_name');
-                // ->implode(', ');  // Convert array to a comma-separated string
+                return \App\Models\SeedClass::where('id', $seed_generation)
+                ->pluck('class_name')
+                // ->toArray();
+                ->implode(', ');  // Convert array to a comma-separated string
             });
             
             $form->display('applicant_phone_number', __('admin.form.Applicant phone number'));
