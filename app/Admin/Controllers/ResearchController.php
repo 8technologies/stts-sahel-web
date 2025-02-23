@@ -93,10 +93,10 @@ class ResearchController extends AdminController
             return $value ?? '-';
         })->sortable();
         //$grid->column('seed_generation', __('admin.form.Seed generation'))->sortable();
-        $grid->column('seed_generation', __('admin.form.Seed generation'))
-        ->display(function ($seed_generation) {
-        return implode(', ', $seed_generation); // Convert array to a comma-separated string
-        });
+        $grid->column('seed_generation', __('admin.form.Seed generation'));
+        // ->display(function ($seed_generation) {
+        // return implode(', ', $seed_generation); // Convert array to a comma-separated string
+        // });
         $grid->column('status', __('admin.form.Status'))->display(function ($status) {
             return \App\Models\Utils::tell_status($status)??'-';
         })->sortable();

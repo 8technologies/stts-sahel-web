@@ -34,6 +34,7 @@ class UserController extends AdminController
          // Remove the default id filter
          $filter->disableIdFilter();
          $filter->like('id', 'Applicant')->select(\App\Models\User::pluck('name', 'id'));
+         $filter->like('id', 'Applicant')->select(\App\Models\User::pluck('email', 'id'));
         
         });
 
