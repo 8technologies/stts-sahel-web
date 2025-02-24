@@ -224,7 +224,7 @@ class CropDeclarationController extends AdminController
                 
             $crop_declaration = request()->route()->parameters()['crop_declaration'];
              
-            $coop_seed_name = CropDeclaration::where('id', $crop_declaration)->pluck('coop_seed_name')->first(); 
+            // $coop_seed_name = CropDeclaration::where('id', $crop_declaration)->pluck('coop_seed_name')->first(); 
                 // check if the cooperative/seed company name is empty
             // if (!empty($coop_seed_name)) {
             //     $form->display('coop_seed_name', __('admin.form.Cooperative/seed company name'));
