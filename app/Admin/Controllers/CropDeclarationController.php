@@ -344,7 +344,7 @@ class CropDeclarationController extends AdminController
             $form->select('seed_class_id', __('admin.form.Seed generation'))
             ->options($seedClasses )
             ->required();
-            
+
             $form->select('previous_seed_culture', __('admin.form.Previous Seed culture'))
             ->options(Utils::get_varieties())
                 ->required();
@@ -377,32 +377,32 @@ class CropDeclarationController extends AdminController
             $form->text('source_lot_number', __('admin.form.Source lot number'));
             $form->text('origin_of_variety', __('admin.form.Origin of variety'))->required();
             // check if the user 
-            if($user->inRoles(['grower'])){
-                $form->text('name', __('admin.form.Seed company name'))->required();
-            }
+            // if($user->inRoles(['grower'])){
+            //     $form->text('name', __('admin.form.Seed company name'))->required();
+            // }
 
-            // check if the user is a cooperative 
-            if($user->inRoles(['cooperative']) ){
-                // 
-                $user = Admin::user()->id;
+            // // check if the user is a cooperative 
+            // if($user->inRoles(['cooperative']) ){
+            //     // 
+            //     $user = Admin::user()->id;
         
-                $cooperative_name = Cooperative::where('user_id', $user)->first()->cooperative_name;
+            //     $cooperative_name = Cooperative::where('user_id', $user)->first()->cooperative_name;
                
-                $cooperative_id = Cooperative::where('user_id', $user)->first()->id;
+            //     $cooperative_id = Cooperative::where('user_id', $user)->first()->id;
 
-                // get the cooperative members
-                $cooperative_members = CooperativeMember::where('cooperative_id', $cooperative_id)
-                    ->get(['id', 'farmer_first_name', 'farmer_last_name'])
-                    ->mapWithKeys(function ($member) {
-                    // Concatenate first and last names with a space in between
-                    return [$member->id => $member->farmer_first_name . ' ' . $member->farmer_last_name];
-                });
-                $form->text('name', __('admin.form.Cooperative name'))->required();
-                $form->multipleSelect('cooperative_members', __('admin.form.Cooperative members'))
-                ->options($cooperative_members)->required();
+            //     // get the cooperative members
+            //     $cooperative_members = CooperativeMember::where('cooperative_id', $cooperative_id)
+            //         ->get(['id', 'farmer_first_name', 'farmer_last_name'])
+            //         ->mapWithKeys(function ($member) {
+            //         // Concatenate first and last names with a space in between
+            //         return [$member->id => $member->farmer_first_name . ' ' . $member->farmer_last_name];
+            //     });
+            //     $form->text('name', __('admin.form.Cooperative name'))->required();
+            //     $form->multipleSelect('cooperative_members', __('admin.form.Cooperative members'))
+            //     ->options($cooperative_members)->required();
                 
 
-            }
+            // }
             //add a get gps coordinate button
             $form->html('<button type="button" id="getLocationButton">' . __('admin.form.Get GPS Coordinates') . '</button>');
 
