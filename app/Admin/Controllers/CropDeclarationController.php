@@ -402,7 +402,7 @@ class CropDeclarationController extends AdminController
                 ->options($cooperative_members)->required();
                 
 
-            // }
+            }
             //add a get gps coordinate button
             $form->html('<button type="button" id="getLocationButton">' . __('admin.form.Get GPS Coordinates') . '</button>');
 
