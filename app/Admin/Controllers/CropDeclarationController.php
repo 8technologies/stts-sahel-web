@@ -377,9 +377,9 @@ class CropDeclarationController extends AdminController
             $form->text('source_lot_number', __('admin.form.Source lot number'));
             $form->text('origin_of_variety', __('admin.form.Origin of variety'))->required();
             // check if the user 
-            if($user->inRoles(['grower'])){
-                $form->text('name', __('admin.form.Seed company name'))->required();
-            }
+            // if($user->inRoles(['grower'])){
+            //     $form->text('name', __('admin.form.Seed company name'))->required();
+            // }
 
             // check if the user is a cooperative 
             if($user->inRoles(['cooperative']) ){
@@ -399,7 +399,7 @@ class CropDeclarationController extends AdminController
                 });
                 $form->text('name', __('admin.form.Cooperative name'))->required();
                 $form->multipleSelect('cooperative_members', __('admin.form.Cooperative members'))
-                ->options($cooperative_members)->required();
+                ->options($cooperative_members);
                 
 
             }
