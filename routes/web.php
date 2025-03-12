@@ -118,7 +118,9 @@ Route::get('/feedback/{lotId}', [FeedBackController::class, 'feedbackDetails']);
 Route::get('/getVarieties/{id}', [LoadStockController::class, 'getVarieties']);
 
 Route::get('migrate', function(){
-    Artisan::call('migrate', ['--force' => true]);
+    Artisan::call('migrate', [
+        '--path' => 'database/migrations/2025_03_12_070221_change_seed_generation_column.php',
+        '--force' => true]);
     return Artisan::output();
 });
 
