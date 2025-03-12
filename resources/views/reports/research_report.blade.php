@@ -44,7 +44,7 @@ $aujourdHui = date("j F Y");
 <div class="card-container">
   <div class="header">
   {{-- <img src="{{ public_path('storage/assets/logo.png') }}" alt="logo"> --}}
-  <img src="{{ public_path('/storage/assets/Republique Du Mali Logo.png') }}" alt="logo">
+  <img src="{{ public_path('/storage/assets/Republique Du Mali Logo.png') }}"  width="50%" alt="logo">
   
   </div>
   <div class="card">
