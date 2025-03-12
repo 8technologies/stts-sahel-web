@@ -117,10 +117,24 @@ Route::get('/place_order', [MarketableSeedController::class, 'place_order'])->na
 Route::get('/feedback/{lotId}', [FeedBackController::class, 'feedbackDetails']);
 Route::get('/getVarieties/{id}', [LoadStockController::class, 'getVarieties']);
 
+// Route::get('migrate', function(){
+//     Artisan::call('migrate', [
+//         '--path' => 'database/migrations/2025_03_12_070221_change_seed_generation_column.php',
+//         '--force' => true]);
+//     return Artisan::output();
+// });
+
 Route::get('migrate', function(){
-    Artisan::call('migrate', [
-        '--path' => 'database/migrations/2025_03_12_070221_change_seed_generation_column.php',
-        '--force' => true]);
+    $migrations = [
+        'database/migrations/2025_03_12_081600_change_seed_generation_column.php',
+        'database/migrations/2025_03_12_113530_change_previous_seed_culture_column_on_crop_declaration_table.php',
+        'database/migrations/2025_03_12_121550_add_cooperative_column_on_outgrowers_table.php',
+        
+    ];
+
+    foreach ($migrations as $migration) {
+        Artisan::call('migrate', ['--path' => $migration, '--force' => true]);
+    }
+
     return Artisan::output();
 });
-
