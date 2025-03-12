@@ -70,7 +70,7 @@ $fieldData = [
 <body>
     <div class="report-card">
         <div class="header">
-            <img src="{{ public_path('storage/assets/logo.png') }}" alt="logo">
+            <img src="{{ public_path('/storage/assets/Republique Du Mali Logo.png') }}" alt="logo">
         </div>
         <h2>Rapport de l'inspection sur le terrain</h2>
         @foreach ($fieldData as $fieldLabel => $fieldValue)
