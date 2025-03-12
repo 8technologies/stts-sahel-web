@@ -10,6 +10,8 @@ use App\Admin\Controllers\OrderController;
 use App\Admin\Controllers\LoadStockController;
 use App\Models\Gen;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Artisan;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -115,5 +117,8 @@ Route::get('/place_order', [MarketableSeedController::class, 'place_order'])->na
 Route::get('/feedback/{lotId}', [FeedBackController::class, 'feedbackDetails']);
 Route::get('/getVarieties/{id}', [LoadStockController::class, 'getVarieties']);
 
-
+Route::get('migrate', function(){
+    Artisan::call('migrate', ['--force' => true]);
+    return Artisan::output();
+});
 

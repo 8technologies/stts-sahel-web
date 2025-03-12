@@ -71,6 +71,7 @@ class OuGrowerController extends AdminController
         $show->field('phone_number', __('admin.form.Phone number'));
         $show->field('gender', __('admin.form.Gender'));
         $show->field('email_address', __('admin.form.Email address'));
+        $show->field('cooperative', __('admin.form.Cooperative'));
         $show->field('district', __('admin.form.Region'));
         $show->field('sub_county', __('admin.form.Circle'));
         $show->field('town_street', __('admin.form.physical address'));
@@ -113,7 +114,7 @@ class OuGrowerController extends AdminController
         }
        
         
-        $form->text('seed_company_registration_number', __('admin.form.Seed company registration number'))->value($seed_company->producer_registration_number);
+        $form->text('seed_company_registration_number', __('admin.form.Seed company registration number'))->readonly()->value($seed_company->producer_registration_number);
         $form->text('contract_number', __('admin.form.Contract number'))->required();
         $form->text('first_name', __('admin.form.First name'))->required();
         $form->text('last_name', __('admin.form.Last name'))->required();
@@ -126,6 +127,7 @@ class OuGrowerController extends AdminController
         
         $form->text('email_address', __('admin.form.Email address'));
         $form->text('town_street', __('admin.form.physical address'));
+        $form->text('cooperative', __('admin.form.Cooperative'));
         $form->text('community', __('admin.form.Community'))->required();
         $form->text('district', __('admin.form.Region'))->required();
         $form->text('sub_county', __('admin.form.Circle'))->required();

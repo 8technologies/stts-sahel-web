@@ -257,7 +257,7 @@ class SeedProducerController extends AdminController
             {
 
                 $form->divider(__('admin.form.Administrator decision'));
-                $form->radio('status', __('admin.form.Status'))
+                $form->radioButton('status', __('admin.form.Status'))
 
                 ->options([
                     'accepted'=> __('admin.form.Accepted'),

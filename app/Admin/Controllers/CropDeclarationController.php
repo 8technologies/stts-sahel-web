@@ -67,7 +67,7 @@ class CropDeclarationController extends AdminController
             return CropVariety::find($crop_variety_id)->crop_variety_name;
         });
         $grid->column('garden_size', __('admin.form.Garden size(Acres)'));
-        $grid->column('field_name', __('admin.form.Field number'));
+        $grid->column('field_name', __('admin.form.Field name'));
         $grid->column('planting_date', __('admin.form.Planting date'))->display(function ($planting_date) {
             return date('d-m-Y', strtotime($planting_date));
         });
@@ -112,17 +112,18 @@ class CropDeclarationController extends AdminController
         $show->field('seed_class_id', __('admin.form.Seed generation'))->as(function ($seed_class) {
             return \App\Models\SeedClass::find($seed_class)->class_name;
         });
-        $show->field('previous_seed_culture', __('admin.form.Previous Seed culture'))->as(function ($crop_variety_id) {
-            return CropVariety::find($crop_variety_id)->crop_variety_name;
-        });
+        $show->field('previous_seed_culture', __('admin.form.Field history'));//->as(function ($crop_variety_id) {
+            // return CropVariety::find($crop_variety_id)->crop_variety_name;
+        // });
 
         $show->field('out_grower_id', __('admin.form.Out-grower'))->as(function ($out_grower_id) {
-            return \App\Models\OutGrower::find($out_grower_id)->name ?? 'No out-grower selected';
+            $outgrower = \App\Models\OutGrower::find($out_grower_id);
+        
+            return $outgrower ? "{$outgrower->first_name} ({$outgrower->cooperative})" : 'No out-grower selected';
         });
-
         $show->field('phone_number', __('admin.form.Phone number'));
         $show->field('garden_size', __('admin.form.Garden size(Acres)'));
-        $show->field('field_name', __('admin.form.Field number'));
+        $show->field('field_name', __('admin.form.Field name'));
         $show->field('district_region', __('admin.form.District/Region'));
         $show->field('circle', __('admin.form.Circle'));
         $show->field('township', __('admin.form.Township'));
@@ -216,7 +217,7 @@ class CropDeclarationController extends AdminController
                     return \App\Models\SeedClass::find($seed_class)->class_name;
                 })
                 ->required();
-            $form->display('previous_seed_culture', __('admin.form.Previous Seed culture'))
+            $form->display('previous_seed_culture', __('admin.form.Field history'))
                 ->with(function ($crop_variety_id) {
                     return CropVariety::find($crop_variety_id)->crop_variety_name;
                 })
@@ -245,7 +246,7 @@ class CropDeclarationController extends AdminController
 
             $form->display('phone_number', __('admin.form.Phone number'));
             $form->display('garden_size', __('admin.form.Garden size(Acres)'));
-            $form->display('field_name', __('admin.form.Field number'));
+            $form->display('field_name', __('admin.form.Field name'));
             $form->display('district_region', __('admin.form.District/Region'));
             $form->display('circle', __('admin.form.Circle'));
             $form->display('township', __('admin.form.Township'));
@@ -310,30 +311,6 @@ class CropDeclarationController extends AdminController
                 ->options(Utils::get_varieties())
                 ->required();
 
-            // Define a configuration array for roles and their corresponding seed class options
-            $roleSeedClassOptions = [
-                'individual-producers' => [
-                    'Semence Certifiée Première génération',
-                    'Semence Certifiée Deuxième génération',
-                ],
-                'research' => [
-                    'Prébase',
-                    'Base',
-                ],
-                'cooperative' => [
-                    'Semence Certifiée Première génération',
-                    'Semence Certifiée Deuxième génération',
-                ],
-                'grower' => [
-                    'Base',
-                    'Semence Certifiée Première génération',
-                    'Semence Certifiée Deuxième génération',
-                ],
-                'agro-dealer' => [
-                    'Semence Certifiée Première génération',
-                    'Semence Certifiée Deuxième génération',
-                ],
-            ];
             
             //get the user role
             $userRole = $user->roles->pluck('slug')->toArray();
@@ -345,15 +322,14 @@ class CropDeclarationController extends AdminController
             ->options($seedClasses )
             ->required();
 
-            $form->select('previous_seed_culture', __('admin.form.Previous Seed culture'))
-            ->options(Utils::get_varieties())
+            $form->text('previous_seed_culture', __('admin.form.Field history'))
                 ->required();
 
             $form->text('phone_number', __('admin.form.Phone number'))->required();
             $form->decimal('garden_size', __('admin.form.Garden size(Acres)'))->required();
             
             $randomFieldName = 'FIELD' . mt_rand(100, 999);
-            $form->hidden('field_name', __('admin.form.Field number'))->default($randomFieldName)->required();
+            $form->hidden('field_name', __('admin.form.Field name'))->default($randomFieldName)->required();
             $form->text('district_region', __('admin.form.District/Region'))->required();
             $form->text('circle', __('admin.form.Circle'))->required();
             $form->text('township', __('admin.form.Township'))->required();
@@ -366,7 +342,7 @@ class CropDeclarationController extends AdminController
                     'step' => 'any', // 'any' allows any decimal input
                 ]
             )->required();
-            $form->text('expected_yield', __('admin.form.Expected yield(tons)'))->attribute([
+            $form->text('expected_yield', __('admin.form.Expected yield(Kgs)'))->attribute([
                 'type' => 'number',
                 'min' => 0,
                 'step' => 'any', // 'any' allows any decimal input
@@ -375,7 +351,7 @@ class CropDeclarationController extends AdminController
             $form->text('seed_supplier_name', __('admin.form.Seed supplier name'));
             $form->text('seed_supplier_registration_number', __('admin.form.Seed supplier registration number'));
             $form->text('source_lot_number', __('admin.form.Source lot number'));
-            $form->text('origin_of_variety', __('admin.form.Origin of variety'))->required();
+            $form->text('origin_of_variety', __('admin.form.Origin of seed'))->required();
             // check if the user 
             // if($user->inRoles(['grower'])){
             //     $form->text('name', __('admin.form.Seed company name'))->required();

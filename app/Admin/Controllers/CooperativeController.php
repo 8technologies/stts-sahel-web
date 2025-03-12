@@ -220,7 +220,7 @@ class CooperativeController extends AdminController
             if ($user->inRoles(['commissioner','developer'])) 
             {
                 $form->divider(__('admin.form.Administrator decision'));
-                $form->radio('status', __('admin.form.Status'))
+                $form->radioButton('status', __('admin.form.Status'))
                     ->options([
                         'accepted' => __('admin.form.Accepted'),
                         'rejected' => __('admin.form.Rejected'),

@@ -8,6 +8,7 @@ use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Show;
 use \App\Models\CooperativeMember;
+use App\Models\Utils;
 use \Encore\Admin\Facades\Admin;
 
 
@@ -35,6 +36,8 @@ class CooperativeMemberController extends AdminController
 
         //show a cooperative only members belonging to the cooperative
         $user = Admin::user()->id;
+        //disable action buttons appropriately
+        
         
         $cooperative_name = Cooperative::where('user_id', $user)->first()->cooperative_name;
        

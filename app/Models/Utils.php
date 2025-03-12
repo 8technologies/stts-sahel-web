@@ -176,8 +176,16 @@ class Utils extends Model
     //get all outgrowers of a seed producer
     public static function get_out_growers($seed_company)
     {
-        $outgrowers = \App\Models\OutGrower::where('seed_company_id', $seed_company)->pluck('first_name', 'id');
-        return $outgrowers;
+        // $outgrowers = \App\Models\OutGrower::where('seed_company_id', $seed_company)->pluck('first_name', 'cooperative', 'id');
+        // return $outgrowers;
+
+        $outgrowers = \App\Models\OutGrower::where('seed_company_id', $seed_company)
+        ->get(['id', 'first_name', 'cooperative']) // Fetch only required columns
+        ->mapWithKeys(function ($outgrower) {
+            return [$outgrower->id => $outgrower->first_name . ' (' . $outgrower->cooperative . ')'];
+        });
+
+    return $outgrowers;
     }
 
     //function to get a list of all crop varieties with their respective crop names

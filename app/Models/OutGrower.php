@@ -25,7 +25,8 @@ class OutGrower extends Model
         'community',
         'valid_from',
         'valid_to',
-        'signature'
+        'signature',
+        'cooperative'
     ];
 
 }

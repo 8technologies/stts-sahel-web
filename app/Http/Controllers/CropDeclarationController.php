@@ -52,6 +52,8 @@ class CropDeclarationController extends Controller
             'out_grower_id' => 'nullable|exists:out_growers,id',
             'status_comment' => 'nullable',
             'details' => 'nullable',
+            'previous_seed_culture' => 'required',
+            'cooperative_members' => 'nullable'
         ];
     
         try {
@@ -107,6 +109,8 @@ class CropDeclarationController extends Controller
             'out_grower_id' => 'nullable|exists:out_growers,id',
             'status_comment' => 'nullable',
             'details' => 'nullable',
+            'previous_seed_culture' => 'required',
+            'cooperative_members' => 'nullable'
         ];
 
         try {
