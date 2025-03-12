@@ -54,6 +54,8 @@ $aujourdHui = date("j F Y");
     <label for="date">DATE : {{$aujourdHui}}</label><br>
     <label for="date">VALIDITÉ : de {{$form->valid_from}} à {{$form->valid_until}} </label><br>
 
+    <label for="application-number">NOM DE LA SOCIETE DE SEMENCES : {{$form->company_name}}</label><br>
+    
     <label for="application-number">NUMÉRO DE LA DEMANDE : {{$form->producer_registration_number}}</label><br>
     <p></p>
 
