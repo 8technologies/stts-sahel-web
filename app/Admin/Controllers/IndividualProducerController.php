@@ -82,7 +82,7 @@ class IndividualProducerController extends AdminController
         })->sortable();
         $grid->column('seed_generation', __('admin.form.Seed generation'))
         ->display(function ($seed_generation) {
-            return \App\Models\SeedClass::where('id', $seed_generation)
+            return \App\Models\SeedClass::whereIn('id', $seed_generation)
             ->pluck('class_name')
             ->implode(', '); // Convert array to a comma-separated string
         });
@@ -142,7 +142,7 @@ class IndividualProducerController extends AdminController
         });
         $show->field('seed_generation', __('admin.form.Seed generation'))->as(function ($seedGeneration) {
             
-            return \App\Models\SeedClass::where('id', $seedGeneration)
+            return \App\Models\SeedClass::whereIn('id', $seedGeneration)
                 ->pluck('class_name')
                 ->implode(', '); // Display the names as a comma-separated string
         });$show->field('applicant_phone_number', __('admin.form.Applicant phone number'));
@@ -225,7 +225,7 @@ class IndividualProducerController extends AdminController
 
             $form->display('seed_generation', __('admin.form.Seed generation'))
             ->with(function ($seed_generation) {
-                return \App\Models\SeedClass::where('id', $seed_generation)
+                return \App\Models\SeedClass::whereIn('id', $seed_generation)
                 ->pluck('class_name')
                 ->implode(', ');  // Convert array to a comma-separated string
             });
@@ -255,7 +255,7 @@ class IndividualProducerController extends AdminController
                         $form->textarea('status_comment', __('admin.form.Status comment'))->rules('required');
                     })
                     ->when('accepted', function (Form $form) {
-                        $form->text('producer_registration_number', __('admin.form.Seed producer registration number')) ->default('DCCS/' . date('Y/M/') . rand(1000, 100000))->required();
+                        $form->text('producer_registration_number', __('admin.form.Seed producer registration number')) ->default('LABOSEM/INDIV'  . rand(1000, 100000).'/'. date('Y'))->required();
                         $form->datetime('valid_from', __('admin.form.Seed producer approval date'))->default(date('Y-m-d H:i:s'))->required();
                         $nextYear = Carbon::now()->addYear(); // Get the date one year from now
                         $defaultDateTime = $nextYear->format('Y-m-d H:i:s'); // Format the date for default value
@@ -296,8 +296,8 @@ class IndividualProducerController extends AdminController
         //basic user
         else 
         {
-            $seedClasses = \App\Models\Utils::getSeedClassNamesByRoleSlug('individual-producer');
-            $form->select('seed_generation', __('admin.form.Seed generation'))
+            $seedClasses = \App\Models\Utils::getSeedClassNamesByRoleSlug('individual-producers');
+            $form->multipleSelect('seed_generation', __('admin.form.Seed generation'))
             ->options($seedClasses )
             ->required();
             

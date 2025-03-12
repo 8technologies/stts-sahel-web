@@ -95,10 +95,11 @@ class ResearchController extends AdminController
         //$grid->column('seed_generation', __('admin.form.Seed generation'))->sortable();
         $grid->column('seed_generation', __('admin.form.Seed generation'))
         ->display(function ($seed_generation) {
-            return \App\Models\SeedClass::where('id', $seed_generation)
+            return \App\Models\SeedClass::whereIn('id', $seed_generation)
             ->pluck('class_name')
             ->implode(', '); // Convert array to a comma-separated string
         });
+        
         $grid->column('status', __('admin.form.Status'))->display(function ($status) {
             return \App\Models\Utils::tell_status($status)??'-';
         })->sortable();
@@ -155,7 +156,7 @@ class ResearchController extends AdminController
         $show->field('seed_generation', __('admin.form.Seed generation'))->as(function ($seedGeneration) {
             // Assuming $seedGeneration contains an array of seed class IDs
             
-            return \App\Models\SeedClass::where('id', $seedGeneration)
+            return \App\Models\SeedClass::whereIn('id', $seedGeneration)
                 ->pluck('class_name')
                 ->implode(', '); // Display the names as a comma-separated string
         });
@@ -268,7 +269,7 @@ class ResearchController extends AdminController
                         $form->textarea('status_comment', __('admin.form.Status comment'))->rules('required');
                     })
                     ->when('accepted', function (Form $form) {
-                        $form->text('researcher_registration_number', __('admin.form.Research registration number')) ->default('DCCS/RESEARCH/' . rand(1000, 100000).'/'. date('Y') )->required();
+                        $form->text('researcher_registration_number', __('admin.form.Research registration number')) ->default('LABOSEM/RESEARCH/' . rand(1000, 100000).'/'. date('Y') )->required();
                         $form->datetime('valid_from', __('admin.form.Research approval date'))->default(date('Y-m-d H:i:s'))->required();
                         $nextYear = Carbon::now()->addYear(); // Get the date one year from now
                         $defaultDateTime = $nextYear->format('Y-m-d H:i:s'); // Format the date for default value
@@ -308,7 +309,7 @@ class ResearchController extends AdminController
         else 
         {
             $seedClasses = \App\Models\Utils::getSeedClassNamesByRoleSlug('research');
-            $form->select('seed_generation', __('admin.form.Seed generation'))
+            $form->multipleSelect('seed_generation', __('admin.form.Seed generation'))
             ->options($seedClasses )
             ->required();
             $form->text('applicant_phone_number', __('admin.form.Applicant phone number'))->required();

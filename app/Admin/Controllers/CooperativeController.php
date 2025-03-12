@@ -123,7 +123,7 @@ class CooperativeController extends AdminController
          $show->field('seed_generation', __('admin.form.Seed generation'))->as(function ($seedGeneration) {
             // Assuming $seedGeneration contains an array of seed class IDs
             
-            return \App\Models\SeedClass::where('id', $seedGeneration)
+            return \App\Models\SeedClass::whereIn('id', $seedGeneration)
                 ->pluck('class_name')
                 ->implode(', '); // Display the names as a comma-separated string
         });
@@ -203,7 +203,7 @@ class CooperativeController extends AdminController
         {
             $form->display('seed_generation', __('admin.form.Seed generation'))
             ->with(function ($seed_generation) {
-                return \App\Models\SeedClass::where('id', $seed_generation)
+                return \App\Models\SeedClass::whereIn('id', $seed_generation)
                 ->pluck('class_name')
                 ->implode(', ');  // Convert array to a comma-separated string
             });
@@ -235,7 +235,7 @@ class CooperativeController extends AdminController
                         //get the current year
                         $year = date('y');
 
-                        $form->text('registration_number', __('admin.form.Registration number'))->default('coop'.'/'.rand(1000, 10000).'/'. $year )->required();
+                        $form->text('registration_number', __('admin.form.Registration number'))->default('LABOSEM/COOP/'.rand(1000, 10000).'/'. $year )->required();
                         $form->datetime('valid_from', __('admin.form.Cooperative approval date'))->default(date('Y-m-d H:i:s'))->required();
                         $nextYear = Carbon::now()->addYear(); // Get the date one year from now
                         $defaultDateTime = $nextYear->format('Y-m-d H:i:s'); // Format the date for default value
@@ -273,13 +273,13 @@ class CooperativeController extends AdminController
         else 
         {
             $seedClasses = \App\Models\Utils::getSeedClassNamesByRoleSlug('cooperative');
-            $form->select('seed_generation', __('admin.form.Seed generation'))
+            $form->multipleSelect('seed_generation', __('admin.form.Seed generation'))
             ->options($seedClasses )
             ->required();
             
             $form->text('cooperative_number', __('admin.form.Cooperative number'));
-            $form->date('date_of_creation', __('admin.form.Date of creation'))->required();
-            $form->text('years_of_experience', __('admin.form.Number of years of experience'));
+            $form->date('date_of_creation', __('admin.form.Date of creation'));
+            $form->text('years_of_experience', __('admin.form.Number of years of experience'))->required();
             $form->text('cooperative_name', __('admin.form.Cooperative name'))->required();
             $form->text('cooperative_physical_address', __('admin.form.Cooperative physical address'))->required();
             $form->text('contact_person_name', __('admin.form.Name of cooperative president'))->required();

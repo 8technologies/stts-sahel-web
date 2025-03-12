@@ -86,7 +86,7 @@ class SeedProducerController extends AdminController
 
         $grid->column('seed_generation', __('admin.form.Seed generation'))
         ->display(function ($seed_generation) {
-            return \App\Models\SeedClass::where('id', $seed_generation)
+            return \App\Models\SeedClass::whereIN('id', $seed_generation)
             ->pluck('class_name')
             ->implode(', '); // Convert array to a comma-separated string
         });
@@ -138,11 +138,12 @@ class SeedProducerController extends AdminController
         {
             return(' <p class="alert alert-danger">You do not have rights to view this form. <a href="/seed-producers"> Go Back </a></p> ');
         }
+        $show->field('company_name', __('admin.form.Seed company name'));
 
         $show->field('seed_generation', __('admin.form.Seed generation'))->as(function ($seedGeneration) {
             // Assuming $seedGeneration contains an array of seed class IDs
             
-            return \App\Models\SeedClass::where('id', $seedGeneration)
+            return \App\Models\SeedClass::whereIn('id', $seedGeneration)
                 ->pluck('class_name')
                 ->implode(', '); // Display the names as a comma-separated string
         });
@@ -155,7 +156,7 @@ class SeedProducerController extends AdminController
         $show->field('name_of_applicant', __('admin.form.Responsible manager name'));
         $show->field('applicant_phone_number', __('admin.form.Responsible manager phone number'));
         $show->field('applicant_email', __('admin.form.Company email'));
-        $show->field('company_name', __('admin.form.Seed company name'));
+        
         $show->field('premises_location', __('admin.form.Company physical address'));
         $show->field('proposed_farm_location', __('admin.form.Proposed farm location'));
         $show->field('years_of_experience', __('admin.form.If seed company, years of experience as a seed producer'));
@@ -230,17 +231,18 @@ class SeedProducerController extends AdminController
         //admin, inspector and developer
         if ($user->inRoles(['commissioner','developer', 'inspector'])) 
         {
+            
+            $form->display('company_name', __('admin.form.Seed company name'));
 
             $form->display('seed_generation', __('admin.form.Seed generation'))
             ->with(function ($seed_generation) {
-                return \App\Models\SeedClass::where('id', $seed_generation)
+                return \App\Models\SeedClass::whereIn('id', $seed_generation)
                 ->pluck('class_name')
                 ->implode(', ');  // Convert array to a comma-separated string
             });
             $form->display('name_of_applicant', __('admin.form.Responsible manager name'));
             $form->display('applicant_phone_number', __('admin.form.Responsible manager phone number'));
             $form->display('applicant_email', __('admin.form.Company email'));
-            $form->display('company_name', __('admin.form.Seed company name'));
             $form->display('premises_location', __('admin.form.Company physical address'));
             $form->display('proposed_farm_location', __('admin.form.Proposed farm location'));
             $form->display('years_of_experience', __('admin.form.years of experience'));
@@ -267,7 +269,7 @@ class SeedProducerController extends AdminController
                         $form->textarea('status_comment', __('admin.form.Status comment'))->rules('required');
                     })
                     ->when('accepted', function (Form $form) {
-                        $form->text('producer_registration_number', __('admin.form.Seed producer registration number')) ->default('DCCS/SEEDPRODUCER/'  . rand(1000, 100000).'/'. date('Y'))->required();
+                        $form->text('producer_registration_number', __('admin.form.Seed producer registration number')) ->default('LABOSEM/SEEDPRODUCER/'  . rand(1000, 100000).'/'. date('Y'))->required();
                         $form->datetime('valid_from', __('admin.form.Seed producer approval date'))->default(date('Y-m-d H:i:s'))->required();
                         $nextYear = Carbon::now()->addYear(); // Get the date one year from now
                         $defaultDateTime = $nextYear->format('Y-m-d H:i:s'); // Format the date for default value
@@ -306,24 +308,16 @@ class SeedProducerController extends AdminController
         //basic user
         else 
         {
-
-            // $form->multipleSelect('seed_generation', __('admin.form.Seed generation'))->options(
-            //     [
-            //         'Base' => 'Base(B)',
-            //         'Semence Certifiée Première Reproduction' => 'Semence Certifiée Premiere Reproduction(R1)',
-            //         'Semence Certifiée Deuxième Reproduction' => 'Semence Certifiée Deuxième Reproduction(R2)',
-            //     ]
-            // )->required();
+            $form->text('company_name', __('admin.form.Seed company name'))->required();
 
             $seedClasses = \App\Models\Utils::getSeedClassNamesByRoleSlug('grower');
-            $form->select('seed_generation', __('admin.form.Seed generation'))
+            $form->multipleSelect('seed_generation', __('admin.form.Seed generation'))
             ->options($seedClasses )
             ->required();
             
             $form->text('name_of_applicant', __('admin.form.Responsible manager name'))->required();
             $form->text('applicant_phone_number', __('admin.form.Responsible manager phone number'))->required();
             $form->text('applicant_email', __('admin.form.Company email'))->required();
-            $form->text('company_name', __('admin.form.Seed company name'))->required();
             $form->text('premises_location', __('admin.form.Company physical address'))->required();
             $form->text('proposed_farm_location', __('admin.form.Proposed farm location'))->required();
             $form->text('years_of_experience', __('admin.form.years of experience'))->required();

@@ -11,6 +11,9 @@ use Encore\Admin\Auth\Database\Administrator;
 class Cooperative extends Model
 {
     use HasFactory;
+    protected $casts = [
+        'seed_generation' => 'array',
+      ];
 
     protected $fillable = [
         'cooperative_number',

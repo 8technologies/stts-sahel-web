@@ -123,21 +123,24 @@ class UserController extends AdminController
             ->rules(['mimes:jpeg,pdf,jpg,png', 'max:2048'])
             ->help('Please upload a valid image file. Size of image should not be more than 2MB.');
         
-        $id = request()->route()->parameters()["user"];
+            $id= null;
+            $user = null;
+            if(request()->route('user')){
+                $id = request()->route()->parameters()["user"];
+                $user = User::findOrFail($id);
+            }
         
-        $user = User::findOrFail($id);
-
         $form->html('<div class="input-group">
                     <span class="input-group-addon">
                     <i class="fa fa-eye" id="eye-icon"></i></span>
-                    <input id="password-input" type="text" class="form-control password" value="'.$user->password.'" name="password" required >
+                    <input id="password-input" type="text" class="form-control password" value="'.($user ? $user->password : '').'" name="password" required >
 
                 </div>','<span style="color:red;">*</span>'. trans('admin.password'))->rules('confirmed|required');
             
         $form->html('<div class="input-group">
                 <span class="input-group-addon">
                 <i class="fa fa-eye" id="eye-icon1"></i></span>
-                <input id="password-confirm" type="text" class="form-control password" value="'.$user->password.'" name="password" required >
+                <input id="password-confirm" type="text" class="form-control password" value="'.($user ? $user->password : '').'" name="password" required >
 
                 </div>', '<span style="color:red;">*</span>'. trans('admin.password_confirmation')
         )
