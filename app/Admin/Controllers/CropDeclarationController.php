@@ -64,7 +64,13 @@ class CropDeclarationController extends AdminController
             return \App\Models\User::find($user_id)->name;
         }); 
         $grid->column('crop_variety_id', __('admin.form.Crop Variety'))->display(function ($crop_variety_id) {
-            return CropVariety::find($crop_variety_id)->crop_variety_name;
+            $cropVariety = \App\Models\CropVariety::with('crop')->find($crop_variety_id);
+        
+            if ($cropVariety && $cropVariety->crop) {
+                return $cropVariety->crop->crop_name . ' - (' . $cropVariety->crop_variety_name.')';
+            }
+        
+            return 'N/A'; // Fallback in case of missing data
         });
         $grid->column('garden_size', __('admin.form.Garden size(Acres)'));
         $grid->column('field_name', __('admin.form.Field name'));
@@ -106,7 +112,13 @@ class CropDeclarationController extends AdminController
         });
        
         $show->field('crop_variety_id', __('admin.form.Crop Variety'))->as(function ($crop_variety_id) {
-            return CropVariety::find($crop_variety_id)->crop_variety_name;
+            $cropVariety = \App\Models\CropVariety::with('crop')->find($crop_variety_id);
+        
+            if ($cropVariety && $cropVariety->crop) {
+                return $cropVariety->crop->crop_name . ' - (' . $cropVariety->crop_variety_name.')';
+            }
+        
+            return 'N/A'; // Fallback in case of missing data
         });
 
         $show->field('seed_class_id', __('admin.form.Seed generation'))->as(function ($seed_class) {
@@ -206,11 +218,16 @@ class CropDeclarationController extends AdminController
         {
             // $userid =
             // $owner= User::where('user_id', $userid)->first()->id;
-            $form->display('crop_variety_id', __('admin.form.Crop variety'))
-                ->with(function ($crop_variety_id) {
-                    return CropVariety::find($crop_variety_id)->crop_variety_name;
-                })
-                ->required();
+
+            $form->display('crop_variety_id', __('admin.form.Crop Variety'))->with(function ($crop_variety_id) {
+                $cropVariety = \App\Models\CropVariety::with('crop')->find($crop_variety_id);
+            
+                if ($cropVariety && $cropVariety->crop) {
+                    return $cropVariety->crop->crop_name . ' - (' . $cropVariety->crop_variety_name.')';
+                }
+            
+                return 'N/A'; // Fallback in case of missing data
+            });
 
             $form->display('seed_class_id', __('admin.form.Seed generation'))
                 ->with(function ($seed_class) {

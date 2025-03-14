@@ -317,8 +317,17 @@ class FieldInspectionController extends AdminController
             \App\Models\SeedClass::all()->pluck('class_name', 'id')->all() 
         )->readOnly();
         
+        // $form->display('crop_variety_id', __('admin.form.Crop Variety'))->with(function ($crop_variety_id) {
+        //     return \App\Models\CropVariety::find($crop_variety_id)->crop_variety_name;
+        // });
         $form->display('crop_variety_id', __('admin.form.Crop Variety'))->with(function ($crop_variety_id) {
-            return \App\Models\CropVariety::find($crop_variety_id)->crop_variety_name;
+            $cropVariety = \App\Models\CropVariety::with('crop')->find($crop_variety_id);
+        
+            if ($cropVariety && $cropVariety->crop) {
+                return $cropVariety->crop->crop_name . ' - ' . $cropVariety->crop_variety_name;
+            }
+        
+            return 'N/A'; // Fallback in case of missing data
         });
 
         $form->display('previous_seed_culture', __('admin.form.Field history'))
