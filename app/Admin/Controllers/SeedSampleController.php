@@ -109,6 +109,8 @@ class SeedSampleController extends AdminController
         $show->field('load_stock_id', __('admin.form.Load stock number'))->as(function ($load_stock_id) {
             return \App\Models\LoadStock::find($load_stock_id)->load_stock_number;
         });
+        $show->field('quantity', __('admin.form.Sample size(kgs)'));
+            
         $show->field('sample_request_date', __('admin.form.Sample request date'));
         $show->field('proof_of_payment', __('admin.form.Proof of payment'))->as(function ($receipt) {
             return $receipt == null ? 'Aucun fichier téléchargé.' : '<a href="/storage/' . $receipt . '" target="_blank">View receipt</a>';
@@ -147,10 +149,10 @@ class SeedSampleController extends AdminController
             $form->saving(function (Form $form) 
             {
                $load_stock_quantity = LoadStock::where('id', $form->load_stock_id)->first();
-                if($form->quantity > 5)
-                {
-                    return back()->withInput()->withErrors(['quantity' => 'The sample size should not be more than 5kgs']);
-                }
+                // if($form->quantity > 5)
+                // {
+                //     return back()->withInput()->withErrors(['quantity' => 'The sample size should not be more than 5kgs']);
+                // }
                 $form->crop_variety_id = $load_stock_quantity->crop_variety_id;
 
              
@@ -193,6 +195,8 @@ class SeedSampleController extends AdminController
             {
                 //get crop variety from crop_declaration id
                 $crop_variety_id = CropDeclaration::where('id', $crop_declaration)->value('crop_variety_id');
+                //get field size
+                $crop_field_size = CropDeclaration::where('id', $crop_declaration)->value('garden_size');
                 //get crop variety name from crop_variety id
                 $crop_variety = CropVariety::where('id', $crop_variety_id)->first();
                 //get crop name from crop variety
@@ -208,9 +212,10 @@ class SeedSampleController extends AdminController
 
                     $form->display('', __('admin.form.Applicant name'))->default($applicant_name);
                     $form->display('', __('admin.form.Load stock number'))->default($load_stock_number);
+                    $form->display('', __('admin.form.Field size'))->default($crop_field_size);
                     $form->display('', __('admin.form.Crop'))->default($crop_name);
                     $form->display('', __('admin.form.Variety'))->default($crop_variety->crop_variety_name);
-                    $form->display('', __('admin.form.Generation'))->default($seed_class_name);
+                    $form->display('', __('admin.form.Seed generation'))->default($seed_class_name);
                     $form->date('sample_request_date', __('admin.form.Sample request date'))->default(date('Y-m-d'))->readonly();
                     $form->file('proof_of_payment', __('admin.form.Proof of payment'))->readonly();
                     $form->display('applicant_remarks', __('admin.form.Applicant remarks'))->readonly();
@@ -239,7 +244,7 @@ class SeedSampleController extends AdminController
                     $form->display('', __('admin.form.Load stock number'))->default($load_stock_number);
                     $form->display('', __('admin.form.Crop'))->default($crop_name);
                     $form->display('', __('admin.form.Variety'))->default($crop_variety->crop_variety_name);
-                    $form->display('', __('admin.form.Generation'))->default($seed_class_name);
+                    $form->display('', __('admin.form.Seed generation'))->default($seed_class_name);
                     $form->date('sample_request_date', __('admin.form.Sample request date'))->default(date('Y-m-d'))->readonly();
                     $form->file('proof_of_payment', __('admin.form.Proof of payment'))->readonly();
                     $form->display('applicant_remarks', __('admin.form.Applicant remarks'))->readonly();
@@ -272,9 +277,14 @@ class SeedSampleController extends AdminController
             if (auth('admin')->user()->isRole('inspector')) 
             {
                 $form->divider(__('admin.form.Inspector decision'));
+
+                $seedClasses = SeedClass::pluck('class_name', 'id');
+                $form->select('seed_generation', __('admin.form.Seed generation'))
+                ->options($seedClasses )
+                ->required();
                 $form->text('sample_request_number', __('admin.form.Sample request number'))->readonly();
                 $form->decimal('validated_stock', __('admin.form.Validate farmer\'s stock(kgs)'))->required();
-                $form->textarea('additional_instructions', __('admin.form.Analyst Information'));
+                $form->textarea('additional_instructions', __('admin.form.Any other information'));
                 $form->radioCard('status', __('admin.form.Decision'))->options([
                     'halted' => __('admin.form.Halted'),
                     'rejected' => __('admin.form.Rejected'),

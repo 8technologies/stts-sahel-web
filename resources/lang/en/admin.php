@@ -311,11 +311,13 @@ return [
         'Variety' => 'Variety',
         'Generation' => 'Generation',
         'Priority' => 'Priority',
+
         'Additional instructions' => 'Additional instructions',
         'Decision' => 'Decision',
         'Expected reporting date' => 'Expected reporting date',
         'Assign Lab Test' => 'Assign Lab Test',
         'Analyst Information' => 'Analyst Information',
+        'Any other information'=>'Any other information',
         'Assign inspector' => 'Assign Inspector',
         //cooperaive member form
         'Member number'=>'Member number',

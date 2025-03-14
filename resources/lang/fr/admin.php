@@ -319,6 +319,7 @@ return [
         'Generation' => 'Génération',
         'Priority' => 'Priorité',
         'Additional instructions' => 'Instructions supplémentaires',
+        'Any other information'=>'Toute autre information',
         'Decision' => 'Décision',
         'Expected reporting date' => 'Date prévue pour le rapport',
         'Assign Lab Test' => 'Assigner un test de laboratoire',

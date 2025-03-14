@@ -39,6 +39,7 @@ class SeedLab extends Model
         'lot_number',
         'mother_lot',
         'reporting_and_signature',
+        'seed_generation'
     ];
 
     public static function boot()
