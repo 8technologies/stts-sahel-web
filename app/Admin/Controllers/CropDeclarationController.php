@@ -134,7 +134,7 @@ class CropDeclarationController extends AdminController
         $show->field('seed_supplier_name', __('admin.form.Seed supplier name'));
         $show->field('seed_supplier_registration_number', __('admin.form.Seed supplier registration number'));
         $show->field('source_lot_number', __('admin.form.Source lot number'));
-        $show->field('origin_of_variety', __('admin.form.Origin of variety'));
+        $show->field('origin_of_variety', __('admin.form.Origin of seed'));
         $show->field('garden_location_latitude', __('admin.form.Garden location latitude'));
         $show->field('garden_location_longitude', __('admin.form.Garden location longitude'));
 
@@ -218,17 +218,15 @@ class CropDeclarationController extends AdminController
                 })
                 ->required();
             $form->display('previous_seed_culture', __('admin.form.Field history'))
-                ->with(function ($crop_variety_id) {
-                    return CropVariety::find($crop_variety_id)->crop_variety_name;
-                })
+                
                 ->required();
                 
             $crop_declaration = request()->route()->parameters()['crop_declaration'];
              
-            $coop_seed_name = CropDeclaration::where('id', $crop_declaration)->pluck('coop_seed_name')->first(); 
+            $coop_seed_name = CropDeclaration::where('id', $crop_declaration)->pluck('name')->first(); 
                 // check if the cooperative/seed company name is empty
             if (!empty($coop_seed_name)) {
-                $form->display('coop_seed_name', __('admin.form.Cooperative/seed company name'));
+                $form->display('name', __('admin.form.Cooperative/seed company name'));
                 if (empty($form->model()->cooperative_members)) { 
 
                 $form->display('cooperative_members', __('admin.form.Cooperative members'))
@@ -257,7 +255,7 @@ class CropDeclarationController extends AdminController
             $form->display('seed_supplier_name', __('admin.form.Seed supplier name'));
             $form->display('seed_supplier_registration_number', __('admin.form.Seed supplier registration number'));
             $form->display('source_lot_number', __('admin.form.Source lot number'));
-            $form->display('origin_of_variety', __('admin.form.Origin of variety'));
+            $form->display('origin_of_variety', __('admin.form.Origin of seed'));
             $form->display('garden_location_latitude', __('admin.form.Garden location latitude'))->rules('required|numeric|digits:10|between:-9999.999999,9999.999999', [
                 'numeric' => 'Coordinates must be a numeric value.',
                 'digits'  => 'Coordinates must have exactly 10 digits in total.',

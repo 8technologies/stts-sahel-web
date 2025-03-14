@@ -2,6 +2,7 @@
 
 namespace App\Admin\Controllers;
 
+use App\Models\CropDeclaration;
 use App\Models\CropVariety;
 use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
@@ -10,6 +11,7 @@ use Encore\Admin\Show;
 use \App\Models\FieldInspection;
 use \App\Models\Validation;
 use \App\Models\Utils;
+use Illuminate\Support\Facades\Log;
 
 class FieldInspectionController extends AdminController
 {
@@ -166,9 +168,7 @@ class FieldInspectionController extends AdminController
             return \App\Models\InspectionType::find($inspection_type_id)->inspection_type_name;
         });
         $show->field('previous_seed_culture', __('admin.form.Previous Seed culture'))
-        ->as(function ($crop_variety_id) {
-            return CropVariety::find($crop_variety_id)->crop_variety_name;
-        }) ->required();
+         ->required();
 
         $show->field('planting_date', __('admin.form.Planting date'));
         $show->field('origin_of_variety', __('admin.form.Origin of variety'));
@@ -185,6 +185,24 @@ class FieldInspectionController extends AdminController
         $show->field('crop_condition', __('admin.form.Crop condition'))->as(function ($value) {
             return $value ?? '-';
         });
+        $show->field('health_status', __('admin.form.Health status'));
+            
+        $show->field('off_types', __('admin.form.Off types'))->as(function ($value) {
+            return $value == '0' ? __('admin.form.Yes') : __('admin.form.No');
+        });
+
+        $inspection = FieldInspection::findOrFail($id);
+        // Conditionally show additional fields if off_types is '0' (Yes)
+        if ($inspection->off_types == '0') {
+            $show->field('level', __('admin.form.Level'))->as(function ($value) {
+                return $value;
+            });
+
+            $show->field('number_of_offtypes', __('admin.form.Number of off types'))->as(function ($value) {
+                return $value;
+            });
+        }
+
         $show->field('field_spacing', __('admin.form.Field spacing'))->as(function ($value) {
             return $value ?? '-';
         });
@@ -274,6 +292,7 @@ class FieldInspectionController extends AdminController
         //onsaved return to the list page
         $form->saved(function (Form $form) 
         {
+            // Log::info('$form');
             admin_toastr(__('admin.form.Field Inspection saved successfully'), 'success');
             return redirect('/field-inspections');
         });
@@ -281,12 +300,30 @@ class FieldInspectionController extends AdminController
         $form->display('user_id', __('admin.form.Applicant'))->with(function ($user_id) {
             return \App\Models\User::find($user_id)->name;
         });
+        $form->display('id', __('admin.form.Crop Declaration Form'))
+        ->with(function($id) {
+            // $id = $form->model()->id ?? null; // Ensure the ID exists
+            $field_inspection = FieldInspection::findOrFail($id);
+            $CropDeclaration = $field_inspection->crop_declaration;
+            Log::info($CropDeclaration->id);
+            if ($id) {
+                return '<a href="'.admin_url('crop-declarations/'.$CropDeclaration->id).'" target="_blank">'.__('admin.form.Go to Crop Declaration Form').'</a>';
+            }
+            return 'No Crop Declaration Form available';
+        });
 
         $form->display('coop_seed_name', __('admin.form.Cooperative/seed company name'));
+        $form->select('seed_generation', __('admin.form.Seed generation'))->options(
+            \App\Models\SeedClass::all()->pluck('class_name', 'id')->all() 
+        )->readOnly();
         
         $form->display('crop_variety_id', __('admin.form.Crop Variety'))->with(function ($crop_variety_id) {
             return \App\Models\CropVariety::find($crop_variety_id)->crop_variety_name;
         });
+
+        $form->display('previous_seed_culture', __('admin.form.Field history'))
+         ->required();
+
         $form->display('inspection_type_id', __('admin.form.Inspection type'))->with(function ($inspection_type_id) {
             return \App\Models\InspectionType::find($inspection_type_id)->inspection_type_name;
         });
@@ -298,19 +335,30 @@ class FieldInspectionController extends AdminController
 
         $form->text('field_inspection_form_number', __('admin.form.Field inspection form number'))->default('FieldInspection/' . date('Y/') . rand(1000, 9999))->readonly();
         $form->decimal('field_size', __('admin.form.Field size'))->required();
-        $form->select('seed_generation', __('admin.form.Seed generation'))->options(
-            \App\Models\SeedClass::all()->pluck('class_name', 'id')->all() 
-        )->readOnly();
 
-        $form->display('previous_seed_culture', __('admin.form.Previous Seed culture'))
-        ->with(function ($crop_variety_id) {
-            return CropVariety::find($crop_variety_id)->crop_variety_name;
-        }) ->required();
-
+        
         $form->display('planting_date', __('admin.form.Planting date'));
         $form->display('origin_of_variety', __('admin.form.Origin of variety'));
         
         $form->text('crop_condition', __('admin.form.Crop condition'))->required();
+        $form->text('health_status', __('form.Health Status'))->required();
+        
+        $form->radio('off_types', __('admin.form.Off types'))
+        ->options([
+            '0' => __('admin.form.Yes'),
+            '1' => __('admin.form.No')
+        ])
+        ->when('0', function (Form $form) {
+            $form->select('level', __('admin.form.Level'))->options(
+                [
+                    'high' => __('admin.form.High'),
+                    'medium' => __('admin.form.Medium'),
+                    'low' => __('admin.form.Low'),
+                ]
+            );
+            $form->number('number_of_offtypes', __('admin.form.Number of off types'));
+        })->required();
+        
         $form->select('plant_density', __('admin.form.Plant density'))->options([
             'low' =>__('admin.form.Low'),
             'optimal' => __('admin.form.Optimal'),

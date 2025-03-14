@@ -35,6 +35,10 @@ class FieldInspection extends Model
         'isolation',
         'isolation_time',
         'isolation_distance',
+        'off_types',
+        'level',
+        'number_of_offtypes',
+        'health_status',
     ];
 
     public function crop_variety()
