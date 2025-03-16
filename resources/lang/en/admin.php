@@ -455,6 +455,7 @@ return [
         'Expected yield(Kgs)'=>'Expected yield(Kgs)',
         'Pre-Orders'=>'Pre-orders',
         'Seed sample size' => 'Seed sample size',
+        'Lot weight(kgs)' => 'Lot weight(kgs)',
         'Testing method' => 'Testing method',
         'Germination test results' => 'Germination test results(%)',
         'Purity test results' => 'Purity test results(%)',

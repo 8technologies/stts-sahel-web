@@ -20,7 +20,7 @@ use \App\Models\LabelPackage;
 use \App\Models\SeedClass;
 use \App\Models\Utils;
 use \App\Models\Validation;
-
+use Illuminate\Support\Facades\Log;
 
 class SeedLabelController extends AdminController
 {
@@ -297,6 +297,9 @@ class SeedLabelController extends AdminController
             $form->textarea('applicant_remarks', __('admin.form.Applicant remarks'));
 
             $form->text('label_packages', __('admin.form.Label package Type'))->attribute('id','package_type')->readonly();
+            // $form->text('unit_price', __('admin.form.Unit Price(XOF)'))->default($label->price)->required()->readonly();
+            $form->text('selling_price', __('admin.form.Selling Price(XOF)'))->required();
+                
             $form->hasMany('packages', __('admin.form.Packages'), function (Form\NestedForm $form) {
                 $label_package = LabelPackage::all();
                     $label_package_array = [];
@@ -310,7 +313,9 @@ class SeedLabelController extends AdminController
                         // Check if the quantity is unique
                         if (!in_array($quantityKey, $uniqueQuantities)) {
                             // If unique, add to the array and the list of unique quantities
-                            $label_package_array[$label->id] = $quantityKey . ' @ ' . $label->price;
+                            // $label_package_array[$label->id] = $quantityKey . ' @ ' . $label->price;
+                            $label_package_array[$label->id] = $quantityKey ;
+                            
                             $uniqueQuantities[] = $quantityKey;
                         }
                     }
@@ -332,6 +337,7 @@ class SeedLabelController extends AdminController
             
                             // Set the value of the #package_type element
                             packageType.val(data);
+                            console.log(data);
                         },
                         error: function(xhr, status, error) {
                             console.error("Error fetching package type:", error);
@@ -388,6 +394,7 @@ class SeedLabelController extends AdminController
                     }
                     
                     $form->select('package_id', __('admin.form.Label package'))->options($label_package_array)->readonly();
+                    $form->display('', __('admin.form.Unit price(XOF)'))->default($label->price)->readonly();
                     $form->display('quantity', __('admin.form.Quantity(kgs)'))->readonly();
                 })->disable();
                 
@@ -441,12 +448,10 @@ class SeedLabelController extends AdminController
     public function package_types($seedLabId)
     {
         $seed_lab = SeedLab::where('id', $seedLabId)->first();
-        
         if ($seed_lab) {
             $seed_generation = LoadStock::where('id', $seed_lab->load_stock_id)->pluck('seed_class');
             $label_package = LabelPackage::where('seed_generation', $seed_generation)->first();
-            
-            if ($label_package) {
+             if ($label_package) {
                 return response()->json($label_package->package_type);
             }
         }

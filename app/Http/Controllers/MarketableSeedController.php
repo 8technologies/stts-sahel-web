@@ -9,6 +9,7 @@ use App\Models\LoadStock;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use App\Models\Utils;
 use App\Models\User;
+use Illuminate\Support\Facades\DB;
 
 class MarketableSeedController extends Controller
 {
@@ -24,11 +25,31 @@ class MarketableSeedController extends Controller
             $load_stock = LoadStock::find($stock->load_stock_id);
             $seed_lab = SeedLab::find($stock->seed_lab_id);
             $user = User::find($stock->user_id);
+            if ($user->isrole(['cooperative'])) {
+                $telephone = DB::table('cooperatives')->where('user_id', $user->id)->value('contact_phone_number');
+                
+            }
+            elseif($user->isrole(['grower'])){
+                $telephone = DB::table('seed_producers')->where('user_id', $user->id)->value('applicant_phone_number');
+                
+            }
+            elseif($user->isrole(['research'])){
+                $telephone = DB::table('research')->where('user_id', $user->id)->value('applicant_phone_number');
+               
+            } 
+            elseif($user->isrole(['individual-producers'])){
+                $telephone = DB::table('individual_producers')->where('user_id', $user->id)->value('applicant_phone_number');
+               
+            } 
+               
             $result[] = [
                 'marketable_seed_id' => $stock->id,
                 'load_stock' => $load_stock,
                 'seed_lab' => $seed_lab,
-                'user' => $user
+                'crop_variety' => $load_stock->seed_class->name,
+                'seed_generation' => $load_stock->seed_class->name,
+                'user' => $user,
+                'telephone'=>$telephone,
             ];
         }
 

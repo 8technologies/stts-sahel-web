@@ -20,6 +20,8 @@ class SeedLabel extends Model
         'applicant_remarks',
         'status',
         'label_packages',
+        'unit_price',
+        'selling_price'
     ];
 
     public function packages()

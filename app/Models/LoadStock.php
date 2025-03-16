@@ -28,4 +28,9 @@ class LoadStock extends Model
     {
         return $this->belongsTo(CropDeclaration::class);
     }
+
+    public function seed_class()
+    {
+        return $this->belongsTo(SeedClass::class);
+    }
 }

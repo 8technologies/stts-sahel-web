@@ -168,7 +168,7 @@ class SeedLabController extends AdminController
         });
         $show->field('seed_lab_test_report_number', __('admin.form.Seed lab test report number'));
         $show->field('sample_request_number', __('admin.form.Seed sample request number'));
-        $show->field('seed_sample_size', __('admin.form.Seed sample size'));
+        $show->field('seed_sample_size', __('admin.form.Lot weight(kgs)'));
 
        
         $show->field('testing_methods', __('admin.form.Testing method'))->as(function ($testingMethods) {
@@ -257,7 +257,7 @@ class SeedLabController extends AdminController
                 $form->display('', __('admin.form.Crop'))->default($crop->crop_name);
                 $form->display('', __('admin.form.Variety'))->default($crop_variety->crop_variety_name);
                 $form->display('', __('Generation'))->default($seed_class);
-                $form->display('quantity', __('admin.form.Seed Sample size(kgs)'));
+                $form->display('quantity', __('admin.form.Lot weight(kgs)'));
                 $form->hidden('crop_variety_id', __('admin.form.Crop Variety'))->default($crop_variety->id);
                 $form->text('mother_lot',__('admin.form.Mother lot number'))->default($mother_lot)->readonly();
 
@@ -285,7 +285,7 @@ class SeedLabController extends AdminController
                   $form->display('', __('admin.form.Crop'))->default($crop_name);
                   $form->display('', __('admin.form.Variety'))->default($crop_variety->crop_variety_name);
                   $form->display('', __('Generation'))->default($seed_class);
-                  $form->display('quantity', __('admin.form.Seed Sample size(kgs)'));
+                  $form->display('quantity', __('admin.form.Lot weight(kgs)'));
                   $form->hidden('crop_variety_id', __('admin.form.Crop Variety'))->default($crop_variety->id);
                   
                  

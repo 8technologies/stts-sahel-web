@@ -380,6 +380,7 @@ return [
         'Quantity to be supplied' => 'Quantité à fournir',
         //preorder form
         'Order date' => 'Date de commande',
+        'Lot weight(kgs)'=>'Poids du lot(kgs)',
         'Client name' => 'Nom du client',
         'Client physical address' => 'Adresse physique du client',
         'Client contact number' => 'Numéro de contact du client',
