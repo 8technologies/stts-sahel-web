@@ -120,9 +120,9 @@ Route::get('/getVarieties/{id}', [LoadStockController::class, 'getVarieties']);
 
 Route::get('migrate', function(){
     $migrations = [
-        'database/migrations/2025_03_14_060324_change_previous_seed_culture_column_on_field_inspection_table.php',
-        'database/migrations/2025_03_14_071932_add_off_types_column_on_field_inspection_table.php',
-        'database/migrations/2025_03_14_093906_add_seed_generation_column_on_seedSample_table.php',
+        // 'database/migrations/2025_03_14_060324_change_previous_seed_culture_column_on_field_inspection_table.php',
+        // 'database/migrations/2025_03_14_071932_add_off_types_column_on_field_inspection_table.php',
+        'database/migrations/2025_03_14_131659_add_selling_price_column_on_seed_label_table.php',
         
     ];
 
