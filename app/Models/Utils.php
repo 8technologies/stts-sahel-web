@@ -185,7 +185,18 @@ class Utils extends Model
             return [$outgrower->id => $outgrower->first_name . ' (' . $outgrower->cooperative . ')'];
         });
 
-    return $outgrowers;
+        return $outgrowers;
+    }
+
+    public static function get_cooperative_members($cooperative)
+    {
+        
+        $cooperative_members = \App\Models\CooperativeMember::where('cooperative_id', $cooperative)
+        ->get(['id', 'farmer_first_name', 'farmer_last_name']) // Fetch only required columns
+        ->mapWithKeys(function ($cooperative_members) {
+            return [$cooperative_members->id => $cooperative_members->farmer_first_name.' ' .$cooperative_members->farmer_last_name ];
+        });
+        return $cooperative_members;
     }
 
     //function to get a list of all crop varieties with their respective crop names

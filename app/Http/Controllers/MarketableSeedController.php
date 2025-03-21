@@ -49,6 +49,7 @@ class MarketableSeedController extends Controller
                 'crop_variety' => $load_stock->seed_class->name,
                 'seed_generation' => $load_stock->seed_class->name,
                 'user' => $user,
+                'selling_price'=> ,
                 'telephone'=>$telephone,
             ];
         }

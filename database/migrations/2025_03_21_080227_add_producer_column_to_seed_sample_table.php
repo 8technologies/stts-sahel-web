@@ -12,8 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('seed_labs', function (Blueprint $table) {
-            $table->bigInteger('seed_generation')->nullable();
-            
+            $table->integer('number_of_samples')->nullable();
+            $table->string('year_of_production')->nullable();
         });
     }
 
@@ -23,8 +23,8 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('seed_labs', function (Blueprint $table) {
-            $table->dropColumn('seed_generation');
-            
+            $table->dropColumn('number_of_samples');
+            $table->dropColumn('year_of_production');
         });
     }
 };

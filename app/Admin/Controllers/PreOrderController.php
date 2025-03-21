@@ -7,6 +7,7 @@ use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Show;
 use \App\Models\PreOrder;
+use App\Models\Utils;
 
 class PreOrderController extends AdminController
 {
@@ -43,7 +44,13 @@ class PreOrderController extends AdminController
 
      
         $grid->column('crop_variety_id', __('admin.form.Crop Variety'))->display(function ($crop_variety_id) {
-            return \App\Models\CropVariety::find($crop_variety_id)->crop_variety_name;
+            $cropVariety = \App\Models\CropVariety::with('crop')->find($crop_variety_id);
+        
+            if ($cropVariety && $cropVariety->crop) {
+                return $cropVariety->crop->crop_name . ' - (' . $cropVariety->crop_variety_name.')';
+            }
+        
+            return 'N/A'; // Fallback in case of missing data
         });
         $grid->column('seed_class', __('admin.form.Seed class'))->display(function ($seed_class) {
             return \App\Models\SeedClass::find($seed_class)->class_name;
@@ -71,8 +78,15 @@ class PreOrderController extends AdminController
 
 
         $show->field('crop_variety_id', __('admin.form.Crop Variety'))->as(function ($crop_variety_id) {
-            return \App\Models\CropVariety::find($crop_variety_id)->crop_variety_name;
+            $cropVariety = \App\Models\CropVariety::with('crop')->find($crop_variety_id);
+        
+            if ($cropVariety && $cropVariety->crop) {
+                return $cropVariety->crop->crop_name . ' - (' . $cropVariety->crop_variety_name.')';
+            }
+        
+            return 'N/A'; // Fallback in case of missing data
         });
+
         $show->field('seed_class', __('admin.form.Seed class'))->as(function ($seed_class) {
             return \App\Models\SeedClass::find($seed_class)->class_name;
         });
@@ -123,7 +137,9 @@ class PreOrderController extends AdminController
         if ($form->isCreating()) {
             $form->hidden('user_id')->default($user->id);
         }
-        $form->select('crop_variety_id', __('admin.form.Crop Variety'))->options(\App\Models\CropVariety::all()->pluck('crop_variety_name', 'id'))->required();
+        $form->select('crop_variety_id', __('admin.form.Crop Variety'))
+        ->options(Utils::get_varieties())
+        ->required();
         $form->select(
             'seed_class',
             __('admin.form.Seed generation')

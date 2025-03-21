@@ -2,6 +2,7 @@
 
 namespace App\Admin\Controllers;
 
+use App\Models\Cooperative;
 use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
@@ -14,6 +15,9 @@ use \App\Models\CropVariety;
 use \App\Models\SeedClass;
 
 use \App\Models\CropDeclaration;
+use App\Models\SeedProducer;
+use App\Models\User;
+use Illuminate\Support\Facades\Log;
 
 class LoadStockController extends AdminController
 {
@@ -106,8 +110,14 @@ class LoadStockController extends AdminController
         $show->field('user_id', __('admin.form.Applicant'))->as(function ($value) {
             return \App\Models\User::find($value)->name ?? '-';
         });
-        $show->field('seed_class', __('admin.form.Seed class'))->as(function ($value) {
-            return \App\Models\SeedClass::find($value)->class_name ?? '-';
+        $show->field('seed_class', __('admin.form.Seed class'))->as(function ($crop_variety_id) {
+            $cropVariety = \App\Models\CropVariety::with('crop')->find($crop_variety_id);
+        
+            if ($cropVariety && $cropVariety->crop) {
+                return $cropVariety->crop->crop_name . ' - (' . $cropVariety->crop_variety_name.')';
+            }
+        
+            return 'N/A'; // Fallback in case of missing data
         });
         $show->field('field_size', __('admin.form.Field size(Acres)'));
         $show->field('yield_quantity', __('admin.form.Yield quantity(kgs)'));
@@ -134,49 +144,72 @@ class LoadStockController extends AdminController
         $form = new Form(new LoadStock());
         $user = auth()->user();
     
-        if ($form->isCreating()) 
-        {
-            $form->hidden('user_id')->default($user->id);
-        }
-    
         $form->saved(function (Form $form) 
         {
             admin_toastr(__('admin.form.Crop stock saved successfully'), 'success');
             return redirect('/load-stocks');
         });
     
-        if ($form->isEditing()) 
-        {
-            $id = request()->route()->parameters()['load_stock'];
-            Validation::checkFormEditable($form, $id, 'LoadStock');
-        }
-    
         $form->text('load_stock_number', __('admin.form.Crop stock number'))->default('LS'.rand(1000, 100000))->readonly();
         $crop_declarations = CropDeclaration::where('user_id', $user->id)
             ->where('status', 'accepted')->get();
     
-        if($user->isRole('agro-dealer')){
-            $form->select('crop_variety_id', __('admin.form.Crop Variety'))->options(CropVariety::pluck('crop_variety_name', 'id'));
-            $form->select('seed_class', __('admin.form.Seed class'))->options(SeedClass::pluck('class_name', 'id')); 
-        }
-        else{
-            $form->select('crop_declaration_id', __('admin.form.Crop Declaration'))
-                ->options($crop_declarations->pluck('field_name', 'id'))
-                ->attribute('id', 'crop_declaration_id')
-                ->required();
-    
-            $form->hidden('crop_variety_id', __('admin.form.Crop Variety'))->attribute('id', 'crop_variety_id')->required();
-            $form->text('', __('admin.form.Crop Variety Name'))->attribute('id', 'crop_variety_name')->readonly();
-    
-            $form->hidden('seed_class', __('admin.form.Seed class'))->attribute('id', 'seed_class_id')->required();
-            $form->text('', __('admin.form.Seed class Name'))->attribute('id', 'seed_class')->readonly();  
-        }
-    
+        $form->select('crop_declaration_id', __('admin.form.Crop Declaration'))
+            ->options($crop_declarations->pluck('field_name', 'id'))
+            ->attribute('id', 'crop_declaration_id')
+            ->required();
+
+        $form->hidden('crop_variety_id', __('admin.form.Crop Variety'))->attribute('id', 'crop_variety_id')->required();
+        $form->text('', __('admin.form.Crop Variety Name'))->attribute('id', 'crop_variety_name')
+        ->options(Utils::get_varieties())
+        ->readonly();
+
+        $form->hidden('seed_class', __('admin.form.Seed generation'))->attribute('id', 'seed_class_id')->required();
+        $form->text('', __('admin.form.Seed generation'))->attribute('id', 'seed_class')->readonly(); 
+
+        // if ($form->isCreating()) 
+        // {
+            $form->hidden('user_id')->default($user->id);
+            Log::info($form->model()->user_id);
+            $seed_producer = SeedProducer::where('user_id', $user->id)->first();
+            if($user->isRole('outgrower')){
+                $form->select('producer', __('admin.form.Producer'))->options(Utils::get_out_growers($seed_producer->id));
+            }
+            if($user->isRole('cooperative')){
+                $cooperatives = Cooperative::where('user_id', $user->id)->first();
+                Log::info($form->model()->user_id);
+            
+                $form->select('producer', __('admin.form.Producer'))->options(Utils::get_cooperative_members($cooperatives->id));
+            }
+
+        // }
+        // elseif($form->isEditing()){
+        //     $id = request()->route()->parameters()['load_stock'];
+        //     Validation::checkFormEditable($form, $id, 'LoadStock');
+            
+        //     $loadStock = $form->model(); // Get the model being edited
+        //     Log::info('Editing LoadStock - Full Model:', $loadStock->toArray());
+            
+        //     $user = User::where('id', $loadStock->user_id)->first(); // Added ->first()
+        //     if ($user) {
+        //         $seed_producer = SeedProducer::where('user_id', $loadStock->user_id)->first();
+        //         if($user->isRole('outgrower') && $seed_producer){
+        //             $form->select('producer', __('admin.form.Producer'))->options(Utils::get_out_growers($seed_producer->id));
+        //         }
+        //         if($user->isRole('cooperative')){
+        //             $cooperatives = Cooperative::where('user_id', $loadStock->user_id)->first();
+        //             if ($cooperatives) {
+        //                 $form->select('producer', __('admin.form.Producer'))->options(Utils::get_cooperative_members($cooperatives->id));
+        //             }
+        //         }
+        //     }
+        // }
+
         $form->decimal('field_size', __('admin.form.Field size(Acres)'))->required();
-        $form->decimal('yield_quantity', __('admin.form.Yield quantity(kgs)'))->required();
+        $form->decimal('yield_quantity', __('admin.form.Production(kgs)'))->required();
+        $form->date('last_field_inspection_date', __('admin.form.Last inspection date'))->attribute('id', 'last_field_inspection_date')->readonly();
         $form->date('load_stock_date', __('admin.form.Crop stock date'))->default(date('Y-m-d'))->required();
-        $form->hidden('last_field_inspection_date', __('admin.form.Date'))->attribute('id', 'last_field_inspection_date');
-    
+        
         $form->tools(function (Form\Tools $tools) {
             $tools->disableDelete();
             $tools->disableView();
@@ -191,8 +224,10 @@ class LoadStockController extends AdminController
         Admin::script
         ('
             $(document).ready(function() {
-                $("#crop_declaration_id").change(function () {
-                    var id = $(this).val();
+                // $("#crop_declaration_id").change(function () {
+                //     var id = $(this).val();
+                if($("#crop_declaration_id").val()){
+                    var id = $("#crop_declaration_id").val();
             
                     $.ajax({
                         url: "/getVarieties/" + id,
@@ -209,7 +244,38 @@ class LoadStockController extends AdminController
                             console.log(error);
                         }
                     });
+                }
+
+                $("#crop_declaration_id").change(function () {
+                    var id = $(this).val();
+                    // var id = $("#crop_declaration_id").val();
+            
+                    $.ajax({
+                        url: "/getVarieties/" + id,
+                        method: "GET",
+                        dataType: "json",
+                        success: function(data) {
+                            $("#crop_variety_id").val(data.crop_variety_id);
+                            $("#crop_variety_name").val(data.crop_variety);
+                            $("#seed_class_id").val(data.seed_class_id);
+                            $("#seed_class").val(data.seed_class);
+                            $("#last_field_inspection_date").val(data.last_field_inspection_date);
+                        },
+                        error: function (error) {
+                            console.log(error);
+                        }
+                    });
+                
+
+
                 });
+
+
+                // });
+            });
+
+            $(document).ready(function() {
+                
             });
         ');
     
@@ -224,14 +290,19 @@ class LoadStockController extends AdminController
         }
     
         $crop_variety_id = $cropDeclaration->crop_variety_id;
-        $crop_variety = \App\Models\CropVariety::find($crop_variety_id);
+        $variety =\App\Models\CropVariety::with('crop')->find($crop_variety_id);
+        // $crop_variety = 
+        // $cropVariety = \App\Models\CropVariety::with('crop')->find($form->model()->crop_variety_id);
+            // if ($crop_variety && $crop_variety->crop) {
+        $crop_variety = $variety->crop->crop_name . ' - ' . $variety->crop_variety_name;
+            // }
     
         $seed_class_id = $cropDeclaration->seed_class_id;
         $seed_class = \App\Models\SeedClass::find($seed_class_id);
     
         return response()->json([
-            'crop_variety_id' => $crop_variety_id,
-            'crop_variety' => $crop_variety->crop_variety_name,
+            'crop_variety_id' => $variety->id,
+            'crop_variety' => $crop_variety,
             'seed_class_id' => $seed_class_id,
             'seed_class' => $seed_class->class_name,
             'last_field_inspection_date' => $cropDeclaration->updated_at->format('Y-m-d'),
@@ -240,3 +311,5 @@ class LoadStockController extends AdminController
     
     
 }
+
+

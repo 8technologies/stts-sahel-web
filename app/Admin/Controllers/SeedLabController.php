@@ -13,11 +13,11 @@ use \App\Models\SeedLab;
 use \App\Models\CropDeclaration;
 use \App\Models\CropVariety;
 use \App\Models\Crop;
+use App\Models\FieldInspection;
 use \App\Models\SeedClass;
 use \App\Models\Validation;
 use \App\Models\Utils;
-
-
+use Illuminate\Support\Facades\Log;
 
 class SeedLabController extends AdminController
 {
@@ -153,13 +153,15 @@ class SeedLabController extends AdminController
         $show->field('load_stock_id', __('admin.form.Crop stock number'))->as(function ($load_stock_id) {
             return \App\Models\LoadStock::find($load_stock_id)->load_stock_number;
         });
-        $show->field('c', __('admin.form.Crop'))->as(function () use ($crop_variety_id) {
-            $crop_id = \App\Models\CropVariety::find($crop_variety_id)->crop_id;
-            return \App\Models\Crop::find($crop_id)->crop_name;
-        });
-
+        
         $show->field('crop_variety_id', __('admin.form.Crop Variety'))->as(function ($crop_variety_id) {
-            return \App\Models\CropVariety::find($crop_variety_id)->crop_variety_name;
+            $cropVariety = \App\Models\CropVariety::with('crop')->find($crop_variety_id);
+        
+            if ($cropVariety && $cropVariety->crop) {
+                return $cropVariety->crop->crop_name . ' - (' . $cropVariety->crop_variety_name.')';
+            }
+        
+            return 'N/A'; // Fallback in case of missing data
         });
 
         $show->field('', __('Generation'))->as(function () use ($load_stock_id) {
@@ -180,9 +182,11 @@ class SeedLabController extends AdminController
         $show->field('germination_test_results', __('admin.form.Germination test results(%)'))->as(function ($germination_test_results) {
             return $germination_test_results ??__('admin.form.Not yet assigned');
         })->unescape();
-        $show->field('purity_test_results', __('admin.form.Purity test results(%)'))->as(function ($purity_test_results) {
+        $show->field('purity_test_results', __('admin.form.Specific purity test results(%)'))->as(function ($purity_test_results) {
             return $purity_test_results ?? __('admin.form.Not yet assigned');
         })->unescape();
+        $show->field('variegated_purity_test', __('admin.form.Variegated test results(%)'))->required();
+            
         $show->field('moisture_content_test_results', __('admin.form.Moisture content test results(%)'))->as(function ($moisture_content_test_results) {
             return $moisture_content_test_results ?? __('admin.form.Not yet assigned');
         })->unescape();
@@ -245,6 +249,8 @@ class SeedLabController extends AdminController
                 $mother_lot = CropDeclaration::where('id', $crop_declaration)->value('source_lot_number');
                 //get crop variety name from crop_variety id
                 $crop_variety = CropVariety::where('id', $crop_variety_id)->first();
+
+                $estimated_yield = FieldInspection::where('crop_declaration_id', $crop_declaration)->value('estimated_yield');
                 //get crop name from crop variety
                 $crop = Crop::find($crop_variety->crop_id);
                 $load_stock = LoadStock::where('id', $seed_lab->load_stock_id)->first();
@@ -257,7 +263,7 @@ class SeedLabController extends AdminController
                 $form->display('', __('admin.form.Crop'))->default($crop->crop_name);
                 $form->display('', __('admin.form.Variety'))->default($crop_variety->crop_variety_name);
                 $form->display('', __('Generation'))->default($seed_class);
-                $form->display('quantity', __('admin.form.Lot weight(kgs)'));
+                $form->display('', __('admin.form.Lot weight(kgs)'))->default($estimated_yield);
                 $form->hidden('crop_variety_id', __('admin.form.Crop Variety'))->default($crop_variety->id);
                 $form->text('mother_lot',__('admin.form.Mother lot number'))->default($mother_lot)->readonly();
 
@@ -275,6 +281,9 @@ class SeedLabController extends AdminController
                   //get crop name from crop variety
                   $crop = Crop::find($crop_variety->crop_id);
                   $crop_name = $crop->crop_name;
+
+                  $estimated_yield = FieldInspection::where('crop_declaration_id', $crop_declaration)->value('estimated_yield');
+                
                   //get applicant name
                   $applicant_name = Administrator::where('id', $seed_lab->user_id)->value('name');
                   //get seed class name
@@ -285,7 +294,7 @@ class SeedLabController extends AdminController
                   $form->display('', __('admin.form.Crop'))->default($crop_name);
                   $form->display('', __('admin.form.Variety'))->default($crop_variety->crop_variety_name);
                   $form->display('', __('Generation'))->default($seed_class);
-                  $form->display('quantity', __('admin.form.Lot weight(kgs)'));
+                  $form->display('', __('admin.form.Lot weight(kgs)'))->default($estimated_yield);
                   $form->hidden('crop_variety_id', __('admin.form.Crop Variety'))->default($crop_variety->id);
                   
                  
@@ -301,8 +310,21 @@ class SeedLabController extends AdminController
                 
                 ])->required();
                 
+            // $selectedId = request()->input('lab_seed_generation'); // Get the selected value if available
+
+            $seed_class = LoadStock::where('id', $seed_lab->load_stock_id)->where('user_id', $seed_lab->user_id)->value('seed_class');
+                
+            Log::info($seed_class);
+            $seedGenerations = SeedClass::when($seed_class, function ($query, $selectedId) {
+                return $query->where('id', '>=', $selectedId);
+            })->pluck('class_name', 'id');
+            
+            $form->select('lab_seed_generation', __('admin.form.Confirm Seed Generation'))
+                ->options($seedGenerations)
+                ->required();
             $form->decimal('germination_test_results', __('admin.form.Germination test results'))->required();
-            $form->decimal('purity_test_results', __('admin.form.Purity test results'))->required();
+            $form->decimal('purity_test_results', __('admin.form.Specific purity test results(%)'))->required();
+            $form->decimal('variegated_purity_test', __('admin.form.Variegated test results(%)'))->required();
             $form->decimal('moisture_content_test_results', __('admin.form.Moisture content test results'))->required();
             $form->textarea('additional_tests_results', __('admin.form.Additional tests results'))->required();
             $form->radio('test_decision', __('admin.form.Test decision'))

@@ -2,6 +2,8 @@
 
 namespace App\Admin\Controllers;
 
+use App\Models\Cooperative;
+use App\Models\CooperativeMember;
 use App\Models\LoadStock;
 use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
@@ -13,9 +15,11 @@ use \App\Models\SeedLab;
 use \App\Models\CropDeclaration;
 use \App\Models\CropVariety;
 use \App\Models\Crop;
+use App\Models\OutGrower;
 use \App\Models\SeedClass;
 use \App\Models\Utils;
 use \App\Models\Validation;
+use Illuminate\Support\Facades\Log;
 
 class SeedSampleController extends AdminController
 {
@@ -149,10 +153,7 @@ class SeedSampleController extends AdminController
             $form->saving(function (Form $form) 
             {
                $load_stock_quantity = LoadStock::where('id', $form->load_stock_id)->first();
-                // if($form->quantity > 5)
-                // {
-                //     return back()->withInput()->withErrors(['quantity' => 'The sample size should not be more than 5kgs']);
-                // }
+                
                 $form->crop_variety_id = $load_stock_quantity->crop_variety_id;
 
              
@@ -172,7 +173,17 @@ class SeedSampleController extends AdminController
          if (!auth('admin')->user()->inRoles(['commissioner','developer','inspector','basic-user'])) 
         {
             $form->text('sample_request_number', __('admin.form.Sample request number'))->default('SRN' . date('YmdHis'))->readonly();
-            $form->select('load_stock_id', __('admin.form.Load stock number'))->options($crop_stock->pluck('load_stock_number', 'id'))->required();
+            $form->select('load_stock_id', __('admin.form.Load stock number'))->options($crop_stock->pluck('load_stock_number', 'id'))->attribute('id', 'load_stock_id')->required();
+            
+            $form->text('', __('admin.form.Name of producer'))->attribute('id', 'producer')->readonly();
+            
+            // } 
+            // elseif(auth('admin')->user()->isRole('cooperative')){
+            //     $form->text('', __('admin.form.Name of producer'))->attribute('id', 'coopproducer')->readonly();
+            
+            // }
+            $form->text('year_of_production', __('admin.form.Year of production'));
+            $form->number('number_of_samples', __('admin.form.Number of samples'));
             $form->number('quantity', __('admin.form.Sample size(kgs)'));
             $form->date('sample_request_date', __('admin.form.Sample request date'))->default(date('Y-m-d'))->required(); 
             $form->file('proof_of_payment', __('admin.form.Proof of payment'))
@@ -202,6 +213,24 @@ class SeedSampleController extends AdminController
                 //get crop name from crop variety
                 $crop_name = Crop::where('id', $crop_variety->crop_id)->value('crop_name');
                 $load_stock_number = LoadStock::where('id', $seed_lab->load_stock_id)->value('load_stock_number');
+                // name of producer
+                $loadStock = LoadStock::where('id', $seed_lab->load_stock_id)->first();
+                
+                // $user = \App\Models\User::find($loadStock->user_id);
+                $user = Administrator::find($loadStock->user_id);
+
+                if ($user->isRole('cooperative')) {
+                    $coopProducer = CooperativeMember::where('id', $loadStock->producer)->first();
+                    if ($coopProducer) {
+                        $fullName = $coopProducer->farmer_first_name . ' ' . $coopProducer->farmer_last_name;
+                    }
+                } elseif ($user->isRole('outgrower')) {
+                    $producer = OutGrower::where('id', $loadStock->producer)->first();
+                    if ($producer) {
+                        $fullName = $producer->first_name . ' ' . $producer->last_name;
+                        
+                    }
+                }
 
                 $applicant_name = Administrator::where('id', $seed_lab->user_id)->value('name');
                 $seed_class = LoadStock::where('id', $seed_lab->load_stock_id)->where('user_id', $seed_lab->user_id)->value('seed_class');
@@ -212,6 +241,7 @@ class SeedSampleController extends AdminController
 
                     $form->display('', __('admin.form.Applicant name'))->default($applicant_name);
                     $form->display('', __('admin.form.Load stock number'))->default($load_stock_number);
+                    $form->display('', __('admin.form.Name of producer'))->default($fullName?? 'N/A');
                     $form->display('', __('admin.form.Field size'))->default($crop_field_size);
                     $form->display('', __('admin.form.Crop'))->default($crop_name);
                     $form->display('', __('admin.form.Variety'))->default($crop_variety->crop_variety_name);
@@ -305,11 +335,89 @@ class SeedSampleController extends AdminController
             $tools->disableDelete();
         });
 
+        Admin::script('
+            $("#load_stock_id").change(function () {
+                    var id = $(this).val();
+                    // var id = $("#crop_declaration_id").val();
+            
+                    $.ajax({
+                        url: "/getproducer/" + id,
+                        method: "GET",
+                        dataType: "json",
+                        success: function(data) {
+                            // let producerName = Object.values(data.producer)[0]; // Get first value
+                            // $("#producer").val(producerName);
+                            $("#producer").val(data.producer);
+                        },
+                        error: function (error) {
+                            console.log(error);
+                        }
+                    });
+                
+
+
+            });
+
+            $(document).ready(function() {
+                if($("#load_stock_id").val()){
+                    var id = $("#load_stock_id").val();
+            
+                    $.ajax({
+                        url: "/getproducer/" + id,
+                        method: "GET",
+                        dataType: "json",
+                        success: function(data) {
+                            // let producerName = Object.values(data.producer)[0]; // Get first value
+                            // $("#producer").val(producerName);
+                            $("#producer").val(data.producer);
+                        },
+                        error: function (error) {
+                            console.log(error);
+                        }
+                    });
+                }
+
+                // });
+            });
+
+        ');
+
         //disable checkboxes
         $form->disableViewCheck();
         $form->disableEditingCheck();
         $form->disableCreatingCheck();
 
         return $form;
+    }
+
+    public function getProducers($id)
+    {
+        // Get the LoadStock record
+        $loadStock = \App\Models\LoadStock::find($id);
+
+        // Get the user who created the LoadStock
+        $user = auth('admin')->user();
+        // $user = \App\Models\User::find($loadStock->user_id);
+
+        $fullName = 'N/A'; // Default fallback name
+
+        // Check if the user is a cooperative or outgrower and fetch producer details
+    if ($user->isRole('cooperative')) {
+        $coopProducer = CooperativeMember::where('id', $loadStock->producer)->first();
+        if ($coopProducer) {
+            $fullName = $coopProducer->farmer_first_name . ' ' . $coopProducer->farmer_last_name;
+        }
+    } elseif ($user->isRole('outgrower')) {
+        $producer = OutGrower::where('id', $loadStock->producer)->first();
+        if ($producer) {
+            $fullName = $producer->first_name . ' ' . $producer->last_name;
+            
+        }
+    }
+    Log::info('$fullName');
+
+    return response()->json([
+        'producer' => $fullName,
+        ]);
     }
 }

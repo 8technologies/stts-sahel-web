@@ -161,13 +161,19 @@ class FieldInspectionController extends AdminController
         }
         
         $show->field('crop_variety_id', __('admin.form.Crop Variety'))->as(function ($crop_variety_id) {
-            return \App\Models\CropVariety::find($crop_variety_id)->crop_variety_name;
+            $cropVariety = \App\Models\CropVariety::with('crop')->find($crop_variety_id);
+        
+            if ($cropVariety && $cropVariety->crop) {
+                return $cropVariety->crop->crop_name . ' - (' . $cropVariety->crop_variety_name.')';
+            }
+        
+            return 'N/A'; // Fallback in case of missing data
         });
 
         $show->field('inspection_type_id', __('admin.form.Inspection type'))->as(function ($inspection_type_id) {
             return \App\Models\InspectionType::find($inspection_type_id)->inspection_type_name;
         });
-        $show->field('previous_seed_culture', __('admin.form.Previous Seed culture'))
+        $show->field('previous_seed_culture', __('admin.form.Field history'))
          ->required();
 
         $show->field('planting_date', __('admin.form.Planting date'));
@@ -185,7 +191,7 @@ class FieldInspectionController extends AdminController
         $show->field('crop_condition', __('admin.form.Crop condition'))->as(function ($value) {
             return $value ?? '-';
         });
-        $show->field('health_status', __('admin.form.Health status'));
+        $show->field('health_status', __('admin.form.Form Health status'));
             
         $show->field('off_types', __('admin.form.Off types'))->as(function ($value) {
             return $value == '0' ? __('admin.form.Yes') : __('admin.form.No');
@@ -350,7 +356,7 @@ class FieldInspectionController extends AdminController
         $form->display('origin_of_variety', __('admin.form.Origin of variety'));
         
         $form->text('crop_condition', __('admin.form.Crop condition'))->required();
-        $form->text('health_status', __('form.Health Status'))->required();
+        $form->text('health_status', __('admin.form.Form Health status'))->required();
         
         $form->radio('off_types', __('admin.form.Off types'))
         ->options([
@@ -364,8 +370,8 @@ class FieldInspectionController extends AdminController
                     'medium' => __('admin.form.Medium'),
                     'low' => __('admin.form.Low'),
                 ]
-            );
-            $form->number('number_of_offtypes', __('admin.form.Number of off types'));
+            )->rules('required');
+            $form->number('number_of_offtypes', __('admin.form.Number of off types'))->rules('required');
         })->required();
         
         $form->select('plant_density', __('admin.form.Plant density'))->options([
@@ -384,7 +390,7 @@ class FieldInspectionController extends AdminController
                     '2:1' => '2:1',
                     '3:1' => '3:1',
                 ]
-            );
+            )->rules('required');
         })->required();
         
 
@@ -392,7 +398,7 @@ class FieldInspectionController extends AdminController
             'temps' => 'Temps',
              'distance' => 'Distance'
         ])->when('distance', function (Form $form) {
-            $form->decimal('isolation_distance', __('admin.form.isolation_distance'));
+            $form->decimal('isolation_distance', __('admin.form.isolation_distance'))->rules('required');
         })
         ->when('temps', function (Form $form) {
             $form->select('isolation_time', __('admin.form.isolation_time'))->options(
@@ -401,8 +407,8 @@ class FieldInspectionController extends AdminController
                     'Inadéquat' => 'Inadéquat',
 
                 ]
-            );
-        });
+            )->rules('required');
+        })->required();
        
         $form->decimal('estimated_yield', __('admin.form.Estimated yield(kgs)'))->required();
         $form->file('signature', __('admin.form.Signature'))->required();

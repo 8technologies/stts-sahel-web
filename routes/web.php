@@ -8,6 +8,7 @@ use App\Admin\Controllers\MarketableSeedController;
 use App\Admin\Controllers\SeedLabelController;
 use App\Admin\Controllers\OrderController;
 use App\Admin\Controllers\LoadStockController;
+use App\Admin\Controllers\SeedSampleController;
 use App\Models\Gen;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Artisan;
@@ -116,13 +117,14 @@ Route::get('/package_types/{seedLabId}', [SeedLabelController::class, 'package_t
 Route::get('/place_order', [MarketableSeedController::class, 'place_order'])->name('place_order');
 Route::get('/feedback/{lotId}', [FeedBackController::class, 'feedbackDetails']);
 Route::get('/getVarieties/{id}', [LoadStockController::class, 'getVarieties']);
+Route::get('/getproducer/{id}', [SeedSampleController::class, 'getProducers']);
 
 
 Route::get('migrate', function(){
     $migrations = [
-        // 'database/migrations/2025_03_14_060324_change_previous_seed_culture_column_on_field_inspection_table.php',
-        // 'database/migrations/2025_03_14_071932_add_off_types_column_on_field_inspection_table.php',
-        'database/migrations/2025_03_14_131659_add_selling_price_column_on_seed_label_table.php',
+        'database/migrations/2025_03_19_120703_add_producer_column_to_load_stocks_table.php',
+        'database/migrations/2025_03_21_080227_add_producer_column_to_seed_sample_table.php',
+        'database/migrations/2025_03_21_120005_add_producer_column_to_seedlab_table.php',
         
     ];
 

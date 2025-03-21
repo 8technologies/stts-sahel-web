@@ -54,8 +54,13 @@ class QuotationController extends AdminController
         });
 
         $grid->column('preorder_id', __('admin.form.Crop Variety'))->display(function ($preorder_id) {
-            $crop_variety_id = \App\Models\PreOrder::find($preorder_id)->crop_variety_id;
-            return \App\Models\CropVariety::find($crop_variety_id)->crop_variety_name;
+            $cropVariety = \App\Models\CropVariety::with('crop')->find($preorder_id);
+        
+            if ($cropVariety && $cropVariety->crop) {
+                return $cropVariety->crop->crop_name . ' - (' . $cropVariety->crop_variety_name.')';
+            }
+        
+            return 'N/A'; // Fallback in case of missing data
         });
         $grid->column('quantity', __('admin.form.Quantity(kgs)'))->display(function ($quantity) {
             return $quantity . ' kgs';
@@ -88,9 +93,17 @@ class QuotationController extends AdminController
 
         $preOrder = PreOrder::find($quotation->preorder_id);
 
-        $show->field('crop_variety_id', __('admin.form.Crop Variety'))->as(function () use ($preOrder) {
-            return \App\Models\CropVariety::find($preOrder->crop_variety_id)->crop_variety_name;
-        });
+        $show->field('crop_variety_id', __('admin.form.Crop Variety'))->as(function () use ($preOrder) 
+            {
+                $cropVariety = \App\Models\CropVariety::find($preOrder->crop_variety_id);
+            
+                if ($cropVariety && $cropVariety->crop) {
+                    return $cropVariety->crop->crop_name . ' - (' . $cropVariety->crop_variety_name.')';
+                }
+            
+                return 'N/A'; // Fallback in case of missing data
+            });
+    
         $show->field('seed_class', __('admin.form.Seed class'))->as(function () use ($preOrder) {
             return \App\Models\SeedClass::find($preOrder->seed_class)->class_name;
         });
@@ -161,8 +174,16 @@ class QuotationController extends AdminController
 
             $form->text('preorder_id', __('admin.form.Preorder id'))->readonly()->value($id);
             $form->display('crop_variety_id', __('admin.form.Crop Variety'))->with(function () use ($preOrder) {
-                return \App\Models\CropVariety::find($preOrder->crop_variety_id)->crop_variety_name;
+            
+                $cropVariety = \App\Models\CropVariety::find($preOrder->crop_variety_id);
+            
+                if ($cropVariety && $cropVariety->crop) {
+                    return $cropVariety->crop->crop_name . ' - (' . $cropVariety->crop_variety_name.')';
+                }
+            
+                return 'N/A'; // Fallback in case of missing data
             });
+            
             $form->display('seed_class', __('admin.form.Seed class'))->default(
                   \App\Models\SeedClass::find($preOrder->seed_class)->class_name);
             $form->display('', __('admin.form.Requested Quantity'))->default($preOrder->quantity.' kgs');

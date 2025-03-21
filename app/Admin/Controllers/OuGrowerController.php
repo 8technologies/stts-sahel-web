@@ -115,10 +115,10 @@ class OuGrowerController extends AdminController
        
         
         $form->text('seed_company_registration_number', __('admin.form.Seed company registration number'))->readonly()->value($seed_company->producer_registration_number);
-        $form->text('contract_number', __('admin.form.Contract number'))->required();
+        $form->text('contract_number', __('admin.form.Contract number'))->required()->rules('unique:out_growers,contract_number');
         $form->text('first_name', __('admin.form.First name'))->required();
         $form->text('last_name', __('admin.form.Last name'))->required();
-        $form->text('phone_number', __('admin.form.Phone number'))->required();
+        $form->text('phone_number', __('admin.form.Phone number'))->required()->rules('unique:out_growers,contract_number');;
         $form->radio('gender', __('admin.form.Gender'))->options([
             'female' => 'Female',
             'male' => 'Male',

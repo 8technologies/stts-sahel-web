@@ -173,7 +173,13 @@ class SeedLabelController extends AdminController
             return $crop_name;
         });
         $show->field('a', __('admin.form.Variety'))->as(function ($variety) use ($crop_variety) {
-            return $crop_variety->crop_variety_name;
+            // $cropVariety = \App\Models\CropVariety::with('crop')->find($crop_variety_id);
+        
+            if ($crop_variety && $crop_variety->crop) {
+                return $crop_variety->crop->crop_name . ' - (' . $crop_variety->crop_variety_name.')';
+            }
+        
+            return 'N/A'; // Fallback in case of missing data
         });
         $show->field('', __('admin.form.Generation'))->as(function () use ($load_stock) {
             return \App\Models\SeedClass::find( $load_stock->seed_class)->class_name;
