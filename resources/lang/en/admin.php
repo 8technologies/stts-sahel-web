@@ -522,6 +522,8 @@ return [
         'Contract number' => 'Contract number',
         'Seed company name' => 'Seed company name',
         'Sub county' => 'Sub-county',
+        'Skip inspection' => 'Skip inspection',
+        'Skipped' => 'Skipped',
         'Town street' => 'Town street',
         'Plot number' => 'Plot number',
         'Valid from' => 'Valid from',

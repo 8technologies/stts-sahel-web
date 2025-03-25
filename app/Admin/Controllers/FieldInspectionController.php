@@ -9,6 +9,7 @@ use Encore\Admin\Show;
 use \App\Models\FieldInspection;
 use \App\Models\Validation;
 use \App\Models\Utils;
+use Illuminate\Support\Facades\Log;
 
 class FieldInspectionController extends AdminController
 {
@@ -150,7 +151,13 @@ class FieldInspectionController extends AdminController
             return \App\Models\User::find($user_id)->name;
         });
         $show->field('crop_variety_id', __('admin.form.Crop Variety'))->as(function ($crop_variety_id) {
-            return \App\Models\CropVariety::find($crop_variety_id)->crop_variety_name;
+            $cropVariety = \App\Models\CropVariety::with('crop')->find($crop_variety_id);
+        
+            if ($cropVariety && $cropVariety->crop) {
+                return $cropVariety->crop->crop_name . ' - (' . $cropVariety->crop_variety_name.')';
+            }
+        
+            return 'N/A'; // Fallback in case of missing data
         });
         $show->field('inspection_type_id', __('admin.form.Inspection type'))->as(function ($inspection_type_id) {
             return \App\Models\InspectionType::find($inspection_type_id)->inspection_type_name;
@@ -199,7 +206,7 @@ class FieldInspectionController extends AdminController
             return $value ?? '-';
         });
         $show->field('signature', __('admin.form.Signature'))->as(function ($signature) {
-            return $signature == null ? 'No file uploaded' : '<a href="/storage/' . $signature . '" target="_blank">View receipt</a>';
+            return $signature == null ? 'No file uploaded' : '<a href="/storage/' . $signature . '" target="_blank">View signature</a>';
         })->unescape();
         $show->field('status', __('admin.form.Status'))->as(function ($status) {
             return Utils::tell_status($status);
@@ -223,125 +230,249 @@ class FieldInspectionController extends AdminController
      *
      * @return Form
      */
-    protected function form()
-    {
-        $form = new Form(new FieldInspection());
-        $user = auth('admin')->user();
-        //check if the form is being edited
-        if ($form->isEditing()) 
-        {
-            //get request id
-            $id = request()->route()->parameters()['field_inspection'];
-            //check if its valid to edit the form
-            Validation::checkFormEditable($form, $id, 'FieldInspection');
+    // protected function form()
+    // {
+    //     $form = new Form(new FieldInspection());
+    //     $user = auth('admin')->user();
+    //     //check if the form is being edited
+    //     if ($form->isEditing()) 
+    //     {
+    //         //get request id
+    //         $id = request()->route()->parameters()['field_inspection'];
+    //         //check if its valid to edit the form
+    //         Validation::checkFormEditable($form, $id, 'FieldInspection');
 
-            //check if the user is not the assigned inspector or commissioner and disable the form
-            if (!$user->inRoles(['inspector', 'commissioner'])) 
-            {
-                $form->html('<p class="alert alert-danger">' . __('admin.form.no_rights_to_edit_form') . '</p>');
+    //         //check if the user is not the assigned inspector or commissioner and disable the form
+    //         if (!$user->inRoles(['inspector', 'commissioner'])) 
+    //         {
+    //             $form->html('<p class="alert alert-danger">' . __('admin.form.no_rights_to_edit_form') . '</p>');
 
-                $form->footer(function ($footer) 
-                {
+    //             $form->footer(function ($footer) 
+    //             {
 
-                    // disable reset btn
-                    $footer->disableReset();
+    //                 // disable reset btn
+    //                 $footer->disableReset();
 
-                    // disable submit btn
-                    $footer->disableSubmit();
-                });
+    //                 // disable submit btn
+    //                 $footer->disableSubmit();
+    //             });
                 
-            }
-        }
+    //         }
+    //     }
         
-        //onsaved return to the list page
-        $form->saved(function (Form $form) 
-        {
-            admin_toastr(__('admin.form.Field Inspection saved successfully'), 'success');
-            return redirect('/field-inspections');
-        });
+    //     //onsaved return to the list page
+    //     $form->saved(function (Form $form) 
+    //     {
+    //         admin_toastr(__('admin.form.Field Inspection saved successfully'), 'success');
+    //         return redirect('/field-inspections');
+    //     });
+
+    //     $form->switch('skip_inspection', 'Skip Inspection')->states([
+    //         'on'  => ['value' => 1, 'text' => 'Yes', 'color' => 'success'],
+    //         'off' => ['value' => 0, 'text' => 'No',  'color' => 'danger'],
+    //     ]);
           
-        $form->display('user_id', __('admin.form.Applicant'))->with(function ($user_id) {
-            return \App\Models\User::find($user_id)->name;
-        });
-        $form->display('crop_variety_id', __('admin.form.Crop Variety'))->with(function ($crop_variety_id) {
-            return \App\Models\CropVariety::find($crop_variety_id)->crop_variety_name;
-        });
-        $form->display('inspection_type_id', __('admin.form.Inspection type'))->with(function ($inspection_type_id) {
-            return \App\Models\InspectionType::find($inspection_type_id)->inspection_type_name;
-        });
-
-        $form->display('physical_address', __('admin.form.Physical address'));
-        $form->display('inspector_id', __('admin.form.Inspector'))->with(function ($inspector_id) {
-            return \App\Models\User::find($inspector_id)->name;
-        });
-
-        $form->text('field_inspection_form_number', __('admin.form.Field inspection form number'))->default('FieldInspection/' . date('Y/') . rand(1000, 9999))->readonly();
-        $form->decimal('field_size', __('admin.form.Field size'))->required();
-        $form->select('seed_generation', __('admin.form.Seed generation'))->options(
-            \App\Models\SeedClass::all()->pluck('class_name', 'id')->all() 
-        )->required();
+    //     $form->display('user_id', __('admin.form.Applicant'))->with(function ($user_id) {
+    //         return \App\Models\User::find($user_id)->name;
+    //     });
+    //     $form->display('crop_variety_id', __('admin.form.Crop Variety'))->with(function ($crop_variety_id) {
+    //         $cropVariety = \App\Models\CropVariety::with('crop')->find($crop_variety_id);
+            
+    //         if ($cropVariety && $cropVariety->crop) {
+    //             return $cropVariety->crop->crop_name . ' - (' . $cropVariety->crop_variety_name.')';
+    //         }
         
-        $form->text('crop_condition', __('admin.form.Crop condition'))->required();
-        $form->select('plant_density', __('admin.form.Plant density'))->options([
-            'low' =>__('admin.form.Low'),
-            'optimal' => __('admin.form.Optimal'),
-            'high' => __('admin.form.High')
-        ])->required();
-        $form->radio('seed_category', __('admin.form.Seed Category'))->options([
-           'opv' => 'OPV',
-            'hybrid' => 'Hybrid'
+    //         return 'N/A'; // Fallback in case of missing data
+    //     });
+    //     $form->display('inspection_type_id', __('admin.form.Inspection type'))->with(function ($inspection_type_id) {
+    //         return \App\Models\InspectionType::find($inspection_type_id)->inspection_type_name;
+    //     });
 
-        ])
-        ->when('hybrid', function (Form $form) {
-            $form->select('planting_ratio', __('admin.form.Planting ratio'))->options(
-                [
-                    '2:1' => '2:1',
-                    '3:1' => '3:1',
-                ]
-            );
-        })->required();
+    //     $form->display('physical_address', __('admin.form.Physical address'));
+    //     $form->display('inspector_id', __('admin.form.Inspector'))->with(function ($inspector_id) {
+    //         return \App\Models\User::find($inspector_id)->name;
+    //     });
+
+    //     $form->text('field_inspection_form_number', __('admin.form.Field inspection form number'))->default('FieldInspection/' . date('Y/') . rand(1000, 9999))->readonly();
+    //     $form->decimal('field_size', __('admin.form.Field size'))->required();
+    //     $form->select('seed_generation', __('admin.form.Seed generation'))->options(
+    //         \App\Models\SeedClass::all()->pluck('class_name', 'id')->all() 
+    //     )->required();
+        
+    //     $form->text('crop_condition', __('admin.form.Crop condition'))->required();
+    //     $form->select('plant_density', __('admin.form.Plant density'))->options([
+    //         'low' =>__('admin.form.Low'),
+    //         'optimal' => __('admin.form.Optimal'),
+    //         'high' => __('admin.form.High')
+    //     ])->required();
+    //     $form->radio('seed_category', __('admin.form.Seed Category'))->options([
+    //        'opv' => 'OPV',
+    //         'hybrid' => 'Hybrid'
+
+    //     ])
+    //     ->when('hybrid', function (Form $form) {
+    //         $form->select('planting_ratio', __('admin.form.Planting ratio'))->options(
+    //             [
+    //                 '2:1' => '2:1',
+    //                 '3:1' => '3:1',
+    //             ]
+    //         );
+    //     })->required();
         
 
-        $form->radio('isolation', __('admin.form.isolation'))->options([
-            'temps' => 'Temps',
-             'distance' => 'Distance'
-        ])->when('distance', function (Form $form) {
-            $form->decimal('isolation_distance', __('admin.form.isolation_distance'));
-        })
-        ->when('temps', function (Form $form) {
-            $form->select('isolation_time', __('admin.form.isolation_time'))->options(
-                [
-                    'Adéquat' => 'Adéquat',
-                    'Inadéquat' => 'Inadéquat',
+    //     $form->radio('isolation', __('admin.form.isolation'))->options([
+    //         'temps' => 'Temps',
+    //          'distance' => 'Distance'
+    //     ])->when('distance', function (Form $form) {
+    //         $form->decimal('isolation_distance', __('admin.form.isolation_distance'));
+    //     })
+    //     ->when('temps', function (Form $form) {
+    //         $form->select('isolation_time', __('admin.form.isolation_time'))->options(
+    //             [
+    //                 'Adéquat' => 'Adéquat',
+    //                 'Inadéquat' => 'Inadéquat',
 
-                ]
-            );
-        });
+    //             ]
+    //         );
+    //     });
        
-        $form->decimal('estimated_yield', __('admin.form.Estimated yield(kgs)'))->required();
-        $form->file('signature', __('admin.form.Signature'))->required();
+    //     $form->decimal('estimated_yield', __('admin.form.Estimated yield(kgs)'))->required();
+    //     $form->file('signature', __('admin.form.Signature'))->required();
 
-        $form->divider();
+    //     $form->divider();
 
-        $form->select('status', __('admin.form.Field decision'))
-            ->options([
-                'accepted' => __('admin.form.Approved'),
-                'rejected' => __('admin.form.Rejected'),
+    //     $form->select('status', __('admin.form.Field decision'))
+    //         ->options([
+    //             'accepted' => __('admin.form.Approved'),
+    //             'rejected' => __('admin.form.Rejected'),
+    //         ])
+    //         ->rules('required');
+
+    //     $form->textarea('remarks', __('admin.form.Recommendation'));
+
+    //     //disable delete and view button
+    //     $form->tools(function (Form\Tools $tools) {
+    //         $tools->disableDelete();
+    //         $tools->disableView();
+    //     });
+
+    //     //disbale check boxes
+    //     $form->disableCreatingCheck()
+    //         ->disableEditingCheck()
+    //         ->disableViewCheck();
+    //     return $form;
+    // }  
+
+    protected function form()
+{
+    $form = new Form(new FieldInspection());
+    $user = auth('admin')->user();
+
+    if ($form->isEditing()) {
+        $id = request()->route()->parameters()['field_inspection'];
+        Validation::checkFormEditable($form, $id, 'FieldInspection');
+
+        if (!$user->inRoles(['inspector', 'commissioner'])) {
+            $form->html('<p class="alert alert-danger">' . __('admin.form.no_rights_to_edit_form') . '</p>');
+            $form->footer(function ($footer) {
+                $footer->disableReset();
+                $footer->disableSubmit();
+            });
+        }
+    }
+
+    $form->saved(function (Form $form) {
+        admin_toastr(__('admin.form.Field Inspection saved successfully'), 'success');
+        return redirect('/field-inspections');
+    });
+
+    $form->display('user_id', __('admin.form.Applicant'))->with(fn($user_id) => \App\Models\User::find($user_id)->name);
+    $form->display('crop_variety_id', __('admin.form.Crop Variety'))->with(function ($crop_variety_id) {
+        $cropVariety = \App\Models\CropVariety::with('crop')->find($crop_variety_id);
+        return $cropVariety && $cropVariety->crop ? $cropVariety->crop->crop_name . ' - (' . $cropVariety->crop_variety_name . ')' : 'N/A';
+    });
+    $form->display('inspection_type_id', __('admin.form.Inspection type'))->with(fn($inspection_type_id) => \App\Models\InspectionType::find($inspection_type_id)->inspection_type_name);
+    $form->display('physical_address', __('admin.form.Physical address'));
+    $form->display('inspector_id', __('admin.form.Inspector'))->with(fn($inspector_id) => \App\Models\User::find($inspector_id)->name);
+
+    $form->text('field_inspection_form_number', __('admin.form.Field inspection form number'))->default('FieldInspection/' . date('Y/') . rand(1000, 9999))->readonly();
+
+    // Field Decision Dropdown with Skip Option
+    $form->radioButton('status', __('admin.form.Field decision'))
+        ->options([
+            'accepted' => __('admin.form.Approved'),
+            'rejected' => __('admin.form.Rejected'),
+            'skipped' => __('admin.form.Skip inspection')
+        ])
+        ->when('in', ['rejected', 'accepted'], function (Form $form) {
+            $form->decimal('field_size', __('admin.form.Field size'))->rules('required');
+            $form->select('seed_generation', __('admin.form.Seed generation'))->options(
+                \App\Models\SeedClass::all()->pluck('class_name', 'id')->all()
+            )->rules('required');
+            $form->text('crop_condition', __('admin.form.Crop condition'))->rules('required');
+            $form->select('plant_density', __('admin.form.Plant density'))
+                ->options([
+                    'low' => __('admin.form.Low'),
+                    'optimal' => __('admin.form.Optimal'),
+                    'high' => __('admin.form.High')
+                ])->rules('required');
+            $form->radio('isolation', __('admin.form.isolation'))->options([
+                'temps' => 'Temps',
+                'distance' => 'Distance'
+                ])->when('distance', function (Form $form) {
+                    $form->decimal('isolation_distance', __('admin.form.isolation_distance'));
+                })
+                ->when('temps', function (Form $form) {
+                    $form->select('isolation_time', __('admin.form.isolation_time'))->options(
+                        [
+                            'Adéquat' => 'Adéquat',
+                            'Inadéquat' => 'Inadéquat',
+        
+                        ]
+                    );
+            })->rules('required');
+
+            $form->radio('seed_category', __('admin.form.Seed Category'))->options([
+                'opv' => 'OPV',
+                'hybrid' => 'Hybrid'
+    
             ])
-            ->rules('required');
-
-        $form->textarea('remarks', __('admin.form.Recommendation'));
-
-        //disable delete and view button
-        $form->tools(function (Form\Tools $tools) {
-            $tools->disableDelete();
-            $tools->disableView();
+            ->when('hybrid', function (Form $form) {
+                $form->select('planting_ratio', __('admin.form.Planting ratio'))->options(
+                    [
+                        '2:1' => '2:1',
+                        '3:1' => '3:1',
+                    ]
+                );
+            })->rules('required');
+            $form->decimal('estimated_yield', __('admin.form.Estimated yield(kgs)'))->rules('required');
+            $form->file('signature', __('admin.form.Signature'))->rules('required');
+            $form->textarea('remarks', __('admin.form.Recommendation'));
+        })
+        ->when('skipped', function (Form $form) {
+            $form->file('signature', __('admin.form.Signature'))->rules('required');
+            
         });
 
-        //disbale check boxes
-        $form->disableCreatingCheck()
-            ->disableEditingCheck()
-            ->disableViewCheck();
-        return $form;
-    }
+    $form->saving(function (Form $form) {
+        if ($form->status === 'skipped') {
+            // Remove validation rules to allow skipping
+            $form->ignore(['field_size', 'seed_generation', 'crop_condition', 'plant_density', 'estimated_yield', 'signature']);
+        }
+    });
+
+    // Disable Delete & View Buttons
+    $form->tools(function (Form\Tools $tools) {
+        $tools->disableDelete();
+        $tools->disableView();
+    });
+
+    // Disable Checkboxes
+    $form->disableCreatingCheck()
+        ->disableEditingCheck()
+        ->disableViewCheck();
+
+    return $form;
+}
+
 }

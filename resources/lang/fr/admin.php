@@ -535,6 +535,8 @@ return [
         'Valid from' => 'Valide à partir de',
         'Valid to' => 'Valide jusqu\'au',
         'Signature' => 'Signature',
+        'Skip inspection' => 'Passer l\'inspection',
+        'Skipped' => 'Ignoré',
         'Date of creation' => 'Date de création',
         'Cooperative Member' => 'Membre de la coopérative',
         'Individual Seed Producer' => 'Producteur de semences individuel',

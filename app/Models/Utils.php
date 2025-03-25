@@ -67,8 +67,10 @@ class Utils extends Model
             return '<span class="label label-warning">' . trans('admin.form.Shipping') . '</span>';
         if ($status == 'delivered')
             return '<span class="label label-success">' . trans('admin.form.Delivered') . '</span>';
-            if ($status == 'confirmed')
+        if ($status == 'confirmed')
             return '<span class="label label-success">' . trans('admin.form.Confirmed') . '</span>';
+        if ($status == 'skipped')
+            return '<span class="label label-success">' . trans('admin.form.Skipped') . '</span>';
 
         if ($status == 'cancelled')
             return '<span class="label label-danger">' . trans('admin.form.Cancelled') . '</span>';

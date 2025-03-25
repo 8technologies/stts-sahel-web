@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Log;
 
 class FieldInspection extends Model
 {
@@ -68,6 +69,28 @@ class FieldInspection extends Model
 
             if ($model->status == 'accepted' && $model->is_done == 0) 
             {
+                $next = $model->getNext();
+                if ($next != null) {
+                    $model->is_done = 1;
+                    $model->is_active = 0;
+                    $model->save();
+                    $next->is_active = 1;
+                    $next->save();
+                } else {
+                    $crop_declaration = CropDeclaration::find($model->crop_declaration_id);
+                    if ($crop_declaration != null) {
+                        $crop_declaration->status = 'accepted';
+                        $model->is_done = 1;
+                        $model->is_active = 0;
+                        $crop_declaration->save();
+                        $model->save();
+                    }
+                }
+            }
+
+            if ($model->status == 'skipped' && $model->is_done == 0) 
+            {
+                Log::info($model->status);
                 $next = $model->getNext();
                 if ($next != null) {
                     $model->is_done = 1;

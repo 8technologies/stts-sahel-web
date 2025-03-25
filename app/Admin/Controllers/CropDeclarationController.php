@@ -117,9 +117,9 @@ class CropDeclarationController extends AdminController
         $show->field('phone_number', __('admin.form.Phone number'));
         $show->field('garden_size', __('admin.form.Garden size(Acres)'));
         $show->field('field_name', __('admin.form.Field name'));
-        $show->field('district_region', __('admin.form.District/Region'));
-        $show->field('circle', __('admin.form.Circle'));
-        $show->field('township', __('admin.form.Township'));
+        $show->field('region', __('admin.form.Region'));
+        $show->field('department', __('admin.form.Department'));
+        $show->field('commune', __('admin.form.Commune'));
         $show->field('village', __('admin.form.Village'));
         $show->field('planting_date', __('admin.form.Planting date'));
         $show->field('quantity_of_seed_planted', __('admin.form.Quantity of seed planted(kgs)'));
@@ -213,9 +213,9 @@ class CropDeclarationController extends AdminController
             $form->display('phone_number', __('admin.form.Phone number'));
             $form->display('garden_size', __('admin.form.Garden size(Acres)'));
             $form->display('field_name', __('admin.form.Field name'));
-            $form->display('region', __('admin.form.District/Region'));
-            $form->display('department', __('admin.form.Circle'));
-            $form->display('commune', __('admin.form.Township'));
+            $form->display('region', __('admin.form.Region'));
+            $form->display('department', __('admin.form.Department'));
+            $form->display('commune', __('admin.form.Commune'));
             $form->display('village', __('admin.form.Village'));
             $form->display('planting_date', __('admin.form.Planting date'))->default(date('Y-m-d'));
             $form->display('quantity_of_seed_planted', __('admin.form.Quantity of seed planted(kgs)'));
@@ -292,9 +292,9 @@ class CropDeclarationController extends AdminController
             
             $randomFieldName = 'FIELD' . mt_rand(100, 999);
             $form->hidden('field_name', __('admin.form.Field name'))->default($randomFieldName)->required();
-            $form->text('region', __('admin.form.District/Region'))->required();
-            $form->text('department', __('admin.form.Circle'))->required();
-            $form->text('commune', __('admin.form.Township'))->required();
+            $form->text('region', __('admin.form.Region'))->required();
+            $form->text('department', __('admin.form.Department'))->required();
+            $form->text('commune', __('admin.form.Commune'))->required();
             $form->text('village', __('admin.form.Village'))->required();
             $form->date('planting_date', __('admin.form.Planting date'))->default(date('Y-m-d'))->required();
             $form->text('quantity_of_seed_planted', __('admin.form.Quantity of seed planted(kgs)'))->attribute(
@@ -339,6 +339,7 @@ class CropDeclarationController extends AdminController
             SCRIPT);
          
             $form->textarea('details', __('admin.form.Provide more details about the garden'));
+            $form->file('proof_of_payment', __('admin.form.Proof of payment'))->rules('required|mimes:pdf,png,jpeg,jpg,')->help('Upload a pdf/png/jpeg/jpg file');
             $form->hidden('status')->default('pending');
             $form->hidden('inspector_id')->default(null);
 
