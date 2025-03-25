@@ -48,7 +48,8 @@ $aujourdHui = date("j F Y");
   <div class="card">
     <h2>CARTE D'ENREGISTREMENT DU PRODUCTEUR DE SEMENCES</h2>
 
-    <label for="category">CATÉGORIE DU PRODUCTEUR :Société de semences </label><br>
+    <label for="category">CATÉGORIE DU PRODUCTEUR :Entreprise semenciere </label><br>
+    <label for="category">NOM DE LA ENTREPRISE SEMENCIERE :{{$form->company_name}} </label><br>
     <label for="date">DATE : {{$aujourdHui}}</label><br>
     <label for="date">VALIDITÉ : de {{$form->valid_from}} à {{$form->valid_until}} </label><br>
 

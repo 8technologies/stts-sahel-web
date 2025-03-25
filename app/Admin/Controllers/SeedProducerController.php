@@ -148,6 +148,7 @@ class SeedProducerController extends AdminController
         $show->field('producer_registration_number', __('admin.form.Seed producer registration number'))->as(function ($value) {
             return $value ?? '-';
         });
+        $show->field('company_name', __('admin.form.Seed company name'));
         $show->field('name_of_applicant', __('admin.form.Responsible manager name'));
         $show->field('applicant_phone_number', __('admin.form.Responsible manager phone number'));
         $show->field('applicant_email', __('admin.form.Company email'));
@@ -232,6 +233,8 @@ class SeedProducerController extends AdminController
                 ->pluck('class_name')
                 ->implode(', ');  // Convert array to a comma-separated string
             });
+            $form->display('company_name', __('admin.form.Seed company name'));
+            
             $form->display('name_of_applicant', __('admin.form.Responsible manager name'));
             $form->display('applicant_phone_number', __('admin.form.Responsible manager phone number'));
             $form->display('applicant_email', __('admin.form.Company email'));
@@ -261,7 +264,7 @@ class SeedProducerController extends AdminController
                     ->when('accepted', function (Form $form) {
                         $form->text('producer_registration_number', __('admin.form.Seed producer registration number')) ->default('DCCS/SEEDPRODUCER/'  . rand(1000, 100000).'/'. date('Y'))->required();
                         $form->datetime('valid_from', __('admin.form.Seed producer approval date'))->default(date('Y-m-d H:i:s'))->required();
-                        $nextYear = Carbon::now()->addYear(); // Get the date one year from now
+                        $nextYear = Carbon::now()->addYears(3); // Get the date 3 year from now
                         $defaultDateTime = $nextYear->format('Y-m-d H:i:s'); // Format the date for default value
                         
                         $form->datetime('valid_until', __('admin.form.Valid until'))
@@ -298,7 +301,7 @@ class SeedProducerController extends AdminController
                     ])
                   
                     ->when('recommended', function(Form $form){
-                       $form->textarea('recommendation', __('Recommendation'))->required();
+                       $form->textarea('recommendation', __('admin.form.Recommendation'))->required();
                     })->required();
 
             }
@@ -311,8 +314,9 @@ class SeedProducerController extends AdminController
             $form->multipleSelect('seed_generation', __('admin.form.Seed generation'))
             ->options($seedClasses )
             ->required();
-            
+            $form->text('company_name', __('admin.form.Seed company name'))->required();
             $form->text('name_of_applicant', __('admin.form.Responsible manager name'))->required();
+            $form->text('national_id', __('admin.form.ID'));
             $form->text('applicant_phone_number', __('admin.form.Responsible manager phone number'))->required();
             $form->text('applicant_email', __('admin.form.Company email'))->required();
             $form->text('premises_location', __('admin.form.Company physical address'))->required();

@@ -11,8 +11,7 @@ use Encore\Admin\Facades\Admin;
 use \App\Models\Validation;
 use \App\Models\Utils;
 use Carbon\Carbon;
-
-
+use Illuminate\Support\Facades\Log;
 
 class AgroDealerController extends AdminController
 {
@@ -161,9 +160,9 @@ class AgroDealerController extends AdminController
         $show->field('valid_from', __('admin.form.Approval date'))->as(function ($value) {
             return $value ?? '-';
         });
-        $show->field('valid_until', __('admin.form.Valid until'))->as(function ($value) {
-            return $value ?? '-';
-        });
+        // $show->field('valid_until', __('admin.form.Valid until'))->as(function ($value) {
+        //     return $value ?? '-';
+        // });
        
 
         //disable edit and delete button
@@ -249,12 +248,8 @@ class AgroDealerController extends AdminController
                         $year = date('y');
                         $form->text('agro_dealer_reg_number', __('admin.form.Agro-dealer registration number'))->default('DCCS/AGRO_DEALER/' . rand(1000, 100000).'/'. date('Y'))->required();
                         $form->datetime('valid_from', __('admin.form.Cooperative approval date'))->default(date('Y-m-d H:i:s'))->required();
-                        $nextYear = Carbon::now()->addYear(); // Get the date one year from now
-                        $defaultDateTime = $nextYear->format('Y-m-d H:i:s'); // Format the date for default value
                         
-                        $form->datetime('valid_until', __('admin.form.Valid until'))
-                            ->default($defaultDateTime)
-                            ->required();
+                        
                     })
                     ->when('inspector assigned', function (Form $form) {
 
@@ -285,7 +280,7 @@ class AgroDealerController extends AdminController
                     
                     ])
                     ->when('recommended', function(Form $form){
-                    $form->textarea('recommendation', __('Recommendation'))->required();
+                    $form->textarea('recommendation', __('admin.form.Recommendation'))->required();
                     })->required();
 
             }
@@ -293,9 +288,10 @@ class AgroDealerController extends AdminController
 
         else
         {
-        
+            
             $form->text('first_name', __('admin.form.First name'))->rules('required');
             $form->text('last_name', __('admin.form.Last name'))->rules('required');
+            $form->text('national_id', __('admin.form.ID'));
             $form->text('telephone', __('admin.form.Telephone'))->rules('required');
             $form->email('email', __('admin.form.Email'))->rules('required|unique:agro_dealers,email');
             $form->text('physical_address', __('admin.form.Physical address'))->rules('required');
@@ -303,12 +299,12 @@ class AgroDealerController extends AdminController
             $form->text('department', __('admin.form.Department'))->rules('required');
             $form->text('commune', __('admin.form.Commune'))->rules('required');
             $form->text('village', __('admin.form.Village'))->rules('required');
-            $form->text('shop_number', __('admin.form.Shop number'))->rules('required');
+            $form->text('shop_number', __('admin.form.Shop number'));
             $form->text('company_name', __('admin.form.Company name'))->rules('required');
             $form->radio('category', __('admin.form.Agro Dealer Category'))
             ->options([
-            'retailer' => 'Retailer',
-            'wholesaler' => 'Wholesaler'
+            'retailer' => __('admin.form.Retailer'),
+            'wholesaler' => __('admin.form.Wholesaler')
             ])->when('retailer', function(Form $form){
                 $form->text('retailers_in', __('admin.form.Retailer in'))->rules('required');
                 })

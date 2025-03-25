@@ -240,7 +240,7 @@ class CooperativeController extends AdminController
 
                         $form->text('registration_number', __('admin.form.Registration number'))->default('DCCS/COOP/'.rand(1000, 10000).'/'. date('Y') )->required();
                         $form->datetime('valid_from', __('admin.form.Cooperative approval date'))->default(date('Y-m-d H:i:s'))->required();
-                        $nextYear = Carbon::now()->addYear(); // Get the date one year from now
+                        $nextYear = Carbon::now()->addYears(3); // Get the date one year from now
                         $defaultDateTime = $nextYear->format('Y-m-d H:i:s'); // Format the date for default value
                         
                         $form->datetime('valid_until', __('admin.form.Valid until'))
@@ -276,7 +276,7 @@ class CooperativeController extends AdminController
                       
                      ])
                      ->when('recommended', function(Form $form){
-                        $form->textarea('recommendation', __('Recommendation'))->rules('required');
+                        $form->textarea('recommendation', __('admin.form.Recommendation'))->rules('required');
                      })->required();
  
              }
@@ -294,6 +294,7 @@ class CooperativeController extends AdminController
             $form->text('cooperative_name', __('admin.form.Cooperative name'))->required();
             $form->text('cooperative_physical_address', __('admin.form.Cooperative physical address'))->required();
             $form->text('contact_person_name', __('admin.form.Name of cooperative president'))->required();
+            $form->text('national_id', __('admin.form.ID'));
             $form->text('contact_phone_number', __('admin.form.Phone number'))->required();
             $form->text('contact_email', __('admin.form.Email address'))->required();
             $form->file('proof_of_payment', __('admin.form.Proof of payment'))

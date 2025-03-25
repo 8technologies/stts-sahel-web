@@ -260,7 +260,7 @@ class IndividualProducerController extends AdminController
                     ->when('accepted', function (Form $form) {
                         $form->text('producer_registration_number', __('admin.form.Seed producer registration number')) ->default('DCCS/INDIVIDUAL_PROD/'. rand(1000, 100000).'/'. date('Y'))->required();
                         $form->datetime('valid_from', __('admin.form.Seed producer approval date'))->default(date('Y-m-d H:i:s'))->required();
-                        $nextYear = Carbon::now()->addYear(); // Get the date one year from now
+                        $nextYear = Carbon::now()->addYears(3); // Get the date one year from now
                         $defaultDateTime = $nextYear->format('Y-m-d H:i:s'); // Format the date for default value
                         
                         $form->datetime('valid_until', __('admin.form.Valid until'))
@@ -296,7 +296,7 @@ class IndividualProducerController extends AdminController
                        
                     ])
                     ->when('recommended', function(Form $form){
-                       $form->textarea('recommendation', __('Recommendation'))->required();
+                       $form->textarea('recommendation', __('admin.form.Recommendation'))->required();
                     })->required();
 
             }
@@ -312,6 +312,7 @@ class IndividualProducerController extends AdminController
 
             
             $form->text('applicant_phone_number', __('admin.form.Applicant phone number'))->required();
+            $form->text('national_id', __('admin.form.ID'));
             $form->text('applicant_email', __('admin.form.Applicant email'))->required();
             $form->text('premises_location', __('admin.form.Applicant physical address'))->required();
             $form->text('proposed_farm_location', __('admin.form.Proposed farm location'))->required();

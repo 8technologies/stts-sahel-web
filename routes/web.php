@@ -116,4 +116,3 @@ Route::get('/feedback/{lotId}', [FeedBackController::class, 'feedbackDetails']);
 Route::get('/getVarieties/{id}', [LoadStockController::class, 'getVarieties']);
 
 
-

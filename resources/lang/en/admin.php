@@ -152,6 +152,10 @@ return [
         'Certificate' => 'Certificate',
         'Applicant' => 'Applicant',
         'Date' => 'Date',
+        'Retailer' => 'Retailer',
+        'Wholesaler' => 'Wholesaler',
+        'ID' => 'ID',
+
         'Recommend' => 'Recommend',
         'Yield quantity(kgs)' => 'Yield quantity(kgs)',
         'Field size(Acres)' => 'Field size(Acres)',
