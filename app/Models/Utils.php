@@ -70,7 +70,9 @@ class Utils extends Model
         if ($status == 'confirmed')
             return '<span class="label label-success">' . trans('admin.form.Confirmed') . '</span>';
         if ($status == 'skipped')
-            return '<span class="label label-success">' . trans('admin.form.Skipped') . '</span>';
+            // return '<span class="label label-success">' . trans('admin.form.Skipped') . '</span>';
+            return '<span style="background-color: purple; color: white;" class="label">' . trans('admin.form.Skipped') . '</span>';
+    
 
         if ($status == 'cancelled')
             return '<span class="label label-danger">' . trans('admin.form.Cancelled') . '</span>';

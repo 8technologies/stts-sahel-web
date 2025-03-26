@@ -13,11 +13,11 @@ use \App\Models\SeedLab;
 use \App\Models\CropDeclaration;
 use \App\Models\CropVariety;
 use \App\Models\Crop;
+use App\Models\Department;
 use \App\Models\SeedClass;
 use \App\Models\Validation;
 use \App\Models\Utils;
-
-
+use Illuminate\Support\Facades\Log;
 
 class SeedLabController extends AdminController
 {
@@ -83,6 +83,8 @@ class SeedLabController extends AdminController
         $grid->column('lot_number', __('admin.form.Lot Number'))->display(function ($lot_number) {
             return $lot_number ?? __('admin.form.Not yet assigned');
         });
+        $randomNumber = str_pad(mt_rand(0, 9999), 4, '0', STR_PAD_LEFT).'-'.'cat'.'-'.date('y').'-'.'DEptNo'.'-'.'crop_decl';
+                    Log::info($randomNumber);
         $grid->column('user_id', __('admin.form.Applicant'))->display(function ($user_id) {
             return \App\Models\User::find($user_id)->name;
         });
@@ -311,7 +313,17 @@ class SeedLabController extends AdminController
                     'not marketable' => __('admin.form.Not Marketable')
                     ])
                 ->when('marketable', function (Form $form) use ($crop_variety, $crop) {
-                    $form->text('lot_number', __('admin.form.Lot number'))->default($crop->crop_code.$crop_variety->crop_variety_code. mt_rand(10000, 999999))->readonly();
+
+                    $form_id = request()->route()->parameters()['seed_lab_test'];
+                    $seed_lab = SeedLab::find($form_id); 
+                    $crop_declaration = LoadStock::where('id', $seed_lab->load_stock_id)->where('user_id', $seed_lab->user_id);
+                    $load_stock = LoadStock::where('id', $seed_lab->load_stock_id)->first();
+                    $seed_class = SeedClass::where('id', $load_stock->seed_class)->value('class_code');
+                    $department = Department::where('name', $crop_declaration->value('department'))->pluck('code');
+
+                    $randomNumber = str_pad(mt_rand(0, 9999), 4, '0', STR_PAD_LEFT).'-'.$seed_class.'-'.date('y').'-'.$department.'-'.$crop_declaration->value('crop_declaration_id');
+                    Log::info($randomNumber);
+                    $form->text('lot_number', __('admin.form.Lot number'))->default($randomNumber)->readonly();
                 })->required();
             $form->file('reporting_and_signature', __('admin.form.Reporting and signature'))->required();
         }

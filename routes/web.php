@@ -8,7 +8,10 @@ use App\Admin\Controllers\MarketableSeedController;
 use App\Admin\Controllers\SeedLabelController;
 use App\Admin\Controllers\OrderController;
 use App\Admin\Controllers\LoadStockController;
+use App\Models\Department;
 use App\Models\Gen;
+use App\Models\Region;
+use Encore\Admin\Admin;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Artisan;
 
@@ -120,8 +123,8 @@ Route::get('/getVarieties/{id}', [LoadStockController::class, 'getVarieties']);
 
 Route::get('migrate', function(){
     $migrations = [
-        'database/migrations/2025_03_25_065557_add_id_to_seed_producers_tables.php',
-        'database/migrations/2025_03_25_084153_add_proof_of_payment_to_crop_declaration_table.php',
+        'database/migrations/2025_03_26_075138_create_regions_table.php',
+        'database/migrations/2025_03_26_075139_create_departments_table.php',
         // 'database/migrations/2025_03_21_120005_add_producer_column_to_seedlab_table.php',
         
     ];
@@ -132,3 +135,10 @@ Route::get('migrate', function(){
 
     return Artisan::output();
 });
+
+Route::get('/api/departments', function () {
+        $regionrequest = request('q'); // Get the selected region
+        $region = Region::where('name', $regionrequest)->pluck('id');
+
+        return Department::where('region_id', $region)->pluck('name', 'name');
+    });

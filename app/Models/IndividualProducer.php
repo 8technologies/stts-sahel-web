@@ -57,16 +57,22 @@ class IndividualProducer extends Model
           Notification::update_notification($model, 'IndividualProducer', request()->segment(count(request()->segments())-1));
            
           //change the role of the basic user to that of the seed producer if approved
-          if($model->status == 'accepted'){
-               AdminRoleUser::where([
-                   'user_id' => $model->user_id
-               ])->delete();
-               $new_role = new AdminRoleUser();
-               $new_role->user_id = $model->user_id;
-               $new_role->role_id = 11;
-               $new_role->save();
-           }
-       });
+
+            if ($model->status == 'accepted') {
+                $existingRole = AdminRoleUser::where([
+                    'user_id' => $model->user_id,
+                    'role_id' => 11
+                ])->first();
+                // If the user doesn't have the agro-dealer role, add it
+                if (!$existingRole) {
+                    $new_role = new AdminRoleUser();
+                    $new_role->user_id = $model->user_id;
+                    $new_role->role_id = 11; // Role ID for agro-dealer
+                    $new_role->save();
+                }
+            
+            }
+        });
 
    }
 

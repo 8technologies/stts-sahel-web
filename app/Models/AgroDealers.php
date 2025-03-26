@@ -58,13 +58,18 @@ class AgroDealers extends Model
 
             //change the role of the basic user to that of an agro-dealer if approved
             if ($model->status == 'accepted') {
-                AdminRoleUser::where([
-                    'user_id' => $model->user_id
-                ])->delete();
-                $new_role = new AdminRoleUser();
-                $new_role->user_id = $model->user_id;
-                $new_role->role_id = 9;
-                $new_role->save();
+                $existingRole = AdminRoleUser::where([
+                    'user_id' => $model->user_id,
+                    'role_id' => 9
+                ])->first();
+                // If the user doesn't have the agro-dealer role, add it
+                if (!$existingRole) {
+                    $new_role = new AdminRoleUser();
+                    $new_role->user_id = $model->user_id;
+                    $new_role->role_id = 9; // Role ID for agro-dealer
+                    $new_role->save();
+                }
+                
             }
         });
     }

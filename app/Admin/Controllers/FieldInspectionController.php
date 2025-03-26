@@ -416,14 +416,14 @@ class FieldInspectionController extends AdminController
                     'optimal' => __('admin.form.Optimal'),
                     'high' => __('admin.form.High')
                 ])->rules('required');
-            $form->radio('isolation', __('admin.form.isolation'))->options([
+            $form->radio('isolation', __('admin.form.Isolation'))->options([
                 'temps' => 'Temps',
                 'distance' => 'Distance'
                 ])->when('distance', function (Form $form) {
-                    $form->decimal('isolation_distance', __('admin.form.isolation_distance'));
+                    $form->decimal('isolation_distance', __('admin.form.Isolation distance'));
                 })
                 ->when('temps', function (Form $form) {
-                    $form->select('isolation_time', __('admin.form.isolation_time'))->options(
+                    $form->select('isolation_time', __('admin.form.Isolation time'))->options(
                         [
                             'Adéquat' => 'Adéquat',
                             'Inadéquat' => 'Inadéquat',

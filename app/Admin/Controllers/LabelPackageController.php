@@ -95,10 +95,16 @@ class LabelPackageController extends AdminController
 
         if($form->isCreating()){
             $form->multipleSelect('quantity', __('admin.form.Quantity(kgs)'))->options([
+                '0.001'=> '0.001 kg', 
+                '0.01'=> '0.01 kg', 
+                '0.025' => '0.025 kg', 
+                '0.1'=> '0.1 kg', 
+                '0.5'=> '0.5 kg',
                 '1' => '1 kgs',
+                '2' => '2 kgs',
                 '5' => '5 kgs',
                 '10' => '10 kgs',
-                '20' => '20 kgs',
+                '25' => '25 kgs',
                 '50' => '50 kgs',
             ])->required();
 
@@ -129,10 +135,16 @@ class LabelPackageController extends AdminController
 
         if ($form->isEditing()){
             $form->select('quantity', __('admin.form.Quantity(kgs)'))->options([
+                '0.001'=> '0.001 kg', 
+                '0.01'=> '0.01 kg', 
+                '0.025' => '0.025 kg', 
+                '0.1'=> '0.1 kg', 
+                '0.5'=> '0.5 kg',
                 "1" => '1 kgs',
+                "2" => '2 kgs',
                 "5" => '5 kgs',
                 "10" => '10 kgs',
-                "20" => '20 kgs',
+                "25" => '25 kgs',
                 "50" => '50 kgs',
             ])->required();
 

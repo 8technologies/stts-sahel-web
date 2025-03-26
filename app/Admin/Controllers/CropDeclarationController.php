@@ -292,8 +292,17 @@ class CropDeclarationController extends AdminController
             
             $randomFieldName = 'FIELD' . mt_rand(100, 999);
             $form->hidden('field_name', __('admin.form.Field name'))->default($randomFieldName)->required();
-            $form->text('region', __('admin.form.Region'))->required();
-            $form->text('department', __('admin.form.Department'))->required();
+            $form->select('region', __('admin.form.Region'))
+                ->options(\App\Models\Region::pluck('name', 'name')->toArray())
+                ->load('department', '/admin/departments') // Load departments dynamically
+                ->required();
+            $form->select('department', __('admin.form.Department'))
+                ->options(function ($value) {
+                    if ($value) {
+                        return \App\Models\Department::where('region', $value)->pluck('name', 'name');
+                    }
+                })
+                ->required();
             $form->text('commune', __('admin.form.Commune'))->required();
             $form->text('village', __('admin.form.Village'))->required();
             $form->date('planting_date', __('admin.form.Planting date'))->default(date('Y-m-d'))->required();

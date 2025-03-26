@@ -1,5 +1,8 @@
 <?php
 
+use App\Admin\Controllers\RegionContoller;
+use App\Models\Department;
+use App\Models\Region;
 use Illuminate\Routing\Router;
 
 Admin::routes();
@@ -36,4 +39,11 @@ Route::group([
     $router->resource('research', ResearchController::class);
     $router->resource('individual-producers', IndividualProducerController::class);
     $router->resource('agro-dealers', AgroDealerController::class);
+    $router->resource('regions', RegionContoller::class);
+    $router->get('/departments', function () {
+        $regionrequest = request('q'); // Get the selected region
+        $region = Region::where('name', $regionrequest)->pluck('id');
+
+        return Department::where('region_id', $region)->pluck('name', 'name');
+    });
 });
