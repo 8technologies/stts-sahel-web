@@ -58,6 +58,11 @@ class AgroDealers extends Model
 
             //change the role of the basic user to that of an agro-dealer if approved
             if ($model->status == 'accepted') {
+                AdminRoleUser::where([
+                    'user_id' => $model->user_id,
+                    'role_id' => 3
+                ])->delete();
+
                 $existingRole = AdminRoleUser::where([
                     'user_id' => $model->user_id,
                     'role_id' => 9

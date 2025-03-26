@@ -234,7 +234,6 @@ class Utils extends Model
             return [];
         }
 
-        Log::info([$role->seedClasses()->get()->toArray()]);
         // Fetch the associated seed classes' names
         return $role->seedClasses()->pluck('class_name', 'id')->toArray();
     }

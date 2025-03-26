@@ -58,6 +58,11 @@ class IndividualProducer extends Model
            
           //change the role of the basic user to that of the seed producer if approved
 
+          AdminRoleUser::where([
+                'user_id' => $model->user_id,
+                'role_id' => 3
+            ])->delete();
+
             if ($model->status == 'accepted') {
                 $existingRole = AdminRoleUser::where([
                     'user_id' => $model->user_id,

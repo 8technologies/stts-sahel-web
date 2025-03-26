@@ -12,7 +12,7 @@ use App\Models\SeedProducer;
 use App\Models\Utils;
 use Encore\Admin\Facades\Admin;
 use \App\Models\Validation;
-
+use Illuminate\Support\Facades\Log;
 
 class CropDeclarationController extends AdminController
 {
@@ -122,6 +122,7 @@ class CropDeclarationController extends AdminController
         $show->field('commune', __('admin.form.Commune'));
         $show->field('village', __('admin.form.Village'));
         $show->field('planting_date', __('admin.form.Planting date'));
+        $show->field('crop_declaration_period', __('admin.form.Crop declaration period'));
         $show->field('quantity_of_seed_planted', __('admin.form.Quantity of seed planted(kgs)'));
         $show->field('expected_yield', __('admin.form.Expected yield(tons)'));
         $show->field('seed_supplier_name', __('admin.form.Seed supplier name'));
@@ -217,6 +218,7 @@ class CropDeclarationController extends AdminController
             $form->display('department', __('admin.form.Department'));
             $form->display('commune', __('admin.form.Commune'));
             $form->display('village', __('admin.form.Village'));
+            $form->display('crop_declaration_period', __('admin.form.Crop declaration period'));
             $form->display('planting_date', __('admin.form.Planting date'))->default(date('Y-m-d'));
             $form->display('quantity_of_seed_planted', __('admin.form.Quantity of seed planted(kgs)'));
             $form->display('expected_yield', __('admin.form.Expected yield(tons)'));
@@ -278,8 +280,14 @@ class CropDeclarationController extends AdminController
 
             
             //get the user role
-            $userRole = $user->roles->pluck('slug')->toArray();
-            $userRole = $userRole[0];
+            $userRoles = $user->roles->pluck('slug')->toArray(); // Get all roles
+            $filteredRoles = array_filter($userRoles, fn($role) => $role !== 'agro-dealer'); // Remove 'Agro_dealer'
+
+            // If there are any remaining roles, take the first one, otherwise default to null or another fallback
+            $userRole = !empty($filteredRoles) ? reset($filteredRoles) : null;
+
+            // Log::info($userRoles);
+            // Log::info("Selected Role: " . $userRole);
 
             $seedClasses = \App\Models\Utils::getSeedClassNamesByRoleSlug($userRole);
             $form->select('seed_class_id', __('admin.form.Seed generation'))
@@ -298,13 +306,17 @@ class CropDeclarationController extends AdminController
                 ->required();
             $form->select('department', __('admin.form.Department'))
                 ->options(function ($value) {
-                    if ($value) {
-                        return \App\Models\Department::where('region', $value)->pluck('name', 'name');
-                    }
+                    return $value ? [$value => $value] : [];
                 })
                 ->required();
             $form->text('commune', __('admin.form.Commune'))->required();
-            $form->text('village', __('admin.form.Village'))->required();
+            $form->text('village', __('admin.form.Village'))->required();            
+            $form->radio('crop_declaration_period', __('admin.form.Crop declaration period'))
+            ->options([
+                'rain season' => __('admin.form.Rain season(1st April to 30th June)'),
+                'dry season' => __('admin.form.Dry season( 15th August to 31st October)')
+            ])
+            ->required();
             $form->date('planting_date', __('admin.form.Planting date'))->default(date('Y-m-d'))->required();
             $form->text('quantity_of_seed_planted', __('admin.form.Quantity of seed planted(kgs)'))->attribute(
                 [

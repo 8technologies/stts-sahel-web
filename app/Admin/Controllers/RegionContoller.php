@@ -85,6 +85,7 @@ class RegionContoller extends AdminController
 
             // Disable row actions (Edit, Delete)
             $departments->disableActions();
+            $departments->disableExport();
 
             // Disable batch actions (Bulk delete, etc.)
             $departments->disableBatchActions();

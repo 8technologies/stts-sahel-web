@@ -123,8 +123,8 @@ Route::get('/getVarieties/{id}', [LoadStockController::class, 'getVarieties']);
 
 Route::get('migrate', function(){
     $migrations = [
-        'database/migrations/2025_03_26_075138_create_regions_table.php',
-        'database/migrations/2025_03_26_075139_create_departments_table.php',
+        // 'database/migrations/2025_03_26_075138_create_regions_table.php',
+        'database/migrations/2025_03_26_142037_add_crop_declaration_period_to_crop_declaration_table.php',
         // 'database/migrations/2025_03_21_120005_add_producer_column_to_seedlab_table.php',
         
     ];
