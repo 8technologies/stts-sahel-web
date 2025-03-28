@@ -319,6 +319,7 @@ return [
         'Generation' => 'Génération',
         'Priority' => 'Priorité',
         'Producer Name' => 'Nom du producteur',
+        'Name of producer' => 'Nom du producteur',
         'Number of samples' => 'Nombre d\'échantillons',
         'Year of production' => 'Année de production',
         'Confirm seed Generation' => 'Confirmer la génération de graines',
