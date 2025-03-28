@@ -17,6 +17,8 @@ use \App\Models\SeedClass;
 use \App\Models\CropDeclaration;
 use App\Models\SeedProducer;
 use App\Models\User;
+use Encore\Admin\Admin as AdminAdmin;
+use Encore\Admin\Auth\Database\Administrator;
 use Illuminate\Support\Facades\Log;
 
 class LoadStockController extends AdminController
@@ -119,6 +121,48 @@ class LoadStockController extends AdminController
         
             return 'N/A'; // Fallback in case of missing data
         });
+        $userId = $show->getModel()->user_id; 
+        // $user = \App\Models\User::find($userId); // Get the actual user model
+        $usp = Admin::user($userId);
+        $user = Administrator::whereHas('roles', function ($query) {
+            $query->where('id', 4);
+        })->pluck('name', 'id');
+
+        Log::info($user);
+
+        // Check the user's role and display the correct producer
+        if ($usp->isRole('grower')) {
+            $seed_producer = SeedProducer::where('user_id', $usp->id)->first();
+            $producerOptions = $seed_producer ? Utils::get_out_growers($seed_producer->id) : [];
+        } elseif ($usp->isRole('cooperative')) {
+            $cooperative = Cooperative::where('user_id', $usp->id)->first();
+            $producerOptions = $cooperative ? Utils::get_cooperative_members($cooperative->id) : [];
+            Log::info($producerOptions);
+        } else {
+            $producerOptions = [];
+        }
+
+        // Display Producer Name (if available)
+        $show->field('producer', __('admin.form.Producer Name'))->as(function ($value) use ($producerOptions, $usp) {
+            return $producerOptions[$value] ?? 'N/A';
+        });
+
+        // // if($user->roles->contains('name', 'grower')){
+        // if($usp->isRole('grower')){
+        //     $show->field('producer', __('admin.form.Producer Name'))->as(function ($value) {
+                
+        //         $seed_producer = SeedProducer::where('user_id', $user->id)->first();
+
+        //         return Utils::get_out_growers($seed_producer->id);
+        //     });
+        // }
+        // // if($user->roles->contains('name', 'cooperative')){
+        // if($usp->isRole('cooperative')){
+        //     $cooperatives = Cooperative::where('user_id', $user->id)->first();
+        //     Log::info($show->model()->user_id);
+        
+        //     $show->field('producer', __('admin.form.Producer Name'))->options(Utils::get_cooperative_members($cooperatives->id));
+        // }
         $show->field('field_size', __('admin.form.Field size(Acres)'));
         $show->field('yield_quantity', __('admin.form.Yield quantity(kgs)'));
         $show->field('last_field_inspection_date', __('admin.form.Last field inspection date'));
@@ -171,15 +215,17 @@ class LoadStockController extends AdminController
         // {
             $form->hidden('user_id')->default($user->id);
             Log::info($form->model()->user_id);
+            Log::info($user->id);
             $seed_producer = SeedProducer::where('user_id', $user->id)->first();
-            if($user->isRole('outgrower')){
-                $form->select('producer', __('admin.form.Producer'))->options(Utils::get_out_growers($seed_producer->id));
+
+            if($user->isRole('grower')){
+                $form->select('producer', __('admin.form.Producer Name'))->options(Utils::get_out_growers($seed_producer->id));
             }
             if($user->isRole('cooperative')){
                 $cooperatives = Cooperative::where('user_id', $user->id)->first();
                 Log::info($form->model()->user_id);
             
-                $form->select('producer', __('admin.form.Producer'))->options(Utils::get_cooperative_members($cooperatives->id));
+                $form->select('producer', __('admin.form.Producer Name'))->options(Utils::get_cooperative_members($cooperatives->id));
             }
 
         // }
