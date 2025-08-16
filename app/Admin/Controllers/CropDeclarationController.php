@@ -200,13 +200,13 @@ class CropDeclarationController extends AdminController
         {
             $form->display('crop_variety_id', __('admin.form.Crop variety'))
                 ->with(function ($crop_variety_id) {
-                    return CropVariety::find($crop_variety_id)->crop_variety_name;
+                    return CropVariety::find($crop_variety_id)?->crop_variety_name;
                 })
                 ->required();
 
             $form->display('seed_class_id', __('admin.form.Seed generation'))
                 ->with(function ($seed_class) {
-                    return \App\Models\SeedClass::find($seed_class)->class_name;
+                    return \App\Models\SeedClass::find($seed_class)?->class_name;
                 })
                 ->required();
 
@@ -302,7 +302,7 @@ class CropDeclarationController extends AdminController
             $form->hidden('field_name', __('admin.form.Field name'))->default($randomFieldName)->required();
             $form->select('region', __('admin.form.Region'))
                 ->options(\App\Models\Region::pluck('name', 'name')->toArray())
-                ->load('department', '/admin/departments') // Load departments dynamically
+                ->load('department', '/departments') // Load departments dynamically
                 ->required();
             $form->select('department', __('admin.form.Department'))
                 ->options(function ($value) {

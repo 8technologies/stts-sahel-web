@@ -40,6 +40,7 @@ Route::group([
     $router->resource('individual-producers', IndividualProducerController::class);
     $router->resource('agro-dealers', AgroDealerController::class);
     $router->resource('regions', RegionContoller::class);
+    
     $router->get('/departments', function () {
         $regionrequest = request('q'); // Get the selected region
         $region = Region::where('name', $regionrequest)->pluck('id');

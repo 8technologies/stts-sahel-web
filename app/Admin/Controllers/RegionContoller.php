@@ -65,7 +65,7 @@ class RegionContoller extends AdminController
         $show->field('name', __('admin.form.Region name'));
 
         $show->departments(__('admin.form.Departments'), function ($departments) {
-            $departments->resource('/admin/departments');
+            $departments->resource('/departments');
 
             // Add filter by name
             $departments->filter(function ($filter) {
