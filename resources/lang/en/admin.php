@@ -16,6 +16,8 @@ return [
     'username'              => 'Username',
     'password'              => 'Password',
     'password_confirmation' => 'Password confirmation',
+    'enter_new_password'    => 'Enter new password',
+    'Confirm_new_password'  => 'Confirm new password',
     'remember_me'           => 'Remember me',
     'user_setting'          => 'User setting',
     'avatar'                => 'Avatar',

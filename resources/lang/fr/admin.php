@@ -8,6 +8,8 @@ return [
     'last_name'             => 'Nom de famille',
     'email'                 => 'Email',
     'Member since '          => 'Membre depuis',
+    'enter_new_password'    => 'Entrez le nouveau mot de passe', 
+    'Confirm_new_password'  => 'Confirmer le nouveau mot de passe',
     'login'                 => 'Connexion',
     'logout'                => 'Déconnexion',
     'setting'               => 'Paramètres',

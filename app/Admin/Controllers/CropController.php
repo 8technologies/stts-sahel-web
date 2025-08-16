@@ -124,7 +124,7 @@ class CropController extends AdminController
 
         $form->text('crop_name', __('admin.form.Crop name'))->rules('required');
         // $form->text('crop_code', __('admin.form.Crop code'))->required();
-        $form->date('number_of_days_before_submission', __('admin.form.Deadline for submission of crop declaration'))->required();
+        $form->number('number_of_days_before_submission', __('admin.form.Deadline for submission of crop declaration'))->required();
         $form->divider();
         $form->decimal('seed_viability_period', __('admin.form.Seed viability period (in days)')); 
         $form->hasMany('crop_varieties', __('admin.form.Crop Varieties'), function (Form\NestedForm $form)  {

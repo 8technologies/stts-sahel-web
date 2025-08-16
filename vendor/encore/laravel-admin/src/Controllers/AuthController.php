@@ -140,14 +140,14 @@ class AuthController extends Controller
         $form->html('<div class="input-group">
                     <span class="input-group-addon">
                     <i class="fa fa-eye" id="eye-icon"></i></span>
-                    <input type="text" id="password" name="password"  class="form-control password" placeholder="'.$currentPassword.'" value= "'.$form->password.'" >
+                    <input type="text" id="password" name="password"  class="form-control password" placeholder="'.trans('admin.enter_new_password').'" value= "'.$form->password.'" >
         
                 </div>','<span style="color:red;">*</span>'. trans('admin.password'))->rules('confirmed|required');
 
         $form->html('<div class="input-group">
             <span class="input-group-addon">
             <i class="fa fa-eye" id="eye-icon1"></i></span>
-            <input id="password-confirm" type="text" class="form-control password" name="password-confirm" autocomplete="current-password" placeholder="' . $currentPassword . '" required >
+            <input id="password-confirm" type="text" class="form-control password" name="password-confirm" autocomplete="current-password" placeholder="'.trans('admin.Confirm_new_password').'" required >
 
         </div>', '<span style="color:red;">*</span>'.trans('admin.password_confirmation'));
         $form->setAction(admin_url('auth/setting'));
