@@ -68,10 +68,12 @@ class RegisterController extends Controller
 
         $registrationStatus = $this->create($request->all());
 
-        if ($registrationStatus['status'] === 'success') {
-            return redirect()->route('register')->with('success', 'Registration successful! Please check your email for your password.');
+        if ($registrationStatus) {
+            return redirect()->route('register')
+                ->with('success', 'Registration successful! Please check your email for your password.');
         } else {
-            return redirect()->route('register')->with('warning', 'Registration successful, but email could not be sent.');
+            return redirect()->route('register')
+                ->with('warning', 'Registration failed.');
         }
     }
 
